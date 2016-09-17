@@ -15,10 +15,36 @@
 })();
 
 (function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controller: ["$scope", function contextMenuController($scope) {}]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('navbar', navbar);
+
+    function navbar() {
+        return {
+            restrict: 'EA',
+            scope: {
+                title: '='
+            },
+            templateUrl: 'navbar/navbar.html',
+            controller: ["$scope", function navbarController($scope) {}]
+        };
+    }
+})();
+(function () {
     angular.module('app').controller('HomeController', HomeController);
 
     function HomeController() {
         var vm = this;
-        vm.test = 'It works!';
+        vm.title = 'It works!';
     }
 })();

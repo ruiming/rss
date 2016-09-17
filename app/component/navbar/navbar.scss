@@ -1,0 +1,20 @@
+.rssnav {
+    font-size: 1rem;
+    border-radius: 0;
+    border: 0;
+    color: #fff;
+    margin-bottom: 0;
+    .navbar-brand {
+        width: $leftbar;
+        border-right: 1px solid $border-color;
+    }
+    ul {
+        float: right;
+    }
+}
+.rss-title {
+    color: #777;
+    float: left;
+    font-size: 1.3rem;
+    padding: 12.5px 0 0 10px;
+}

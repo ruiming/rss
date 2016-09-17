@@ -1,0 +1,12 @@
+html {
+    font-size: 14px;
+}
+p {
+    margin-bottom: 0;
+}
+html, body, .ng-scope, .container-fluid, .row {
+  height: 100%;
+}
+// Layout / Basic / Width
+$leftbar: 250px;
+$border-color: #ddd;

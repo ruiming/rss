@@ -5,6 +5,7 @@
 
     function HomeController() {
         var vm = this;
-        vm.test = 'It works!'
+        vm.title = 'It works!'
     }
+    
 }());
