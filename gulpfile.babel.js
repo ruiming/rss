@@ -19,66 +19,66 @@ gulp.task('angular', () => {
         'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
         'node_modules/angular-ui-router/release/angular-ui-router.min.js'])
         .pipe(concat('app.min.js'))
-        .pipe(gulp.dest('dist/js'));
+        .pipe(gulp.dest('public/js'));
 });
 
 // Packaging CSS dependence
 gulp.task('css', () => {
     gulp.src([
         'node_modules/bootstrap/dist/css/bootstrap.css'])
-        .pipe(gulp.dest('dist/css'));
+        .pipe(gulp.dest('public/css'));
 });
 
 // Packaging fonts
 gulp.task('font', () => {
     gulp.src([
         'node_modules/bootstrap/dist/fonts/*.*'])
-        .pipe(gulp.dest('dist/fonts'));
+        .pipe(gulp.dest('public/fonts'));
 });
 
 // Packaging templates
 gulp.task('template', () => {
     gulp.src([
-        'app/controller/**/*.html',
-        'app/component/**/*.html'])
+        'frontend/controller/**/*.html',
+        'frontend/component/**/*.html'])
         .pipe(minifyHtml({empty: true, quotes: true}))
         .pipe(ngTemplate({
             moduleName: 'app',
             filePath: 'templates.js'
         }))
-        .pipe(gulp.dest('dist/js'));
+        .pipe(gulp.dest('public/js'));
 });
 
 // Packaging own JS code
 gulp.task('js', () => {
     gulp.src([
-        'app/*.js',
-        'app/**/*.js',
-        'app/**/**/*.js'])
+        'frontend/*.js',
+        'frontend/**/*.js',
+        'frontend/**/**/*.js'])
     .pipe(plumber())
     .pipe(ngAnnotate())
     .pipe(concat('rss.js'))
     .pipe(babel())
-    .pipe(gulp.dest('dist/js'));
+    .pipe(gulp.dest('public/js'));
 });
 
 // Packaging own CSS code
 gulp.task('sass', () => {
     gulp.src([
-        'app/*.scss',
-        'app/**/*.scss',
-        'app/**/**/*.scss'])
+        'frontend/*.scss',
+        'frontend/**/*.scss',
+        'frontend/**/**/*.scss'])
         .pipe(plumber())
         .pipe(concat('rss.css'))
         .pipe(sass())
         .pipe(cleanCSS())
-        .pipe(gulp.dest('dist/css'));
+        .pipe(gulp.dest('public/css'));
 });
 
 // Auto watch and build
-gulp.watch(['app/*.js', 'app/**/*.js', 'app/**/**/*.js'], ['js']);
-gulp.watch(['app/*.scss', 'app/**/*.scss', 'app/**/**/*.scss'], ['sass']);
-gulp.watch(['app/controller/**/*.html', 'app/component/**/*.html'], ['template']);
+gulp.watch(['frontend/*.js', 'frontend/**/*.js', 'frontend/**/**/*.js'], ['js']);
+gulp.watch(['frontend/*.scss', 'frontend/**/*.scss', 'frontend/**/**/*.scss'], ['sass']);
+gulp.watch(['frontend/controller/**/*.html', 'frontend/component/**/*.html'], ['template']);
 
 // Task
 gulp.task('default', ['angular', 'css', 'font', 'js', 'sass', 'template']);
