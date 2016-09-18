@@ -5,9 +5,8 @@ import FeedParser from 'feedparser';
 import request from 'request';
 
 // 增加新的订阅源
-exports.create = async (ctx, next) => {
-
-    var url = 'http://www.alloyteam.com/feed/';
+exports.create = (ctx, next) => {
+    var url = ctx.body.feedlink;
     var req = request(url), feedparser = new FeedParser();
     var data = [];
     var result, _id;
@@ -16,6 +15,7 @@ exports.create = async (ctx, next) => {
     // 先查找数据库是否存在该订阅源
     var result = await FeedModel.find({xmlurl: url});
     if(result.length) {
+        // TODO: 订阅源已经存在
         console.log('exist');
     }
 
@@ -28,32 +28,15 @@ exports.create = async (ctx, next) => {
         var feed = new FeedModel(this);
         var store = await feed.save();
         _id = store._id;
-        await feedparser.on('readable', function() {
+        feedparser.on('readable', function() {
             while(result = this.read()) {
+                console.log(_id);
                 var post = new PostModel(Object.assign(result, {feed_id: _id}));
                 post.save();
             }
         });
     });
-    await feedparser.on('end', function() {
-        return ctx.body = '123';
-    });
 
-
-    /*
-    var info = {
-        rid: 123,
-        title: '1213123'
-    }
-    var feed = new FeedModel(info);
-    var result = await feed.save();
-    console.log(result);
-    if(!result) {
-        ctx.body = "error";
-    } else {
-        ctx.body = result;
-    }
-    */
 }
 
 exports.get = async(ctx, next) => {
