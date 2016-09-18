@@ -19,7 +19,8 @@ exports.create = async (ctx, next) => {
     if(result.length) {
         return ctx.body = {
             status: 'success',
-            message: '订阅成功'
+            message: '订阅成功',
+            id: result[0]._id
         };
     }
 
@@ -43,19 +44,27 @@ exports.create = async (ctx, next) => {
         feedparser.on('end', () => {
             ctx.body = {
                 status: 'success',
-                message: '订阅成功'
+                message: '订阅成功',
+                id: _id
             }
             resolve();
         });
     });
 }
 
+//　获取订阅源信息
 exports.get = async(ctx, next) => {
     var rid = ctx.params.rid;
-    var result = await FeedModel.find({rid: rid});
+    var result = await FeedModel.find({_id: rid});
     if(!result) {
-         ctx.body = "error";
+         return ctx.body = {
+             status: 'fail',
+             message: '信息不存在'
+         };
     } else {
-        ctx.body = result;
+        return ctx.body = {
+            status: 'success',
+            data: result[0]
+        };
     }
 }
