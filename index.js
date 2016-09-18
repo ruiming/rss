@@ -7,7 +7,6 @@ import convert from 'koa-convert';
 import Bodyparser from 'koa-bodyparser';
 
 var app = new Koa();
-var body2 = new body();
 var bodyparser = new Bodyparser();
 
 mongoose.Promise = require('bluebird');

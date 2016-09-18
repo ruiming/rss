@@ -13,6 +13,7 @@ const FeedSchema = new Schema({
     pubdate:        {type: Date},
     link:           {type: String},
     xmlurl:         {type: String},
+    absurl:         {type: String},
     author:         {type: String},
     langulage:      {type: String},
     favicon:        {type: String},

@@ -5,18 +5,22 @@ import FeedParser from 'feedparser';
 import request from 'request';
 
 // 增加新的订阅源
-exports.create = (ctx, next) => {
-    var url = ctx.body.feedlink;
+exports.create = async (ctx, next) => {
+    var url = ctx.request.body.feedlink;
+
     var req = request(url), feedparser = new FeedParser();
     var data = [];
     var result, _id;
     var feed = new FeedModel();
 
     // 先查找数据库是否存在该订阅源
-    var result = await FeedModel.find({xmlurl: url});
+    var result = await FeedModel.find({absurl: url});
+
     if(result.length) {
-        // TODO: 订阅源已经存在
-        console.log('exist');
+        return ctx.body = {
+            status: 'success',
+            message: '订阅成功'
+        };
     }
 
     req.on('err', err => ctx.body = err);
@@ -25,18 +29,25 @@ exports.create = (ctx, next) => {
         res.pipe(feedparser);
     });
     feedparser.on('meta', async function() {
-        var feed = new FeedModel(this);
+        var feed = new FeedModel(Object.assign(this.meta, {absurl: url}));
         var store = await feed.save();
         _id = store._id;
         feedparser.on('readable', function() {
             while(result = this.read()) {
-                console.log(_id);
                 var post = new PostModel(Object.assign(result, {feed_id: _id}));
                 post.save();
             }
         });
     });
-
+    await new Promise(resolve => {
+        feedparser.on('end', () => {
+            ctx.body = {
+                status: 'success',
+                message: '订阅成功'
+            }
+            resolve();
+        });
+    });
 }
 
 exports.get = async(ctx, next) => {
