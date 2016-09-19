@@ -15,15 +15,6 @@
 })();
 
 (function () {
-    angular.module('app').controller('HomeController', HomeController);
-
-    function HomeController() {
-        var vm = this;
-        vm.title = 'It works!';
-    }
-})();
-
-(function () {
     angular.module('app').directive('contextMenu', contextMenu);
 
     function contextMenu() {
@@ -47,5 +38,13 @@
             templateUrl: 'navbar/navbar.html',
             controller: ["$scope", function navbarController($scope) {}]
         };
+    }
+})();
+(function () {
+    angular.module('app').controller('HomeController', HomeController);
+
+    function HomeController() {
+        var vm = this;
+        vm.title = 'It works!';
     }
 })();
