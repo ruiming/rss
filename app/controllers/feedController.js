@@ -4,6 +4,8 @@ import PostModel from '../models/post';
 import FeedParser from 'feedparser';
 import request from 'request';
 
+// TODO: 数据库错误捕捉处理
+
 /**
  * 创建/新增订阅源
  * @method: post
@@ -17,7 +19,7 @@ exports.create = async (ctx, next) => {
         var feedparser = new FeedParser(), feed = new FeedModel(), _id;
 
         var result = await FeedModel.findOne({absurl: feedlink});
-        
+
         if(result) {
             result.feeder += 1;
             result.save();
@@ -25,7 +27,6 @@ exports.create = async (ctx, next) => {
         }
 
         await new Promise((resolve, reject) => {
-            // 检查 feedlink 是否有效
             var req = request(feedlink, err => {
                 reject(err);
             });
@@ -33,7 +34,6 @@ exports.create = async (ctx, next) => {
                 if(res.statusCode != 200) {
                     reject(res.statusCode);
                 } else {
-                    // TODO make sure res is a rss
                     res.pipe(feedparser);
                     feedparser.on('error', err => {
                         if(err) {
@@ -55,6 +55,7 @@ exports.create = async (ctx, next) => {
                         post.save();
                     }
                     ctx.body = { success: true, data: {id: _id} };
+                    resolve();
                 });
             });
         });
@@ -73,7 +74,7 @@ exports.create = async (ctx, next) => {
  */
 exports.list = async (ctx, next) => {
     var id = ctx.params.id;
-    var result = await FeedModel.findById(id).catch(e => e);
+    var result = await FeedModel.findById(id).catch(e => e);;
     if (result._id) {
         ctx.body = { success: true, data: result };
     } else {

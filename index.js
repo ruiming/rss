@@ -17,10 +17,11 @@ mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${conf
 
 app.use(convert(bodyparser));
 
-convert(Koaerror)(app);
+//convert(Koaerror)(app);
 
 app.on('error', (err, ctx) => {
-    console.log('lalalala');
+    ctx.body = { success: false, message: err.toString()};
+    ctx.status = 400;
 });
     
 app.use(router.routes())

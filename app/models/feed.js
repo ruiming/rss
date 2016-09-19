@@ -21,7 +21,7 @@ const FeedSchema = new Schema({
     generator:      {type: String},
     categories:     {type: String},
 
-    feeder:         {type: Number, default: 0}
+    feeder:         {type: Number, default: 1}
 });
 
 var Feed = mongoose.model('Feed', FeedSchema);
