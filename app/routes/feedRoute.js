@@ -4,6 +4,7 @@ import feedController from '../controllers/feedController';
 var router = new Router();
 
 router.post('/create', feedController.create);
-router.get('/:rid', feedController.get);
+router.get('/:id', feedController.list);
+router.get('/:id/post', feedController.listPost);
 
 export default router;

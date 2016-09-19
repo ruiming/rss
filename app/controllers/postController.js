@@ -16,9 +16,12 @@ exports.create = async (ctx, next) => {
     var req = request(feedlink), feedparser = new FeedParser(), feed = new FeedModel(), _id;
 
     // 先查找数据库是否存在该订阅源
-    var result = await FeedModel.find({absurl: feedlink}).catch(e => e);
+    var result = await FeedModel.find({absurl: feedlink});
     if(result.length) {
-        return ctx.body = { success: true, data: {id: result[0]._id} };
+        return ctx.body = {
+            success: true,
+            data: {id: result[0]._id}
+        };
     }
 
     // 如果 feedlink 参数不正确，会在这里报错
@@ -30,18 +33,21 @@ exports.create = async (ctx, next) => {
     });
     feedparser.on('meta', async function() {
         var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink}));
-        var store = await feed.save().catch(e => e);
+        var store = await feed.save();
         _id = store._id;
         feedparser.on('readable', function() {
             while(result = this.read()) {
                 var post = new PostModel(Object.assign(result, {feed_id: _id}));
-                post.save().catch(e => e);
+                post.save();
             }
         });
     });
     await new Promise(resolve => {
         feedparser.on('end', () => {
-            ctx.body = { success: true, data: {id: _id} };
+            ctx.body = {
+                success: true,
+                data: {id: _id}
+            }
             resolve();
         });
     });
@@ -57,27 +63,11 @@ exports.list = async (ctx, next) => {
     var id = ctx.params.id;
     var result = await FeedModel.findById(id).catch(e => e);
     if (result._id) {
-        ctx.body = { success: true, data: result };
+        ctx.body = {
+            success: true,
+            data: result
+        }
     } else {
-        ctx.throw(400, JSON.stringify({success: false, message: '订阅源不存在', error: result}));
-    }
-}
-
-/**
- * 获取指定订阅源的文章
- * @method: get
- * @url:    /api/feedlink/{id}/post
- * @params: {string} id
- * @query:  {number} limit
- * @query:  {number} page
- * @query:  {number} per_page
- */
-exports.listPost = async (ctx, next) => {
-    var id = ctx.params.id, limit = ctx.request.query.limit || ctx.request.query.per_page || 2, page = ctx.request.query.page || 0;
-    var result = await PostModel.where('feed_id').eq(id).skip(page*limit).limit(limit).catch(e => e);
-    if(result[0] && result[0]._id) {
-        ctx.body = { success: true, data: result };
-    } else {
-        ctx.throw(400, JSON.stringify({success: false, message: '订阅源不存在', error: result}));
+        ctx.throw(400, JSON.stringify({success: false, message: '订阅源不存在', error: result}))
     }
 }
