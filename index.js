@@ -20,8 +20,7 @@ app.use(convert(bodyparser));
 convert(Koaerror)(app);
 
 app.on('error', (err, ctx) => {
-    ctx.status = '400';
-    ctx.body = err;
+    console.log('lalalala');
 });
     
 app.use(router.routes())

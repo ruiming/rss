@@ -15,62 +15,52 @@ exports.create = async (ctx, next) => {
         var feedlink = ctx.request.body.feedlink;
 
         var feedparser = new FeedParser(), feed = new FeedModel(), _id;
-        var error;
 
-        await new Promise((resolve, reject) => {
-            // 检查 feedlink 是否有效
-            var req = request(feedlink, err => {
-                error = err;
-                reject(err);
-            });
-            req.on('response', function(res) {
-                if(res.statusCode != 200) {
-                    error = res.statusCode;
-                    reject(res.statusCode);
-                } else {
-                    // TODO make sure res is a rss
-                    res.pipe(feedparser);
-                }
-            });
-            // 如果 feedlink 参数不正确，会在这里报错
-            req.on('err', function(err) {
-                error = err;
-                reject(err);
-            });
-        });
-        feedparser.on('error', err => {
-            error = err;
-        });
-        
-        console.log(error);
-        if(error) {
-            ctx.throw(400);
-        }
-
-        // 查找数据库是否存在该订阅源
         var result = await FeedModel.findOne({absurl: feedlink});
+        
         if(result) {
             result.feeder += 1;
             result.save();
             return ctx.body = { success: true, data: {id: result._id} };
         }
 
-        // First time will be slow...  Seems impossible to return ctx.body before all the async done.
-        await new Promise(resolve => feedparser.on('meta', async function() {
-            var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink}));
-            var store = await feed.save();
-            _id = store._id;
-            feedparser.on('readable', function() {
-                while(result = this.read()) {
-                    var post = new PostModel(Object.assign(result, {feed_id: _id}));
-                    post.save();
-                }
-                ctx.body = { success: true, data: {id: _id} };
-                resolve();
+        await new Promise((resolve, reject) => {
+            // 检查 feedlink 是否有效
+            var req = request(feedlink, err => {
+                reject(err);
             });
-        }));
+            req.on('response', function(res) {
+                if(res.statusCode != 200) {
+                    reject(res.statusCode);
+                } else {
+                    // TODO make sure res is a rss
+                    res.pipe(feedparser);
+                    feedparser.on('error', err => {
+                        if(err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    });
+                }
+            });
+
+            feedparser.on('meta', async function() {
+                var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink}));
+                var store = await feed.save();
+                _id = store._id;
+                feedparser.on('readable', function() {
+                    while(result = this.read()) {
+                        var post = new PostModel(Object.assign(result, {feed_id: _id}));
+                        post.save();
+                    }
+                    ctx.body = { success: true, data: {id: _id} };
+                });
+            });
+        });
+
     } catch (error) {
-        ctx.body = { success: false, message: error.toString || error.toString()};
+        ctx.body = { success: false, message: error.toString()};
         ctx.status = 400;
     }
 }
