@@ -21,6 +21,7 @@
     "feedparser": "^1.1.4",
     "koa": "^2.0.0-alpha.7",
     "koa-bodyparser": "^2.2.0",
+    "koa-onerror": "^2.0.0",
     "koa-router": "^7.0.1",
     "mongoose": "^4.6.0"
   },

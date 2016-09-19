@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import config from './config/config';
 import convert from 'koa-convert';
 import Bodyparser from 'koa-bodyparser';
+import Koaerror from 'koa-onerror';
 
 var app = new Koa();
 var bodyparser = new Bodyparser();
@@ -14,8 +15,14 @@ global.Promise = require('bluebird');
 
 mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${config.MongoDB.NAME}`);
 
-
 app.use(convert(bodyparser));
+
+convert(Koaerror)(app);
+
+app.on('error', (err, ctx) => {
+    ctx.status = '400';
+    ctx.body = err;
+});
     
 app.use(router.routes())
    .use(router.allowedMethods())

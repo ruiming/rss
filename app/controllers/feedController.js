@@ -11,40 +11,68 @@ import request from 'request';
  * @params: {string} feedlink
  */
 exports.create = async (ctx, next) => {
-    var feedlink = ctx.request.body.feedlink;
+    try {
+        var feedlink = ctx.request.body.feedlink;
 
-    var req = request(feedlink), feedparser = new FeedParser(), feed = new FeedModel(), _id;
+        var feedparser = new FeedParser(), feed = new FeedModel(), _id;
+        var error;
 
-    // 先查找数据库是否存在该订阅源
-    var result = await FeedModel.find({absurl: feedlink}).catch(e => e);
-    if(result.length) {
-        return ctx.body = { success: true, data: {id: result[0]._id} };
+        await new Promise((resolve, reject) => {
+            // 检查 feedlink 是否有效
+            var req = request(feedlink, err => {
+                error = err;
+                reject(err);
+            });
+            req.on('response', function(res) {
+                if(res.statusCode != 200) {
+                    error = res.statusCode;
+                    reject(res.statusCode);
+                } else {
+                    // TODO make sure res is a rss
+                    res.pipe(feedparser);
+                }
+            });
+            // 如果 feedlink 参数不正确，会在这里报错
+            req.on('err', function(err) {
+                error = err;
+                reject(err);
+            });
+        });
+        feedparser.on('error', err => {
+            error = err;
+        });
+        
+        console.log(error);
+        if(error) {
+            ctx.throw(400);
+        }
+
+        // 查找数据库是否存在该订阅源
+        var result = await FeedModel.findOne({absurl: feedlink});
+        if(result) {
+            result.feeder += 1;
+            result.save();
+            return ctx.body = { success: true, data: {id: result._id} };
+        }
+
+        // First time will be slow...  Seems impossible to return ctx.body before all the async done.
+        await new Promise(resolve => feedparser.on('meta', async function() {
+            var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink}));
+            var store = await feed.save();
+            _id = store._id;
+            feedparser.on('readable', function() {
+                while(result = this.read()) {
+                    var post = new PostModel(Object.assign(result, {feed_id: _id}));
+                    post.save();
+                }
+                ctx.body = { success: true, data: {id: _id} };
+                resolve();
+            });
+        }));
+    } catch (error) {
+        ctx.body = { success: false, message: error.toString || error.toString()};
+        ctx.status = 400;
     }
-
-    // 如果 feedlink 参数不正确，会在这里报错
-    req.on('err', err => ctx.body = err);
-    req.on('response', function(res) {
-        // TODO: this.emit ?
-        if(res.statusCode != 200)   return this.emit('error', new Error('Bad Status code'));
-        res.pipe(feedparser);
-    });
-    feedparser.on('meta', async function() {
-        var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink}));
-        var store = await feed.save().catch(e => e);
-        _id = store._id;
-        feedparser.on('readable', function() {
-            while(result = this.read()) {
-                var post = new PostModel(Object.assign(result, {feed_id: _id}));
-                post.save().catch(e => e);
-            }
-        });
-    });
-    await new Promise(resolve => {
-        feedparser.on('end', () => {
-            ctx.body = { success: true, data: {id: _id} };
-            resolve();
-        });
-    });
 }
 
 /**
@@ -74,7 +102,7 @@ exports.list = async (ctx, next) => {
  */
 exports.listPost = async (ctx, next) => {
     var id = ctx.params.id, limit = ctx.request.query.limit || ctx.request.query.per_page || 2, page = ctx.request.query.page || 0;
-    var result = await PostModel.where('feed_id').eq(id).skip(page*limit).limit(limit).catch(e => e);
+    var result = await PostModel.where('feed_id').eq(id).skip(+page*limit).limit(+limit).catch(e => e);
     if(result[0] && result[0]._id) {
         ctx.body = { success: true, data: result };
     } else {

@@ -20,6 +20,8 @@ const FeedSchema = new Schema({
     copyright:      {type: String},
     generator:      {type: String},
     categories:     {type: String},
+
+    feeder:         {type: Number, default: 0}
 });
 
 var Feed = mongoose.model('Feed', FeedSchema);
