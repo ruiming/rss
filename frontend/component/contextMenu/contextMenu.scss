@@ -1,5 +1,6 @@
 .context-menu {
     width: $leftbar;
+    float: left;
     height: calc(100% - 50px);
     border: {
         right: 1px solid $border-color;
@@ -8,9 +9,14 @@
     font-size: 0.8rem;
     .list-group {
         margin-bottom: 0;
+        overflow: hidden;
         border: {
             top: 1px solid $border-color;
-            bottom: 1px solid $border-color;;
+        }
+        &:last-child {
+            border: {
+                bottom: 1px solid $border-color;;
+            }
         }
         span:before {
             padding: 0 5px;
@@ -21,6 +27,10 @@
     }
     .list-group-item {
         padding: 8px 15px;
+    }
+    h2 {
+        margin: 8px;
+        text-align: center;
     }
 }
 .user-avatar {

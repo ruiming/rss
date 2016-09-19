@@ -1,10 +1,10 @@
 import Router from 'koa-router';
 import feedController from '../controllers/feedController';
+import postController from '../controllers/postController';
 
 var router = new Router();
 
-router.post('/', feedController.create);
-router.get('/:id', feedController.list);
-router.get('/', feedController.listAll);
+router.get('/', postController.listAll);
+router.get('/:id', postController.listOne);
 
 export default router;

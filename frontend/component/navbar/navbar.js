@@ -9,6 +9,7 @@
             scope: {
                 title: '='
             },
+            replace: true,
             templateUrl: 'navbar/navbar.html',
             controller: function navbarController($scope) {
             }

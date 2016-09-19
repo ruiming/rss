@@ -9,11 +9,11 @@ import request from 'request';
 /**
  * 创建/新增订阅源
  * @method: post
- * @url:    /api/feed/create
+ * @url:    /api/feed
  * @params: {string} feedlink
  */
 exports.create = async (ctx, next) => {
-    var feedlink = ctx.request.body.feedlink;
+    var feedlink = ctx.request.body.feedlink.trim();
 
     var feedparser = new FeedParser(), feed = new FeedModel(), _id;
 
@@ -63,12 +63,12 @@ exports.create = async (ctx, next) => {
 /**
  * 获取订阅源信息
  * @method: get
- * @url:    /api/feedlink/{id}
+ * @url:    /api/feed/{id}
  * @params: {string} id
  */
 exports.list = async (ctx, next) => {
     var id = ctx.params.id;
-    var result = await FeedModel.findById(id).catch(e => e);;
+    var result = await FeedModel.findById(id).catch(e => e);
     if (result._id) {
         ctx.body = { success: true, data: result };
     } else {
@@ -77,20 +77,12 @@ exports.list = async (ctx, next) => {
 }
 
 /**
- * 获取指定订阅源的文章
+ * 获取全部订阅源
  * @method: get
- * @url:    /api/feedlink/{id}/post
- * @params: {string} id
- * @query:  {number} limit
- * @query:  {number} page
- * @query:  {number} per_page
+ * @url:    /api/feed/
+ * TODO:    根据用户获取
  */
-exports.listPost = async (ctx, next) => {
-    var id = ctx.params.id, limit = ctx.request.query.limit || ctx.request.query.per_page || 2, page = ctx.request.query.page || 0;
-    var result = await PostModel.where('feed_id').eq(id).skip(+page*limit).limit(+limit).catch(e => e);
-    if(result[0] && result[0]._id) {
-        ctx.body = { success: true, data: result };
-    } else {
-        ctx.throw(result);
-    }
+exports.listAll = async (ctx, next) => {
+    var result = await FeedModel.find();
+    ctx.body = { success: true, data: result };
 }

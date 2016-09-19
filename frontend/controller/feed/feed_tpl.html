@@ -1,0 +1,17 @@
+<div class="post-panel">
+    <article>
+        <header>
+            <h2>{{vm.posts[0].title}}</h2>
+        </header>
+        <section>
+            <span>{{vm.posts[0].author}}</span>
+            <span>{{vm.posts[0].pubdate}}</span>
+        </section>
+        <section>
+            <article ng-bind-html="vm.posts[0].description">
+            </article>
+        </section>
+        <footer>
+        </footer>
+    </article>
+</div>

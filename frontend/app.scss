@@ -1,11 +1,26 @@
 html {
     font-size: 14px;
 }
-p {
-    margin-bottom: 0;
+body {
+    color: #333;    
+}
+p, h1, h2, h3, h4{
+    margin: 0;
 }
 html, body, .ng-scope, .container-fluid, .row {
   height: 100%;
+}
+h1 {
+    font-size: 1.4rem;
+}
+h2 {
+    font-size: 1.3rem;
+}
+h3 {
+    font-size: 1.2rem;
+}
+.main {
+    height: calc(100% - 50px);
 }
 // Layout / Basic / Width
 $leftbar: 250px;
