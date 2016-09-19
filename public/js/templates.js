@@ -4,7 +4,7 @@
 
 angular.module('app').run(['$templateCache', function($templateCache) {
 
-  $templateCache.put('feed/feed_tpl.html', '<div class="post-panel"><article><header><h2>{{vm.posts[0].title}}</h2></header><section><span>{{vm.posts[0].author}}</span> <span>{{vm.posts[0].pubdate}}</span></section><section><article ng-bind-html="vm.posts[0].description"></article></section><footer></footer></article></div>');
+  $templateCache.put('feed/feed_tpl.html', '<div class="post-panel"><article><header><h1>{{vm.posts[0].title}}</h1></header><section><span>{{vm.posts[0].author}}</span> <span>{{vm.posts[0].pubdate}}</span></section><section><article ng-bind-html="vm.posts[0].description"></article></section><footer></footer></article></div>');
 
   $templateCache.put('home/home_tpl.html', '');
 
