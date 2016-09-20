@@ -2,9 +2,11 @@
     margin-left: 260px;
     overflow-y: scroll;
     height: 100%;
+    overflow: hidden;
     .center {
         margin-right: 260px;
-        overflow: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
         height: 100%;
     }
     .sidebar {
@@ -13,12 +15,26 @@
         float: right;
         width: 250px;
         border-left: 1px solid $border-color;
+        a {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            margin-bottom: 0;
+            overflow: hidden;
+            border: {
+                top: 1px solid $border-color;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+            &:last-child {
+                border: {
+                    bottom: 1px solid $border-color;
+                }
+            }
+        }
     }
 }
 .post-select {
-    border: {
-        bottom: 1px solid $border-color;
-    }
     padding: 10px;
     h2 {
         margin: 0 0 10px 0;

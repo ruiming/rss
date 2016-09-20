@@ -1,0 +1,35 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">订阅源信息</h3>
+    </div>
+    <div class="panel-body container">
+        <div class="row">
+            <p class="col-sm-2">订阅源标题</p>
+            <p class="col-sm-10">{{feed.title}}</p>
+        </div>
+        <div class="row">
+            <p class="col-sm-2">作者</p>
+            <p class="col-sm-10">{{feed.author}}</p>
+        </div>
+        <div class="row">
+            <p class="col-sm-2">本周文章</p>
+            <p class="col-sm-10">TODO</p>
+        </div>
+        <div class="row">
+            <p class="col-sm-2">最近更新时间</p>
+            <p class="col-sm-10">{{feed.pubdate | toLocalString}}</p>
+        </div>
+        <div class="row">
+            <p class="col-sm-2">订阅人数</p>
+            <p class="col-sm-10">{{feed.feeder}}</p>
+        </div>
+        <div class="row">
+            <p class="col-sm-2">订阅源网站</p>
+            <p class="col-sm-10">{{feed.link}}</p>
+        </div>
+        <div class="row">
+            <p class="col-sm-2">XML 地址</p>
+            <p class="col-sm-10">{{feed.absurl}}</p>
+        </div>
+    </div>
+</div>

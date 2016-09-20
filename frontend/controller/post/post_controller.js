@@ -5,7 +5,8 @@
 
     function PostController(posts) {
         var vm = this;
-        vm.currentPost = posts.data[0];
+        console.log(posts);
+        vm.currentPost = posts.data;
     }
     
 }());

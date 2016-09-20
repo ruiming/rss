@@ -79,7 +79,7 @@ exports.list = async (ctx, next) => {
 /**
  * 获取全部订阅源
  * @method: get
- * @url:    /api/feed/
+ * @url:    /api/feed
  * TODO:    根据用户获取
  */
 exports.listAll = async (ctx, next) => {

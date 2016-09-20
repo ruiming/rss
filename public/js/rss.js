@@ -74,6 +74,21 @@
     }
 })();
 (function () {
+    angular.module('app').directive('feedPanel', feedPanel);
+
+    function feedPanel() {
+        return {
+            restrict: 'EA',
+            scope: {
+                feed: '='
+            },
+            replace: true,
+            templateUrl: 'feedPanel/feedPanel.html',
+            controller: ["$scope", function navbarController($scope) {}]
+        };
+    }
+})();
+(function () {
     angular.module('app').directive('navbar', navbar);
 
     function navbar() {
@@ -115,6 +130,7 @@
 
     function PostController(posts) {
         var vm = this;
-        vm.currentPost = posts.data[0];
+        console.log(posts);
+        vm.currentPost = posts.data;
     }
 })();

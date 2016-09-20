@@ -33,8 +33,8 @@ exports.listAll = async (ctx, next) => {
  */
 exports.listOne = async (ctx, next) => {
     var feed_id = ctx.params.feed_id, id = ctx.params.id;
-    var result = await PostModel.find({_id: id, feed_id: feed_id}).catch(e => e);
-    if(result[0] && result[0]._id) {
+    var result = await PostModel.findOne({_id: id, feed_id: feed_id}).catch(e => e);
+    if(result) {
         ctx.body = { success: true, data: result };
     } else {
         ctx.throw(result);
