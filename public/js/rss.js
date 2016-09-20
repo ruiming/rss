@@ -12,7 +12,7 @@
             templateUrl: 'home/home_tpl.html',
             controller: 'HomeController as vm'
         }).state('feed', {
-            url: '/feed/{id}',
+            url: '/feed/:id',
             templateUrl: 'feed/feed_tpl.html',
             controller: 'FeedController as vm',
             resolve: {
@@ -23,8 +23,25 @@
                     return Post.get({ feed_id: $stateParams.id }).$promise;
                 }]
             }
+        }).state('feed.post', {
+            url: '/feed/:id/post/:post_id',
+            templateUrl: 'post/post_tpl.html',
+            controller: 'PostController as vm',
+            resolve: {
+                posts: ["Post", "$stateParams", "$state", function (Post, $stateParams, $state) {
+                    return Post.get({ feed_id: $stateParams.id, id: $stateParams.post_id }).$promise;
+                }]
+            }
         });
     }
+})();
+
+(function () {
+    angular.module('app').filter('toLocalString', ["$filter", function ($filter) {
+        return function (input) {
+            return $filter('date')(Date.parse(input), 'yyyy-MM-dd HH:mm');
+        };
+    }]);
 })();
 
 (function () {
@@ -35,7 +52,7 @@
 
 (function () {
     angular.module('app').factory('Post', function ($resource) {
-        return $resource('/api/feed/:feed_id/post/:id', { id: '@_id' });
+        return $resource('/api/feed/:feed_id/post/:id', { id: '@id' });
     });
 })();
 
@@ -79,8 +96,6 @@
         var vm = this;
         vm.feed = feed.data;
         vm.posts = posts.data;
-        console.log(vm.feed);
-        console.log(vm.posts);
     }
 })();
 
@@ -90,5 +105,15 @@
     function HomeController() {
         var vm = this;
         vm.title = 'It works!';
+    }
+})();
+
+(function () {
+    PostController.$inject = ["posts"];
+    angular.module('app').controller('PostController', PostController);
+
+    function PostController(posts) {
+        var vm = this;
+        vm.currentPost = posts.data[0];
     }
 })();

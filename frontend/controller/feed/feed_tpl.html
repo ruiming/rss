@@ -1,17 +1,11 @@
 <div class="post-panel">
-    <article>
-        <header>
-            <h1>{{vm.posts[0].title}}</h1>
-        </header>
-        <section>
-            <span>{{vm.posts[0].author}}</span>
-            <span>{{vm.posts[0].pubdate}}</span>
-        </section>
-        <section>
-            <article ng-bind-html="vm.posts[0].description">
-            </article>
-        </section>
-        <footer>
-        </footer>
-    </article>
+    <div class="sidebar">
+        <div class="post-select" ng-repeat="post in vm.posts"
+            ui-sref="feed.post({id: post.feed_id, post_id: post._id})">
+            <h2>{{post.title}}</h2>
+            <span>{{post.pubdate | toLocalString}}</span>
+        </div>
+    </div>
+    <div ui-view class="center">
+    </div>
 </div>
