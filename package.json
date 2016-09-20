@@ -28,7 +28,10 @@
     "koa-router": "^7.0.1",
     "koa-static": "^2.0.0",
     "mongoose": "^4.6.0",
-    "normalize.css": "^4.2.0"
+    "normalize.css": "^4.2.0",
+    "angular-nvd3": "^1.0.9",
+    "d3": "^3.5.17",
+    "nvd3": "^1.8.4"
   },
   "devDependencies": {
     "babel": "^6.5.2",

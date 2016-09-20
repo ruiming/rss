@@ -23,17 +23,6 @@ exports.listAll = async (ctx, next) => {
         ctx.throw(result);
     }
 }
-/*
-exports.listAll = async (ctx, next) => {
-    var feed_id = ctx.params.feed_id,
-        limit = ctx.request.query.limit || ctx.request.query.per_page || 0, page = ctx.request.query.page || 0;
-    var result = await PostModel.where('feed_id').eq(feed_id).skip(+page*limit).limit(+limit).catch(e => e);
-    if(result[0] && result[0]._id) {
-        ctx.body = { success: true, data: result };
-    } else {
-        ctx.throw(result);
-    }
-}*/
 
 /**
  * 获取一篇文章的详细信息

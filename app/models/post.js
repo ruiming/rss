@@ -15,6 +15,7 @@ const PostSchema = new Schema({
     comments:       {type: String},
     origlink:       {type: String},
     categories:     {type: Array},
+
     feed_id:        [{type: Schema.Types.ObjectId, ref: 'Feed'}]
 });
 

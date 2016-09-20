@@ -4,7 +4,7 @@
 
 angular.module('app').run(['$templateCache', function($templateCache) {
 
-  $templateCache.put('feed/feed_tpl.html', '<div class="post-panel"><div class="sidebar"><div class="post-select" ng-repeat="post in vm.posts" ui-sref="feed.post({id: post.feed_id, post_id: post._id})"><h2>{{post.title}}</h2><span>{{post.pubdate | toLocalString}}</span></div></div><div ui-view class="center"></div></div>');
+  $templateCache.put('feed/feed_tpl.html', '<div class="post-panel"><div class="sidebar"><div class="post-select" ng-repeat="post in vm.posts" ui-sref="feed.post({id: post.feed_id, post_id: post._id})"><h2>{{post.title}}</h2><span>{{post.pubdate | toLocalString}}</span></div></div><div ui-view class="center"><div class="page-header"><h1>{{vm.feed.title}}</h1></div><div class="panel panel-primary"><div class="panel-heading"><h3 class="panel-title">订阅源信息</h3></div><div class="panel-body container"><div class="row"><p class="col-sm-2">订阅源标题</p><p class="col-sm-10">{{vm.feed.title}}</p></div><div class="row"><p class="col-sm-2">作者</p><p class="col-sm-10">{{vm.feed.author}}</p></div><div class="row"><p class="col-sm-2">最近更新时间</p><p class="col-sm-10">{{vm.feed.pubdate | toLocalString}}</p></div><div class="row"><p class="col-sm-2">订阅人数</p><p class="col-sm-10">{{vm.feed.feeder}}</p></div><div class="row"><p class="col-sm-2">订阅源网站</p><p class="col-sm-10">{{vm.feed.link}}</p></div><div class="row"><p class="col-sm-2">XML 地址</p><p class="col-sm-10">{{vm.feed.absurl}}</p></div></div></div><div class="row"><div class="col-md-6 graphy"><p>更新频率图,最近一段时间的每天更新文章数，柱状图表示</p></div><div class="col-md-6 graphy"><p>用户阅读图，最近一段时间的阅读情况和阅读时间图标</p></div></div></div></div>');
 
   $templateCache.put('home/home_tpl.html', '');
 

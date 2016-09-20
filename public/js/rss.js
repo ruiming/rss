@@ -96,6 +96,7 @@
         var vm = this;
         vm.feed = feed.data;
         vm.posts = posts.data;
+        console.log(vm.feed);
     }
 })();
 

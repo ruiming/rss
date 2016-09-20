@@ -22,6 +22,22 @@
     padding: 10px;
     h2 {
         margin: 0 0 10px 0;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+    }
+    span {
+        color: #666;
+    }
+}
+.page-header {
+    margin-top: 20px;
+}
+.graphy {
+    display: table;
+    border: 1px solid #ddd;
+    height: 300px;
+    text-align: center;
+    p {
+        display: table-cell;
+        vertical-align: middle;
     }
 }
