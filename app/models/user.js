@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 // 文章表
 
 const UserSchema = new Schema({ 
-    name:           {type: String, required: true},
+    username:       {type: String, required: true},
     email:          {type: String, required: true, unique: true},
     password:       {type: String, required: true},
     createdtime:    {type: Date, default: Date.now()},

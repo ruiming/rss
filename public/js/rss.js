@@ -57,6 +57,36 @@
 })();
 
 (function () {
+    FeedController.$inject = ["feed", "posts"];
+    angular.module('app').controller('FeedController', FeedController);
+
+    function FeedController(feed, posts) {
+        var vm = this;
+        vm.feed = feed.data;
+        vm.posts = posts.data;
+    }
+})();
+
+(function () {
+    angular.module('app').controller('HomeController', HomeController);
+
+    function HomeController() {
+        var vm = this;
+        vm.title = 'It works!';
+    }
+})();
+
+(function () {
+    PostController.$inject = ["posts"];
+    angular.module('app').controller('PostController', PostController);
+
+    function PostController(posts) {
+        var vm = this;
+        vm.currentPost = posts.data;
+    }
+})();
+
+(function () {
     angular.module('app').directive('contextMenu', contextMenu);
 
     function contextMenu() {
@@ -101,34 +131,5 @@
             templateUrl: 'navbar/navbar.html',
             controller: ["$scope", function navbarController($scope) {}]
         };
-    }
-})();
-(function () {
-    FeedController.$inject = ["feed", "posts"];
-    angular.module('app').controller('FeedController', FeedController);
-
-    function FeedController(feed, posts) {
-        var vm = this;
-        vm.feed = feed.data;
-        vm.posts = posts.data;
-    }
-})();
-
-(function () {
-    angular.module('app').controller('HomeController', HomeController);
-
-    function HomeController() {
-        var vm = this;
-        vm.title = 'It works!';
-    }
-})();
-
-(function () {
-    PostController.$inject = ["posts"];
-    angular.module('app').controller('PostController', PostController);
-
-    function PostController(posts) {
-        var vm = this;
-        vm.currentPost = posts.data;
     }
 })();

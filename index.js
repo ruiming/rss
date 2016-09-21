@@ -1,6 +1,7 @@
 import Koa from 'koa';
 import path from 'path';
 import router from './app/routes/index';
+import api from './app/routes/api';
 import mongoose from 'mongoose';
 import config from './config/config';
 import convert from 'koa-convert';
@@ -32,10 +33,15 @@ app.use(async (ctx, next) => {
     }
 });
 
-// ****** JWT 处理 TODO ...
-app.use(jwt({ secret: 'shared-secret'}));
-
- 
+// 主页和登录注册接口
 app.use(router.routes())
-   .use(router.allowedMethods())
-   .listen(3000);
+   .use(router.allowedMethods());
+
+// ****** JWT 处理 TODO ...
+app.use(jwt({ secret: config.app.publicKey, algorithm: 'RS256' }));
+
+// API
+app.use(api.routes())
+   .use(api.allowedMethods())
+
+app.listen(3000);
