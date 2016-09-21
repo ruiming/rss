@@ -24,7 +24,7 @@
                 }]
             }
         }).state('feed.post', {
-            url: '/feed/:id/post/:post_id',
+            url: '/post/:post_id',
             templateUrl: 'post/post_tpl.html',
             controller: 'PostController as vm',
             resolve: {
@@ -111,7 +111,6 @@
         var vm = this;
         vm.feed = feed.data;
         vm.posts = posts.data;
-        console.log(vm.feed);
     }
 })();
 
@@ -130,7 +129,6 @@
 
     function PostController(posts) {
         var vm = this;
-        console.log(posts);
         vm.currentPost = posts.data;
     }
 })();

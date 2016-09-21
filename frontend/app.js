@@ -33,7 +33,7 @@
                 }
             })
             .state('feed.post', {
-                url: '/feed/:id/post/:post_id',
+                url: '/post/:post_id',
                 templateUrl: 'post/post_tpl.html',
                 controller: 'PostController as vm',
                 resolve: {

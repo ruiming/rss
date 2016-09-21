@@ -7,8 +7,8 @@ const PostSchema = new Schema({
     title:          {type: String},
     description:    {type: String},
     summary:        {type: String},
-    date:           {type: String},
-    pubdate:        {type: String},
+    date:           {type: Date},
+    pubdate:        {type: Date},
     link:           {type: String},
     guid:           {type: String},
     author:         {type: String},
@@ -16,7 +16,9 @@ const PostSchema = new Schema({
     origlink:       {type: String},
     categories:     {type: Array},
 
-    feed_id:        [{type: Schema.Types.ObjectId, ref: 'Feed'}]
+    feed_id:        [{type: Schema.Types.ObjectId, ref: 'Feed'}],   // 订阅源 ID
+    love:           {type: Number, default: 0},                     // 点赞数量
+    mark:           {type: Number, default: 0}                      // 星标人数
 });
 
 var Post = mongoose.model('Post', PostSchema);

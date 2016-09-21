@@ -29,7 +29,7 @@ exports.create = async (ctx, next) => {
         var req = request(feedlink, err => {
             reject(err);
         });
-        req.on('response', function(res) {
+        req.on('response', res => {
             if(res.statusCode != 200) {
                 reject(res.statusCode);
             } else {
@@ -44,11 +44,11 @@ exports.create = async (ctx, next) => {
             }
         });
 
-        feedparser.on('meta', async function() {
+        feedparser.on('meta', async () => {
             var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink}));
             var store = await feed.save();
             _id = store._id;
-            feedparser.on('readable', function() {
+            feedparser.on('readable', () => {
                 while(result = this.read()) {
                     var post = new PostModel(Object.assign(result, {feed_id: _id}));
                     post.save();

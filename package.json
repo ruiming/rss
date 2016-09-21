@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db": "mongod --dbpath='/home/ruiming/data/db' --rest"
   },
   "author": "ruiming",
   "license": "ISC",
   "dependencies": {
     "angular": "^1.5.8",
     "angular-animate": "^1.5.8",
+    "angular-nvd3": "^1.0.9",
     "angular-resource": "^1.5.8",
     "angular-sanitize": "^1.5.8",
     "angular-touch": "^1.5.8",
@@ -20,6 +22,7 @@
     "bluebird": "^3.4.6",
     "bootstrap": "^3.3.7",
     "crypto-js": "^3.1.6",
+    "d3": "^3.5.17",
     "feedparser": "^1.1.4",
     "koa": "^2.0.0-alpha.7",
     "koa-bodyparser": "^2.2.0",
@@ -29,8 +32,6 @@
     "koa-static": "^2.0.0",
     "mongoose": "^4.6.0",
     "normalize.css": "^4.2.0",
-    "angular-nvd3": "^1.0.9",
-    "d3": "^3.5.17",
     "nvd3": "^1.8.4"
   },
   "devDependencies": {

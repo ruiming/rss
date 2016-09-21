@@ -8,6 +8,7 @@ import Bodyparser from 'koa-bodyparser';
 import Koaerror from 'koa-onerror';
 import logger from 'koa-logger';
 import serve from 'koa-static';
+import jwt from 'koa-jwt';
 
 var app = new Koa();
 var bodyparser = new Bodyparser();
@@ -18,7 +19,6 @@ global.Promise = require('bluebird');
 mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${config.MongoDB.NAME}`);
 
 app.use(convert(serve(path.resolve(__dirname, 'public'))))
-
 app.use(convert(bodyparser));
 app.use(convert(logger()))
 
@@ -27,19 +27,15 @@ app.use(async (ctx, next) => {
     try {
         await next();
     } catch (err) {
+        ctx.status = err.status || 500;            
         ctx.body = { success: false, message: err.toString()};
-        ctx.status = err.status || 500;
     }
 });
 
-/* 
-convert(Koaerror)(app);
+// ****** JWT 处理 TODO ...
+app.use(jwt({ secret: 'shared-secret'}));
 
-app.on('error', (err, ctx) => {
-    ctx.body = { success: false, message: err.toString()};
-    ctx.status = 400;
-});
-*/ 
+ 
 app.use(router.routes())
    .use(router.allowedMethods())
    .listen(3000);
