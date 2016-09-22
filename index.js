@@ -27,6 +27,8 @@ app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }));
 
+app.use(convert(serve(path.resolve(__dirname, 'public'), {defer: true})));
+
 // 全局错误处理
 app.use(async (ctx, next) => {
     try {
@@ -37,26 +39,15 @@ app.use(async (ctx, next) => {
     }
 });
 
-// 后端视图处理
+// 后端视图处理 (Unprotected)
 app.use(handel.routes())
    .use(handel.allowedMethods());
 
-// 后端 API 提供
+// Below needs JWT verfiy
+app.use(jwt({ secret: config.app.secretKey, algorithm: 'RS256' }).unless({ path: [/^\/css|js|img|fonts/] }));
+
+// API (Protected)
 app.use(api.routes())
    .use(api.allowedMethods());
-
-// This should not put in front of the router middleware
-app.use(convert(serve(path.resolve(__dirname, 'public'))))
-
-/****** JWT 处理 TODO ...
-app.use(jwt({ secret: config.app.publicKey, algorithm: 'RS256' }));
-
-app.use((ctx, next) => {
-  if (this.url.match(/^\/api/)) {
-      ctx.body = ctx;
-  }
-});
-*/
-// API
 
 app.listen(3000);

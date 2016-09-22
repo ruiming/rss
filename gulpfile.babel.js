@@ -18,6 +18,7 @@ gulp.task('angular', () => {
         'node_modules/angular-touch/angular-touch.min.js',
         'node_modules/angular-sanitize/angular-sanitize.min.js',
         'node_modules/angular-resource/angular-resource.min.js',
+        'node_modules/angular-cookies/angular-cookies.min.js',
         'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
         'node_modules/angular-ui-router/release/angular-ui-router.min.js'])
         .pipe(concat('app.min.js'))

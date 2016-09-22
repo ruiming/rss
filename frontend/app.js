@@ -6,11 +6,14 @@
             'ngTouch',
             'ngAnimate',
             'ngResource',
-            'ngSanitize'
+            'ngSanitize',
+            'ngCookies'
         ])
         .config(config);
 
     function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
+
+        $httpProvider.interceptors.push('tokenInjector');
 
         $urlRouterProvider.otherwise('/');
         $stateProvider

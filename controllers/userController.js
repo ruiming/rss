@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/user';
 import config from '../config/config'
+import send from 'koa-send';
 
 /**
  * 注册用户
@@ -17,9 +18,9 @@ exports.create = async (ctx, next) => {
     });
     var result = await user.save().catch(e => e);
     if(result && result._id) {
-        var token = jwt.sign(result._id, config.app.privateKey);
-        ctx.cookies.set("token", token, {httpOnly: true, overwrite: true});
-        ctx.body = { success: true, data: {email: result.email, username: result.username, _id: result.id, jwt: token }}; 
+        var token = jwt.sign(result._id, config.app.secretKey);
+        ctx.cookies.set("token", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
+        await ctx.redirect('/');
     } else {
         throw(result.errmsg);   // Attention!
     }
@@ -35,9 +36,10 @@ exports.create = async (ctx, next) => {
 exports.get = async (ctx, next) => {
     var result = await UserModel.findOne({email: ctx.request.body.email, password: ctx.request.body.password}).catch(e => e);
     if(result && result._id) {
-        var token = jwt.sign(result._id, config.app.privateKey);
-        ctx.cookies.set("token", token, {httpOnly: true, overwrite: true});
-        ctx.body = { success: true, data: {email: result.email, username: result.username, _id: result.id, jwt: token }};        
+        var token = jwt.sign({id: result._id}, config.app.secretKey);
+        console.log(token);
+        ctx.cookies.set("jwt", token, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
+        await ctx.redirect('/');
     } else {
         throw('用户不存在');
     }

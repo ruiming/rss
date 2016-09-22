@@ -13,7 +13,6 @@ module.exports = {
         NAME: "rss"
     },
     app: {
-        publicKey: publicKey,
-        privateKey: privateKey
+        secretKey: publicKey
     }
 }

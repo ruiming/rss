@@ -83,6 +83,8 @@ exports.list = async (ctx, next) => {
  * TODO:    根据用户获取
  */
 exports.listAll = async (ctx, next) => {
+    // TODO ctx.state.user is the user info
+    console.log(ctx.state.user);
     var result = await FeedModel.find();
     ctx.body = { success: true, data: result };
 }

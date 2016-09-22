@@ -2,9 +2,11 @@
 
 (function () {
     config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider"];
-    angular.module('app', ['ui.router', 'ui.bootstrap', 'ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize']).config(config);
+    angular.module('app', ['ui.router', 'ui.bootstrap', 'ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies']).config(config);
 
     function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
+
+        $httpProvider.interceptors.push('tokenInjector');
 
         $urlRouterProvider.otherwise('/');
         $stateProvider.state('home', {
@@ -57,32 +59,28 @@
 })();
 
 (function () {
-    FeedController.$inject = ["feed", "posts"];
-    angular.module('app').controller('FeedController', FeedController);
+    tokenInjector.$inject = ["$injector", "$q", "$cookies"];
+    angular.module('app').factory('tokenInjector', tokenInjector);
 
-    function FeedController(feed, posts) {
-        var vm = this;
-        vm.feed = feed.data;
-        vm.posts = posts.data;
-    }
-})();
+    function tokenInjector($injector, $q, $cookies) {
+        var jwt = undefined;
 
-(function () {
-    angular.module('app').controller('HomeController', HomeController);
+        return {
+            // Warning: The cookie should set to httponly to keep safe.
+            request: function request(config) {
+                var deferred = $q.defer();
+                if (void 0 === jwt) {
+                    jwt = $cookies.get('jwt');
+                }
+                config.headers['Authorization'] = "Bearer " + jwt;
+                deferred.resolve(config);
+                return deferred.promise;
+            },
 
-    function HomeController() {
-        var vm = this;
-        vm.title = 'It works!';
-    }
-})();
-
-(function () {
-    PostController.$inject = ["posts"];
-    angular.module('app').controller('PostController', PostController);
-
-    function PostController(posts) {
-        var vm = this;
-        vm.currentPost = posts.data;
+            response: function response(config) {
+                return config;
+            }
+        };
     }
 })();
 
@@ -131,5 +129,34 @@
             templateUrl: 'navbar/navbar.html',
             controller: ["$scope", function navbarController($scope) {}]
         };
+    }
+})();
+(function () {
+    FeedController.$inject = ["feed", "posts"];
+    angular.module('app').controller('FeedController', FeedController);
+
+    function FeedController(feed, posts) {
+        var vm = this;
+        vm.feed = feed.data;
+        vm.posts = posts.data;
+    }
+})();
+
+(function () {
+    angular.module('app').controller('HomeController', HomeController);
+
+    function HomeController() {
+        var vm = this;
+        vm.title = 'It works!';
+    }
+})();
+
+(function () {
+    PostController.$inject = ["posts"];
+    angular.module('app').controller('PostController', PostController);
+
+    function PostController(posts) {
+        var vm = this;
+        vm.currentPost = posts.data;
     }
 })();
