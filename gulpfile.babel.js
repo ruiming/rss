@@ -83,11 +83,16 @@ gulp.task('sass', () => {
         .pipe(sass())
         .pipe(cleanCSS())
         .pipe(gulp.dest('public/css'));
+    gulp.src('views/backend.scss')
+        .pipe(plumber())
+        .pipe(sass())
+        .pipe(cleanCSS())
+        .pipe(gulp.dest('public/css/'))
 });
 
 // Auto watch and build
 gulp.watch(['frontend/*.js', 'frontend/**/*.js', 'frontend/**/**/*.js'], ['js']);
-gulp.watch(['frontend/*.scss', 'frontend/**/*.scss', 'frontend/**/**/*.scss'], ['sass']);
+gulp.watch(['frontend/*.scss', 'frontend/**/*.scss', 'frontend/**/**/*.scss', 'views/*.scss'], ['sass']);
 gulp.watch(['frontend/controller/**/*.html', 'frontend/component/**/*.html'], ['template']);
 
 // Task
