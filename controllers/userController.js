@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/user';
-import config from '../../config/config'
+import config from '../config/config'
 
 /**
  * 注册用户

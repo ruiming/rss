@@ -18,7 +18,7 @@ exports.create = async (ctx, next) => {
     var feedparser = new FeedParser(), feed = new FeedModel(), _id;
 
     var result = await FeedModel.findOne({absurl: feedlink});
-
+    // TODO 用户已经订阅的话就不增加了
     if(result) {
         result.feeder += 1;
         result.save();
@@ -44,7 +44,7 @@ exports.create = async (ctx, next) => {
             }
         });
 
-        feedparser.on('meta', async () => {
+        feedparser.on('meta', async function() {
             var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink}));
             var store = await feed.save();
             _id = store._id;

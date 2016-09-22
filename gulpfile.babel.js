@@ -27,10 +27,15 @@ gulp.task('angular', () => {
 // Packaging CSS dependence
 gulp.task('css', () => {
     gulp.src([
-        'node_morules/normalize.css/normalize.min.css',
+        'node_modules/normalize.css/normalize.css',
         'node_modules/bootstrap/dist/css/bootstrap.min.css'])
         .pipe(concat('common.css'))
         .pipe(cleanCSS())
+        .pipe(gulp.dest('public/css'));
+    // Backend
+    gulp.src('node_modules/normalize.css/normalize.css')
+        .pipe(gulp.dest('public/css'));
+    gulp.src('node_modules/bootstrap/dist/css/bootstrap.min.css')
         .pipe(gulp.dest('public/css'));
 });
 

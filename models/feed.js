@@ -23,7 +23,9 @@ const FeedSchema = new Schema({
 
     feeder:         {type: Number, default: 1},     // 订阅人数
     lastScan:       {type: Date},                   // 上次扫描时间
-    frequency:      {type: Array}                   // 更新频率，每日更新文章数，存为数组
+    frequency:      {type: Array},                  // 更新频率，每日更新文章数，存为数组
+    hot:            {type: Number, default: 0},     // 热度
+    keyword:        {type: Array}                   // 关键词数组
 });
 
 var Feed = mongoose.model('Feed', FeedSchema);
