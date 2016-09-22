@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     email:          {type: String, required: true, unique: true},
     password:       {type: String, required: true},
     createdtime:    {type: Date, default: Date.now()},
-    avatar:         {type: String}
+    avatar:         {type: String, default: 'img/avatar.jpg'}
 });
 
 var User = mongoose.model('User', UserSchema);
