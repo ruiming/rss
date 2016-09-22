@@ -34,6 +34,7 @@ app.use(async (ctx, next) => {
     try {
         await next();
     } catch (err) {
+        console.log(err);
         ctx.status = (err && err.status) || 500;
         if(err === null)    ctx.body = { success: false, message: err};
         else    ctx.body = { success: false, message: err.toString()};

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 var Schema = mongoose.Schema;
 
-// 用户订阅表
+// 用户订阅源表
 
 const UserFeedSchema = new Schema({ 
     feed_id:        [{type: Schema.Types.ObjectId, ref: 'Feed'}],   // 订阅源 ID

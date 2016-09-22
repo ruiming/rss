@@ -1,7 +1,6 @@
 import FeedModel from '../models/feed';
 import PostModel from '../models/post';
 import UserFeedModel from '../models/userFeed'
-
 import FeedParser from 'feedparser';
 import request from 'request';
 
@@ -14,14 +13,13 @@ import request from 'request';
 exports.create = async (ctx, next) => {
     var feedlink = ctx.request.body.feedlink.trim();
     var userid = ctx.state.user.id;
-
     var feedparser = new FeedParser(), feed = new FeedModel(), _id;
 
     // 查找数据库是否有该订阅源
     var result = await FeedModel.findOne({absurl: feedlink});
     // 判断数据库已存在该订阅源
     if(result && result._id) {
-        var userresult = await UserFeedModel.findOne({absUrl: feedlink});
+        var userresult = await UserFeedModel.findOne({feed_id: result._id});
         // 判断用户是否已经订阅该订阅源
         if(userresult && userresult._id) {
             return ctx.body = { success: false, data: "已订阅源 " + result.title };
@@ -57,13 +55,15 @@ exports.create = async (ctx, next) => {
             feedparser.on('meta', async function() {
                 var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink}));
                 var store = await feed.save();
-                var _id = store._id;
+                var feedid = store._id;
+                var userfeed = new UserFeedModel({feed_id: feedid, user_id: userid});
+                userfeed.save().catch(e => e);
                 feedparser.on('readable', function() {
                     while(result = this.read()) {
-                        var post = new PostModel(Object.assign(result, {feed_id: _id}));
-                        post.save();
+                        var post = new PostModel(Object.assign(result, {feed_id: feedid}));
+                        post.save().catch(e => e);
                     }
-                    ctx.body = { success: true, data: {id: _id} };
+                    ctx.body = { success: true, data: {id: feedid} };
                     resolve();
                 });
             });
@@ -81,8 +81,9 @@ exports.create = async (ctx, next) => {
  */
 exports.list = async (ctx, next) => {
     var id = ctx.params.id;
-    var result = await FeedModel.findById(id).catch(e => e);
-    if (result._id) {
+    var userid = ctx.state.user.id;
+    var result = await UserFeedModel.findOne({user_id: userid, feed_id: id}).populate('feed_id').exec().catch(e => e);
+    if (result && result._id) {
         ctx.body = { success: true, data: result };
     } else {
         ctx.throw(result);
@@ -96,8 +97,7 @@ exports.list = async (ctx, next) => {
  * TODO:    根据用户获取
  */
 exports.listAll = async (ctx, next) => {
-    // TODO ctx.state.user is the user info
-    console.log(ctx.state.user);
-    var result = await FeedModel.find();
+    var userid = ctx.state.user.id;
+    var result = await UserFeedModel.find({user_id: userid}).populate('feed_id').exec().catch(e => e);
     ctx.body = { success: true, data: result };
 }
