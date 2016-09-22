@@ -37,9 +37,15 @@ app.use(async (ctx, next) => {
 app.use(router.routes())
    .use(router.allowedMethods());
 
-// ****** JWT 处理 TODO ...
+/****** JWT 处理 TODO ...
 app.use(jwt({ secret: config.app.publicKey, algorithm: 'RS256' }));
 
+app.use((ctx, next) => {
+  if (this.url.match(/^\/api/)) {
+      ctx.body = ctx;
+  }
+});
+*/
 // API
 app.use(api.routes())
    .use(api.allowedMethods())
