@@ -5,7 +5,7 @@
             ui-sref="feed.post({id: post.feed_id, post_id: post._id})">
             <h2>{{post.title}}</h2>
             <!-- TODO: 图标有点丑.. -->
-            <img ng-if="post.read||vm.detail[post._id][0].read" class="read" src="img/ic_done_black_24dp_1x.png">
+            <img ng-if="post.read" class="read" src="img/ic_done_black_24dp_1x.png">
             <span>{{post.pubdate | toLocalString}}</span>
         </a>
     </div>

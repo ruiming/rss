@@ -52,7 +52,7 @@ exports.listOne = async (ctx, next) => {
  * @params: {string} id
  * @params: {read|mark|love} type
  * @params: {boolean} revert
- * @Importang: 当 id 为 0 时表示更新全部文章状态
+ * @Important: 当 id 为 0 时表示更新全部文章状态
  */
 exports.update = async (ctx, next) => {
     var feed_id = ctx.params.feed_id, id = ctx.params.id;

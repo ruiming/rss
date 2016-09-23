@@ -20,9 +20,11 @@
                     $scope.title = storage.title;
                     $scope.time = Date.now();
                     $scope.feed_id = storage.feed_id;
+                    $scope.status = storage.status;
+                    $scope.begintime = storage.begintime;
 
                     $scope.$digest();
-                }, 500);
+                }, 1000);
 
                 function readall() {
                     Post.update({feed_id: $scope.feed_id, id: 0}, {type: 'read'});

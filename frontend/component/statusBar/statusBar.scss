@@ -30,4 +30,19 @@
             background-color: #0c8af7;
         }
     }
+    .readtime {
+        padding-right: 25px;
+        float: right;
+    }
+    .status {
+        padding-right: 10px;
+        float: right;
+        &.ng-enter {
+            margin-top: 20px;
+            transition: 0.4s linear all;
+        }
+        &.ng-enter.ng-enter-active {
+            margin-top: 0;
+        }
+    }
 }

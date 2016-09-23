@@ -41,24 +41,30 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    scrollListen.$inject = ["_", "Post"];
+    scrollListen.$inject = ["_", "Post", "storage"];
     angular.module('app').directive('scrollListen', scrollListen);
 
-    function scrollListen(_, Post) {
+    function scrollListen(_, Post, storage) {
         return {
             restrict: 'EA',
             scope: true,
             link: function link(scope, elem, attrs) {
                 var func = _.throttle(function (e) {
-                    var target = e.target;
-                    if (target.scrollHeight - target.clientHeight === target.scrollTop) {
-                        // Read over
-                        Post.update({ feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id }, {
-                            type: 'read'
-                        });
+                    if (scope.vm.posts[scope.vm.currentPost._id] && scope.vm.posts[scope.vm.currentPost._id][0].read) {
+                        storage.status = '已经读过啦~\(≧▽≦)/~';
+                    } else {
+                        var target = e.target;
+                        if (target.scrollHeight - target.clientHeight === target.scrollTop) {
+                            // Read over
+                            Post.update({ feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id }, {
+                                type: 'read'
+                            });
+                            storage.status = '读完啦~\(≧▽≦)/~';
+                        }
                     }
-                }, 300);
+                }, 200);
                 angular.element(elem).on('scroll', func);
+                console.log(angular.element(elem));
             }
         };
     }
@@ -226,9 +232,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     $scope.title = storage.title;
                     $scope.time = Date.now();
                     $scope.feed_id = storage.feed_id;
+                    $scope.status = storage.status;
+                    $scope.begintime = storage.begintime;
 
                     $scope.$digest();
-                }, 500);
+                }, 1000);
 
                 function readall() {
                     Post.update({ feed_id: $scope.feed_id, id: 0 }, { type: 'read' });
@@ -240,21 +248,53 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 (function () {
-    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post"];
+    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post", "$state"];
     angular.module('app').controller('FeedController', FeedController);
 
-    function FeedController(feed, posts, _, storage, $scope, Post) {
+    function FeedController(feed, posts, _, storage, $scope, Post, $state) {
         var vm = this;
         vm.read = read;
 
         vm.feed = feed.data;
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
+        console.log(vm.detail);
+
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = vm.posts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var post = _step.value;
+
+                if (vm.detail[post._id] && vm.detail[post._id][0].read) {
+                    post.read = true;
+                }
+            }
+
+            // 传递给子路由作已读/未读判断
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        $state.current.data = vm.posts;
 
         storage.feed_id = feed.data.feed_id;
 
         function read(post) {
-            if (vm.detail[post._id] && vm.detail[post._id][0].read || post.read) {
+            if (post.read) {
                 return;
             } else {
                 post.read = true;
@@ -264,27 +304,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         // listen the event from statusbar
         $scope.$on('readall', function () {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
             try {
-                for (var _iterator = vm.posts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var post = _step.value;
+                for (var _iterator2 = vm.posts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var post = _step2.value;
 
                     post.read = true;
                 }
             } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
                     }
                 } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
                     }
                 }
             }
@@ -302,12 +342,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    PostController.$inject = ["posts", "storage"];
+    PostController.$inject = ["posts", "storage", "$scope", "$state", "_"];
     angular.module('app').controller('PostController', PostController);
 
-    function PostController(posts, storage) {
+    function PostController(posts, storage, $scope, $state, _) {
         var vm = this;
         vm.currentPost = posts.data;
+        vm.posts = _.groupBy($state.current.data, '_id');
+
         storage.title = vm.currentPost.title;
+        storage.begintime = Date.now();
+        storage.status = '';
     }
 })();
