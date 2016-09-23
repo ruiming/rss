@@ -64,7 +64,7 @@ exports.listOne = async (ctx, next) => {
 exports.update = async (ctx, next) => {
     var feed_id = ctx.params.feed_id, id = ctx.params.id;
     var userid = ctx.state.user.id;
-    var type = ctx.request.body.type.trim();
+    var type = ctx.request.body.type && ctx.request.body.type.trim();
     if(['read', 'mark', 'love'].indexOf(type) === -1) {
         ctx.throw('参数错误');
     } else {

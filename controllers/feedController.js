@@ -11,7 +11,7 @@ import request from 'request';
  * @params: {string} feedlink
  */
 exports.create = async (ctx, next) => {
-    var feedlink = ctx.request.body.feedlink.trim();
+    var feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim();
     var userid = ctx.state.user.id;
     var feedparser = new FeedParser(), feed = new FeedModel(), _id;
 
