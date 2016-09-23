@@ -10,7 +10,7 @@
             link: (scope, elem, attrs) => {
                 var first = true;
                 var func = _.throttle(e => {
-                    if(!scope.vm.currentPostDetail.finish) {
+                    if(void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail && !scope.vm.currentPostDetail.finish) {
                         let target = e.target;
                         if(first && target.scrollHeight - target.clientHeight === target.scrollTop) {
                             // Read over

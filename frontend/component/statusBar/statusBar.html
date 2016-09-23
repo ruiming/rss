@@ -2,6 +2,6 @@
     <p class="time">{{ time | date: 'EEEE yyyy-MM-dd HH:mm:ss a' }}</p>
     <p class="title" ng-if="title">{{ title }}</p>
     <p class="feed" ng-click="readall()">全部标记为已读</p>
-    <p class="readtime" ng-if="begintime">{{ time - begintime | date: 'mm:ss' }}</p>
+    <p class="readtime" ng-if="begintime" ng-if="begintime">{{ time - begintime | date: 'mm:ss' }}</p>
     <p ng-if="status" class="status">{{ status }}</p>
 </div>

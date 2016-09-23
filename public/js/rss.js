@@ -51,7 +51,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             link: function link(scope, elem, attrs) {
                 var first = true;
                 var func = _.throttle(function (e) {
-                    if (!scope.vm.currentPostDetail.finish) {
+                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail && !scope.vm.currentPostDetail.finish) {
                         var target = e.target;
                         if (first && target.scrollHeight - target.clientHeight === target.scrollTop) {
                             // Read over
@@ -190,6 +190,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 });
                 $scope.setTitle = function () {
                     storage.title = '';
+                    storage.status = '';
+                    storage.begintime = '';
                 };
             }]
         };

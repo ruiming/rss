@@ -15,6 +15,8 @@
                 });
                 $scope.setTitle = function() {
                     storage.title = '';
+                    storage.status = '';
+                    storage.begintime = '';
                 }
             }
         }
