@@ -154,9 +154,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }]);
 })();
 (function () {
+    angular.module('app').filter('linkFix', ["$state", function ($state) {
+        return function (input, origin) {
+            var re = /src="(\/.+?)"/g;
+            var result = input.replace(re, function (match, p, offset, string) {
+                return "src=\"" + origin + p.slice(1) + "\"";
+            });
+            return result;
+        };
+    }]);
+})();
+
+(function () {
     angular.module('app').filter('toLocalString', ["$filter", function ($filter) {
-        return function (input) {
-            return $filter('date')(Date.parse(input), 'yyyy-MM-dd HH:mm');
+        return function (input, format) {
+            return $filter('date')(Date.parse(input), format);
         };
     }]);
 })();
@@ -263,16 +275,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 (function () {
-    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post"];
+    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post", "$state"];
     angular.module('app').controller('FeedController', FeedController);
 
-    function FeedController(feed, posts, _, storage, $scope, Post) {
+    function FeedController(feed, posts, _, storage, $scope, Post, $state) {
         var vm = this;
         vm.read = read;
 
         vm.feed = feed.data;
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
+
+        $state.current.data = feed.data.link;
 
         // 无需处理 finish 的情况
         var _iteratorNormalCompletion = true;
@@ -353,16 +367,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    PostController.$inject = ["post", "storage", "$scope", "_"];
+    PostController.$inject = ["$state", "post", "storage", "$scope", "_"];
     angular.module('app').controller('PostController', PostController);
 
-    function PostController(post, storage, $scope, _) {
+    function PostController($state, post, storage, $scope, _) {
         var vm = this;
+
         vm.currentPost = post.data.result;
         vm.currentPostDetail = post.data.detail;
 
         storage.title = vm.currentPost.title;
         storage.begintime = Date.now();
+
+        // 黑人问号? I just want to get the title but avoid the break of inherit
+        if (void 0 !== $state.router.globals.$current.parent.self.data) {
+            vm.origin = $state.router.globals.$current.parent.self.data;
+        } else {
+            vm.origin = $state.router.globals.current.data;
+        }
 
         if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) storage.status = '已经读过啦~\(≧▽≦)/~';else storage.status = '';
     }

@@ -3,11 +3,11 @@
         <h1>{{vm.currentPost.title}}</h1>
     </header>
     <section>
-        <span>{{vm.currentPost.author}}</span>
-        <span>{{vm.currentPost.pubdate | toLocalString}}</span>
+        <small>更新于 {{vm.currentPost.pubdate | toLocalString: 'medium'}} 由 {{vm.currentPost.author}} 发布</small>
+        <small ng-if="vm.currentPost.categories">{{vm.currentPost.categories.toString()}}</small>
     </section>
     <section>
-        <article ng-bind-html="vm.currentPost.description" >
+        <article ng-bind-html="vm.currentPost.description | linkFix: vm.origin" >
         </article>
     </section>
     <footer>

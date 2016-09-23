@@ -1,0 +1,22 @@
+.markdown-body {
+    & > header {
+        border-bottom: 1px solid #ddd;
+    }
+    & > header + section {
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+        small:last-child {
+            float: right;
+            letter-spacing: 0.5px;
+        }
+    }
+    figure {
+        overflow-x: auto;
+    }
+    article {
+        padding: 10px 0;
+    }
+    img {
+        max-width: 100%;
+    }
+}

@@ -3,7 +3,7 @@
         .module('app')
         .controller('FeedController', FeedController);
 
-    function FeedController(feed, posts, _, storage, $scope, Post) {
+    function FeedController(feed, posts, _, storage, $scope, Post, $state) {
         var vm = this;
         vm.read = read;
 
@@ -11,6 +11,8 @@
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
 
+        $state.current.data = feed.data.link;
+        
         // 无需处理 finish 的情况
         for(let post of vm.posts) {
             if(vm.detail[post._id] && vm.detail[post._id][0].read) {
