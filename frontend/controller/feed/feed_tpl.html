@@ -1,6 +1,6 @@
 <div class="post-panel">
     <div class="sidebar list-group">
-        <a class="post-select list-group-item" ng-repeat="post in vm.posts"
+        <a class="post-select list-group-item" ng-repeat="post in vm.posts | orderBy: 'pubdate' : true"
             ng-click="post.read = true"
             ui-sref="feed.post({id: post.feed_id, post_id: post._id})">
             <h2>{{post.title}}</h2>

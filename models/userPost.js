@@ -10,7 +10,10 @@ const UserPostSchema = new Schema({
 
     mark:           {type: Boolean, default: false},    // 星标情况
     love:           {type: Boolean, default: false},    // 点赞情况
-    read:           {type: Boolean, default: true}      // 是否已读
+    read:           {type: Boolean, default: false},     // 是否已读
+    readdate:       {type: Date, default: Date.now()},  // 阅读时间
+    lovedate:       {type: Date},
+    markdate:       {type: Date}
 });
 
 var UserPost = mongoose.model('UserPost', UserPostSchema);

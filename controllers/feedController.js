@@ -5,7 +5,7 @@ import FeedParser from 'feedparser';
 import request from 'request';
 
 /**
- * 创建/新增订阅源
+ * 创建/订阅 订阅源
  * @method: post
  * @url:    /api/feed
  * @params: {string} feedlink
@@ -22,7 +22,7 @@ exports.create = async (ctx, next) => {
         var userresult = await UserFeedModel.findOne({feed_id: result._id});
         // 判断用户是否已经订阅该订阅源
         if(userresult && userresult._id) {
-            return ctx.body = { success: false, data: "已订阅源 " + result.title };
+            return ctx.body = { success: false, data: `已订阅源 ${result.title}(${result.id})` };
         } else {
             // 订阅源的订阅人数 +1
             result.feeder += 1;
@@ -69,12 +69,10 @@ exports.create = async (ctx, next) => {
             });
         });
     }
-
-    
 }
 
 /**
- * 获取订阅源信息
+ * 获取 订阅源信息
  * @method: get
  * @url:    /api/feed/{id}
  * @params: {string} id
@@ -91,7 +89,7 @@ exports.list = async (ctx, next) => {
 }
 
 /**
- * 获取全部订阅源
+ * 获取 全部订阅源
  * @method: get
  * @url:    /api/feed
  */
@@ -99,4 +97,22 @@ exports.listAll = async (ctx, next) => {
     var userid = ctx.state.user.id;
     var result = await UserFeedModel.find({user_id: userid}, {user_id: 0}).populate('feed_id', {title: 1}).exec().catch(e => e);
     ctx.body = { success: true, data: result };
+}
+
+/**
+ * 取消/删除 订阅源
+ * @method: delete
+ * @url:    /api/feed
+ * @params: {string} id
+ */
+exports.remove = async (ctx, next) => {
+    var userid = ctx.state.user.id;
+    var feed_id = ctx.params.id;
+    var result = await UserFeedModel.find({feed_id: feed_id}).remove();
+    if(result.result.n === 0) {
+        return ctx.body = { success: false, data: '你没有订阅该订阅源' };
+    } else {
+        FeedModel.update({_id: feed_id}, {$inc: {feeder: -1}});
+        return ctx.body = { success: true, data: `成功删除` };
+    }
 }
