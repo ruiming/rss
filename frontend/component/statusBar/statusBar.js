@@ -22,7 +22,7 @@
                     $scope.feed_id = storage.feed_id;
                     $scope.status = storage.status;
                     $scope.begintime = storage.begintime;
-
+                    
                     $scope.$digest();
                 }, 1000);
 

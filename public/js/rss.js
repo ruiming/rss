@@ -50,9 +50,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             scope: true,
             link: function link(scope, elem, attrs) {
                 var func = _.throttle(function (e) {
-                    if (scope.vm.currentPostDetail.finish) {
-                        storage.status = '已经读过啦~\(≧▽≦)/~';
-                    } else {
+                    if (!scope.vm.currentPostDetail.finish) {
                         var target = e.target;
                         if (target.scrollHeight - target.clientHeight === target.scrollTop) {
                             // Read over
@@ -63,8 +61,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }
                 }, 200);
-                angular.element(elem).on('scroll', func);
+                // 如果没有滚动条的话，则立即标为读完
+                setTimeout(function () {
+                    if (!scope.vm.currentPostDetail.finish) {
+                        if (angular.element(elem[0].scrollHeight)[0] === angular.element(elem[0].offsetHeight)[0]) {
+                            Post.update({ feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id }, {
+                                type: 'finish'
+                            });
+                            storage.status = '读完啦~\(≧▽≦)/~';
+                        }
+                    }
+                }, 0);
+
                 // TODO: if there is no scroll bar...
+                // TODO: The first time load...
             }
         };
     }
@@ -163,6 +173,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
+                Feed.get(function (res) {
+                    $scope.feeds = res.data;
+                });
+                $scope.setTitle = function () {
+                    storage.title = '';
+                };
+            }]
+        };
+    }
+})();
+(function () {
     angular.module('app').directive('feedPanel', feedPanel);
 
     function feedPanel() {
@@ -189,26 +219,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             replace: true,
             templateUrl: 'navbar/navbar.html',
             controller: ["$scope", function navbarController($scope) {}]
-        };
-    }
-})();
-(function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
-                Feed.get(function (res) {
-                    $scope.feeds = res.data;
-                });
-                $scope.setTitle = function () {
-                    storage.title = '';
-                };
-            }]
         };
     }
 })();
@@ -258,7 +268,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.feed = feed.data;
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
-        console.log(vm.detail);
 
         // 无需处理 finish 的情况
         var _iteratorNormalCompletion = true;
@@ -349,6 +358,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         storage.title = vm.currentPost.title;
         storage.begintime = Date.now();
-        storage.status = '';
+
+        if (vm.currentPostDetail.finish) storage.status = '已经读过啦~\(≧▽≦)/~';else storage.status = '';
     }
 })();

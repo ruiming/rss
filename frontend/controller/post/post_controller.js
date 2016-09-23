@@ -10,7 +10,9 @@
 
         storage.title = vm.currentPost.title;
         storage.begintime = Date.now();
-        storage.status = '';
+
+        if(vm.currentPostDetail.finish) storage.status = '已经读过啦~\(≧▽≦)/~';
+        else storage.status = '';
     }
     
 }());

@@ -10,7 +10,6 @@
         vm.feed = feed.data;
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
-        console.log(vm.detail);
 
         // 无需处理 finish 的情况
         for(let post of vm.posts) {
