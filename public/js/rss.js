@@ -215,7 +215,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             scope: true,
             replace: true,
             templateUrl: 'statusBar/statusBar.html',
-            controller: ["$scope", "$interval", "storage", function statusBarController($scope, $interval, storage) {
+            controller: ["$scope", "$interval", "storage", "Post", "$rootScope", function statusBarController($scope, $interval, storage, Post, $rootScope) {
                 $scope.readall = readall;
 
                 $scope.title = storage.title;
@@ -230,22 +230,65 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     $scope.$digest();
                 }, 500);
 
-                function readall() {}
+                function readall() {
+                    Post.update({ feed_id: $scope.feed_id, id: 0 }, { type: 'read' });
+                    // is there a better way ?
+                    $rootScope.$broadcast('readall');
+                }
             }]
         };
     }
 })();
 (function () {
-    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope"];
+    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post"];
     angular.module('app').controller('FeedController', FeedController);
 
-    function FeedController(feed, posts, _, storage, $scope) {
+    function FeedController(feed, posts, _, storage, $scope, Post) {
         var vm = this;
+        vm.read = read;
+
         vm.feed = feed.data;
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
 
-        storage.feed_id = feed.data._id;
+        storage.feed_id = feed.data.feed_id;
+
+        function read(post) {
+            if (vm.detail[post._id] && vm.detail[post._id][0].read || post.read) {
+                return;
+            } else {
+                post.read = true;
+                Post.update({ feed_id: post.feed_id[0], id: post._id }, { type: 'read' });
+            }
+        }
+
+        // listen the event from statusbar
+        $scope.$on('readall', function () {
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = vm.posts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var post = _step.value;
+
+                    post.read = true;
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+        });
     }
 })();
 

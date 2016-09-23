@@ -9,7 +9,7 @@
             scope: true,
             replace: true,
             templateUrl: 'statusBar/statusBar.html',
-            controller: function statusBarController($scope, $interval, storage) {
+            controller: function statusBarController($scope, $interval, storage, Post, $rootScope) {
                 $scope.readall = readall;
                 
                 $scope.title = storage.title;
@@ -25,7 +25,9 @@
                 }, 500);
 
                 function readall() {
-                    
+                    Post.update({feed_id: $scope.feed_id, id: 0}, {type: 'read'});
+                    // is there a better way ?
+                    $rootScope.$broadcast('readall');
                 }
             }
         }
