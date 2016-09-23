@@ -8,21 +8,24 @@
             restrict: 'EA',
             scope: true,
             link: (scope, elem, attrs) => {
+                var first = true;
                 var func = _.throttle(e => {
                     if(!scope.vm.currentPostDetail.finish) {
                         let target = e.target;
-                        if(target.scrollHeight - target.clientHeight === target.scrollTop) {
+                        if(first && target.scrollHeight - target.clientHeight === target.scrollTop) {
                             // Read over
                             Post.update({feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id}, {
                                 type: 'finish'
                             });
+                            first = false;
                             storage.status = '读完啦~\(≧▽≦)/~';
                         }
                     }
                 }, 200);
+                angular.element(elem).on('scroll', func);
                 // 如果没有滚动条的话，则立即标为读完
                 setTimeout(() => {
-                    if(!scope.vm.currentPostDetail.finish) {
+                    if(void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail && !scope.vm.currentPostDetail.finish) {
                         if(angular.element(elem[0].scrollHeight)[0] === angular.element(elem[0].offsetHeight)[0]) {
                             Post.update({feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id}, {
                                 type: 'finish'
