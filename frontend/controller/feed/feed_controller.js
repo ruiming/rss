@@ -3,7 +3,7 @@
         .module('app')
         .controller('FeedController', FeedController);
 
-    function FeedController(feed, posts, _, storage, $scope, Post, $state) {
+    function FeedController(feed, posts, _, storage, $scope, Post) {
         var vm = this;
         vm.read = read;
 
@@ -12,14 +12,12 @@
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
         console.log(vm.detail);
 
+        // 无需处理 finish 的情况
         for(let post of vm.posts) {
             if(vm.detail[post._id] && vm.detail[post._id][0].read) {
                 post.read = true;
             }
         }
-
-        // 传递给子路由作已读/未读判断
-        $state.current.data = vm.posts;
         
         storage.feed_id = feed.data.feed_id;
 

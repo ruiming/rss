@@ -36,9 +36,10 @@ exports.listOne = async (ctx, next) => {
     var feed_id = ctx.params.feed_id, id = ctx.params.id;
     var userid = ctx.state.user.id;
     // 返回该文章结果
-    var result = await PostModel.findOne({_id: id, feed_id: feed_id}).catch(e => e);
+    var result = await PostModel.findOne({_id: id, feed_id: feed_id});
+    var readresult = await UserPostModel.findOne({feed_id: feed_id, post_id: id, user_id: userid});
     if(result) {
-        ctx.body = { success: true, data: result };
+        ctx.body = { success: true, data: {result: result, detail: readresult} };
     } else {
         ctx.throw(result);
     }
@@ -53,13 +54,14 @@ exports.listOne = async (ctx, next) => {
  * @params: {read|mark|love} type
  * @params: {boolean} revert
  * @Important: 当 id 为 0 时表示更新全部文章状态
+ * @Important: 已读分两种情况, read 和 finish
  */
 exports.update = async (ctx, next) => {
     var feed_id = ctx.params.feed_id, id = ctx.params.id;
     var userid = ctx.state.user.id;
     var type = ctx.request.body.type && ctx.request.body.type.trim();
     var revert = ctx.request.body.revert === true;
-    if(['read', 'mark', 'love'].indexOf(type) === -1) {
+    if(['read', 'mark', 'love', 'finish'].indexOf(type) === -1) {
         ctx.throw('参数错误');
     } else {
         setTimeout(async () => {
@@ -77,6 +79,7 @@ exports.update = async (ctx, next) => {
             // Problem: 用户对一个订阅源标记全部已读会产生较多的数据库读写操作，并且有占用存储空间的可能
             for(let item of items) {
                 var state = await UserPostModel.findOne({user_id: userid, feed_id: feed_id, post_id: item});
+                if(type === 'finish')   state['read'] = true;                
                 if(state && state._id) {
                     if(revert)  state[type] = !state[type];
                     else    state[type] = true;

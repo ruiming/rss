@@ -3,10 +3,10 @@
         .module('app')
         .controller('PostController', PostController);
 
-    function PostController(posts, storage, $scope, $state, _) {
+    function PostController(post, storage, $scope, _) {
         var vm = this;
-        vm.currentPost = posts.data;
-        vm.posts = _.groupBy($state.current.data, '_id');
+        vm.currentPost = post.data.result;
+        vm.currentPostDetail = post.data.detail;
 
         storage.title = vm.currentPost.title;
         storage.begintime = Date.now();

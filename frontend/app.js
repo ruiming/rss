@@ -41,7 +41,7 @@
                 templateUrl: 'post/post_tpl.html',
                 controller: 'PostController as vm',
                 resolve: {
-                    posts: function(Post, $stateParams, $state) {
+                    post: function(Post, $stateParams, $state) {
                         return Post.get({feed_id: $stateParams.id, id: $stateParams.post_id}).$promise;
                     }
                 }

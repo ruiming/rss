@@ -32,7 +32,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             templateUrl: 'post/post_tpl.html',
             controller: 'PostController as vm',
             resolve: {
-                posts: ["Post", "$stateParams", "$state", function (Post, $stateParams, $state) {
+                post: ["Post", "$stateParams", "$state", function (Post, $stateParams, $state) {
                     return Post.get({ feed_id: $stateParams.id, id: $stateParams.post_id }).$promise;
                 }]
             }
@@ -50,21 +50,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             scope: true,
             link: function link(scope, elem, attrs) {
                 var func = _.throttle(function (e) {
-                    if (scope.vm.posts[scope.vm.currentPost._id] && scope.vm.posts[scope.vm.currentPost._id][0].read) {
+                    if (scope.vm.currentPostDetail.finish) {
                         storage.status = '已经读过啦~\(≧▽≦)/~';
                     } else {
                         var target = e.target;
                         if (target.scrollHeight - target.clientHeight === target.scrollTop) {
                             // Read over
                             Post.update({ feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id }, {
-                                type: 'read'
+                                type: 'finish'
                             });
                             storage.status = '读完啦~\(≧▽≦)/~';
                         }
                     }
                 }, 200);
                 angular.element(elem).on('scroll', func);
-                console.log(angular.element(elem));
+                // TODO: if there is no scroll bar...
             }
         };
     }
@@ -163,26 +163,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
-                Feed.get(function (res) {
-                    $scope.feeds = res.data;
-                });
-                $scope.setTitle = function () {
-                    storage.title = '';
-                };
-            }]
-        };
-    }
-})();
-(function () {
     angular.module('app').directive('feedPanel', feedPanel);
 
     function feedPanel() {
@@ -209,6 +189,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             replace: true,
             templateUrl: 'navbar/navbar.html',
             controller: ["$scope", function navbarController($scope) {}]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
+                Feed.get(function (res) {
+                    $scope.feeds = res.data;
+                });
+                $scope.setTitle = function () {
+                    storage.title = '';
+                };
+            }]
         };
     }
 })();
@@ -248,10 +248,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 (function () {
-    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post", "$state"];
+    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post"];
     angular.module('app').controller('FeedController', FeedController);
 
-    function FeedController(feed, posts, _, storage, $scope, Post, $state) {
+    function FeedController(feed, posts, _, storage, $scope, Post) {
         var vm = this;
         vm.read = read;
 
@@ -260,6 +260,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
         console.log(vm.detail);
 
+        // 无需处理 finish 的情况
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -272,8 +273,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     post.read = true;
                 }
             }
-
-            // 传递给子路由作已读/未读判断
         } catch (err) {
             _didIteratorError = true;
             _iteratorError = err;
@@ -288,8 +287,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }
         }
-
-        $state.current.data = vm.posts;
 
         storage.feed_id = feed.data.feed_id;
 
@@ -342,13 +339,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    PostController.$inject = ["posts", "storage", "$scope", "$state", "_"];
+    PostController.$inject = ["post", "storage", "$scope", "_"];
     angular.module('app').controller('PostController', PostController);
 
-    function PostController(posts, storage, $scope, $state, _) {
+    function PostController(post, storage, $scope, _) {
         var vm = this;
-        vm.currentPost = posts.data;
-        vm.posts = _.groupBy($state.current.data, '_id');
+        vm.currentPost = post.data.result;
+        vm.currentPostDetail = post.data.detail;
 
         storage.title = vm.currentPost.title;
         storage.begintime = Date.now();
