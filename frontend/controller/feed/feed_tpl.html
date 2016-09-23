@@ -9,7 +9,7 @@
             <span>{{post.pubdate | toLocalString}}</span>
         </a>
     </div>
-    <div ui-view class="center">
+    <div ui-view class="center" scroll-listen="post.read">
         <div class="page-header">
             <h1>{{vm.feed.title}}</h1>
         </div>

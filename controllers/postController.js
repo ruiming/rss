@@ -60,22 +60,26 @@ exports.listOne = async (ctx, next) => {
  * @params: {string} feed_id
  * @params: {string} id
  * @params: {read|mark|love} type
+ * @params: {boolean}   revert
  */
 exports.update = async (ctx, next) => {
     var feed_id = ctx.params.feed_id, id = ctx.params.id;
     var userid = ctx.state.user.id;
     var type = ctx.request.body.type && ctx.request.body.type.trim();
+    var revert = ctx.request.body.revert === true;
     if(['read', 'mark', 'love'].indexOf(type) === -1) {
         ctx.throw('参数错误');
     } else {
         setTimeout(async () => {
             var state = await UserPostModel.findOne({user_id: userid, feed_id: feed_id, post_id: id});
             if(state && state._id) {
-                state[type] = !state[type];
+                if(revert)  state[type] = !state[type];
+                else    state[type] = true;
                 state.save()
             } else {
                 state = {user_id: userid, feed_id: feed_id, post_id: id};
-                state[type] = true;
+                if(revert)  state[type] = false;
+                else    state[type] = true;
                 state = new UserPostModel(state);
                 state.save();
             }

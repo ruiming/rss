@@ -1,0 +1,18 @@
+.status-bar {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: $status-bar-bg-color;
+    color: $status-bar-font-color;
+    p {
+        margin: 0;
+        line-height: 2.0;
+    }
+    .time {
+        width: $leftbar;
+        text-align: center;
+        border-right: 1px solid $border-color;
+    }
+}

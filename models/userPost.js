@@ -10,7 +10,8 @@ const UserPostSchema = new Schema({
 
     mark:           {type: Boolean, default: false},    // 星标情况
     love:           {type: Boolean, default: false},    // 点赞情况
-    read:           {type: Boolean, default: false},     // 是否已读
+    read:           {type: Boolean, default: false},    // 是否已读(标记)
+    finish:         {type: Boolean, default: false},    // 真已读
     readdate:       {type: Date, default: Date.now()},  // 阅读时间
     lovedate:       {type: Date},
     markdate:       {type: Date}

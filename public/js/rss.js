@@ -41,17 +41,34 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    angular.module('app').factory('Feed', function ($resource) {
-        return $resource('/api/feed/:id', { id: '@_id' });
-    });
-})();
+    scrollListen.$inject = ["_", "Post"];
+    angular.module('app').directive('scrollListen', scrollListen);
 
+    function scrollListen(_, Post) {
+        return {
+            restrict: 'EA',
+            scope: true,
+            link: function link(scope, elem, attrs) {
+                console.log(scope);
+                var func = _.throttle(function (e) {
+                    var target = e.target;
+                    if (target.scrollHeight - target.clientHeight === target.scrollTop) {
+                        // Read over
+                        Post.update({ feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id }, {
+                            type: 'read'
+                        });
+                    }
+                }, 300);
+                angular.element(elem).on('scroll', func);
+            }
+        };
+    }
+})();
 (function () {
-    angular.module('app').factory('Post', function ($resource) {
-        return $resource('/api/feed/:feed_id/post/:id', { id: '@id' });
-    });
-})();
+    angular.module('app').factory('storage', storage);
 
+    function storage() {}
+})();
 (function () {
     tokenInjector.$inject = ["$injector", "$q", "$cookies"];
     angular.module('app').factory('tokenInjector', tokenInjector);
@@ -121,6 +138,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
+    angular.module('app').factory('Feed', function ($resource) {
+        return $resource('/api/feed/:id', { id: '@_id' });
+    });
+})();
+
+(function () {
+    angular.module('app').factory('Post', function ($resource) {
+        return $resource('/api/feed/:feed_id/post/:id', { id: '@id' }, {
+            update: { method: 'PUT' }
+        });
+    });
+})();
+
+(function () {
     angular.module('app').directive('contextMenu', contextMenu);
 
     function contextMenu() {
@@ -164,6 +195,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             replace: true,
             templateUrl: 'navbar/navbar.html',
             controller: ["$scope", function navbarController($scope) {}]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('statusBar', statusBar);
+
+    function statusBar() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'statusBar/statusBar.html',
+            controller: ["$scope", "$interval", function statusBarController($scope, $interval) {
+                $scope.time = Date.now();
+                $interval(function () {
+                    $scope.time = Date.now();
+                }, 1000);
+            }]
         };
     }
 })();
