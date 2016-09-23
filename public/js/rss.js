@@ -1,5 +1,7 @@
 "use strict";
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 (function () {
     config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider"];
     angular.module('app', ['ui.router', 'ui.bootstrap', 'ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies']).config(config);
@@ -78,7 +80,35 @@
             },
 
             response: function response(config) {
-                return config;
+                var data = config.data.data;
+                if (Array.isArray(data)) {
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        if (void 0 !== data[i].feed_id && Array.isArray(data[i].feed_id)) {
+                            if (typeof data[i].feed_id[0] === 'string') {
+                                config.data.data[i].feed_id = data[i].feed_id[0];
+                            } else {
+                                config.data.data[i] = Object.assign(data[i].feed_id[0], data[i], { feed_id: data[i].feed_id[0]._id });
+                            }
+                        }
+                        if (void 0 !== data[i].user_id && Array.isArray(data[i].user_id)) {
+                            config.data.data[i].user_id = data[i].user_id[0];
+                        }
+                    }
+                } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === 'object') {
+                    if (void 0 !== data.feed_id && Array.isArray(data.feed_id)) {
+                        if (typeof data.feed_id[0] === 'string') {
+                            config.data.data.feed_id = data.feed_id[0];
+                        } else {
+                            config.data.data = Object.assign(data.feed_id[0], data, { feed_id: data.feed_id[0]._id });
+                        }
+                    }
+                    if (void 0 !== data.user_id && Array.isArray(data.user_id)) {
+                        config.data.data.user_id = data.user_id[0];
+                    }
+                }
+                var deferred = $q.defer();
+                deferred.resolve(config);
+                return deferred.promise;
             }
         };
     }
@@ -95,10 +125,6 @@
             templateUrl: 'contextMenu/contextMenu.html',
             controller: ["$scope", "Feed", function contextMenuController($scope, Feed) {
                 Feed.get(function (res) {
-                    console.log(res);
-                    for (var i = 0, len = res.data.length; i < len; i++) {
-                        res.data[i] = Object.assign({}, res.data[i].feed_id[0], res.data[i], { feed_id: res.data[i].feed_id[0]._id });
-                    }
                     $scope.feeds = res.data;
                 });
             }]

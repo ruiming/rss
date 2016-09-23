@@ -78,11 +78,12 @@ exports.create = async (ctx, next) => {
  * @method: get
  * @url:    /api/feed/{id}
  * @params: {string} id
+ * TODO:    根据需要返回信息
  */
 exports.list = async (ctx, next) => {
     var id = ctx.params.id;
     var userid = ctx.state.user.id;
-    var result = await UserFeedModel.findOne({user_id: userid, feed_id: id}).populate('feed_id').exec().catch(e => e);
+    var result = await UserFeedModel.findOne({user_id: userid, feed_id: id}, {user_id: 0}).populate('feed_id').exec().catch(e => e);
     if (result && result._id) {
         ctx.body = { success: true, data: result };
     } else {
@@ -94,10 +95,10 @@ exports.list = async (ctx, next) => {
  * 获取全部订阅源
  * @method: get
  * @url:    /api/feed
- * TODO:    根据用户获取
+ * TODO:    根据需要返回信息
  */
 exports.listAll = async (ctx, next) => {
     var userid = ctx.state.user.id;
-    var result = await UserFeedModel.find({user_id: userid}).populate('feed_id').exec().catch(e => e);
+    var result = await UserFeedModel.find({user_id: userid}, {user_id: 0}).populate('feed_id', {title: 1}).exec().catch(e => e);
     ctx.body = { success: true, data: result };
 }

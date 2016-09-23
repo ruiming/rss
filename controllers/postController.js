@@ -1,6 +1,6 @@
 import FeedModel from '../models/feed';
 import PostModel from '../models/post';
-
+import UserPostModel from '../models/userPost'
 import FeedParser from 'feedparser';
 import request from 'request';
 
@@ -14,11 +14,11 @@ import request from 'request';
  */
 exports.listAll = async (ctx, next) => {
     var feed_id = ctx.params.feed_id;
-    var result = await PostModel.find({feed_id: feed_id}, {
-        description: 0, summary: 0
-    }).catch(e => e);
+    var userid = ctx.state.user.id;
+    var result = await PostModel.find({feed_id: feed_id}, {description: 0, summary: 0});
+    // var detail = await UserPostModel.find({feed_id: feed_id, user_id: userid});
     if(result[0] && result[0]._id) {
-        ctx.body = { success: true, data: result };        
+        ctx.body = { success: true, data: result };
     } else {
         ctx.throw(result);
     }
