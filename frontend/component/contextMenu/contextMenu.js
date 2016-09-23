@@ -9,10 +9,13 @@
             scope: true,
             replace: true,
             templateUrl: 'contextMenu/contextMenu.html',
-            controller: function contextMenuController($scope, Feed) {
+            controller: function contextMenuController($scope, Feed, storage) {
                 Feed.get(res => {
                     $scope.feeds = res.data;
                 });
+                $scope.setTitle = function() {
+                    storage.title = '';
+                }
             }
         }
     }

@@ -6,13 +6,28 @@
     right: 0;
     background-color: $status-bar-bg-color;
     color: $status-bar-font-color;
+    height: 30px;
     p {
         margin: 0;
-        line-height: 2.0;
+        line-height: 2.2;
+        float: left;
     }
     .time {
         width: $leftbar;
         text-align: center;
         border-right: 1px solid $border-color;
+    }
+    .title {
+        padding-left: 25px;
+    }
+    .feed {
+        float: right;
+        width: $leftbar;
+        border-left: 1px solid $border-color;
+        text-align: center;
+        cursor: pointer;
+        &:hover {
+            background-color: #0c8af7;
+        }
     }
 }

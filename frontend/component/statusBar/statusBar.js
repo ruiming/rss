@@ -9,11 +9,24 @@
             scope: true,
             replace: true,
             templateUrl: 'statusBar/statusBar.html',
-            controller: function statusBarController($scope, $interval) {
+            controller: function statusBarController($scope, $interval, storage) {
+                $scope.readall = readall;
+                
+                $scope.title = storage.title;
                 $scope.time = Date.now();
-                $interval(() => {
+
+                // TODO: would it effect the angular perfomance ?
+                setInterval(() => {
+                    $scope.title = storage.title;
                     $scope.time = Date.now();
-                }, 1000);
+                    $scope.feed_id = storage.feed_id;
+
+                    $scope.$digest();
+                }, 500);
+
+                function readall() {
+                    
+                }
             }
         }
     }

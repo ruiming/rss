@@ -8,7 +8,6 @@
             restrict: 'EA',
             scope: true,
             link: function(scope, elem, attrs) {
-                console.log(scope);
                 var func = _.throttle(function(e) {
                     let target = e.target;
                     if(target.scrollHeight - target.clientHeight === target.scrollTop) {

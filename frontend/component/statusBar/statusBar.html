@@ -1,3 +1,5 @@
 <div class="status-bar">
     <p class="time">{{time | date: 'EEEE yyyy-MM-dd HH:mm:ss a'}}</p>
+    <p class="title" ng-if="title">{{title}}</p>
+    <p class="feed" ng-click="readall()">全部标记为已读</p>
 </div>

@@ -60,7 +60,7 @@ exports.listOne = async (ctx, next) => {
  * @params: {string} feed_id
  * @params: {string} id
  * @params: {read|mark|love} type
- * @params: {boolean}   revert
+ * @params: {boolean} revert
  */
 exports.update = async (ctx, next) => {
     var feed_id = ctx.params.feed_id, id = ctx.params.id;

@@ -14,6 +14,7 @@
     </div>
     <div class="list-group">
         <a class="list-group-item" ui-sref="feed({id: feed.feed_id})"
+            ng-click="setTitle()"
             ng-repeat="feed in feeds track by $index">
             {{feed.title}}
         </a>

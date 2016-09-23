@@ -49,7 +49,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             restrict: 'EA',
             scope: true,
             link: function link(scope, elem, attrs) {
-                console.log(scope);
                 var func = _.throttle(function (e) {
                     var target = e.target;
                     if (target.scrollHeight - target.clientHeight === target.scrollTop) {
@@ -64,10 +63,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }
 })();
+/**
+ * 单体通信
+ */
 (function () {
     angular.module('app').factory('storage', storage);
 
-    function storage() {}
+    function storage() {
+        var kkk = {};
+        return kkk;
+    }
 })();
 (function () {
     tokenInjector.$inject = ["$injector", "$q", "$cookies"];
@@ -160,10 +165,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             scope: true,
             replace: true,
             templateUrl: 'contextMenu/contextMenu.html',
-            controller: ["$scope", "Feed", function contextMenuController($scope, Feed) {
+            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
                 Feed.get(function (res) {
                     $scope.feeds = res.data;
                 });
+                $scope.setTitle = function () {
+                    storage.title = '';
+                };
             }]
         };
     }
@@ -207,24 +215,37 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             scope: true,
             replace: true,
             templateUrl: 'statusBar/statusBar.html',
-            controller: ["$scope", "$interval", function statusBarController($scope, $interval) {
+            controller: ["$scope", "$interval", "storage", function statusBarController($scope, $interval, storage) {
+                $scope.readall = readall;
+
+                $scope.title = storage.title;
                 $scope.time = Date.now();
-                $interval(function () {
+
+                // TODO: would it effect the angular perfomance ?
+                setInterval(function () {
+                    $scope.title = storage.title;
                     $scope.time = Date.now();
-                }, 1000);
+                    $scope.feed_id = storage.feed_id;
+
+                    $scope.$digest();
+                }, 500);
+
+                function readall() {}
             }]
         };
     }
 })();
 (function () {
-    FeedController.$inject = ["feed", "posts", "_"];
+    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope"];
     angular.module('app').controller('FeedController', FeedController);
 
-    function FeedController(feed, posts, _) {
+    function FeedController(feed, posts, _, storage, $scope) {
         var vm = this;
         vm.feed = feed.data;
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
+
+        storage.feed_id = feed.data._id;
     }
 })();
 
@@ -238,11 +259,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    PostController.$inject = ["posts"];
+    PostController.$inject = ["posts", "storage"];
     angular.module('app').controller('PostController', PostController);
 
-    function PostController(posts) {
+    function PostController(posts, storage) {
         var vm = this;
         vm.currentPost = posts.data;
+        storage.title = vm.currentPost.title;
     }
 })();
