@@ -23,6 +23,10 @@ gulp.task('angular', () => {
         'node_modules/angular-ui-router/release/angular-ui-router.min.js'])
         .pipe(concat('app.min.js'))
         .pipe(gulp.dest('public/js'));
+    // Backend & Frontend
+    gulp.src([
+        'node_modules/underscore/underscore-min.js'])
+        .pipe(gulp.dest('public/js'));
 });
 
 // Packaging CSS dependence

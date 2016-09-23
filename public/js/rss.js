@@ -4,7 +4,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 (function () {
     config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider"];
-    angular.module('app', ['ui.router', 'ui.bootstrap', 'ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies']).config(config);
+    angular.module('app', ['ui.router', 'ui.bootstrap', 'ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'underscore']).config(config);
 
     function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
 
@@ -38,14 +38,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         });
     }
-})();
-
-(function () {
-    angular.module('app').filter('toLocalString', ["$filter", function ($filter) {
-        return function (input) {
-            return $filter('date')(Date.parse(input), 'yyyy-MM-dd HH:mm');
-        };
-    }]);
 })();
 
 (function () {
@@ -115,6 +107,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
+    var underscore = angular.module('underscore', []);
+    underscore.factory('_', ['$window', function ($window) {
+        return $window._;
+    }]);
+})();
+(function () {
+    angular.module('app').filter('toLocalString', ["$filter", function ($filter) {
+        return function (input) {
+            return $filter('date')(Date.parse(input), 'yyyy-MM-dd HH:mm');
+        };
+    }]);
+})();
+
+(function () {
     angular.module('app').directive('contextMenu', contextMenu);
 
     function contextMenu() {
@@ -162,13 +168,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 (function () {
-    FeedController.$inject = ["feed", "posts"];
+    FeedController.$inject = ["feed", "posts", "_"];
     angular.module('app').controller('FeedController', FeedController);
 
-    function FeedController(feed, posts) {
+    function FeedController(feed, posts, _) {
         var vm = this;
         vm.feed = feed.data;
-        vm.posts = posts.data;
+        vm.posts = posts.data.posts;
+        vm.detail = _.groupBy(posts.data.detail, 'post_id');
     }
 })();
 

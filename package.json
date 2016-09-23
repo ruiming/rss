@@ -39,7 +39,8 @@
     "koa-views": "^5.0.2",
     "mongoose": "^4.6.0",
     "normalize.css": "^4.2.0",
-    "nvd3": "^1.8.4"
+    "nvd3": "^1.8.4",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "babel": "^6.5.2",

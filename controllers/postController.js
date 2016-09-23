@@ -16,9 +16,10 @@ exports.listAll = async (ctx, next) => {
     var feed_id = ctx.params.feed_id;
     var userid = ctx.state.user.id;
     var result = await PostModel.find({feed_id: feed_id}, {description: 0, summary: 0});
-    // var detail = await UserPostModel.find({feed_id: feed_id, user_id: userid});
+    // 查询阅读情况
+    var detail = await UserPostModel.find({feed_id: feed_id, user_id: userid}, {user_id: 0, feed_id: 0});
     if(result[0] && result[0]._id) {
-        ctx.body = { success: true, data: result };
+        ctx.body = { success: true, data: { posts: result, detail: detail} };
     } else {
         ctx.throw(result);
     }
@@ -33,6 +34,11 @@ exports.listAll = async (ctx, next) => {
  */
 exports.listOne = async (ctx, next) => {
     var feed_id = ctx.params.feed_id, id = ctx.params.id;
+    var userid = ctx.state.user.id;
+    // 文章标记为已读
+    var read = new UserPostModel({user_id: userid, feed_id: feed_id, post_id: id});
+    read.save();
+    // 返回该文章结果
     var result = await PostModel.findOne({_id: id, feed_id: feed_id}).catch(e => e);
     if(result) {
         ctx.body = { success: true, data: result };

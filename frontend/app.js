@@ -7,7 +7,8 @@
             'ngAnimate',
             'ngResource',
             'ngSanitize',
-            'ngCookies'
+            'ngCookies',
+            'underscore'
         ])
         .config(config);
 
