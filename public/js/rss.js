@@ -379,7 +379,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         storage.title = vm.currentPost.title;
         storage.begintime = Date.now();
 
-        // 黑人问号? I just want to get the title but avoid the break of inherit
+        // TODO: 黑人问号? I just want to get the title but avoid the break of inherit
         if (void 0 !== $state.router.globals.$current.parent.self.data) {
             vm.origin = $state.router.globals.$current.parent.self.data;
         } else {
