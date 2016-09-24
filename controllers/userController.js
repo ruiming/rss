@@ -16,7 +16,7 @@ exports.create = async (ctx, next) => {
         password: ctx.request.body.password,
         username: ctx.request.body.email && ctx.request.body.email.split('@')[0]    // Default name
     });
-    var result = await user.save().catch(e => e);
+    var result = await user.save();
     if(result && result._id) {
         var token = jwt.sign(result._id, config.app.secretKey);
         ctx.cookies.set("token", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
@@ -37,7 +37,6 @@ exports.get = async (ctx, next) => {
     var result = await UserModel.findOne({email: ctx.request.body.email, password: ctx.request.body.password}).catch(e => e);
     if(result && result._id) {
         var token = jwt.sign({id: result._id}, config.app.secretKey);
-        console.log(token);
         ctx.cookies.set("jwt", token, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
         await ctx.redirect('/');
     } else {
