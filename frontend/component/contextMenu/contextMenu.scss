@@ -27,12 +27,15 @@
     }
     .list-group-item {
         padding: 8px 15px;
-        display: flex;
+    }
+    .feed-item {
+        position: relative;
+        margin: auto 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
         span {
-            margin: auto 5px;
-            text-overflow: ellipsis;
+            margin-left: 22px;
             white-space: pre;
-            overflow: hidden;
         }
     }
     h2 {
@@ -40,8 +43,9 @@
         text-align: center;
     }
     .favicon {
-        width: 20px;
-        height: 20px;
+        width: 17px;
+        height: 17px;
+        position: absolute;
     }
 }
 .user-avatar {

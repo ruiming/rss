@@ -13,7 +13,7 @@
         <h2>订阅源</h2>
     </div>
     <div class="list-group">
-        <a class="list-group-item" ui-sref="feed({id: feed.feed_id})"
+        <a class="list-group-item feed-item" ui-sref="feed({id: feed.feed_id})"
             ng-click="setTitle()"
             ng-repeat="feed in feeds track by $index">
             <!-- TODO: still has the failure get info -->

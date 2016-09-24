@@ -22,5 +22,4 @@
         if(vm.currentPostDetail !== null && vm.currentPostDetail.finish) storage.status = '已经读过啦~\(≧▽≦)/~';
         else storage.status = '';
     }
-    
 }());

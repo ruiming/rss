@@ -10,8 +10,12 @@
     & > header + section {
         border-bottom: 1px solid #eee;
         padding: 10px 0;
+        overflow: hidden;
         span {
             padding-right: 5px;
+        }
+        small:first-child {
+            float: left;            
         }
         small:last-child {
             float: right;

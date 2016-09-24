@@ -156,7 +156,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function () {
     angular.module('app').filter('linkFix', ["$state", function ($state) {
         return function (input, origin) {
-            var re = /src="(\/.+?)"/g;
+            var re = /src="(\/[^\/].+?)"/g;
             var result = input.replace(re, function (match, p, offset, string) {
                 return "src=\"" + origin + p.slice(1) + "\"";
             });
