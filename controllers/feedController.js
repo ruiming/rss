@@ -3,6 +3,7 @@ import PostModel from '../models/post';
 import UserFeedModel from '../models/userFeed'
 import FeedParser from 'feedparser';
 import request from 'request';
+import fetchFavicon from 'favicon-getter';
 
 /**
  * 创建/订阅 订阅源
@@ -33,10 +34,8 @@ exports.create = async (ctx, next) => {
             return ctx.body = { success: true, data: {id: result._id} };
         }
     } else {
-        await new Promise((resolve, reject) => {
-            var req = request(feedlink, err => {
-                reject(err);
-            });
+        await new Promise(async (resolve, reject) => {
+            var req = request(feedlink);
             req.on('response', res => {
                 if(res.statusCode != 200) {
                     reject(res.statusCode);
@@ -44,7 +43,8 @@ exports.create = async (ctx, next) => {
                     res.pipe(feedparser);
                     feedparser.on('error', err => {
                         if(err) {
-                            reject(err);
+                            console.log(err);
+                            reject('aaaa');
                         } else {
                             resolve();
                         }
@@ -53,19 +53,25 @@ exports.create = async (ctx, next) => {
             });
 
             feedparser.on('meta', async function() {
-                var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink}));
+                var favicon = null;
+                await fetchFavicon(this.meta.link).then(data => favicon = data);
+                var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink, favicon: favicon}));
                 var store = await feed.save();
                 var feedid = store._id;
-                var userfeed = new UserFeedModel({feed_id: feedid, user_id: userid});
-                userfeed.save().catch(e => e);
-                feedparser.on('readable', function() {
-                    while(result = this.read()) {
-                        var post = new PostModel(Object.assign(result, {feed_id: feedid}));
-                        post.save().catch(e => e);
-                    }
-                    ctx.body = { success: true, data: {id: feedid} };
-                    resolve();
-                });
+                setTimeout(() => {
+                    var userfeed = new UserFeedModel({feed_id: feedid, user_id: userid});
+                    userfeed.save();
+                    feedparser.on('readable', function() {
+                        while(result = this.read()) {
+                            console.log('reading');
+                            var post = new PostModel(Object.assign(result, {feed_id: feedid}));
+                            post.save();
+                        }
+
+                    });
+                }, 0);
+                ctx.body = { success: true, data: {id: feedid} };
+                resolve();
             });
         });
     }
