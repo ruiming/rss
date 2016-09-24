@@ -1,17 +1,15 @@
 import mongoose from 'mongoose';
 import config from '../config/config';
 
-import FeedModel from '../models/feed';
-import PostModel from '../models/post';
 import UserModel from '../models/user';
-import UserFeedModel from '../models/userFeed';
-import UserPostModel from '../models/userPost';
 
 mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${config.MongoDB.NAME}`);
 mongoose.Promise = require('bluebird');
 var should = require('chai').should();
 
-// Model test
+/**
+ * Model 测试
+ */
 describe(`测试 User Model:`, () => {
     
     before(done => {
@@ -28,7 +26,6 @@ describe(`测试 User Model:`, () => {
             done();
         })
     });
-
     it(`不能成功查询用户信息： 使用错误邮箱或错误密码`, done => {
         UserModel.findOne({email: 'test@test.com', password: 'wrongpassword'}, (err, user) => {
             should.not.exist(user);
@@ -38,7 +35,6 @@ describe(`测试 User Model:`, () => {
             })
         });
     });
-
     it(`不能成功新建： 使用已注册过的邮箱创建`, done => {
         UserModel.create({email: 'test@test.com', password: 'test'}, (err, user) => {
             should.not.exist(user);
@@ -46,6 +42,4 @@ describe(`测试 User Model:`, () => {
             done();
         })
     });
-
-
 });
