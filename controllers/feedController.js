@@ -31,7 +31,7 @@ exports.create = async (ctx, next) => {
             var userfeed = UserFeedModel({feed_id: result._id, user_id: userid});
             // 添加到用户订阅表
             userfeed.save();
-            return ctx.body = { success: true, data: {id: result._id} };
+            return ctx.body = { success: true, data: result };
         }
     } else {
         await new Promise(async (resolve, reject) => {
@@ -43,8 +43,7 @@ exports.create = async (ctx, next) => {
                     res.pipe(feedparser);
                     feedparser.on('error', err => {
                         if(err) {
-                            console.log(err);
-                            reject('aaaa');
+                            reject(err);
                         } else {
                             resolve();
                         }
@@ -70,7 +69,7 @@ exports.create = async (ctx, next) => {
 
                     });
                 }, 0);
-                ctx.body = { success: true, data: {id: feedid} };
+                ctx.body = { success: true, data: store };
                 resolve();
             });
         });
@@ -101,7 +100,8 @@ exports.list = async (ctx, next) => {
  */
 exports.listAll = async (ctx, next) => {
     var userid = ctx.state.user.id;
-    var result = await UserFeedModel.find({user_id: userid}, {user_id: 0}).populate('feed_id', {title: 1}).exec().catch(e => e);
+    var result = await UserFeedModel.find({user_id: userid}, {user_id: 0})
+        .populate('feed_id', {favicon: 1, title: 1}).exec().catch(e => e);
     ctx.body = { success: true, data: result };
 }
 

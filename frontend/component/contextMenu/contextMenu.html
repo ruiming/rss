@@ -16,7 +16,8 @@
         <a class="list-group-item" ui-sref="feed({id: feed.feed_id})"
             ng-click="setTitle()"
             ng-repeat="feed in feeds track by $index">
-            {{feed.title}}
+            <img class="favicon" ng-src="{{feed.favicon}}" onerror="this.src='/img/rss.png';">
+            <span class="title">{{feed.title}}</span>
         </a>
     </div>
 </div>

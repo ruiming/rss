@@ -27,10 +27,18 @@
     }
     .list-group-item {
         padding: 8px 15px;
+        display: flex;
+        span {
+            margin: auto 5px;
+        }
     }
     h2 {
         margin: 8px;
         text-align: center;
+    }
+    .favicon {
+        width: 20px;
+        height: 20px;
     }
 }
 .user-avatar {
