@@ -10,6 +10,9 @@
     & > header + section {
         border-bottom: 1px solid #eee;
         padding: 10px 0;
+        span {
+            padding-right: 5px;
+        }
         small:last-child {
             float: right;
             letter-spacing: 0.5px;
@@ -47,7 +50,7 @@
         }
     }
     article {
-        padding: 10px 0;
+        padding: 20px 0;
     }
     img {
         max-width: 100%;
