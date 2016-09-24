@@ -188,6 +188,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
+                $scope.time = Date.now();
+                Feed.get(function (res) {
+                    $scope.feeds = res.data;
+                });
+                $scope.setTitle = function () {
+                    storage.title = '';
+                    storage.status = '';
+                    storage.begintime = '';
+                };
+                setInterval(function () {
+                    $scope.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+            }]
+        };
+    }
+})();
+(function () {
     angular.module('app').directive('feedPanel', feedPanel);
 
     function feedPanel() {
@@ -214,33 +241,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             replace: true,
             templateUrl: 'navbar/navbar.html',
             controller: ["$scope", function navbarController($scope) {}]
-        };
-    }
-})();
-(function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
-                $scope.time = Date.now();
-                Feed.get(function (res) {
-                    $scope.feeds = res.data;
-                });
-                $scope.setTitle = function () {
-                    storage.title = '';
-                    storage.status = '';
-                    storage.begintime = '';
-                };
-                setInterval(function () {
-                    $scope.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
-            }]
         };
     }
 })();
@@ -336,10 +336,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    PostController.$inject = ["$state", "post", "storage", "$scope", "_", "$rootScope"];
+    PostController.$inject = ["$state", "post", "Post", "storage", "$scope", "_", "$rootScope"];
     angular.module('app').controller('PostController', PostController);
 
-    function PostController($state, post, storage, $scope, _, $rootScope) {
+    function PostController($state, post, Post, storage, $scope, _, $rootScope) {
         var vm = this;
 
         vm.currentPost = post.data.result;
@@ -347,6 +347,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.begintime = Date.now();
         vm.currenttime = Date.now();
         vm.status = '';
+
+        vm.love = love;
+        vm.mark = mark;
+
         setInterval(function () {
             vm.currenttime = Date.now();
             $scope.$digest();
@@ -361,6 +365,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
             vm.status = '已经读过啦~\(≧▽≦)/~';
+        }
+
+        function love() {
+            vm.currentPostDetail.love = !vm.currentPostDetail.love;
+            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'love' });
+        }
+
+        function mark() {
+            vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
+            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'mark' });
         }
     }
 })();

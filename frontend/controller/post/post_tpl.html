@@ -3,8 +3,10 @@
         <h1>{{vm.currentPost.title}}</h1>
     </header>
     <section>
-        <small><span class="glyphicon glyphicon-send"></span>更新于 {{vm.currentPost.pubdate | toLocalString: 'medium'}} 由 {{vm.currentPost.author}} 发布</small>
-        <small ng-if="vm.currentPost.categories"><span class="glyphicon glyphicon-tags"></span>{{vm.currentPost.categories.toString()}}</small>
+        <small><span class="glyphicon glyphicon-send"></span>
+        更新于 {{vm.currentPost.pubdate | toLocalString: 'medium'}} 由 {{vm.currentPost.author}} 发布</small>
+        <small ng-if="vm.currentPost.categories"><span class="glyphicon glyphicon-tags"></span>
+        {{vm.currentPost.categories.toString()}}</small>
     </section>
     <section>
         <article ng-bind-html="vm.currentPost.description | linkFix: vm.origin" >
@@ -16,11 +18,11 @@
             <span class="glyphicon glyphicon-time"></span>
             {{ vm.currenttime - vm.begintime | date: 'mm:ss' }}
         </p>
-        <button class="mark btn btn-primary">
+        <button class="mark btn btn-primary" ng-click="vm.mark()">
             <span ng-if="!vm.currentPostDetail.mark">收藏</span>
             <span ng-if="vm.currentPostDetail.mark">已收藏</span>
         </button>
-        <button class="mark btn btn-primary">
+        <button class="mark btn btn-primary" ng-click="vm.love()">
             <span ng-if="!vm.currentPostDetail.love">点赞</span>
             <span ng-if="vm.currentPostDetail.love">已点赞</span>
         </button>

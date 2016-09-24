@@ -3,7 +3,7 @@
         .module('app')
         .controller('PostController', PostController);
 
-    function PostController($state, post, storage, $scope, _, $rootScope) {
+    function PostController($state, post, Post, storage, $scope, _, $rootScope) {
         var vm = this;
 
         vm.currentPost = post.data.result;
@@ -11,6 +11,10 @@
         vm.begintime = Date.now();
         vm.currenttime = Date.now();
         vm.status = '';
+
+        vm.love = love;
+        vm.mark = mark;
+
         setInterval(() => {
             vm.currenttime = Date.now();
             $scope.$digest();
@@ -26,5 +30,16 @@
         if(vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
             vm.status = '已经读过啦~\(≧▽≦)/~';
         }
+
+        function love() {
+            vm.currentPostDetail.love = !vm.currentPostDetail.love;
+            Post.update({feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id}, {type: 'love'});
+        }
+
+        function mark() {
+            vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
+            Post.update({feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id}, {type: 'mark'});
+        }
+
     }
 }());
