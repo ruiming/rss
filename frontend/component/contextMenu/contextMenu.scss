@@ -30,6 +30,9 @@
         display: flex;
         span {
             margin: auto 5px;
+            text-overflow: ellipsis;
+            white-space: pre;
+            overflow: hidden;
         }
     }
     h2 {

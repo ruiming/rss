@@ -40,48 +40,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 
-(function () {
-    scrollListen.$inject = ["_", "Post", "storage"];
-    angular.module('app').directive('scrollListen', scrollListen);
-
-    function scrollListen(_, Post, storage) {
-        return {
-            restrict: 'EA',
-            scope: true,
-            link: function link(scope, elem, attrs) {
-                var first = true;
-                var func = _.throttle(function (e) {
-                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail && !scope.vm.currentPostDetail.finish) {
-                        var target = e.target;
-                        if (first && target.scrollHeight - target.clientHeight === target.scrollTop) {
-                            // Read over
-                            Post.update({ feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id }, {
-                                type: 'finish'
-                            });
-                            first = false;
-                            storage.status = '读完啦~\(≧▽≦)/~';
-                        }
-                    }
-                }, 200);
-                angular.element(elem).on('scroll', func);
-                // 如果没有滚动条的话，则立即标为读完
-                setTimeout(function () {
-                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail && !scope.vm.currentPostDetail.finish) {
-                        if (angular.element(elem[0].scrollHeight)[0] === angular.element(elem[0].offsetHeight)[0]) {
-                            Post.update({ feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id }, {
-                                type: 'finish'
-                            });
-                            storage.status = '读完啦~\(≧▽≦)/~';
-                        }
-                    }
-                }, 0);
-
-                // TODO: if there is no scroll bar...
-                // TODO: The first time load...
-            }
-        };
-    }
-})();
 /**
  * 单体通信
  */
@@ -154,6 +112,48 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }]);
 })();
 (function () {
+    scrollListen.$inject = ["_", "Post", "storage"];
+    angular.module('app').directive('scrollListen', scrollListen);
+
+    function scrollListen(_, Post, storage) {
+        return {
+            restrict: 'EA',
+            scope: true,
+            link: function link(scope, elem, attrs) {
+                var first = true;
+                var func = _.throttle(function (e) {
+                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail && !scope.vm.currentPostDetail.finish) {
+                        var target = e.target;
+                        if (first && target.scrollHeight - target.clientHeight === target.scrollTop) {
+                            // Read over
+                            Post.update({ feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id }, {
+                                type: 'finish'
+                            });
+                            first = false;
+                            storage.status = '读完啦~\(≧▽≦)/~';
+                        }
+                    }
+                }, 200);
+                angular.element(elem).on('scroll', func);
+                // 如果没有滚动条的话，则立即标为读完
+                setTimeout(function () {
+                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail && !scope.vm.currentPostDetail.finish) {
+                        if (angular.element(elem[0].scrollHeight)[0] === angular.element(elem[0].offsetHeight)[0]) {
+                            Post.update({ feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id }, {
+                                type: 'finish'
+                            });
+                            storage.status = '读完啦~\(≧▽≦)/~';
+                        }
+                    }
+                }, 0);
+
+                // TODO: if there is no scroll bar...
+                // TODO: The first time load...
+            }
+        };
+    }
+})();
+(function () {
     angular.module('app').filter('linkFix', ["$state", function ($state) {
         return function (input, origin) {
             var re = /src="(\/.+?)"/g;
@@ -187,93 +187,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     });
 })();
 
-(function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
-                Feed.get(function (res) {
-                    $scope.feeds = res.data;
-                });
-                $scope.setTitle = function () {
-                    storage.title = '';
-                    storage.status = '';
-                    storage.begintime = '';
-                };
-            }]
-        };
-    }
-})();
-(function () {
-    angular.module('app').directive('feedPanel', feedPanel);
-
-    function feedPanel() {
-        return {
-            restrict: 'EA',
-            scope: {
-                feed: '='
-            },
-            replace: true,
-            templateUrl: 'feedPanel/feedPanel.html',
-            controller: ["$scope", function navbarController($scope) {}]
-        };
-    }
-})();
-(function () {
-    angular.module('app').directive('navbar', navbar);
-
-    function navbar() {
-        return {
-            restrict: 'EA',
-            scope: {
-                title: '='
-            },
-            replace: true,
-            templateUrl: 'navbar/navbar.html',
-            controller: ["$scope", function navbarController($scope) {}]
-        };
-    }
-})();
-(function () {
-    angular.module('app').directive('statusBar', statusBar);
-
-    function statusBar() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'statusBar/statusBar.html',
-            controller: ["$scope", "$interval", "storage", "Post", "$rootScope", function statusBarController($scope, $interval, storage, Post, $rootScope) {
-                $scope.readall = readall;
-
-                $scope.title = storage.title;
-                $scope.time = Date.now();
-
-                // TODO: would it effect the angular perfomance ?
-                setInterval(function () {
-                    $scope.title = storage.title;
-                    $scope.time = Date.now();
-                    $scope.feed_id = storage.feed_id;
-                    $scope.status = storage.status;
-                    $scope.begintime = storage.begintime;
-
-                    $scope.$digest();
-                }, 1000);
-
-                function readall() {
-                    Post.update({ feed_id: $scope.feed_id, id: 0 }, { type: 'read' });
-                    // is there a better way ?
-                    $rootScope.$broadcast('readall');
-                }
-            }]
-        };
-    }
-})();
 (function () {
     FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post", "$state"];
     angular.module('app').controller('FeedController', FeedController);
@@ -387,5 +300,93 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) storage.status = '已经读过啦~\(≧▽≦)/~';else storage.status = '';
+    }
+})();
+
+(function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
+                Feed.get(function (res) {
+                    $scope.feeds = res.data;
+                });
+                $scope.setTitle = function () {
+                    storage.title = '';
+                    storage.status = '';
+                    storage.begintime = '';
+                };
+            }]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('feedPanel', feedPanel);
+
+    function feedPanel() {
+        return {
+            restrict: 'EA',
+            scope: {
+                feed: '='
+            },
+            replace: true,
+            templateUrl: 'feedPanel/feedPanel.html',
+            controller: ["$scope", function navbarController($scope) {}]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('navbar', navbar);
+
+    function navbar() {
+        return {
+            restrict: 'EA',
+            scope: {
+                title: '='
+            },
+            replace: true,
+            templateUrl: 'navbar/navbar.html',
+            controller: ["$scope", function navbarController($scope) {}]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('statusBar', statusBar);
+
+    function statusBar() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'statusBar/statusBar.html',
+            controller: ["$scope", "$interval", "storage", "Post", "$rootScope", function statusBarController($scope, $interval, storage, Post, $rootScope) {
+                $scope.readall = readall;
+
+                $scope.title = storage.title;
+                $scope.time = Date.now();
+
+                // TODO: would it effect the angular perfomance ?
+                setInterval(function () {
+                    $scope.title = storage.title;
+                    $scope.time = Date.now();
+                    $scope.feed_id = storage.feed_id;
+                    $scope.status = storage.status;
+                    $scope.begintime = storage.begintime;
+
+                    $scope.$digest();
+                }, 1000);
+
+                function readall() {
+                    Post.update({ feed_id: $scope.feed_id, id: 0 }, { type: 'read' });
+                    // is there a better way ?
+                    $rootScope.$broadcast('readall');
+                }
+            }]
+        };
     }
 })();

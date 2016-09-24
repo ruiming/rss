@@ -54,6 +54,12 @@ exports.create = async (ctx, next) => {
             feedparser.on('meta', async function() {
                 var favicon = null;
                 await fetchFavicon(this.meta.link).then(data => favicon = data);
+                await new Promise(resolve => request(favicon, (err, response, body) => {
+                    if(response.statusCode != 200) {
+                        favicon = '/img/rss.png';
+                    }
+                    resolve(favicon);
+                }));
                 var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink, favicon: favicon}));
                 var store = await feed.save();
                 var feedid = store._id;
