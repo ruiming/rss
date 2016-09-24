@@ -1,3 +1,10 @@
+// Layout / Basic / Width
+$leftbar: 250px;
+$rightbar: 250px;
+$border-color: #ddd;
+$status-bar-bg-color: #2196f3;
+$status-bar-font-color: #fff;
+
 html {
     font-size: 14px;
 }
@@ -40,10 +47,34 @@ h3 {
 }
 .main {
     height: calc(100% - 80px);
-    margin-left: 250px;
+    margin-left: $leftbar;
 }
-// Layout / Basic / Width
-$leftbar: 250px;
-$border-color: #ddd;
-$status-bar-bg-color: #2196f3;
-$status-bar-font-color: #fff;
+.status-bg {
+    left: 0;
+    right: 0;
+    z-index: -1;
+}
+.status-bar {
+    position: fixed;
+    bottom: 0;
+    background-color: $status-bar-bg-color;
+    color: $status-bar-font-color;
+    height: 30px;
+    p {
+        margin: 0;
+        line-height: 2.2;
+        float: left;
+        font-size: 1rem;
+    }
+    button {
+        float: right;        
+        padding: 5px 15px;        
+        margin: 0;   
+        border: 0 none;
+        border-radius: 0;    
+        span {
+            top: 2px;
+            left: 4px;
+        } 
+    }
+}

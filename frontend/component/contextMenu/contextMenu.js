@@ -10,6 +10,7 @@
             replace: true,
             templateUrl: 'contextMenu/contextMenu.html',
             controller: function contextMenuController($scope, Feed, storage) {
+                $scope.time = Date.now();
                 Feed.get(res => {
                     $scope.feeds = res.data;
                 });
@@ -18,6 +19,10 @@
                     storage.status = '';
                     storage.begintime = '';
                 }
+                setInterval(() => {
+                    $scope.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
             }
         }
     }

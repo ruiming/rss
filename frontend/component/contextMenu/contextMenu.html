@@ -21,4 +21,11 @@
             <span class="title">{{feed.title}}</span>
         </a>
     </div>
+    <!-- 底部时间栏 -->
+    <div class="status-bar">
+        <p class="time">
+            <span class="glyphicon glyphicon-calendar"></span>
+            {{ time | date: 'EEEE yyyy-MM-dd HH:mm:ss a' }}
+        </p>
+    </div>
 </div>

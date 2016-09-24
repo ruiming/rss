@@ -53,6 +53,31 @@
             border: 0;
         }
     }
+    .status-bar {
+        left: 250px;
+        right: 250px;
+        .title {
+            padding-left: 25px;
+        }
+        .readtime {
+            padding: 0 15px;        
+            margin: 0;   
+            border: 0 none;
+            border-radius: 0; 
+            float: right;
+        }
+        .status {
+            padding-right: 10px;
+            float: right;
+            &.ng-enter {
+                margin-top: 20px;
+                transition: 0.4s linear all;
+            }
+            &.ng-enter.ng-enter-active {
+                margin-top: 0;
+            }
+        }
+    }
     article {
         padding: 20px 0;
     }

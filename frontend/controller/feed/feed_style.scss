@@ -8,6 +8,13 @@
         height: 100%;
         padding: 15px;
         border-right: 1px solid #ddd;
+        .status-bar {
+            left: $leftbar;
+            right: $rightbar;
+            .title {
+                padding-left: 15px;
+            }
+        }
     }
     .sidebar {
         height: 100%;
@@ -33,6 +40,15 @@
                 border: {
                     bottom: 1px solid $border-color;
                 }
+            }
+        }
+        .status-bar {
+            right: 0;
+            width: $rightbar;
+            .posts {
+                width: $rightbar;
+                border-left: 1px solid $border-color;
+                text-align: center;
             }
         }
     }

@@ -47,6 +47,15 @@
         height: 17px;
         position: absolute;
     }
+    .status-bar {
+        left: 0;
+        width: 250px;
+        .time {
+            width: 250px;
+            text-align: center;
+            border-right: 1px solid $border-color;
+        }
+    }
 }
 .user-avatar {
     text-align: center;

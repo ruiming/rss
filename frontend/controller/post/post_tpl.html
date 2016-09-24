@@ -10,6 +10,22 @@
         <article ng-bind-html="vm.currentPost.description | linkFix: vm.origin" >
         </article>
     </section>
-    <footer>
+    <footer class="status-bar">
+        <p class="title">{{ vm.currentPost.title }}</p>
+        <p class="readtime" ng-if="vm.begintime">
+            <span class="glyphicon glyphicon-time"></span>
+            {{ vm.currenttime - vm.begintime | date: 'mm:ss' }}
+        </p>
+        <button class="mark btn btn-primary">
+            <span ng-if="!vm.currentPostDetail.mark">收藏</span>
+            <span ng-if="vm.currentPostDetail.mark">已收藏</span>
+        </button>
+        <button class="mark btn btn-primary">
+            <span ng-if="!vm.currentPostDetail.love">点赞</span>
+            <span ng-if="vm.currentPostDetail.love">已点赞</span>
+        </button>
+        <p ng-if="vm.status" class="status">
+            {{ vm.status }}
+        </p>
     </footer>
 </article>

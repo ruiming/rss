@@ -6,6 +6,7 @@
     function FeedController(feed, posts, _, storage, $scope, Post, $state) {
         var vm = this;
         vm.read = read;
+        vm.readall = readall;
 
         vm.feed = feed.data;
         vm.posts = posts.data.posts;
@@ -13,15 +14,12 @@
 
         $state.current.data = feed.data.link;
         
-        // 无需处理 finish 的情况
         for(let post of vm.posts) {
             if(vm.detail[post._id] && vm.detail[post._id][0].read) {
                 post.read = true;
             }
         }
         
-        storage.feed_id = feed.data.feed_id;
-
         function read(post) {
             if(post.read) {
                 return;
@@ -31,12 +29,11 @@
             }
         }
 
-        // listen the event from statusbar
-        $scope.$on('readall',() => {
+        function readall() {
             for(let post of vm.posts) {
                 post.read = true;
             }
-        })
+            Post.update({feed_id: vm.feed.feed_id, id: 0}, {type: 'read'});
+        }
     }
-    
 }());

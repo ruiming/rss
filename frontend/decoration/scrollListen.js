@@ -18,7 +18,7 @@
                                 type: 'finish'
                             });
                             first = false;
-                            storage.status = '读完啦~\(≧▽≦)/~';
+                            scope.vm.status = '读完啦~\(≧▽≦)/~';
                         }
                     }
                 }, 200);
@@ -30,7 +30,7 @@
                             Post.update({feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id}, {
                                 type: 'finish'
                             });
-                            storage.status = '读完啦~\(≧▽≦)/~';
+                            scope.vm.status = '读完啦~\(≧▽≦)/~';
                         }
                     }
                 }, 0);

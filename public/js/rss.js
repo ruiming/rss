@@ -59,7 +59,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 type: 'finish'
                             });
                             first = false;
-                            storage.status = '读完啦~\(≧▽≦)/~';
+                            scope.vm.status = '读完啦~\(≧▽≦)/~';
                         }
                     }
                 }, 200);
@@ -71,7 +71,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             Post.update({ feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id }, {
                                 type: 'finish'
                             });
-                            storage.status = '读完啦~\(≧▽≦)/~';
+                            scope.vm.status = '读完啦~\(≧▽≦)/~';
                         }
                     }
                 }, 0);
@@ -188,28 +188,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
-                Feed.get(function (res) {
-                    $scope.feeds = res.data;
-                });
-                $scope.setTitle = function () {
-                    storage.title = '';
-                    storage.status = '';
-                    storage.begintime = '';
-                };
-            }]
-        };
-    }
-})();
-(function () {
     angular.module('app').directive('feedPanel', feedPanel);
 
     function feedPanel() {
@@ -240,36 +218,28 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 (function () {
-    angular.module('app').directive('statusBar', statusBar);
+    angular.module('app').directive('contextMenu', contextMenu);
 
-    function statusBar() {
+    function contextMenu() {
         return {
             restrict: 'EA',
             scope: true,
             replace: true,
-            templateUrl: 'statusBar/statusBar.html',
-            controller: ["$scope", "$interval", "storage", "Post", "$rootScope", function statusBarController($scope, $interval, storage, Post, $rootScope) {
-                $scope.readall = readall;
-
-                $scope.title = storage.title;
+            templateUrl: 'contextMenu/contextMenu.html',
+            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
                 $scope.time = Date.now();
-
-                // TODO: would it effect the angular perfomance ?
+                Feed.get(function (res) {
+                    $scope.feeds = res.data;
+                });
+                $scope.setTitle = function () {
+                    storage.title = '';
+                    storage.status = '';
+                    storage.begintime = '';
+                };
                 setInterval(function () {
-                    $scope.title = storage.title;
                     $scope.time = Date.now();
-                    $scope.feed_id = storage.feed_id;
-                    $scope.status = storage.status;
-                    $scope.begintime = storage.begintime;
-
                     $scope.$digest();
                 }, 1000);
-
-                function readall() {
-                    Post.update({ feed_id: $scope.feed_id, id: 0 }, { type: 'read' });
-                    // is there a better way ?
-                    $rootScope.$broadcast('readall');
-                }
             }]
         };
     }
@@ -281,6 +251,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     function FeedController(feed, posts, _, storage, $scope, Post, $state) {
         var vm = this;
         vm.read = read;
+        vm.readall = readall;
 
         vm.feed = feed.data;
         vm.posts = posts.data.posts;
@@ -288,7 +259,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         $state.current.data = feed.data.link;
 
-        // 无需处理 finish 的情况
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -316,8 +286,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         }
 
-        storage.feed_id = feed.data.feed_id;
-
         function read(post) {
             if (post.read) {
                 return;
@@ -327,8 +295,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         }
 
-        // listen the event from statusbar
-        $scope.$on('readall', function () {
+        function readall() {
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
             var _iteratorError2 = undefined;
@@ -353,7 +320,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 }
             }
-        });
+
+            Post.update({ feed_id: vm.feed.feed_id, id: 0 }, { type: 'read' });
+        }
     }
 })();
 
@@ -367,17 +336,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    PostController.$inject = ["$state", "post", "storage", "$scope", "_"];
+    PostController.$inject = ["$state", "post", "storage", "$scope", "_", "$rootScope"];
     angular.module('app').controller('PostController', PostController);
 
-    function PostController($state, post, storage, $scope, _) {
+    function PostController($state, post, storage, $scope, _, $rootScope) {
         var vm = this;
 
         vm.currentPost = post.data.result;
         vm.currentPostDetail = post.data.detail;
-
-        storage.title = vm.currentPost.title;
-        storage.begintime = Date.now();
+        vm.begintime = Date.now();
+        vm.currenttime = Date.now();
+        vm.status = '';
+        setInterval(function () {
+            vm.currenttime = Date.now();
+            $scope.$digest();
+        }, 1000);
 
         // TODO: 黑人问号? I just want to get the title but avoid the break of inherit
         if (void 0 !== $state.router.globals.$current.parent.self.data) {
@@ -386,6 +359,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             vm.origin = $state.router.globals.current.data;
         }
 
-        if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) storage.status = '已经读过啦~\(≧▽≦)/~';else storage.status = '';
+        if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
+            vm.status = '已经读过啦~\(≧▽≦)/~';
+        }
     }
 })();
