@@ -1,19 +1,19 @@
 <article class="markdown-body">
     <header>
-        <h1>{{vm.currentPost.title}}</h1>
+        <h1>{{::vm.currentPost.title}}</h1>
     </header>
     <section>
         <small><span class="glyphicon glyphicon-send"></span>
-        更新于 {{vm.currentPost.pubdate | toLocalString: 'medium'}} 由 {{vm.currentPost.author}} 发布</small>
+        更新于 {{::vm.currentPost.pubdate | timeago}} 由 {{::vm.currentPost.author}} 发布</small>
         <small ng-if="vm.currentPost.categories"><span class="glyphicon glyphicon-tags"></span>
-        {{vm.currentPost.categories.toString()}}</small>
+        {{::vm.currentPost.categories.toString()}}</small>
     </section>
     <section>
-        <article ng-bind-html="vm.currentPost.description | linkFix: vm.origin" >
+        <article ng-bind-html="::vm.currentPost.description | linkFix: vm.origin" >
         </article>
     </section>
     <footer class="status-bar">
-        <p class="title">{{ vm.currentPost.title }}</p>
+        <p class="title">{{ ::vm.currentPost.title }}</p>
         <p class="readtime" ng-if="vm.begintime">
             <span class="glyphicon glyphicon-time"></span>
             {{ vm.currenttime - vm.begintime | date: 'mm:ss' }}
@@ -27,7 +27,7 @@
             <span ng-if="vm.currentPostDetail.love">已点赞</span>
         </button>
         <p ng-if="vm.status" class="status">
-            {{ vm.status }}
+            {{ ::vm.status }}
         </p>
     </footer>
 </article>

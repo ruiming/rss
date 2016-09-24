@@ -154,7 +154,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }]);
 })();
 (function () {
-    angular.module('app').filter('linkFix', ["$state", function ($state) {
+    angular.module('app').filter('linkFix', function () {
         return function (input, origin) {
             var re = /src="(\/[^\/].+?)"/g;
             var result = input.replace(re, function (match, p, offset, string) {
@@ -162,7 +162,38 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             });
             return result;
         };
-    }]);
+    });
+})();
+
+(function () {
+    angular.module('app').filter('timeago', function () {
+        return function (input) {
+            // TODO: 会被执行两次，并且如果input被watch时会多次执行
+            var now = Date.now();
+            var ago = (now - Date.parse(input)) / 1000;
+            var output = null;
+            var refresh = null;
+            // TODO: if I want to make it change in real time.
+            if (ago < 10 * 60) {
+                output = "刚刚";
+                refresh = 60;
+            } else if (ago < 60 * 60) {
+                output = Math.round(ago / 60) + " 分钟前";
+                refresh = 60;
+            } else if (ago < 60 * 60 * 24) {
+                output = Math.round(ago / 60 / 60) + " 小时前";
+            } else if (ago < 60 * 60 * 24 * 30) {
+                output = Math.round(ago / 60 / 60 / 24) + " 天前";
+            } else if (ago < 60 * 60 * 24 * 365) {
+                output = Math.round(ago / 60 / 60 / 24 / 30) + " 个月前";
+            } else if (ago < 60 * 60 * 24 * 365 * 3) {
+                output = Math.round(ago / 60 / 60 / 24 / 365) + " 年前";
+            } else {
+                output = '很久很久以前';
+            }
+            return output;
+        };
+    });
 })();
 
 (function () {
