@@ -3,11 +3,13 @@
         .module('app')
         .controller('PostController', PostController);
 
-    function PostController($state, post, Post, storage, $scope, _, $rootScope) {
+    function PostController($state, post, Post, storage, $scope, _, $rootScope, $timeout, $cacheFactory) {
         var vm = this;
+        vm.post = post;
 
         vm.currentPost = post.data.result;
         vm.currentPostDetail = post.data.detail;
+        
         vm.begintime = Date.now();
         vm.currenttime = Date.now();
         vm.status = '';
@@ -33,12 +35,12 @@
 
         function love() {
             vm.currentPostDetail.love = !vm.currentPostDetail.love;
-            Post.update({feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id}, {type: 'love'});
+            Post.update({feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id}, {type: 'love', revert: true});
         }
 
         function mark() {
             vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
-            Post.update({feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id}, {type: 'mark'});
+            Post.update({feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id}, {type: 'mark', revert: true});
         }
 
     }

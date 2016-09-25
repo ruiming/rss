@@ -3,7 +3,7 @@
         .module('app')
         .factory('tokenInjector', tokenInjector);
 
-    function tokenInjector($injector, $q, $cookies) {
+    function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
         let jwt = undefined;
         
         return {
@@ -45,6 +45,7 @@
                             config.data.data.user_id = data.user_id[0]
                         }
                 }
+
                 var deferred = $q.defer();
                 deferred.resolve(config);
                 return deferred.promise;

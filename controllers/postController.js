@@ -81,6 +81,7 @@ exports.update = async (ctx, next) => {
                 var state = await UserPostModel.findOne({user_id: userid, feed_id: feed_id, post_id: item});
                 if(type === 'finish')   state['read'] = true;                
                 if(state && state._id) {
+                    console.log(state[type]);
                     if(revert)  state[type] = !state[type];
                     else    state[type] = true;
                     state.save()

@@ -4,7 +4,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 (function () {
     config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider"];
-    angular.module('app', ['ui.router', 'ui.bootstrap', 'ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'underscore']).config(config);
+    angular.module('app', ['ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'underscore', 'ui.router', 'ui.bootstrap']).config(config);
 
     function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
 
@@ -94,10 +94,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 (function () {
-    tokenInjector.$inject = ["$injector", "$q", "$cookies"];
+    tokenInjector.$inject = ["$injector", "$q", "$cookies", "$cacheFactory", "$timeout"];
     angular.module('app').factory('tokenInjector', tokenInjector);
 
-    function tokenInjector($injector, $q, $cookies) {
+    function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
         var jwt = undefined;
 
         return {
@@ -139,6 +139,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         config.data.data.user_id = data.user_id[0];
                     }
                 }
+
                 var deferred = $q.defer();
                 deferred.resolve(config);
                 return deferred.promise;
@@ -211,9 +212,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    angular.module('app').factory('Post', function ($resource) {
-        return $resource('/api/feed/:feed_id/post/:id', { id: '@id' }, {
-            update: { method: 'PUT' }
+    angular.module('app').factory('Post', function ($cacheFactory, $resource) {
+        return $resource('/api/feed/:feed_id/post/:id', { id: '@_id' }, {
+            update: { method: 'PUT' },
+            get: { method: 'GET' }
         });
     });
 })();
@@ -283,7 +285,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var vm = this;
         vm.read = read;
         vm.readall = readall;
-
         vm.feed = feed.data;
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
@@ -318,24 +319,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         function read(post) {
-            if (post.read) {
-                return;
-            } else {
-                post.read = true;
-                Post.update({ feed_id: post.feed_id[0], id: post._id }, { type: 'read' });
-            }
-        }
-
-        function readall() {
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
             var _iteratorError2 = undefined;
 
             try {
                 for (var _iterator2 = vm.posts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var post = _step2.value;
+                    var _post = _step2.value;
 
-                    post.read = true;
+                    _post.active = false;
                 }
             } catch (err) {
                 _didIteratorError2 = true;
@@ -348,6 +340,41 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 } finally {
                     if (_didIteratorError2) {
                         throw _iteratorError2;
+                    }
+                }
+            }
+
+            post.active = true;
+            if (post.read) {
+                return;
+            } else {
+                post.read = true;
+                Post.update({ feed_id: post.feed_id[0], id: post._id }, { type: 'read' });
+            }
+        }
+
+        function readall() {
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+                for (var _iterator3 = vm.posts[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var post = _step3.value;
+
+                    post.read = true;
+                }
+            } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
+                    }
+                } finally {
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
                     }
                 }
             }
@@ -367,14 +394,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    PostController.$inject = ["$state", "post", "Post", "storage", "$scope", "_", "$rootScope"];
+    PostController.$inject = ["$state", "post", "Post", "storage", "$scope", "_", "$rootScope", "$timeout", "$cacheFactory"];
     angular.module('app').controller('PostController', PostController);
 
-    function PostController($state, post, Post, storage, $scope, _, $rootScope) {
+    function PostController($state, post, Post, storage, $scope, _, $rootScope, $timeout, $cacheFactory) {
         var vm = this;
+        vm.post = post;
 
         vm.currentPost = post.data.result;
         vm.currentPostDetail = post.data.detail;
+
         vm.begintime = Date.now();
         vm.currenttime = Date.now();
         vm.status = '';
@@ -400,12 +429,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         function love() {
             vm.currentPostDetail.love = !vm.currentPostDetail.love;
-            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'love' });
+            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'love', revert: true });
         }
 
         function mark() {
             vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
-            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'mark' });
+            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'mark', revert: true });
         }
     }
 })();

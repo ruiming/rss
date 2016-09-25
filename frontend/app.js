@@ -1,14 +1,14 @@
 (function() {
     angular
         .module('app', [
-            'ui.router',
-            'ui.bootstrap',
             'ngTouch',
             'ngAnimate',
             'ngResource',
             'ngSanitize',
             'ngCookies',
-            'underscore'
+            'underscore',
+            'ui.router',
+            'ui.bootstrap'
         ])
         .config(config);
 

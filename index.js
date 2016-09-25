@@ -13,6 +13,7 @@ import views from 'koa-views';
 import jwt from 'koa-jwt';
 import co from 'co';
 import render from 'koa-ejs';
+import json from 'koa-json';
 
 mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${config.MongoDB.NAME}`);
 mongoose.Promise = require('bluebird');
@@ -21,6 +22,7 @@ global.Promise = require('bluebird');
 var app = new Koa();
 var bodyparser = new Bodyparser();
 
+app.use(json());
 app.use(convert(bodyparser));
 app.use(convert(logger()))
 app.use(views(__dirname + '/views', {

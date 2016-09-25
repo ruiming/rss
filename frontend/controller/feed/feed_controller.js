@@ -7,7 +7,6 @@
         var vm = this;
         vm.read = read;
         vm.readall = readall;
-
         vm.feed = feed.data;
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
@@ -21,6 +20,10 @@
         }
         
         function read(post) {
+            for(let post of vm.posts) {
+                post.active = false;
+            }
+            post.active = true;
             if(post.read) {
                 return;
             } else {
