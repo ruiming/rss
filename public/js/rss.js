@@ -79,9 +79,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }
                 }, 0);
-
-                // TODO: if there is no scroll bar...
-                // TODO: The first time load...
             }
         };
     }
@@ -267,9 +264,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 (function () {
+    navbar.$inject = ["$state"];
     angular.module('app').directive('navbar', navbar);
 
-    function navbar() {
+    function navbar($state) {
         return {
             restrict: 'EA',
             scope: {
@@ -297,7 +295,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }, 800);
                 }
                 function search(feedlink) {
-                    console.log(tools.checkUrl(feedlink));
+                    // Check again
+                    if (!tools.checkUrl(feedlink)) {
+                        return false;
+                    } else {
+                        $state.go('search', { feedlink: feedlink });
+                    }
                 }
             }]
         };
@@ -475,6 +478,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 (function () {
     var help = {
+        // 检测 URL 是否合法
         checkUrl: function checkUrl(url) {
             if (!url) return false;
             var re = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;

@@ -34,10 +34,6 @@
                         }
                     }
                 }, 0);
-                
-                
-                // TODO: if there is no scroll bar...
-                // TODO: The first time load...
             }
         }
     }

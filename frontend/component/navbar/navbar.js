@@ -3,7 +3,7 @@
         .module('app')
         .directive('navbar', navbar);
     
-    function navbar() {
+    function navbar($state) {
         return {
             restrict: 'EA',
             scope: {
@@ -30,7 +30,12 @@
                     }, 800);
                 }
                 function search(feedlink) {
-                    console.log(tools.checkUrl(feedlink));
+                    // Check again
+                    if(!tools.checkUrl(feedlink)) {
+                        return false;
+                    } else {
+                        $state.go('search', {feedlink: feedlink});
+                    }
                 }
             }
         }
