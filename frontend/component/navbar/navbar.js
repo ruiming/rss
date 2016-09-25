@@ -3,7 +3,7 @@
         .module('app')
         .directive('navbar', navbar);
     
-    function navbar($state) {
+    function navbar($state, $base64) {
         return {
             restrict: 'EA',
             scope: {
@@ -34,7 +34,7 @@
                     if(!tools.checkUrl(feedlink)) {
                         return false;
                     } else {
-                        $state.go('search', {feedlink: feedlink});
+                        $state.go('search', {feedlink: $base64.encode(unescape(encodeURIComponent(feedlink)))});
                     }
                 }
             }

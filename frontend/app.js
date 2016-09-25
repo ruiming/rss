@@ -8,6 +8,7 @@
             'ngCookies',
             'ui.router',
             'ui.bootstrap',
+            'base64',
             'underscore',
             'app.tools'
         ])
@@ -25,7 +26,7 @@
                 controller: 'HomeController as vm'
             })
             .state('search', {
-                url: '/search:feedlink',
+                url: '/search/:feedlink',
                 templateUrl: 'search/search_tpl.html',
                 controller: 'SearchController as vm'
             })

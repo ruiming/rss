@@ -11,9 +11,11 @@ import fetchFavicon from 'favicon-getter';
  * @method: post
  * @url:    /api/feed
  * @params: {string} feedlink
+ * @query:  {string} search
  */
 exports.create = async (ctx, next) => {
     var feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim();
+    var search = ctx.request.query.search === 'true';
     if(!help.checkUrl(feedlink)) {
         return ctx.body = { success: false, data: 'URL 不合法' };
     }
@@ -24,18 +26,22 @@ exports.create = async (ctx, next) => {
     var result = await FeedModel.findOne({absurl: feedlink});
     // 判断数据库已存在该订阅源
     if(result && result._id) {
-        var userresult = await UserFeedModel.findOne({feed_id: result._id});
-        // 判断用户是否已经订阅该订阅源
-        if(userresult && userresult._id) {
-            return ctx.body = { success: false, data: `已订阅源 ${result.title}(${result.id})` };
-        } else {
-            // 订阅源的订阅人数 +1
-            result.feeder += 1;
-            result.save();
-            var userfeed = UserFeedModel({feed_id: result._id, user_id: userid});
-            // 添加到用户订阅表
-            userfeed.save();
+        if(search) {
             return ctx.body = { success: true, data: result };
+        } else {
+            var userresult = await UserFeedModel.findOne({feed_id: result._id});
+            // 判断用户是否已经订阅该订阅源
+            if(userresult && userresult._id) {
+                return ctx.body = { success: false, data: `已订阅源 ${result.title}(${result.id})` };
+            } else {
+                // 订阅源的订阅人数 +1
+                result.feeder += 1;
+                result.save();
+                var userfeed = UserFeedModel({feed_id: result._id, user_id: userid});
+                // 添加到用户订阅表
+                userfeed.save();
+                return ctx.body = { success: true, data: result };
+            }
         }
     } else {
         await new Promise(async (resolve, reject) => {
@@ -54,7 +60,7 @@ exports.create = async (ctx, next) => {
                     });
                 }
             });
-
+            req.on('error', err => reject(err));
             feedparser.on('meta', async function() {
                 var favicon = null;
                 await fetchFavicon(this.meta.link).then(data => favicon = data);
@@ -64,26 +70,41 @@ exports.create = async (ctx, next) => {
                     }
                     resolve(favicon);
                 }));
-                var feed = new FeedModel(Object.assign(this.meta, {absurl: feedlink, favicon: favicon}));
+                let data = search === 'true' ? {absurl: feedlink, favicon: favicon} : {absurl: feedlink, favicon: favicon, feeder: 1};
+                var feed = new FeedModel(Object.assign(this.meta, data));
                 var store = await feed.save();
                 var feedid = store._id;
-                setTimeout(() => {
-                    var userfeed = new UserFeedModel({feed_id: feedid, user_id: userid});
-                    userfeed.save();
-                    feedparser.on('readable', function() {
-                        while(result = this.read()) {
-                            console.log('reading');
-                            var post = new PostModel(Object.assign(result, {feed_id: feedid}));
-                            post.save();
-                        }
+                if(search) {
+                    ctx.body = { success: true, data: store };
+                    resolve();
+                } else {
+                    setTimeout(() => {
+                        var userfeed = new UserFeedModel({feed_id: feedid, user_id: userid});
+                        userfeed.save();
+                        feedparser.on('readable', function() {
+                            while(result = this.read()) {
+                                var post = new PostModel(Object.assign(result, {feed_id: feedid}));
+                                post.save();
+                            }
 
-                    });
-                }, 0);
-                ctx.body = { success: true, data: store };
-                resolve();
+                        });
+                    }, 0);
+                    ctx.body = { success: true, data: store };
+                    resolve();
+                }
             });
         });
     }
+}
+
+/**
+ * 查找订阅源
+ * @method: query
+ * @url:    /api/feed
+ * @params: {string} feedlink
+ */
+exports.query = async (ctx, next) => {
+
 }
 
 /**

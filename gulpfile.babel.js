@@ -21,6 +21,7 @@ gulp.task('angular', () => {
         'node_modules/angular-resource/angular-resource.js',
         'node_modules/angular-cookies/angular-cookies.min.js',
         'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+        'node_modules/angular-base64/angular-base64.js',
         'node_modules/angular-ui-router/release/angular-ui-router.min.js'])
         .pipe(concat('app.min.js'))
         .pipe(gulp.dest('public/js'));

@@ -7,7 +7,6 @@
         .factory('storage', storage);
 
     function storage() {
-        let kkk = {};
-        return kkk;
+        return {};
     }
 }());
