@@ -483,7 +483,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     // In angular, the module name is app.tools, and the factory name is tools.
-    if (angular) {
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = help;
+    } else {
         angular.module('app.tools', []).factory('tools', function () {
             return help;
         });

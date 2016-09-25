@@ -3,6 +3,7 @@ import PostModel from '../models/post';
 import UserFeedModel from '../models/userFeed'
 import FeedParser from 'feedparser';
 import request from 'request';
+import help from '../helper/help';
 import fetchFavicon from 'favicon-getter';
 
 /**
@@ -13,6 +14,9 @@ import fetchFavicon from 'favicon-getter';
  */
 exports.create = async (ctx, next) => {
     var feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim();
+    if(!help.checkUrl(feedlink)) {
+        return ctx.body = { success: false, data: 'URL 不合法' };
+    }
     var userid = ctx.state.user.id;
     var feedparser = new FeedParser(), feed = new FeedModel(), _id;
 
