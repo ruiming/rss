@@ -6,9 +6,10 @@
             'ngResource',
             'ngSanitize',
             'ngCookies',
-            'underscore',
             'ui.router',
-            'ui.bootstrap'
+            'ui.bootstrap',
+            'underscore',
+            'app.tools'
         ])
         .config(config);
 
@@ -22,6 +23,11 @@
                 url: '/',
                 templateUrl: 'home/home_tpl.html',
                 controller: 'HomeController as vm'
+            })
+            .state('search', {
+                url: '/search:feedlink',
+                templateUrl: 'search/search_tpl.html',
+                controller: 'SearchController as vm'
             })
             .state('feed', {
                 url: '/feed/:id',

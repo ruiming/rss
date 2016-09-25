@@ -4,7 +4,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 (function () {
     config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider"];
-    angular.module('app', ['ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'underscore', 'ui.router', 'ui.bootstrap']).config(config);
+    angular.module('app', ['ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'ui.router', 'ui.bootstrap', 'underscore', 'app.tools']).config(config);
 
     function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
 
@@ -15,6 +15,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             url: '/',
             templateUrl: 'home/home_tpl.html',
             controller: 'HomeController as vm'
+        }).state('search', {
+            url: '/search:feedlink',
+            templateUrl: 'search/search_tpl.html',
+            controller: 'SearchController as vm'
         }).state('feed', {
             url: '/feed/:id',
             templateUrl: 'feed/feed_tpl.html',
@@ -274,14 +278,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             replace: true,
             templateUrl: 'navbar/navbar.html',
             controllerAs: 'vm',
-            controller: ["$timeout", function navbarController($timeout) {
-                var vm = this;
+            controller: ["$timeout", "tools", function navbarController($timeout, tools) {
+                var vm = this,
+                    timeout = void 0;
                 vm.blur = blur;
+                vm.search = search;
+                vm.focus = focus;
 
+                function focus() {
+                    if (timeout) {
+                        $timeout.cancel(timeout);
+                    }
+                    vm.active = true;
+                }
                 function blur() {
-                    $timeout(function () {
+                    timeout = $timeout(function () {
                         vm.active = false;
                     }, 800);
+                }
+                function search(feedlink) {
+                    console.log(tools.checkUrl(feedlink));
                 }
             }]
         };
@@ -446,5 +462,30 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
             Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'mark', revert: true });
         }
+    }
+})();
+
+(function () {
+    angular.module('app').controller('SearchController', SearchController);
+
+    function SearchController() {
+        var vm = this;
+    }
+})();
+
+(function () {
+    var help = {
+        checkUrl: function checkUrl(url) {
+            if (!url) return false;
+            var re = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+            return url.match(re) !== null;
+        }
+    };
+
+    // In angular, the module name is app.tools, and the factory name is tools.
+    if (angular) {
+        angular.module('app.tools', []).factory('tools', function () {
+            return help;
+        });
     }
 })();

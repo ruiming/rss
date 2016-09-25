@@ -69,7 +69,8 @@ gulp.task('js', () => {
     gulp.src([
         'frontend/*.js',
         'frontend/**/*.js',
-        'frontend/**/**/*.js'])
+        'frontend/**/**/*.js',
+        'helper/help.js'])
     .pipe(plumber())
     .pipe(ngAnnotate())
     .pipe(concat('rss.js'))
@@ -96,7 +97,7 @@ gulp.task('sass', () => {
 });
 
 // Auto watch and build
-gulp.watch(['frontend/*.js', 'frontend/**/*.js', 'frontend/**/**/*.js'], ['js']);
+gulp.watch(['frontend/*.js', 'frontend/**/*.js', 'frontend/**/**/*.js', 'helper/help.js'], ['js']);
 gulp.watch(['frontend/*.scss', 'frontend/**/*.scss', 'frontend/**/**/*.scss', 'views/*.scss'], ['sass']);
 gulp.watch(['frontend/controller/**/*.html', 'frontend/component/**/*.html'], ['template']);
 

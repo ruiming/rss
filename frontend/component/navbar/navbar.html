@@ -4,9 +4,9 @@
             <a class="navbar-brand" href="#">Rss</a>
         </div>
         <div class="search">
-            <div class="search-btn btn btn-default"><span class="glyphicon glyphicon-search"></span></div>
-            <input type="text" id="search" class="form-control" placeholder="输入 URL 添加订阅源" autocomplete="off"
-                ng-class="{true: 'input-active', false: ''}[vm.active]" ng-focus="vm.active = true"  ng-blur="vm.blur()">
+            <div class="search-btn btn btn-default" ng-click="vm.search(feedlink)"><span class="glyphicon glyphicon-search"></span></div>
+            <input type="text" id="search" class="form-control" placeholder="输入 URL 添加订阅源" autocomplete="off" ng-model="feedlink"
+                ng-class="{true: 'input-active', false: ''}[vm.active]" ng-focus="vm.focus()"  ng-blur="vm.blur()">
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav">

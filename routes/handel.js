@@ -2,7 +2,6 @@ import Router from 'koa-router';
 import send from 'koa-send';
 import jwt from 'jsonwebtoken';
 import userRoute from './userRoute';
-import { checkJwt } from '../helper/backend';
 import config from '../config/config';
 
 var router = new Router();
