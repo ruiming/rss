@@ -273,7 +273,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             },
             replace: true,
             templateUrl: 'navbar/navbar.html',
-            controller: ["$scope", function navbarController($scope) {}]
+            controllerAs: 'vm',
+            controller: ["$timeout", function navbarController($timeout) {
+                var vm = this;
+                vm.blur = blur;
+
+                function blur() {
+                    $timeout(function () {
+                        vm.active = false;
+                    }, 800);
+                }
+            }]
         };
     }
 })();

@@ -64,6 +64,11 @@
         width: 75px;
         height: 75px;
         border-radius: 50%;
+        transition: 0.3s linear all;
+        &:hover {
+            transition: 0.3s linear all;
+            transform: rotate(360deg);
+        }
     }
     span {
         display: block;

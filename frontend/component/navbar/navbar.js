@@ -11,7 +11,16 @@
             },
             replace: true,
             templateUrl: 'navbar/navbar.html',
-            controller: function navbarController($scope) {
+            controllerAs: 'vm',            
+            controller: function navbarController($timeout) {
+                let vm = this;
+                vm.blur = blur;
+
+                function blur() {
+                    $timeout(() => {
+                        vm.active = false;                        
+                    }, 800);
+                }
             }
         }
     }
