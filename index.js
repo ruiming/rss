@@ -14,6 +14,7 @@ import jwt from 'koa-jwt';
 import co from 'co';
 import render from 'koa-ejs';
 import json from 'koa-json';
+import favicon from 'koa-favicon';
 
 mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${config.MongoDB.NAME}`);
 mongoose.Promise = require('bluebird');
@@ -30,6 +31,7 @@ app.use(views(__dirname + '/views', {
 }));
 
 app.use(convert(serve(path.resolve(__dirname, 'public'), {defer: true})));
+app.use(favicon(__dirname + '/public/img/rss.png'));
 
 // 全局错误处理
 app.use(async (ctx, next) => {
