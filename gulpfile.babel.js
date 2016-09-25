@@ -9,6 +9,7 @@ import ngTemplate from 'gulp-ng-template';
 import plumber from 'gulp-plumber';
 import sass from 'gulp-sass';
 import usemin from 'gulp-usemin';
+import htmlify from 'gulp-angular-htmlify';
 
 // Packaging JS dependence
 gulp.task('angular', () => {
@@ -56,6 +57,7 @@ gulp.task('template', () => {
     gulp.src([
         'frontend/controller/**/*.html',
         'frontend/component/**/*.html'])
+        .pipe(htmlify())
         .pipe(minifyHtml({empty: true, quotes: true}))
         .pipe(ngTemplate({
             moduleName: 'app',

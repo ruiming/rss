@@ -58,6 +58,7 @@
     "babel-preset-stage-3": "^6.11.0",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
+    "gulp-angular-htmlify": "^2.3.0",
     "gulp-babel": "^6.1.2",
     "gulp-clean-css": "^2.0.12",
     "gulp-concat": "^2.6.0",

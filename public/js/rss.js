@@ -83,6 +83,57 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }
 })();
+(function () {
+    angular.module('app').filter('linkFix', function () {
+        return function (input, origin) {
+            var re = /src="(\/[^\/].+?)"/g;
+            var result = input.replace(re, function (match, p, offset, string) {
+                return "src=\"" + origin + p.slice(1) + "\"";
+            });
+            return result;
+        };
+    });
+})();
+
+(function () {
+    angular.module('app').filter('timeago', function () {
+        return function (input) {
+            // TODO: 会被执行两次，并且如果input被watch时会多次执行
+            var now = Date.now();
+            var ago = (now - Date.parse(input)) / 1000;
+            var output = null;
+            var refresh = null;
+            // TODO: if I want to make it change in real time.
+            if (ago < 10 * 60) {
+                output = "刚刚";
+                refresh = 60;
+            } else if (ago < 60 * 60) {
+                output = Math.round(ago / 60) + " 分钟前";
+                refresh = 60;
+            } else if (ago < 60 * 60 * 24) {
+                output = Math.round(ago / 60 / 60) + " 小时前";
+            } else if (ago < 60 * 60 * 24 * 30) {
+                output = Math.round(ago / 60 / 60 / 24) + " 天前";
+            } else if (ago < 60 * 60 * 24 * 365) {
+                output = Math.round(ago / 60 / 60 / 24 / 30) + " 个月前";
+            } else if (ago < 60 * 60 * 24 * 365 * 3) {
+                output = Math.round(ago / 60 / 60 / 24 / 365) + " 年前";
+            } else {
+                output = '很久很久以前';
+            }
+            return output;
+        };
+    });
+})();
+
+(function () {
+    angular.module('app').filter('toLocalString', ["$filter", function ($filter) {
+        return function (input, format) {
+            return $filter('date')(Date.parse(input), format);
+        };
+    }]);
+})();
+
 /**
  * 单体通信
  */
@@ -156,57 +207,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }]);
 })();
 (function () {
-    angular.module('app').filter('linkFix', function () {
-        return function (input, origin) {
-            var re = /src="(\/[^\/].+?)"/g;
-            var result = input.replace(re, function (match, p, offset, string) {
-                return "src=\"" + origin + p.slice(1) + "\"";
-            });
-            return result;
-        };
-    });
-})();
-
-(function () {
-    angular.module('app').filter('timeago', function () {
-        return function (input) {
-            // TODO: 会被执行两次，并且如果input被watch时会多次执行
-            var now = Date.now();
-            var ago = (now - Date.parse(input)) / 1000;
-            var output = null;
-            var refresh = null;
-            // TODO: if I want to make it change in real time.
-            if (ago < 10 * 60) {
-                output = "刚刚";
-                refresh = 60;
-            } else if (ago < 60 * 60) {
-                output = Math.round(ago / 60) + " 分钟前";
-                refresh = 60;
-            } else if (ago < 60 * 60 * 24) {
-                output = Math.round(ago / 60 / 60) + " 小时前";
-            } else if (ago < 60 * 60 * 24 * 30) {
-                output = Math.round(ago / 60 / 60 / 24) + " 天前";
-            } else if (ago < 60 * 60 * 24 * 365) {
-                output = Math.round(ago / 60 / 60 / 24 / 30) + " 个月前";
-            } else if (ago < 60 * 60 * 24 * 365 * 3) {
-                output = Math.round(ago / 60 / 60 / 24 / 365) + " 年前";
-            } else {
-                output = '很久很久以前';
-            }
-            return output;
-        };
-    });
-})();
-
-(function () {
-    angular.module('app').filter('toLocalString', ["$filter", function ($filter) {
-        return function (input, format) {
-            return $filter('date')(Date.parse(input), format);
-        };
-    }]);
-})();
-
-(function () {
     angular.module('app').factory('Feed', function ($resource) {
         return $resource('/api/feed/:id', { id: '@_id' });
     });
@@ -221,91 +221,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     });
 })();
 
-(function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
-                $scope.time = Date.now();
-                Feed.get(function (res) {
-                    $scope.feeds = res.data;
-                });
-                $scope.setTitle = function () {
-                    storage.title = '';
-                    storage.status = '';
-                    storage.begintime = '';
-                };
-                setInterval(function () {
-                    $scope.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
-            }]
-        };
-    }
-})();
-(function () {
-    angular.module('app').directive('feedPanel', feedPanel);
-
-    function feedPanel() {
-        return {
-            restrict: 'EA',
-            scope: {
-                feed: '='
-            },
-            replace: true,
-            templateUrl: 'feedPanel/feedPanel.html',
-            controller: ["$scope", function navbarController($scope) {}]
-        };
-    }
-})();
-(function () {
-    navbar.$inject = ["$state"];
-    angular.module('app').directive('navbar', navbar);
-
-    function navbar($state) {
-        return {
-            restrict: 'EA',
-            scope: {
-                title: '='
-            },
-            replace: true,
-            templateUrl: 'navbar/navbar.html',
-            controllerAs: 'vm',
-            controller: ["$timeout", "tools", function navbarController($timeout, tools) {
-                var vm = this,
-                    timeout = void 0;
-                vm.blur = blur;
-                vm.search = search;
-                vm.focus = focus;
-
-                function focus() {
-                    if (timeout) {
-                        $timeout.cancel(timeout);
-                    }
-                    vm.active = true;
-                }
-                function blur() {
-                    timeout = $timeout(function () {
-                        vm.active = false;
-                    }, 800);
-                }
-                function search(feedlink) {
-                    // Check again
-                    if (!tools.checkUrl(feedlink)) {
-                        return false;
-                    } else {
-                        $state.go('search', { feedlink: feedlink });
-                    }
-                }
-            }]
-        };
-    }
-})();
 (function () {
     FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post", "$state"];
     angular.module('app').controller('FeedController', FeedController);
@@ -476,6 +391,91 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 
+(function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
+                $scope.time = Date.now();
+                Feed.get(function (res) {
+                    $scope.feeds = res.data;
+                });
+                $scope.setTitle = function () {
+                    storage.title = '';
+                    storage.status = '';
+                    storage.begintime = '';
+                };
+                setInterval(function () {
+                    $scope.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+            }]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('feedPanel', feedPanel);
+
+    function feedPanel() {
+        return {
+            restrict: 'EA',
+            scope: {
+                feed: '='
+            },
+            replace: true,
+            templateUrl: 'feedPanel/feedPanel.html',
+            controller: ["$scope", function navbarController($scope) {}]
+        };
+    }
+})();
+(function () {
+    navbar.$inject = ["$state"];
+    angular.module('app').directive('navbar', navbar);
+
+    function navbar($state) {
+        return {
+            restrict: 'EA',
+            scope: {
+                title: '='
+            },
+            replace: true,
+            templateUrl: 'navbar/navbar.html',
+            controllerAs: 'vm',
+            controller: ["$timeout", "tools", function navbarController($timeout, tools) {
+                var vm = this,
+                    timeout = void 0;
+                vm.blur = blur;
+                vm.search = search;
+                vm.focus = focus;
+
+                function focus() {
+                    if (timeout) {
+                        $timeout.cancel(timeout);
+                    }
+                    vm.active = true;
+                }
+                function blur() {
+                    timeout = $timeout(function () {
+                        vm.active = false;
+                    }, 800);
+                }
+                function search(feedlink) {
+                    // Check again
+                    if (!tools.checkUrl(feedlink)) {
+                        return false;
+                    } else {
+                        $state.go('search', { feedlink: feedlink });
+                    }
+                }
+            }]
+        };
+    }
+})();
 (function () {
     var help = {
         // 检测 URL 是否合法
