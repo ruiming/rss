@@ -3,10 +3,15 @@
         <h1>{{::vm.currentPost.title}}</h1>
     </header>
     <section>
-        <small><span class="glyphicon glyphicon-send"></span>
-        更新于 {{::vm.currentPost.pubdate | timeago}} 由 {{::vm.currentPost.author}} 发布</small>
-        <small ng-if="vm.currentPost.categories"><span class="glyphicon glyphicon-tags"></span>
-        {{::vm.currentPost.categories.toString()}}</small>
+        <small>
+            <span class="glyphicon glyphicon-send"></span>
+            <span ng-if="vm.currentPost.pubdate">更新于 {{::vm.currentPost.pubdate | timeago}} </span>
+            <span ng-if="vm.currentPost.author">由 {{::vm.currentPost.author}} 发布</span>
+        </small>
+        <small ng-show="vm.currentPost.categories.length">
+            <span class="glyphicon glyphicon-tags"></span>
+        {{::vm.currentPost.categories.toString()}}
+        </small>
     </section>
     <section>
         <article ng-bind-html="::vm.currentPost.description | linkFix: vm.origin" >

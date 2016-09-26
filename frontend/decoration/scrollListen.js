@@ -12,7 +12,7 @@
                 var func = _.throttle(e => {
                     if(void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail && !scope.vm.currentPostDetail.finish) {
                         let target = e.target;
-                        if(first && target.scrollHeight - target.clientHeight === target.scrollTop) {
+                        if(first && target.scrollHeight - target.clientHeight < target.scrollTop) {
                             // Read over
                             Post.update({feed_id: scope.vm.currentPost.feed_id, id: scope.vm.currentPost._id}, {
                                 type: 'finish'

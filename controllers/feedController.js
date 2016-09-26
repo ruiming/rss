@@ -153,6 +153,6 @@ exports.remove = async (ctx, next) => {
         ctx.throw(404, '你没有订阅该订阅源');
     } else {
         FeedModel.update({_id: feed_id}, {$inc: {feeder: -1}});
-        return ctx.body = { success: true, data: `成功删除` };
+        return ctx.body = { success: true, data: `取消订阅成功` };
     }
 }
