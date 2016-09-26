@@ -17,7 +17,6 @@
 
                 // Function
                 vm.feedit = feedit;
-
                 function feedit() {
                     $scope.feed.feeded = !$scope.feed.feeded;
                     if($scope.feed.feeded) {

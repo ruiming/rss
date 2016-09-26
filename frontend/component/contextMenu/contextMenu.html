@@ -15,7 +15,7 @@
     <!-- feed_id is FeedModel's _id, not UserFeedModel's _id 
          UserFeedModel's _id is not used -->
     <div class="list-group">
-        <a class="list-group-item feed-item" ui-sref="feed({id: vm.feed.feed_id})"
+        <a class="list-group-item feed-item" ui-sref="feed({id: feed.feed_id})"
             ng-click="vm.setTitle()"
             ng-repeat="feed in vm.feeds track by feed.feed_id">
             <!-- TODO: still has the failure get info -->

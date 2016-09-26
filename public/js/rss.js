@@ -242,7 +242,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 Feed.get(function (res) {
                     vm.feeds = res.data;
-                    console.log(vm.feeds);
                 });
 
                 setInterval(function () {
@@ -251,12 +250,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }, 1000);
 
                 $scope.$on('ADD_FEED', function (event, data) {
-                    data.feed_id = data._id;
                     vm.feeds.push(data);
                 });
                 $scope.$on('DELETE_FEED', function (event, data) {
                     vm.feeds = _.filter(vm.feeds, function (feed) {
-                        return feed.feed_id != data._id;
+                        return feed.feed_id != data.feed_id;
                     });
                 });
 
@@ -286,7 +284,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 // Function
                 vm.feedit = feedit;
-
                 function feedit() {
                     $scope.feed.feeded = !$scope.feed.feeded;
                     if ($scope.feed.feeded) {
