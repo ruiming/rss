@@ -22,7 +22,7 @@ exports.create = async (ctx, next) => {
         ctx.cookies.set("token", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
         await ctx.redirect('/');
     } else {
-        throw(result.errmsg);   // Attention!
+        ctx.throw(404, result.errmsg);   // Attention!
     }
 }
 
@@ -40,6 +40,6 @@ exports.get = async (ctx, next) => {
         ctx.cookies.set("jwt", token, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
         await ctx.redirect('/');
     } else {
-        throw('用户不存在');
+        ctx.throw(404, '用户不存在');
     }
 }

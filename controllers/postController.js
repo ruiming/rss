@@ -21,7 +21,7 @@ exports.listAll = async (ctx, next) => {
     if(result[0] && result[0]._id) {
         ctx.body = { success: true, data: { posts: result, detail: detail} };
     } else {
-        ctx.throw(result);
+        ctx.throw(404, result);
     }
 }
 
@@ -41,7 +41,7 @@ exports.listOne = async (ctx, next) => {
     if(result) {
         ctx.body = { success: true, data: {result: result, detail: readresult} };
     } else {
-        ctx.throw(result);
+        ctx.throw(404, result);
     }
 }
 
@@ -62,7 +62,7 @@ exports.update = async (ctx, next) => {
     var type = ctx.request.body.type && ctx.request.body.type.trim();
     var revert = ctx.request.body.revert === true;
     if(['read', 'mark', 'love', 'finish'].indexOf(type) === -1) {
-        ctx.throw('参数错误');
+        ctx.throw(404, '参数错误');
     } else {
         setTimeout(async () => {
             var items = [];

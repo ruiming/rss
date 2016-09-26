@@ -32,7 +32,7 @@ exports.create = async (ctx, next) => {
             var userresult = await UserFeedModel.findOne({feed_id: result._id});
             // 判断用户是否已经订阅该订阅源
             if(userresult && userresult._id) {
-                return ctx.body = { success: false, data: `已订阅源 ${result.title}(${result.id})` };                
+                ctx.throw(409, `已订阅源 ${result.title}(${result.id})`)
             } else {
                 // 订阅源的订阅人数 +1
                 result.feeder += 1;
@@ -121,7 +121,7 @@ exports.list = async (ctx, next) => {
         if(result && result._id) {
             ctx.body = { success: true, data: result };
         } else {
-            ctx.throw('订阅源不存在');
+            ctx.throw(404, '订阅源不存在');
         }
     }
 }
@@ -150,7 +150,7 @@ exports.remove = async (ctx, next) => {
     // Really delete ?
     var result = await UserFeedModel.find({feed_id: feed_id}).remove();
     if(result.result.n === 0) {
-        return ctx.body = { success: false, data: '你没有订阅该订阅源' };
+        ctx.throw(404, '你没有订阅该订阅源');
     } else {
         FeedModel.update({_id: feed_id}, {$inc: {feeder: -1}});
         return ctx.body = { success: true, data: `成功删除` };
