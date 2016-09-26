@@ -3,12 +3,12 @@
         .module('app')
         .controller('FeedController', FeedController);
 
-    function FeedController(feed, posts, _, storage, $scope, Post, $state, Feed) {
+    function FeedController($rootScope, feed, posts, _, storage, $scope, Post, $state, Feed, $stateParams) {
         var vm = this;
         vm.feed = feed.data;
         vm.feed.feeded = angular.isDefined(feed.data.feed_time);        
+        vm.feed.feed_id = $stateParams.id;        
         vm.posts = posts.data.posts;
-        vm.feed_id = angular.isDefined(feed.data.feed_id) ? feed.data.feed_id : feed.data._id;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
 
         // Function
@@ -29,6 +29,7 @@
         function feedit() {
             Feed.save({feedlink: vm.feed.absurl}, res => {
                 vm.feed.feeded = true;
+                $rootScope.$broadcast('ADD_FEED', vm.feed);
             }, err => {
                 // TODO
                 console.log(err);
@@ -50,7 +51,7 @@
             for(let post of vm.posts) {
                 post.read = true;
             }
-            Post.update({feed_id: vm.feed_id, id: 0}, {type: 'read'});
+            Post.update({feed_id: vm.feed.feed_id, id: 0}, {type: 'read'});
         }
     }
 }());

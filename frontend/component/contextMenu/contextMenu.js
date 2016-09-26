@@ -9,20 +9,32 @@
             scope: true,
             replace: true,
             templateUrl: 'contextMenu/contextMenu.html',
+            controllerAs: 'vm',
             controller: function contextMenuController($scope, Feed, storage) {
-                $scope.time = Date.now();
+                let vm = this;
+                vm.time = Date.now();
+                vm.feeds = {};
+
+                // Function
+                vm.setTitle = setTitle;
+
                 Feed.get(res => {
-                    $scope.feeds = res.data;
+                    vm.feeds = res.data;
                 });
-                $scope.setTitle = function() {
+
+                setInterval(() => {
+                    vm.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+                
+                $scope.$on('ADD_FEED', (src, data) => {
+                })
+
+                function setTitle() {
                     storage.title = '';
                     storage.status = '';
                     storage.begintime = '';
                 }
-                setInterval(() => {
-                    $scope.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
             }
         }
     }

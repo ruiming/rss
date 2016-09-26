@@ -13,9 +13,9 @@
         <h2>订阅源</h2>
     </div>
     <div class="list-group">
-        <a class="list-group-item feed-item" ui-sref="feed({id: feed.feed_id})"
-            ng-click="setTitle()"
-            ng-repeat="feed in feeds track by $index">
+        <a class="list-group-item feed-item" ui-sref="feed({id: vm.feed.feed_id})"
+            ng-click="vm.setTitle()"
+            ng-repeat="feed in vm.feeds track by $index">
             <!-- TODO: still has the failure get info -->
             <img class="favicon" ng-src="{{feed.favicon}}" onerror="this.src='/img/rss.png';">
             <span class="title">{{feed.title}}</span>
@@ -25,7 +25,7 @@
     <div class="status-bar">
         <p class="time">
             <span class="glyphicon glyphicon-calendar"></span>
-            {{ time | date: 'EEEE yyyy-MM-dd HH:mm:ss a' }}
+            {{ vm.time | date: 'EEEE yyyy-MM-dd HH:mm:ss a' }}
         </p>
     </div>
 </div>

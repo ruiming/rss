@@ -12,21 +12,24 @@
             replace: true,
             templateUrl: 'feedPanel/feedPanel.html',
             controllerAs: 'vm',
-            controller: function navbarController($scope, Feed) {
+            controller: function navbarController($scope, $rootScope, Feed) {
                 let vm = this;
+
+                // Function
                 vm.feedit = feedit;
 
                 function feedit() {
                     $scope.feed.feeded = !$scope.feed.feeded;
                     if($scope.feed.feeded) {
                         Feed.save({feedlink: $scope.feed.absurl}, res => {
+                            $rootScope.$broadcast('ADD_FEED', vm.feed);
                             $scope.feed.feeded = true;
                         }, err => {
                             // TODO
                             console.log(err);
                         });
                     } else {
-                        Feed.delete({id: $scope.feed._id}, res => {
+                        Feed.delete({id: $scope.feed.feed_id}, res => {
                             $scope.feed.feeded = false;
                         }, err => {
                             // TODO
