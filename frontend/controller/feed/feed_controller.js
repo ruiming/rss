@@ -15,6 +15,7 @@
         vm.read = read;
         vm.readall = readall;
         vm.feedit = feedit;
+        vm.back = back;
 
         // Will be used by its' child state
         $state.current.data = feed.data.link;
@@ -53,6 +54,9 @@
                 post.read = true;
             }
             Post.update({feed_id: vm.feed_id, id: 0}, {type: 'read'});
+        }
+        function back() {
+            history.back();
         }
     }
 }());

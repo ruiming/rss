@@ -77,6 +77,13 @@
                 margin-top: 0;
             }
         }
+        .mark, .love {
+            float: right;
+        }
+        .home {
+            float: left;
+            padding: 5px 10px;
+        }
     }
     article {
         padding: 20px 0;

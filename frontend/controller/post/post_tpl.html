@@ -13,6 +13,9 @@
         </article>
     </section>
     <footer class="status-bar">
+        <button class="home btn btn-primary" ng-click="vm.home()">
+            <span class="glyphicon glyphicon-home"></span>            
+        </button>
         <p class="title">{{ ::vm.currentPost.title }}</p>
         <p class="readtime" ng-if="vm.begintime">
             <span class="glyphicon glyphicon-time"></span>
@@ -22,7 +25,7 @@
             <span ng-if="!vm.currentPostDetail.mark">收藏</span>
             <span ng-if="vm.currentPostDetail.mark">已收藏</span>
         </button>
-        <button class="mark btn btn-primary" ng-click="vm.love()">
+        <button class="love btn btn-primary" ng-click="vm.love()">
             <span ng-if="!vm.currentPostDetail.love">点赞</span>
             <span ng-if="vm.currentPostDetail.love">已点赞</span>
         </button>
