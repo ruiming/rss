@@ -17,7 +17,7 @@ exports.create = async (ctx, next) => {
     var feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim();
     var search = ctx.request.query.search === 'true';
     if(!help.checkUrl(feedlink)) {
-        return ctx.body = { success: false, data: 'URL 不合法' };
+        ctx.throw(404, 'URL 不合法');
     }
     var userid = ctx.state.user.id;
     var feedparser = new FeedParser(), feed = new FeedModel(), _id;
@@ -43,7 +43,6 @@ exports.create = async (ctx, next) => {
                 return ctx.body = { success: true, data: result };
             }
         }
-        
     } else {
         await new Promise(async (resolve, reject) => {
             var req = request(feedlink);

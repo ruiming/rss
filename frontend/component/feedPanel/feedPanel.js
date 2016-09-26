@@ -19,9 +19,19 @@
                 function feedit() {
                     $scope.feed.feeded = !$scope.feed.feeded;
                     if($scope.feed.feeded) {
-                        Feed.save({feedlink: $scope.feed.absurl});
+                        Feed.save({feedlink: $scope.feed.absurl}, res => {
+                            $scope.feed.feeded = true;
+                        }, err => {
+                            // TODO
+                            console.log(err);
+                        });
                     } else {
-                        Feed.delete({id: $scope.feed._id});
+                        Feed.delete({id: $scope.feed._id}, res => {
+                            $scope.feed.feeded = false;
+                        }, err => {
+                            // TODO
+                            console.log(err);
+                        });
                     }
                 }
             }

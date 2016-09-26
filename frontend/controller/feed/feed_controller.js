@@ -6,8 +6,8 @@
     function FeedController(feed, posts, _, storage, $scope, Post, $state, Feed) {
         var vm = this;
         vm.feed = feed.data;
+        vm.feed.feeded = angular.isDefined(feed.data.feed_time);        
         vm.posts = posts.data.posts;
-        vm.feeded = angular.isDefined(feed.data.feed_time);
         vm.feed_id = angular.isDefined(feed.data.feed_id) ? feed.data.feed_id : feed.data._id;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
 
@@ -15,7 +15,6 @@
         vm.read = read;
         vm.readall = readall;
         vm.feedit = feedit;
-        vm.back = back;
 
         // Will be used by its' child state
         $state.current.data = feed.data.link;
@@ -26,12 +25,10 @@
                 post.read = true;
             }
         }
-        
-        // feed.data._id is unstable for it will point to UserFeedModel's _id if you feed it before
-        // the request sent, otherwise it will point to FeedModel's _id if you have not feed it. 
+         
         function feedit() {
-            Feed.save({id: vm.feed_id}).$promise.then(res => {
-                vm.feeded = true
+            Feed.save({feedlink: vm.feed.absurl}, res => {
+                vm.feed.feeded = true;
             }, err => {
                 // TODO
                 console.log(err);
@@ -54,9 +51,6 @@
                 post.read = true;
             }
             Post.update({feed_id: vm.feed_id, id: 0}, {type: 'read'});
-        }
-        function back() {
-            history.back();
         }
     }
 }());

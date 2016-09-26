@@ -9,11 +9,11 @@
         </a>
         <!-- 底部 Posts 管理栏 -->
         <div class="status-bar">
-            <button class="posts btn btn-primary" ng-click="vm.readall()" ng-if="vm.feeded">
+            <button class="posts btn btn-primary" ng-click="vm.readall()" ng-if="vm.feed.feeded">
                 全部标记为已读        
                 <span class="glyphicon glyphicon-ok"></span>        
             </button>
-            <button class="posts btn btn-primary" ng-click="vm.feedit()" ng-if="!vm.feeded">
+            <button class="posts btn btn-primary" ng-click="vm.feedit()" ng-if="!vm.feed.feeded">
                 立即订阅        
                 <span class="glyphicon glyphicon-ok"></span>        
             </button>
@@ -36,9 +36,6 @@
         </div>
         <!-- 底部 Feed 状态栏 -->
         <div class="status-bar">
-            <button class="back btn btn-primary" ng-click="vm.back()">
-                <span class="glyphicon glyphicon-chevron-left"></span>            
-            </button>
             <p class="title" >{{ ::vm.feed.title }}</p>
         </div>
     </div>

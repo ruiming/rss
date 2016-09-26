@@ -268,9 +268,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 function feedit() {
                     $scope.feed.feeded = !$scope.feed.feeded;
                     if ($scope.feed.feeded) {
-                        Feed.save({ feedlink: $scope.feed.absurl });
+                        Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
+                            $scope.feed.feeded = true;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
                     } else {
-                        Feed.delete({ id: $scope.feed._id });
+                        Feed.delete({ id: $scope.feed._id }, function (res) {
+                            $scope.feed.feeded = false;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
                     }
                 }
             }]
@@ -327,8 +337,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     function FeedController(feed, posts, _, storage, $scope, Post, $state, Feed) {
         var vm = this;
         vm.feed = feed.data;
+        vm.feed.feeded = angular.isDefined(feed.data.feed_time);
         vm.posts = posts.data.posts;
-        vm.feeded = angular.isDefined(feed.data.feed_time);
         vm.feed_id = angular.isDefined(feed.data.feed_id) ? feed.data.feed_id : feed.data._id;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
 
@@ -336,7 +346,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.read = read;
         vm.readall = readall;
         vm.feedit = feedit;
-        vm.back = back;
 
         // Will be used by its' child state
         $state.current.data = feed.data.link;
@@ -354,9 +363,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     post.read = true;
                 }
             }
-
-            // feed.data._id is unstable for it will point to UserFeedModel's _id if you feed it before
-            // the request sent, otherwise it will point to FeedModel's _id if you have not feed it. 
         } catch (err) {
             _didIteratorError = true;
             _iteratorError = err;
@@ -373,8 +379,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         function feedit() {
-            Feed.save({ id: vm.feed_id }).$promise.then(function (res) {
-                vm.feeded = true;
+            Feed.save({ feedlink: vm.feed.absurl }, function (res) {
+                vm.feed.feeded = true;
             }, function (err) {
                 // TODO
                 console.log(err);
@@ -441,9 +447,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
 
             Post.update({ feed_id: vm.feed_id, id: 0 }, { type: 'read' });
-        }
-        function back() {
-            history.back();
         }
     }
 })();
