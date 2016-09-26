@@ -147,7 +147,7 @@ exports.listAll = async (ctx, next) => {
 exports.remove = async (ctx, next) => {
     var userid = ctx.state.user.id;
     var feed_id = ctx.params.id;
-    // Really delete ?
+    // UseFeedModel will be de
     var result = await UserFeedModel.find({feed_id: feed_id}).remove();
     if(result.result.n === 0) {
         ctx.throw(404, '你没有订阅该订阅源');

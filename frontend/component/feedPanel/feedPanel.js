@@ -22,7 +22,7 @@
                     $scope.feed.feeded = !$scope.feed.feeded;
                     if($scope.feed.feeded) {
                         Feed.save({feedlink: $scope.feed.absurl}, res => {
-                            $rootScope.$broadcast('ADD_FEED', vm.feed);
+                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
                             $scope.feed.feeded = true;
                         }, err => {
                             // TODO
@@ -30,6 +30,7 @@
                         });
                     } else {
                         Feed.delete({id: $scope.feed.feed_id}, res => {
+                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
                             $scope.feed.feeded = false;
                         }, err => {
                             // TODO
