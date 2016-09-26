@@ -5,7 +5,6 @@
 
     function SearchController(feed, $base64) {
         var vm = this;
-        vm.feed = feed.data;
-        console.log(vm.feed);
+        vm.feed = feed.data, vm.feed.feeded = feed.feeded;
     }
 }());

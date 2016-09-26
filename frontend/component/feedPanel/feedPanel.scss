@@ -3,4 +3,14 @@
     border-radius: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+    position: relative;
+    button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border-radius: 0;
+        width: 80px;
+        background-color: #24659c;
+    }
 }

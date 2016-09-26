@@ -26,13 +26,17 @@ exports.create = async (ctx, next) => {
     var result = await FeedModel.findOne({absurl: feedlink});
     // 判断数据库已存在该订阅源
     if(result && result._id) {
-        if(search) {
-            return ctx.body = { success: true, data: result };
+        var userresult = await UserFeedModel.findOne({feed_id: result._id});
+        // 判断用户是否已经订阅该订阅源
+        if(userresult && userresult._id) {
+            if(search) {
+                return ctx.body = { success: true, data: result, feeded: true };
+            } else {
+                return ctx.body = { success: false, data: `已订阅源 ${result.title}(${result.id})` };                
+            }
         } else {
-            var userresult = await UserFeedModel.findOne({feed_id: result._id});
-            // 判断用户是否已经订阅该订阅源
-            if(userresult && userresult._id) {
-                return ctx.body = { success: false, data: `已订阅源 ${result.title}(${result.id})` };
+            if(search) {
+                return ctx.body = { success: true, data: result, feeded: false };
             } else {
                 // 订阅源的订阅人数 +1
                 result.feeder += 1;
@@ -75,7 +79,7 @@ exports.create = async (ctx, next) => {
                 var store = await feed.save();
                 var feedid = store._id;
                 if(search) {
-                    ctx.body = { success: true, data: store };
+                    ctx.body = { success: true, data: store, feeded: false };
                     resolve();
                 } else {
                     setTimeout(() => {

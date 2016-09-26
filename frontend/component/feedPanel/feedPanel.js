@@ -11,8 +11,17 @@
             },
             replace: true,
             templateUrl: 'feedPanel/feedPanel.html',
-            controller: function navbarController($scope) {
+            controllerAs: 'vm',
+            controller: function navbarController($scope, Feed) {
+                let vm = this;
+                vm.feedit = feedit;
 
+                function feedit() {
+                    $scope.feed.feeded = !$scope.feed.feeded;
+                    if($scope.feed.feeded) {
+                        Feed.save({feedlink: $scope.feed.absurl});
+                    }
+                }
             }
         }
     }
