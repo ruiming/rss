@@ -14,6 +14,8 @@
             controllerAs: 'vm',            
             controller: function navbarController($timeout, tools) {
                 let vm = this, timeout;
+
+                // Function
                 vm.blur = blur;
                 vm.search = search;
                 vm.focus = focus;

@@ -9,13 +9,11 @@
         return {
             // Warning: The cookie should set to httponly to keep safe.
             request: function(config) {
-                var deferred = $q.defer();
                 if(void 0 === jwt) {
                     jwt = $cookies.get('jwt');
                 }
                 config.headers['Authorization'] = "Bearer " + jwt;
-                deferred.resolve(config);
-                return deferred.promise;
+                return $q.when(config);
             },
 
             response: function(config) {
@@ -23,6 +21,7 @@
                 if(Array.isArray(data)) {
                     for(let i = 0, len = data.length; i < len; i++) {
                         if(void 0 !== data[i].feed_id && Array.isArray(data[i].feed_id)) {
+                            // 提取 feed_id 
                             if(typeof data[i].feed_id[0] === 'string') {
                                 config.data.data[i].feed_id = data[i].feed_id[0];
                             } else {
@@ -30,7 +29,7 @@
                             }
                         }
                         if(void 0 !== data[i].user_id && Array.isArray(data[i].user_id)) {
-                            config.data.data[i].user_id = data[i].user_id[0]
+                            config.data.data[i].user_id = data[i].user_id[0];
                         }
                     }
                 } else if (typeof data === 'object'){
@@ -45,10 +44,7 @@
                             config.data.data.user_id = data.user_id[0]
                         }
                 }
-
-                var deferred = $q.defer();
-                deferred.resolve(config);
-                return deferred.promise;
+                return $q.when(config);
             }
         }
     }

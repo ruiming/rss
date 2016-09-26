@@ -22,7 +22,7 @@ exports.create = async (ctx, next) => {
         ctx.cookies.set("jwt", token, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
         await ctx.redirect('/');
     } else {
-        ctx.throw(404, result.errmsg);   // Attention!
+        ctx.throw(404, result.errmsg);
     }
 }
 

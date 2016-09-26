@@ -21,7 +21,6 @@ exports.create = async (ctx, next) => {
     }
     var user_id = ctx.state.user.id;
     var feedparser = new FeedParser(), feed = new FeedModel(), _id;
-
     // 查找数据库是否有该订阅源
     var result = await FeedModel.findOne({absurl: feedlink});
     // 判断数据库已存在该订阅源

@@ -103,13 +103,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return {
             // Warning: The cookie should set to httponly to keep safe.
             request: function request(config) {
-                var deferred = $q.defer();
                 if (void 0 === jwt) {
                     jwt = $cookies.get('jwt');
                 }
                 config.headers['Authorization'] = "Bearer " + jwt;
-                deferred.resolve(config);
-                return deferred.promise;
+                return $q.when(config);
             },
 
             response: function response(config) {
@@ -117,6 +115,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (Array.isArray(data)) {
                     for (var i = 0, len = data.length; i < len; i++) {
                         if (void 0 !== data[i].feed_id && Array.isArray(data[i].feed_id)) {
+                            // 提取 feed_id 
                             if (typeof data[i].feed_id[0] === 'string') {
                                 config.data.data[i].feed_id = data[i].feed_id[0];
                             } else {
@@ -139,10 +138,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         config.data.data.user_id = data.user_id[0];
                     }
                 }
-
-                var deferred = $q.defer();
-                deferred.resolve(config);
-                return deferred.promise;
+                return $q.when(config);
             }
         };
     }
@@ -215,7 +211,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 (function () {
     angular.module('app').factory('Post', function ($cacheFactory, $resource) {
-        return $resource('/api/feed/:feed_id/post/:id', { id: '@_id' }, {
+        return $resource('/api/feed/:feed_id/post/:id', { feed_id: '@feed_id', id: '@_id' }, {
             update: { method: 'PUT' },
             get: { method: 'GET' }
         });
@@ -284,6 +280,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 // Function
                 vm.feedit = feedit;
+
                 function feedit() {
                     $scope.feed.feeded = !$scope.feed.feeded;
                     if ($scope.feed.feeded) {
@@ -326,6 +323,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             controller: ["$timeout", "tools", function navbarController($timeout, tools) {
                 var vm = this,
                     timeout = void 0;
+
+                // Function
                 vm.blur = blur;
                 vm.search = search;
                 vm.focus = focus;

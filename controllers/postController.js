@@ -5,7 +5,6 @@ import FeedParser from 'feedparser';
 import request from 'request';
 import _ from 'underscore';
 
-
 /**
  * 获取订阅源的文章摘要
  * @method: get
@@ -30,11 +29,7 @@ exports.listOne = async (ctx, next) => {
     var feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id;
     var result = await PostModel.findOne({_id: id, feed_id: feed_id});
     var readresult = await UserPostModel.findOne({feed_id: feed_id, post_id: id, user_id: user_id});
-    if(result) {
-        ctx.body = { success: true, data: {result: result, detail: readresult} };
-    } else {
-        ctx.throw(404, result);
-    }
+    result ? ctx.body = { success: true, data: {result: result, detail: readresult} } : ctx.throw(404, result);
 }
 
 /**
@@ -49,9 +44,8 @@ exports.listOne = async (ctx, next) => {
  * @Important: 已读分两种情况, read 和 finish
  */
 exports.update = async (ctx, next) => {
-    var feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id;
-    var type = ctx.request.body.type && ctx.request.body.type.trim();
-    var revert = ctx.request.body.revert == true;
+    var feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id,
+        type = ctx.request.body.type && ctx.request.body.type.trim(), revert = ctx.request.body.revert == true;
     if(['read', 'mark', 'love', 'finish'].indexOf(type) === -1) {
         ctx.throw(404, '参数非法');
     } else {
@@ -67,7 +61,6 @@ exports.update = async (ctx, next) => {
                     resolve(items);
                 }
             });
-            // Problem: 用户对一个订阅源标记全部已读会产生较多的数据库读写操作，并且有占用存储空间的可能
             for(let item of items) {
                 var state = await UserPostModel.findOne({user_id: user_id, feed_id: feed_id, post_id: item});
                 if(type === 'finish')   state['read'] = true;                
