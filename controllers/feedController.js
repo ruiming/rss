@@ -98,16 +98,6 @@ exports.create = async (ctx, next) => {
 }
 
 /**
- * 查找订阅源
- * @method: query
- * @url:    /api/feed
- * @params: {string} feedlink
- */
-exports.query = async (ctx, next) => {
-
-}
-
-/**
  * 获取 订阅源信息
  * @method: get
  * @url:    /api/feed/{id}

@@ -28,7 +28,13 @@
             .state('search', {
                 url: '/search/:feedlink',
                 templateUrl: 'search/search_tpl.html',
-                controller: 'SearchController as vm'
+                controller: 'SearchController as vm',
+                resolve: {
+                    feed: function(Feed, $stateParams, $base64) {
+                        let feedlink = decodeURIComponent(escape($base64.decode($stateParams.feedlink)));
+                        return Feed.search({feedlink: feedlink}).$promise;
+                    }
+                }
             })
             .state('feed', {
                 url: '/feed/:id',

@@ -4,7 +4,8 @@ $rightbar: 250px;
 $border-color: #ddd;
 $status-bar-bg-color: #2196f3;
 $status-bar-font-color: #fff;
-
+// Change bootstrap...
+// Do not need contain-fluid margin, I want to design it myself
 html {
     font-size: 14px;
 }
@@ -53,6 +54,7 @@ h3 {
 .main {
     height: calc(100% - 80px);
     margin-left: $leftbar;
+    padding: 0;
 }
 .status-bg {
     left: 0;

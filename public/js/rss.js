@@ -18,7 +18,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }).state('search', {
             url: '/search/:feedlink',
             templateUrl: 'search/search_tpl.html',
-            controller: 'SearchController as vm'
+            controller: 'SearchController as vm',
+            resolve: {
+                feed: ["Feed", "$stateParams", "$base64", function (Feed, $stateParams, $base64) {
+                    var feedlink = decodeURIComponent(escape($base64.decode($stateParams.feedlink)));
+                    return Feed.search({ feedlink: feedlink }).$promise;
+                }]
+            }
         }).state('feed', {
             url: '/feed/:id',
             templateUrl: 'feed/feed_tpl.html',
@@ -207,7 +213,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 (function () {
     angular.module('app').factory('Feed', function ($resource) {
-        return $resource('/api/feed/:id', { id: '@_id' });
+        return $resource('/api/feed/:id', { id: '@_id' }, {
+            search: { method: 'POST', params: { search: true } }
+        });
     });
 })();
 
@@ -220,91 +228,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     });
 })();
 
-(function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
-                $scope.time = Date.now();
-                Feed.get(function (res) {
-                    $scope.feeds = res.data;
-                });
-                $scope.setTitle = function () {
-                    storage.title = '';
-                    storage.status = '';
-                    storage.begintime = '';
-                };
-                setInterval(function () {
-                    $scope.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
-            }]
-        };
-    }
-})();
-(function () {
-    angular.module('app').directive('feedPanel', feedPanel);
-
-    function feedPanel() {
-        return {
-            restrict: 'EA',
-            scope: {
-                feed: '='
-            },
-            replace: true,
-            templateUrl: 'feedPanel/feedPanel.html',
-            controller: ["$scope", function navbarController($scope) {}]
-        };
-    }
-})();
-(function () {
-    navbar.$inject = ["$state", "$base64"];
-    angular.module('app').directive('navbar', navbar);
-
-    function navbar($state, $base64) {
-        return {
-            restrict: 'EA',
-            scope: {
-                title: '='
-            },
-            replace: true,
-            templateUrl: 'navbar/navbar.html',
-            controllerAs: 'vm',
-            controller: ["$timeout", "tools", function navbarController($timeout, tools) {
-                var vm = this,
-                    timeout = void 0;
-                vm.blur = blur;
-                vm.search = search;
-                vm.focus = focus;
-
-                function focus() {
-                    if (timeout) {
-                        $timeout.cancel(timeout);
-                    }
-                    vm.active = true;
-                }
-                function blur() {
-                    timeout = $timeout(function () {
-                        vm.active = false;
-                    }, 800);
-                }
-                function search(feedlink) {
-                    // Check again
-                    if (!tools.checkUrl(feedlink)) {
-                        return false;
-                    } else {
-                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
-                    }
-                }
-            }]
-        };
-    }
-})();
 (function () {
     FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post", "$state"];
     angular.module('app').controller('FeedController', FeedController);
@@ -468,15 +391,101 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    SearchController.$inject = ["$stateParams", "$base64"];
+    SearchController.$inject = ["feed", "$base64"];
     angular.module('app').controller('SearchController', SearchController);
 
-    function SearchController($stateParams, $base64) {
+    function SearchController(feed, $base64) {
         var vm = this;
-        vm.feedlink = decodeURIComponent(escape($base64.decode($stateParams.feedlink)));
+        vm.feed = feed.data;
+        console.log(vm.feed);
     }
 })();
 
+(function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controller: ["$scope", "Feed", "storage", function contextMenuController($scope, Feed, storage) {
+                $scope.time = Date.now();
+                Feed.get(function (res) {
+                    $scope.feeds = res.data;
+                });
+                $scope.setTitle = function () {
+                    storage.title = '';
+                    storage.status = '';
+                    storage.begintime = '';
+                };
+                setInterval(function () {
+                    $scope.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+            }]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('feedPanel', feedPanel);
+
+    function feedPanel() {
+        return {
+            restrict: 'EA',
+            scope: {
+                feed: '='
+            },
+            replace: true,
+            templateUrl: 'feedPanel/feedPanel.html',
+            controller: ["$scope", function navbarController($scope) {}]
+        };
+    }
+})();
+(function () {
+    navbar.$inject = ["$state", "$base64"];
+    angular.module('app').directive('navbar', navbar);
+
+    function navbar($state, $base64) {
+        return {
+            restrict: 'EA',
+            scope: {
+                title: '='
+            },
+            replace: true,
+            templateUrl: 'navbar/navbar.html',
+            controllerAs: 'vm',
+            controller: ["$timeout", "tools", function navbarController($timeout, tools) {
+                var vm = this,
+                    timeout = void 0;
+                vm.blur = blur;
+                vm.search = search;
+                vm.focus = focus;
+
+                function focus() {
+                    if (timeout) {
+                        $timeout.cancel(timeout);
+                    }
+                    vm.active = true;
+                }
+                function blur() {
+                    timeout = $timeout(function () {
+                        vm.active = false;
+                    }, 800);
+                }
+                function search(feedlink) {
+                    // Check again
+                    if (!tools.checkUrl(feedlink)) {
+                        return false;
+                    } else {
+                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
+                    }
+                }
+            }]
+        };
+    }
+})();
 (function () {
     var help = {
         // 检测 URL 是否合法
