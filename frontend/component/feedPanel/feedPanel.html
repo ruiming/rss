@@ -1,8 +1,9 @@
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h3 class="panel-title">订阅源信息</h3>
-        <button class="btn btn-primary" ng-if="feed.feeded" ng-click="vm.feedit()">已订阅</button>
-        <button class="btn btn-primary" ng-if="!feed.feeded" ng-click="vm.feedit()">未订阅</button>
+        <!-- Only show in the search page -->
+        <button class="btn btn-primary" ng-if="feed.feeded === true" ng-click="vm.feedit()">已订阅</button>
+        <button class="btn btn-primary" ng-if="feed.feeded === false" ng-click="vm.feedit()">未订阅</button>
     </div>
     <div class="panel-body">
         <div class="row">
