@@ -18,13 +18,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }).state('search', {
             url: '/search/:feedlink',
             templateUrl: 'search/search_tpl.html',
-            controller: 'SearchController as vm',
-            resolve: {
-                feed: ["Feed", "$stateParams", "$base64", function (Feed, $stateParams, $base64) {
-                    var feedlink = decodeURIComponent(escape($base64.decode($stateParams.feedlink)));
-                    return Feed.search({ feedlink: feedlink }).$promise;
-                }]
-            }
+            controller: 'SearchController as vm'
         }).state('feed', {
             url: '/feed/:id',
             templateUrl: 'feed/feed_tpl.html',
@@ -229,178 +223,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post", "$state"];
-    angular.module('app').controller('FeedController', FeedController);
-
-    function FeedController(feed, posts, _, storage, $scope, Post, $state) {
-        var vm = this;
-        vm.read = read;
-        vm.readall = readall;
-        vm.feed = feed.data;
-        vm.posts = posts.data.posts;
-        vm.detail = _.groupBy(posts.data.detail, 'post_id');
-
-        $state.current.data = feed.data.link;
-
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = vm.posts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var post = _step.value;
-
-                if (vm.detail[post._id] && vm.detail[post._id][0].read) {
-                    post.read = true;
-                }
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
-        }
-
-        function read(post) {
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
-
-            try {
-                for (var _iterator2 = vm.posts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _post = _step2.value;
-
-                    _post.active = false;
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
-                    }
-                } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
-                    }
-                }
-            }
-
-            post.active = true;
-            if (post.read) {
-                return;
-            } else {
-                post.read = true;
-                Post.update({ feed_id: post.feed_id[0], id: post._id }, { type: 'read' });
-            }
-        }
-
-        function readall() {
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
-
-            try {
-                for (var _iterator3 = vm.posts[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var post = _step3.value;
-
-                    post.read = true;
-                }
-            } catch (err) {
-                _didIteratorError3 = true;
-                _iteratorError3 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                        _iterator3.return();
-                    }
-                } finally {
-                    if (_didIteratorError3) {
-                        throw _iteratorError3;
-                    }
-                }
-            }
-
-            Post.update({ feed_id: vm.feed.feed_id, id: 0 }, { type: 'read' });
-        }
-    }
-})();
-
-(function () {
-    angular.module('app').controller('HomeController', HomeController);
-
-    function HomeController() {
-        var vm = this;
-        vm.title = 'It works!';
-    }
-})();
-
-(function () {
-    PostController.$inject = ["$state", "post", "Post", "storage", "$scope", "_", "$rootScope", "$timeout", "$cacheFactory"];
-    angular.module('app').controller('PostController', PostController);
-
-    function PostController($state, post, Post, storage, $scope, _, $rootScope, $timeout, $cacheFactory) {
-        var vm = this;
-        vm.post = post;
-
-        vm.currentPost = post.data.result;
-        vm.currentPostDetail = post.data.detail;
-
-        vm.begintime = Date.now();
-        vm.currenttime = Date.now();
-        vm.status = '';
-
-        vm.love = love;
-        vm.mark = mark;
-
-        setInterval(function () {
-            vm.currenttime = Date.now();
-            $scope.$digest();
-        }, 1000);
-
-        // TODO: 黑人问号? I just want to get the title but avoid the break of inherit
-        if (void 0 !== $state.router.globals.$current.parent.self.data) {
-            vm.origin = $state.router.globals.$current.parent.self.data;
-        } else {
-            vm.origin = $state.router.globals.current.data;
-        }
-
-        if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
-            vm.status = '已经读过啦~\(≧▽≦)/~';
-        }
-
-        function love() {
-            vm.currentPostDetail.love = !vm.currentPostDetail.love;
-            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'love', revert: true });
-        }
-
-        function mark() {
-            vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
-            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'mark', revert: true });
-        }
-    }
-})();
-
-(function () {
-    SearchController.$inject = ["feed", "$base64"];
-    angular.module('app').controller('SearchController', SearchController);
-
-    function SearchController(feed, $base64) {
-        var vm = this;
-        vm.feed = feed.data, vm.feed.feeded = feed.feeded;
-    }
-})();
-
-(function () {
     angular.module('app').directive('contextMenu', contextMenu);
 
     function contextMenu() {
@@ -498,6 +320,201 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }
 })();
+(function () {
+    FeedController.$inject = ["feed", "posts", "_", "storage", "$scope", "Post", "$state", "Feed"];
+    angular.module('app').controller('FeedController', FeedController);
+
+    function FeedController(feed, posts, _, storage, $scope, Post, $state, Feed) {
+        var vm = this;
+        vm.feed = feed.data;
+        vm.posts = posts.data.posts;
+        vm.feeded = angular.isDefined(feed.data.feed_time);
+        vm.feed_id = angular.isDefined(feed.data.feed_id) ? feed.data.feed_id : feed.data._id;
+        vm.detail = _.groupBy(posts.data.detail, 'post_id');
+
+        // Function
+        vm.read = read;
+        vm.readall = readall;
+        vm.feedit = feedit;
+
+        // Will be used by its' child state
+        $state.current.data = feed.data.link;
+
+        // get the status of each post
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = vm.posts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var post = _step.value;
+
+                if (vm.detail[post._id] && vm.detail[post._id][0].read) {
+                    post.read = true;
+                }
+            }
+
+            // feed.data._id is unstable for it will point to UserFeedModel's _id if you feed it before
+            // the request sent, otherwise it will point to FeedModel's _id if you have not feed it. 
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        function feedit() {
+            Feed.save({ id: vm.feed_id }).$promise.then(function (res) {
+                vm.feeded = true;
+            }, function (err) {
+                // TODO
+                console.log(err);
+            });
+        }
+        function read(post) {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = vm.posts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var _post = _step2.value;
+
+                    _post.active = false;
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+
+            post.active = true;
+            if (post.read) {
+                return;
+            } else {
+                post.read = true;
+                Post.update({ feed_id: post.feed_id[0], id: post._id }, { type: 'read' });
+            }
+        }
+        function readall() {
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+                for (var _iterator3 = vm.posts[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var post = _step3.value;
+
+                    post.read = true;
+                }
+            } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
+                    }
+                } finally {
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
+                    }
+                }
+            }
+
+            Post.update({ feed_id: vm.feed_id, id: 0 }, { type: 'read' });
+        }
+    }
+})();
+
+(function () {
+    angular.module('app').controller('HomeController', HomeController);
+
+    function HomeController() {
+        var vm = this;
+        vm.title = 'It works!';
+    }
+})();
+
+(function () {
+    PostController.$inject = ["$state", "post", "Post", "storage", "$scope", "_", "$rootScope", "$timeout", "$cacheFactory"];
+    angular.module('app').controller('PostController', PostController);
+
+    function PostController($state, post, Post, storage, $scope, _, $rootScope, $timeout, $cacheFactory) {
+        var vm = this;
+        vm.post = post;
+
+        vm.currentPost = post.data.result;
+        vm.currentPostDetail = post.data.detail;
+
+        vm.begintime = Date.now();
+        vm.currenttime = Date.now();
+        vm.status = '';
+
+        vm.love = love;
+        vm.mark = mark;
+
+        setInterval(function () {
+            vm.currenttime = Date.now();
+            $scope.$digest();
+        }, 1000);
+
+        // TODO: 黑人问号? I just want to get the title but avoid the break of inherit
+        if (void 0 !== $state.router.globals.$current.parent.self.data) {
+            vm.origin = $state.router.globals.$current.parent.self.data;
+        } else {
+            vm.origin = $state.router.globals.current.data;
+        }
+
+        if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
+            vm.status = '已经读过啦~\(≧▽≦)/~';
+        }
+
+        function love() {
+            vm.currentPostDetail.love = !vm.currentPostDetail.love;
+            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'love', revert: true });
+        }
+
+        function mark() {
+            vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
+            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'mark', revert: true });
+        }
+    }
+})();
+
+(function () {
+    SearchController.$inject = ["$stateParams", "$base64", "$state", "Feed"];
+    angular.module('app').controller('SearchController', SearchController);
+
+    function SearchController($stateParams, $base64, $state, Feed) {
+        var vm = this;
+        var feedlink = decodeURIComponent(escape($base64.decode($stateParams.feedlink)));
+        Feed.search({ feedlink: feedlink }).$promise.then(function (res) {
+            $state.go('feed', { id: res.data });
+        }, function (err) {
+            // TODO
+            vm.err = err;
+        });
+    }
+})();
+
 (function () {
     var help = {
         // 检测 URL 是否合法

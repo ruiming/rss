@@ -26,17 +26,13 @@ exports.create = async (ctx, next) => {
     var result = await FeedModel.findOne({absurl: feedlink});
     // 判断数据库已存在该订阅源
     if(result && result._id) {
-        var userresult = await UserFeedModel.findOne({feed_id: result._id});
-        // 判断用户是否已经订阅该订阅源
-        if(userresult && userresult._id) {
-            if(search) {
-                return ctx.body = { success: true, data: result, feeded: true };
-            } else {
-                return ctx.body = { success: false, data: `已订阅源 ${result.title}(${result.id})` };                
-            }
+        if(search) {
+            return ctx.body = { success: true, data: result._id };
         } else {
-            if(search) {
-                return ctx.body = { success: true, data: result, feeded: false };
+            var userresult = await UserFeedModel.findOne({feed_id: result._id});
+            // 判断用户是否已经订阅该订阅源
+            if(userresult && userresult._id) {
+                return ctx.body = { success: false, data: `已订阅源 ${result.title}(${result.id})` };                
             } else {
                 // 订阅源的订阅人数 +1
                 result.feeder += 1;
@@ -47,6 +43,7 @@ exports.create = async (ctx, next) => {
                 return ctx.body = { success: true, data: result };
             }
         }
+        
     } else {
         await new Promise(async (resolve, reject) => {
             var req = request(feedlink);
@@ -79,7 +76,15 @@ exports.create = async (ctx, next) => {
                 var store = await feed.save();
                 var feedid = store._id;
                 if(search) {
-                    ctx.body = { success: true, data: store, feeded: false };
+                    setTimeout(() => {
+                        feedparser.on('readable', function() {
+                            while(result = this.read()) {
+                                var post = new PostModel(Object.assign(result, {feed_id: feedid}));
+                                post.save();
+                            }
+                        });
+                    }, 0);
+                    ctx.body = { success: true, data: store._id };
                     resolve();
                 } else {
                     setTimeout(() => {
@@ -90,7 +95,6 @@ exports.create = async (ctx, next) => {
                                 var post = new PostModel(Object.assign(result, {feed_id: feedid}));
                                 post.save();
                             }
-
                         });
                     }, 0);
                     ctx.body = { success: true, data: store };
@@ -114,7 +118,12 @@ exports.list = async (ctx, next) => {
     if (result && result._id) {
         ctx.body = { success: true, data: result };
     } else {
-        ctx.throw(result);
+        var result = await FeedModel.findOne({_id: id});
+        if(result && result._id) {
+            ctx.body = { success: true, data: result };
+        } else {
+            ctx.throw('订阅源不存在');
+        }
     }
 }
 
