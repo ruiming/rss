@@ -20,6 +20,8 @@
                     $scope.feed.feeded = !$scope.feed.feeded;
                     if($scope.feed.feeded) {
                         Feed.save({feedlink: $scope.feed.absurl});
+                    } else {
+                        Feed.delete({id: $scope.feed._id});
                     }
                 }
             }
