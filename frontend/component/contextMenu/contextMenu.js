@@ -13,7 +13,7 @@
             controller: function contextMenuController($scope, Feed, storage, _) {
                 let vm = this;
                 vm.time = Date.now();
-                vm.feeds = {};
+                vm.feeds = [];
 
                 // Function
                 vm.setTitle = setTitle;

@@ -235,7 +235,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             controller: ["$scope", "Feed", "storage", "_", function contextMenuController($scope, Feed, storage, _) {
                 var vm = this;
                 vm.time = Date.now();
-                vm.feeds = {};
+                vm.feeds = [];
 
                 // Function
                 vm.setTitle = setTitle;
@@ -290,6 +290,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
                             $rootScope.$broadcast('ADD_FEED', $scope.feed);
                             $scope.feed.feeded = true;
+                            $scope.feed.feedNum++;
                         }, function (err) {
                             // TODO
                             console.log(err);
@@ -298,6 +299,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         Feed.delete({ id: $scope.feed.feed_id }, function (res) {
                             $rootScope.$broadcast('DELETE_FEED', $scope.feed);
                             $scope.feed.feeded = false;
+                            $scope.feed.feedNum--;
                         }, function (err) {
                             // TODO
                             console.log(err);
@@ -403,6 +405,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             Feed.save({ feedlink: vm.feed.absurl }, function (res) {
                 vm.feed.feeded = true;
                 $rootScope.$broadcast('ADD_FEED', vm.feed);
+                vm.feed.feedNum++;
             }, function (err) {
                 // TODO
                 console.log(err);

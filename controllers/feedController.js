@@ -10,8 +10,8 @@ import fetchFavicon from 'favicon-getter';
  * 创建/订阅 订阅源
  * @method: post
  * @url:    /api/feed
- * @params: {string} feedlink
- * @query:  {string} search
+ * @params: {string url} feedlink
+ * @query:  {string true|false} search
  */
 exports.create = async (ctx, next) => {
     var feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim();
@@ -19,7 +19,7 @@ exports.create = async (ctx, next) => {
     if(!help.checkUrl(feedlink)) {
         ctx.throw(404, 'URL 不合法');
     }
-    var userid = ctx.state.user.id;
+    var user_id = ctx.state.user.id;
     var feedparser = new FeedParser(), feed = new FeedModel(), _id;
 
     // 查找数据库是否有该订阅源
@@ -29,15 +29,15 @@ exports.create = async (ctx, next) => {
         if(search) {
             return ctx.body = { success: true, data: result._id };
         } else {
-            var userresult = await UserFeedModel.findOne({feed_id: result._id});
+            var userresult = await UserFeedModel.findOne({user_id: user_id, feed_id: result._id});
             // 判断用户是否已经订阅该订阅源
             if(userresult && userresult._id) {
                 ctx.throw(409, `已订阅源 ${result.title}(${result.id})`)
             } else {
                 // 订阅源的订阅人数 +1
-                result.feeder += 1;
+                result.feedNum += 1;
                 result.save();
-                var userfeed = UserFeedModel({feed_id: result._id, user_id: userid});
+                var userfeed = UserFeedModel({feed_id: result._id, user_id: user_id});
                 // 添加到用户订阅表
                 userfeed.save();
                 return ctx.body = { success: true, data: result };
@@ -48,12 +48,12 @@ exports.create = async (ctx, next) => {
             var req = request(feedlink);
             req.on('response', res => {
                 if(res.statusCode != 200) {
-                    reject(res.statusCode);
+                    reject(404, res.statusCode);
                 } else {
                     res.pipe(feedparser);
                     feedparser.on('error', err => {
                         if(err) {
-                            reject(err);
+                            reject(404, err);
                         } else {
                             resolve();
                         }
@@ -70,7 +70,7 @@ exports.create = async (ctx, next) => {
                     }
                     resolve(favicon);
                 }));
-                let data = search === 'true' ? {absurl: feedlink, favicon: favicon} : {absurl: feedlink, favicon: favicon, feeder: 1};
+                let data = search ? {absurl: feedlink, favicon: favicon} : {absurl: feedlink, favicon: favicon, feedNum: 1};
                 var feed = new FeedModel(Object.assign(this.meta, data));
                 var store = await feed.save();
                 var feedid = store._id;
@@ -87,7 +87,7 @@ exports.create = async (ctx, next) => {
                     resolve();
                 } else {
                     setTimeout(() => {
-                        var userfeed = new UserFeedModel({feed_id: feedid, user_id: userid});
+                        var userfeed = new UserFeedModel({feed_id: feedid, user_id: user_id});
                         userfeed.save();
                         feedparser.on('readable', function() {
                             while(result = this.read()) {
@@ -112,8 +112,8 @@ exports.create = async (ctx, next) => {
  */
 exports.list = async (ctx, next) => {
     var id = ctx.params.id;
-    var userid = ctx.state.user.id;
-    var result = await UserFeedModel.findOne({user_id: userid, feed_id: id}, {user_id: 0}).populate('feed_id').exec().catch(e => e);
+    var user_id = ctx.state.user.id;
+    var result = await UserFeedModel.findOne({user_id: user_id, feed_id: id}, {user_id: 0}).populate('feed_id').exec().catch(e => e);
     if (result && result._id) {
         ctx.body = { success: true, data: result };
     } else {
@@ -132,8 +132,8 @@ exports.list = async (ctx, next) => {
  * @url:    /api/feed
  */
 exports.listAll = async (ctx, next) => {
-    var userid = ctx.state.user.id;
-    var result = await UserFeedModel.find({user_id: userid}, {user_id: 0})
+    var user_id = ctx.state.user.id;
+    var result = await UserFeedModel.find({user_id: user_id}, {user_id: 0})
         .populate('feed_id', {favicon: 1, title: 1}).exec().catch(e => e);
     ctx.body = { success: true, data: result };
 }
@@ -141,18 +141,19 @@ exports.listAll = async (ctx, next) => {
 /**
  * 取消/删除 订阅源
  * @method: delete
- * @url:    /api/feed
+ * @url:    /api/feed/{id}
  * @params: {string} id
  */
 exports.remove = async (ctx, next) => {
-    var userid = ctx.state.user.id;
+    var user_id = ctx.state.user.id;
     var feed_id = ctx.params.id;
-    // UseFeedModel will be de
-    var result = await UserFeedModel.find({feed_id: feed_id}).remove();
+    var result = await UserFeedModel.find({user_id: user_id, feed_id: feed_id}).remove();
     if(result.result.n === 0) {
         ctx.throw(404, '你没有订阅该订阅源');
     } else {
-        FeedModel.update({_id: feed_id}, {$inc: {feeder: -1}});
+        setTimeout(async () => {
+            await FeedModel.update({_id: feed_id}, {$inc: {feedNum: -1}});
+        }, 0);
         return ctx.body = { success: true, data: `取消订阅成功` };
     }
 }

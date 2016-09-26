@@ -30,6 +30,7 @@
             Feed.save({feedlink: vm.feed.absurl}, res => {
                 vm.feed.feeded = true;
                 $rootScope.$broadcast('ADD_FEED', vm.feed);
+                vm.feed.feedNum ++;
             }, err => {
                 // TODO
                 console.log(err);

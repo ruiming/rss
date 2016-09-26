@@ -13,16 +13,10 @@ import _ from 'underscore';
  * @params: {string} feed_id
  */
 exports.listAll = async (ctx, next) => {
-    var feed_id = ctx.params.feed_id;
-    var userid = ctx.state.user.id;
+    var feed_id = ctx.params.feed_id, user_id = ctx.state.user.id;
     var result = await PostModel.find({feed_id: feed_id}, {description: 0, summary: 0});
-    // 查询阅读情况
-    var detail = await UserPostModel.find({feed_id: feed_id, user_id: userid}, {user_id: 0, feed_id: 0});
-    if(result[0] && result[0]._id) {
-        ctx.body = { success: true, data: { posts: result, detail: detail} };
-    } else {
-        ctx.throw(404, result);
-    }
+    var detail = await UserPostModel.find({feed_id: feed_id, user_id: user_id}, {user_id: 0, feed_id: 0});
+    ctx.body = { success: true, data: { posts: result, detail: detail} };
 }
 
 /**
@@ -33,11 +27,9 @@ exports.listAll = async (ctx, next) => {
  * @params: {string} id
  */
 exports.listOne = async (ctx, next) => {
-    var feed_id = ctx.params.feed_id, id = ctx.params.id;
-    var userid = ctx.state.user.id;
-    // 返回该文章结果
+    var feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id;
     var result = await PostModel.findOne({_id: id, feed_id: feed_id});
-    var readresult = await UserPostModel.findOne({feed_id: feed_id, post_id: id, user_id: userid});
+    var readresult = await UserPostModel.findOne({feed_id: feed_id, post_id: id, user_id: user_id});
     if(result) {
         ctx.body = { success: true, data: {result: result, detail: readresult} };
     } else {
@@ -52,17 +44,16 @@ exports.listOne = async (ctx, next) => {
  * @params: {string} feed_id
  * @params: {string} id
  * @params: {read|mark|love} type
- * @params: {boolean} revert
+ * @params: {boolean true|false} revert
  * @Important: 当 id 为 0 时表示更新全部文章状态
  * @Important: 已读分两种情况, read 和 finish
  */
 exports.update = async (ctx, next) => {
-    var feed_id = ctx.params.feed_id, id = ctx.params.id;
-    var userid = ctx.state.user.id;
+    var feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id;
     var type = ctx.request.body.type && ctx.request.body.type.trim();
-    var revert = ctx.request.body.revert === true;
+    var revert = ctx.request.body.revert == true;
     if(['read', 'mark', 'love', 'finish'].indexOf(type) === -1) {
-        ctx.throw(404, '参数错误');
+        ctx.throw(404, '参数非法');
     } else {
         setTimeout(async () => {
             var items = [];
@@ -78,16 +69,14 @@ exports.update = async (ctx, next) => {
             });
             // Problem: 用户对一个订阅源标记全部已读会产生较多的数据库读写操作，并且有占用存储空间的可能
             for(let item of items) {
-                var state = await UserPostModel.findOne({user_id: userid, feed_id: feed_id, post_id: item});
+                var state = await UserPostModel.findOne({user_id: user_id, feed_id: feed_id, post_id: item});
                 if(type === 'finish')   state['read'] = true;                
                 if(state && state._id) {
-                    if(revert)  state[type] = !state[type];
-                    else    state[type] = true;
+                    state[type] = revert ? !state[type] : true;
                     state.save()
                 } else {
-                    state = {user_id: userid, feed_id: feed_id, post_id: item};
-                    if(revert)  state[type] = false;
-                    else    state[type] = true;
+                    state = {user_id: user_id, feed_id: feed_id, post_id: item};
+                    state[type] = !revert;
                     state = new UserPostModel(state);
                     state.save();
                 }

@@ -17,8 +17,8 @@ const PostSchema = new Schema({
     categories:     {type: Array},
 
     feed_id:        [{type: Schema.Types.ObjectId, ref: 'Feed'}],   // 订阅源 ID
-    love:           {type: Number, default: 0},                     // 点赞数量
-    mark:           {type: Number, default: 0}                      // 星标人数
+    loveNum:        {type: Number, default: 0},                     // 点赞数量
+    markNum:        {type: Number, default: 0}                      // 星标人数
 });
 
 var Post = mongoose.model('Post', PostSchema);

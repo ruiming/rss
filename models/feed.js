@@ -21,7 +21,7 @@ const FeedSchema = new Schema({
     generator:      {type: String},
     categories:     {type: String},
 
-    feeder:         {type: Number, default: 0},     // 订阅人数
+    feedNum:        {type: Number, default: 0},     // 订阅人数
     lastScan:       {type: Date},                   // 上次扫描时间
     frequency:      {type: Array},                  // 更新频率，每日更新文章数，存为数组
     hot:            {type: Number, default: 0},     // 热度
