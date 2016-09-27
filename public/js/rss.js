@@ -59,6 +59,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     return Posts.get({ type: $stateParams.type }).$promise;
                 }]
             }
+        }).state('posts.post', {
+            url: '/post/:id',
+            templateUrl: 'post/post_tpl.html',
+            controller: 'PostController as vm',
+            resolve: {
+                post: ["Post", "$stateParams", "$state", function (Post, $stateParams, $state) {
+                    return Post.get({ feed_id: $state.$current.self.data, id: $stateParams.id }).$promise;
+                }]
+            }
         });
     }
 })();
@@ -561,12 +570,52 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    PostsController.$inject = ["$stateParams", "posts"];
+    PostsController.$inject = ["$stateParams", "posts", "$state", "Post"];
     angular.module('app').controller('PostsController', PostsController);
 
-    function PostsController($stateParams, posts) {
+    function PostsController($stateParams, posts, $state, Post) {
         var vm = this;
         vm.posts = posts.data;
+
+        // Function
+        vm.goto = goto;
+
+        function goto(post) {
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = vm.posts[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var _post2 = _step4.value;
+
+                    _post2.active = false;
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
+            }
+
+            post.active = true;
+            if (post.read) {
+                return;
+            } else {
+                post.read = true;
+                Post.update({ feed_id: post.feed_id, id: post._id }, { type: 'read' });
+            }
+            $state.current.data = post.feed_id;
+            $state.go('posts.post', { id: post._id });
+        }
     }
 })();
 

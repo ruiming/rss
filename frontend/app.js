@@ -71,5 +71,15 @@
                     }
                 }
             })
+            .state('posts.post', {
+                url: '/post/:id',
+                templateUrl: 'post/post_tpl.html',
+                controller: 'PostController as vm',
+                resolve: {
+                    post: function(Post, $stateParams, $state) {
+                        return Post.get({feed_id: $state.$current.self.data, id: $stateParams.id}).$promise;
+                    }
+                }
+            })
     }
 }());
