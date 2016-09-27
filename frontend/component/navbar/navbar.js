@@ -21,6 +21,7 @@
                 vm.focus = focus;
 
                 function focus() {
+                    form.input.focus();
                     if(timeout) {
                         $timeout.cancel(timeout);
                     }
