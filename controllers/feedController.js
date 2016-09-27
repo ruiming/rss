@@ -74,16 +74,16 @@ exports.create = async (ctx, next) => {
                 var store = await feed.save();
                 var feedid = store._id;
                 if(search) {
-                    setTimeout(() => {
-                        feedparser.on('readable', function() {
-                            while(result = this.read()) {
-                                var post = new PostModel(Object.assign(result, {feed_id: feedid}));
-                                post.save();
-                            }
-                        });
-                    }, 0);
-                    ctx.body = { success: true, data: store._id };
-                    resolve();
+                    feedparser.on('readable', function() {
+                        while(result = this.read()) {
+                            var post = new PostModel(Object.assign(result, {feed_id: feedid}));
+                            post.save();
+                        }
+                    });
+                    feedparser.on('end', function() {
+                        ctx.body = { success: true, data: store._id };
+                        resolve();
+                    })
                 } else {
                     setTimeout(() => {
                         var userfeed = new UserFeedModel({feed_id: feedid, user_id: user_id});
