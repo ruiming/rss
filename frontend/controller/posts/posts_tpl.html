@@ -9,17 +9,15 @@
         </a>
         <!-- 底部 Posts 管理栏 -->
         <div class="status-bar">
-            <button class="posts btn btn-primary" ng-click="vm.readall()" ng-if="vm.feed.feeded">
+            <button class="posts btn btn-primary" ng-click="vm.readall()">
                 全部标记为已读        
-                <span class="glyphicon glyphicon-ok"></span>        
-            </button>
-            <button class="posts btn btn-primary" ng-click="vm.feedit()" ng-if="!vm.feed.feeded">
-                立即订阅        
-                <span class="glyphicon glyphicon-ok"></span>        
+                <span class="glyphicon glyphicon-ok"></span>
             </button>
         </div>
     </div>
     <div ui-view class="center" scroll-listen="post.read">
-
+        <div class="page-header">
+            <h1>未读文章 <strong>{{vm.posts.length}}</strong> 篇</h1>
+        </div>
     </div>
 </div>

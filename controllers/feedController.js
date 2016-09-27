@@ -36,7 +36,8 @@ exports.create = async (ctx, next) => {
                 // 订阅源的订阅人数 +1
                 result.feedNum += 1;
                 result.save();
-                var userfeed = UserFeedModel({feed_id: result._id, user_id: user_id});
+                var count = await PostModel.find({feed_id: result._id}).count();
+                var userfeed = UserFeedModel({feed_id: result._id, user_id: user_id, unread: count});
                 // 添加到用户订阅表
                 userfeed.save();
                 return ctx.body = { success: true, data: result };
@@ -82,8 +83,6 @@ exports.create = async (ctx, next) => {
                         }
                     });
                     feedparser.on('end', function() {
-                        var userfeed = new UserFeedModel({feed_id: feedid, user_id: user_id, unread: count});
-                        userfeed.save();
                         ctx.body = { success: true, data: store._id };
                         resolve();
                     })
