@@ -170,14 +170,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var now = Date.now();
             var ago = (now - Date.parse(input)) / 1000;
             var output = null;
-            var refresh = null;
             // TODO: if I want to make it change in real time.
             if (ago < 10 * 60) {
                 output = "刚刚";
-                refresh = 60;
             } else if (ago < 60 * 60) {
                 output = Math.round(ago / 60) + " 分钟前";
-                refresh = 60;
             } else if (ago < 60 * 60 * 24) {
                 output = Math.round(ago / 60 / 60) + " 小时前";
             } else if (ago < 60 * 60 * 24 * 30) {

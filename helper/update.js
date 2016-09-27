@@ -22,7 +22,7 @@ async function update() {
         return new Promise((resolve, reject) => {
             let req = request(item.absurl);
             let feedparser = new FeedParser();
-            Feed.update({_id: item._id}, {recent_update: Date.now()});
+            FeedModel.update({_id: item._id}, {recent_update: Date.now()});
             req.on('response', res => {
                 if(res.statusCode != 200) {
                     reject(err);

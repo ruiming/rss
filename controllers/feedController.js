@@ -69,31 +69,37 @@ exports.create = async (ctx, next) => {
                     }
                     resolve(favicon);
                 }));
-                let data = search ? {absurl: feedlink, favicon: favicon} : {absurl: feedlink, favicon: favicon, feedNum: 1};
+                var data = search ? {absurl: feedlink, favicon: favicon} : {absurl: feedlink, favicon: favicon, feedNum: 1};
                 var feed = new FeedModel(Object.assign(this.meta, data));
                 var store = await feed.save();
-                var feedid = store._id;
+                var feedid = store._id, count = 0;
                 if(search) {
                     feedparser.on('readable', function() {
                         while(result = this.read()) {
                             var post = new PostModel(Object.assign(result, {feed_id: feedid}));
                             post.save();
+                            count ++;
                         }
                     });
                     feedparser.on('end', function() {
+                        var userfeed = new UserFeedModel({feed_id: feedid, user_id: user_id, unread: count});
+                        userfeed.save();
                         ctx.body = { success: true, data: store._id };
                         resolve();
                     })
                 } else {
                     setTimeout(() => {
-                        var userfeed = new UserFeedModel({feed_id: feedid, user_id: user_id});
-                        userfeed.save();
                         feedparser.on('readable', function() {
                             while(result = this.read()) {
                                 var post = new PostModel(Object.assign(result, {feed_id: feedid}));
                                 post.save();
+                                count ++;
                             }
                         });
+                        feedparser.on('end', function() {
+                            var userfeed = new UserFeedModel({feed_id: feedid, user_id: user_id, unread: count});
+                            userfeed.save();
+                        })
                     }, 0);
                     ctx.body = { success: true, data: store };
                     resolve();

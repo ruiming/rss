@@ -1,4 +1,3 @@
-
 (function() {
     angular
         .module('app')
@@ -9,4 +8,3 @@
             });
         })
 }());
-
