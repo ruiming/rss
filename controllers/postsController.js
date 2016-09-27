@@ -20,12 +20,15 @@ exports.list = async (ctx, next) => {
     var posts = [];
     await Promise.all(feeds.map(feed => new Promise(async (resolve) => {
         if(feed.unread) {
-            var result = await PostModel.find({feed_id: feed.feed_id}, {summary: 0, description: 0}).limit(feed.unread);
-            posts.push(result);
+            // 找出已读的文章
+            var read = await UserPostModel.find({feed_id: feed.feed_id, user_id: user_id, read: true}, {_id: 0, post_id: 1});
+            read = _.invoke(_.flatten(_.pluck(read, 'post_id'), true), 'toString');
+            var items = await PostModel.find({feed_id: feed.feed_id}, {summary: 0, description: 0});
+            _.each(items, item => !_.contains(read, item._id.toString()) ? posts.push(item) : _.noop());
             resolve();
         } else {
             resolve();
         }
     })));
-    ctx.body = { success: true, data: _.flatten(posts, true) };
+    ctx.body = { success: true, data: posts };
 }
