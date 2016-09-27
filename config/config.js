@@ -1,8 +1,5 @@
 import fs from 'fs';
 
-var publicKey = fs.readFileSync('config/id_rsa.pub');
-var privateKey = fs.readFileSync('config/id_rsa');
-
 module.exports = {
     PORT: 3000,
     MongoDB: {
@@ -13,6 +10,6 @@ module.exports = {
         NAME: "rss"
     },
     app: {
-        secretKey: publicKey
+        secretKey: 'CjpBSJPTyr3ZfRp+yML1ubBAXR9XIbmg+uMIcN'
     }
 }

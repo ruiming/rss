@@ -47,12 +47,12 @@ exports.create = async (ctx, next) => {
             var req = request(feedlink);
             req.on('response', res => {
                 if(res.statusCode != 200) {
-                    reject(404, res.statusCode);
+                    reject(res.statusCode);
                 } else {
                     res.pipe(feedparser);
                     feedparser.on('error', err => {
                         if(err) {
-                            reject(404, err);
+                            reject(err);
                         } else {
                             resolve();
                         }
