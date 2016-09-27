@@ -27,5 +27,5 @@ exports.list = async (ctx, next) => {
             resolve();
         }
     })));
-    ctx.body = posts;
+    ctx.body = { success: true, data: _.flatten(posts, true) };
 }

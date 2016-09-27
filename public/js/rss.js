@@ -3,12 +3,22 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 (function () {
-    config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider"];
+    config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider", "$transitionsProvider"];
     angular.module('app', ['ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'ui.router', 'ui.bootstrap', 'base64', 'underscore', 'app.tools']).config(config);
 
-    function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
+    function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $transitionsProvider) {
 
         $httpProvider.interceptors.push('tokenInjector');
+
+        $transitionsProvider.onBefore({
+            to: function to(state) {
+                return !!state.abstract;
+            }
+        }, function ($transition, $state) {
+            if (angular.isString($transition.to().abstract)) {
+                return $state.target($transition.to().abstract);
+            }
+        });
 
         $urlRouterProvider.otherwise('/');
         $stateProvider.state('home', {
@@ -38,6 +48,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             resolve: {
                 post: ["Post", "$stateParams", "$state", function (Post, $stateParams, $state) {
                     return Post.get({ feed_id: $stateParams.id, id: $stateParams.post_id }).$promise;
+                }]
+            }
+        }).state('posts', {
+            url: '/posts/:type',
+            templateUrl: 'posts/posts_tpl.html',
+            controller: 'PostsController as vm',
+            resolve: {
+                posts: ["Posts", "$stateParams", function (Posts, $stateParams) {
+                    return Posts.get({ type: $stateParams.type }).$promise;
                 }]
             }
         });
@@ -212,6 +231,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return $resource('/api/feed/:feed_id/post/:id', { feed_id: '@feed_id', id: '@_id' }, {
             update: { method: 'PUT' },
             get: { method: 'GET' }
+        });
+    });
+})();
+
+(function () {
+    angular.module('app').factory('Posts', function ($resource) {
+        return $resource('/api/posts', null, {
+            get: { method: 'GET', params: { type: '@type' } }
         });
     });
 })();
@@ -530,6 +557,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function home() {
             $state.go('feed', { id: vm.currentPost.feed_id[0] });
         }
+    }
+})();
+
+(function () {
+    PostsController.$inject = ["$stateParams", "posts"];
+    angular.module('app').controller('PostsController', PostsController);
+
+    function PostsController($stateParams, posts) {
+        var vm = this;
+        vm.posts = posts.data;
     }
 })();
 

@@ -1,0 +1,25 @@
+<div class="post-panel">
+    <div class="sidebar list-group">
+        <a class="post-select list-group-item" ng-repeat="post in vm.posts | orderBy: 'pubdate' : true"
+            ng-click="vm.read(post)" ng-class="{true: 'active', false: ''}[post.active]"
+            ui-sref="feed.post({id: post.feed_id, post_id: post._id})">
+            <h2>{{::post.title}}</h2>
+            <img ng-if="post.read" class="read" src="img/ic_done_black_24dp_1x.png">
+            <span>{{::post.pubdate | toLocalString}}</span>
+        </a>
+        <!-- 底部 Posts 管理栏 -->
+        <div class="status-bar">
+            <button class="posts btn btn-primary" ng-click="vm.readall()" ng-if="vm.feed.feeded">
+                全部标记为已读        
+                <span class="glyphicon glyphicon-ok"></span>        
+            </button>
+            <button class="posts btn btn-primary" ng-click="vm.feedit()" ng-if="!vm.feed.feeded">
+                立即订阅        
+                <span class="glyphicon glyphicon-ok"></span>        
+            </button>
+        </div>
+    </div>
+    <div ui-view class="center" scroll-listen="post.read">
+
+    </div>
+</div>

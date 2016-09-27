@@ -14,9 +14,17 @@
         ])
         .config(config);
 
-    function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
+    function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $transitionsProvider) {
 
         $httpProvider.interceptors.push('tokenInjector');
+
+        $transitionsProvider.onBefore({
+            to: state => !!state.abstract
+        }, ($transition, $state) => {
+            if(angular.isString($transition.to().abstract)) {
+                return $state.target($transition.to().abstract);
+            }
+        });
 
         $urlRouterProvider.otherwise('/');
         $stateProvider
@@ -50,6 +58,16 @@
                 resolve: {
                     post: function(Post, $stateParams, $state) {
                         return Post.get({feed_id: $stateParams.id, id: $stateParams.post_id}).$promise;
+                    }
+                }
+            })
+            .state('posts', {
+                url: '/posts/:type',
+                templateUrl: 'posts/posts_tpl.html',
+                controller: 'PostsController as vm',
+                resolve: {
+                    posts: function(Posts, $stateParams) {
+                        return Posts.get({type: $stateParams.type}).$promise;
                     }
                 }
             })
