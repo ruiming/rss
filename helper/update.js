@@ -7,6 +7,7 @@ import help from '../helper/help';
 import fetchFavicon from 'favicon-getter';
 import config from '../config/config';
 import mongoose from 'mongoose';
+import process from 'process';
 
 mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${config.MongoDB.NAME}`);
 mongoose.Promise = require('bluebird');
@@ -21,6 +22,7 @@ async function update() {
         return new Promise((resolve, reject) => {
             let req = request(item.absurl);
             let feedparser = new FeedParser();
+            Feed.update({_id: item._id}, {recent_update: Date.now()});
             req.on('response', res => {
                 if(res.statusCode != 200) {
                     reject(err);
@@ -50,14 +52,14 @@ async function update() {
                         let post = new PostModel(Object.assign(result, {feed_id: item._id}));
                         newCount ++;
                         post.save();
-                        UserFeedModel.update({feed_id: item._id}, {recent_update: Date.now(), $inc: {unread: 1}});
+                        UserFeedModel.update({feed_id: item._id}, {$inc: {unread: 1}});
                         console.log('New: ' + result.title);
                     }
                 }
             });
             feedparser.on('end', function() {
                 resolve();
-            })
+            });
         });
     })
     Promise.all(promises).then(data => {
@@ -69,9 +71,10 @@ async function update() {
             console.log('Update: ' + updateCount);
             console.log('New: ' + newCount);
             console.log('************* OK *************');
+            process.exit();
         }, 100);
     }).catch(err => {
         console.log(err);
-    })
+    });
 }
 update();

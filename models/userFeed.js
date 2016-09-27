@@ -9,7 +9,6 @@ const UserFeedSchema = new Schema({
 
     own_title:      {type: String},
     feed_time:      {type: Date, default: Date.now()},
-    recent_update:  {type: Date},
     mark:           {type: Number},
     read:           {type: Number, default: 0},
     unread:         {type: Number, default: 0}
