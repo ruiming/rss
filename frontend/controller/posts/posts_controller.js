@@ -6,6 +6,7 @@
     function PostsController($stateParams, posts, $state, Post) {
         var vm = this;
         vm.posts = posts.data;
+        vm.readall = readall;
         
         // Function
         vm.goto = goto;
@@ -23,6 +24,14 @@
             }
             $state.current.data = post.feed_id;
             $state.go('posts.post', {id: post._id});
+        }
+        function readall() {
+            var str = '';
+            for(let post of vm.posts) {
+                post.read = true;
+                str += str === '' ? post._id : ',' + post._id;
+            }
+            Posts.post(str);
         }
     }
 }());

@@ -576,6 +576,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     function PostsController($stateParams, posts, $state, Post) {
         var vm = this;
         vm.posts = posts.data;
+        vm.readall = readall;
 
         // Function
         vm.goto = goto;
@@ -615,6 +616,36 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
             $state.current.data = post.feed_id;
             $state.go('posts.post', { id: post._id });
+        }
+        function readall() {
+            var str = '';
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
+
+            try {
+                for (var _iterator5 = vm.posts[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var post = _step5.value;
+
+                    post.read = true;
+                    str += str === '' ? post._id : ',' + post._id;
+                }
+            } catch (err) {
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
+                    }
+                } finally {
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
+                    }
+                }
+            }
+
+            Posts.post(str);
         }
     }
 })();

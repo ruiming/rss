@@ -30,3 +30,31 @@ exports.list = async (ctx, next) => {
     })));
     ctx.body = { success: true, data: posts };
 }
+
+/**
+ * 更新全部未读文章
+ * @method: post
+ * @url:    /api/posts
+ * @params: {string | array} id
+ */
+exports.update = async (ctx, next) => {
+    var ids = ctx.params.id, user_id = ctx.state.user.id,
+        type = ctx.request.body.type && ctx.request.body.type.trim(), revert = ctx.request.body.revert == true;
+    ids = ids.split(',');
+    _.each(ids, id => {
+        setTimeout(async () => {
+            var state = await UserPostModel.findOne({user_id: user_id, post_id: id});
+            if(state && stat._id) {
+                state = true;
+                state.save();
+            } else {
+                var feed = await PostModel.findOne({_id: id}, {_id: 1});
+                if(feed && feed_id) {
+                    state = {user_id: user_id, feed_id: feed_id, post_id: id};
+                    state = new UserPostModel(state);
+                    state.save();
+                }
+            }
+        }, 0);
+    });
+}

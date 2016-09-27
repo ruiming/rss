@@ -41,7 +41,7 @@ exports.listOne = async (ctx, next) => {
  * @params: {string} id
  * @params: {read|mark|love} type
  * @params: {boolean true|false} revert
- * @Important: 当 id 为 0 时表示更新全部文章状态
+ * @Important: 当 id 为 0 时表示更新该订阅源下的全部文章状态
  * @Important: 已读分两种情况, read 和 finish
  */
 exports.update = async (ctx, next) => {
