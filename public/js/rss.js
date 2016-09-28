@@ -651,8 +651,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return;
             } else {
                 vm.count--;
+                if ($stateParams.type === 'unread') {
+                    $rootScope.$broadcast('READ_POST', post.feed_id);
+                }
                 post.read = true;
-                $rootScope.$broadcast('READ_POST', post.feed_id);
                 Post.update({ feed_id: post.feed_id, id: post._id }, { type: 'read' });
             }
             $state.current.data = post.feed_id;
