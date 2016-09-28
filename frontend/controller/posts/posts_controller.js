@@ -8,7 +8,8 @@
         vm.posts = posts.data;
         vm.readall = readall;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
-        
+        vm.count = vm.posts.length;
+
         // Function
         vm.goto = goto;
 
@@ -20,6 +21,7 @@
             if(post.read) {
                 return;
             } else {
+                vm.count --;
                 post.read = true;
                 Post.update({feed_id: post.feed_id, id: post._id}, {type: 'read'});
             }

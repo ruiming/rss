@@ -259,50 +259,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    angular.module('app').directive('feedPanel', feedPanel);
-
-    function feedPanel() {
-        return {
-            restrict: 'EA',
-            scope: {
-                feed: '='
-            },
-            replace: true,
-            templateUrl: 'feedPanel/feedPanel.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
-                var vm = this;
-
-                // Function
-                vm.feedit = feedit;
-
-                function feedit() {
-                    $scope.feed.feeded = !$scope.feed.feeded;
-                    if ($scope.feed.feeded) {
-                        Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
-                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
-                            $scope.feed.feeded = true;
-                            $scope.feed.feedNum++;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    } else {
-                        Feed.delete({ id: $scope.feed.feed_id }, function (res) {
-                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
-                            $scope.feed.feeded = false;
-                            $scope.feed.feedNum--;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    }
-                }
-            }]
-        };
-    }
-})();
-(function () {
     angular.module('app').directive('contextMenu', contextMenu);
 
     function contextMenu() {
@@ -342,6 +298,50 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     storage.title = '';
                     storage.status = '';
                     storage.begintime = '';
+                }
+            }]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('feedPanel', feedPanel);
+
+    function feedPanel() {
+        return {
+            restrict: 'EA',
+            scope: {
+                feed: '='
+            },
+            replace: true,
+            templateUrl: 'feedPanel/feedPanel.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
+                var vm = this;
+
+                // Function
+                vm.feedit = feedit;
+
+                function feedit() {
+                    $scope.feed.feeded = !$scope.feed.feeded;
+                    if ($scope.feed.feeded) {
+                        Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
+                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
+                            $scope.feed.feeded = true;
+                            $scope.feed.feedNum++;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    } else {
+                        Feed.delete({ id: $scope.feed.feed_id }, function (res) {
+                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
+                            $scope.feed.feeded = false;
+                            $scope.feed.feedNum--;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    }
                 }
             }]
         };
@@ -584,6 +584,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.posts = posts.data;
         vm.readall = readall;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
+        vm.count = vm.posts.length;
 
         // Function
         vm.goto = goto;
@@ -618,6 +619,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (post.read) {
                 return;
             } else {
+                vm.count--;
                 post.read = true;
                 Post.update({ feed_id: post.feed_id, id: post._id }, { type: 'read' });
             }
