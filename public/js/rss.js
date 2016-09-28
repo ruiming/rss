@@ -293,6 +293,34 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return feed.feed_id != data.feed_id;
                     });
                 });
+                $scope.$on('READ_POST', function (event, data) {
+                    var _iteratorNormalCompletion = true;
+                    var _didIteratorError = false;
+                    var _iteratorError = undefined;
+
+                    try {
+                        for (var _iterator = vm.feeds[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                            var feed = _step.value;
+
+                            if (feed.feed_id === data) {
+                                feed.unread--;
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError = true;
+                        _iteratorError = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion && _iterator.return) {
+                                _iterator.return();
+                            }
+                        } finally {
+                            if (_didIteratorError) {
+                                throw _iteratorError;
+                            }
+                        }
+                    }
+                });
 
                 function setTitle() {
                     storage.title = '';
@@ -414,29 +442,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         $state.current.data = feed.data.link;
 
         // get the status of each post
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
         try {
-            for (var _iterator = vm.posts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var post = _step.value;
+            for (var _iterator2 = vm.posts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var post = _step2.value;
 
                 if (vm.detail[post._id] && vm.detail[post._id][0].read) {
                     post.read = true;
                 }
             }
         } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
         } finally {
             try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                    _iterator2.return();
                 }
             } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
+                if (_didIteratorError2) {
+                    throw _iteratorError2;
                 }
             }
         }
@@ -452,49 +480,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             });
         }
         function read(post) {
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
-
-            try {
-                for (var _iterator2 = vm.posts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _post = _step2.value;
-
-                    _post.active = false;
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
-                    }
-                } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
-                    }
-                }
-            }
-
-            post.active = true;
-            if (post.read) {
-                return;
-            } else {
-                post.read = true;
-                Post.update({ feed_id: post.feed_id[0], id: post._id }, { type: 'read' });
-            }
-        }
-        function readall() {
             var _iteratorNormalCompletion3 = true;
             var _didIteratorError3 = false;
             var _iteratorError3 = undefined;
 
             try {
                 for (var _iterator3 = vm.posts[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var post = _step3.value;
+                    var _post = _step3.value;
 
-                    post.read = true;
+                    _post.active = false;
                 }
             } catch (err) {
                 _didIteratorError3 = true;
@@ -507,6 +501,42 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 } finally {
                     if (_didIteratorError3) {
                         throw _iteratorError3;
+                    }
+                }
+            }
+
+            post.active = true;
+            if (post.read) {
+                return;
+            } else {
+                post.read = true;
+                $rootScope.$broadcast('READ_POST', post.feed_id[0]);
+                Post.update({ feed_id: post.feed_id[0], id: post._id }, { type: 'read' });
+            }
+        }
+        function readall() {
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = vm.posts[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var post = _step4.value;
+
+                    $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
+                    post.read = true;
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
                     }
                 }
             }
@@ -576,10 +606,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    PostsController.$inject = ["$stateParams", "posts", "$state", "Post", "Posts"];
+    PostsController.$inject = ["$stateParams", "posts", "$state", "Post", "Posts", "$rootScope"];
     angular.module('app').controller('PostsController', PostsController);
 
-    function PostsController($stateParams, posts, $state, Post, Posts) {
+    function PostsController($stateParams, posts, $state, Post, Posts, $rootScope) {
         var vm = this;
         vm.posts = posts.data;
         vm.readall = readall;
@@ -590,54 +620,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.goto = goto;
 
         function goto(post) {
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
-
-            try {
-                for (var _iterator4 = vm.posts[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var _post2 = _step4.value;
-
-                    _post2.active = false;
-                }
-            } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                        _iterator4.return();
-                    }
-                } finally {
-                    if (_didIteratorError4) {
-                        throw _iteratorError4;
-                    }
-                }
-            }
-
-            post.active = true;
-            if (post.read) {
-                return;
-            } else {
-                vm.count--;
-                post.read = true;
-                Post.update({ feed_id: post.feed_id, id: post._id }, { type: 'read' });
-            }
-            $state.current.data = post.feed_id;
-            $state.go('posts.post', { id: post._id });
-        }
-        function readall() {
-            var str = '';
             var _iteratorNormalCompletion5 = true;
             var _didIteratorError5 = false;
             var _iteratorError5 = undefined;
 
             try {
                 for (var _iterator5 = vm.posts[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var post = _step5.value;
+                    var _post2 = _step5.value;
 
-                    post.read = true;
-                    str += str === '' ? post._id : ',' + post._id;
+                    _post2.active = false;
                 }
             } catch (err) {
                 _didIteratorError5 = true;
@@ -650,6 +641,47 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 } finally {
                     if (_didIteratorError5) {
                         throw _iteratorError5;
+                    }
+                }
+            }
+
+            post.active = true;
+            if (post.read) {
+                return;
+            } else {
+                vm.count--;
+                post.read = true;
+                $rootScope.$broadcast('READ_POST', post.feed_id);
+                Post.update({ feed_id: post.feed_id, id: post._id }, { type: 'read' });
+            }
+            $state.current.data = post.feed_id;
+            $state.go('posts.post', { id: post._id });
+        }
+        function readall() {
+            var str = '';
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+                for (var _iterator6 = vm.posts[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var post = _step6.value;
+
+                    post.read = true;
+                    str += str === '' ? post._id : ',' + post._id;
+                    $rootScope.$broadcast('READ_POST', post.feed_id);
+                }
+            } catch (err) {
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
+                    }
+                } finally {
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
                     }
                 }
             }

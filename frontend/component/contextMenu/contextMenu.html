@@ -20,6 +20,7 @@
             <!-- TODO: still has the failure get info -->
             <img class="favicon" ng-src="{{feed.favicon}}" onerror="this.src='/img/rss.png';">
             <span class="title">{{feed.title}}</span>
+            <span class="badge" ng-if="feed.unread">{{feed.unread}}</span>
         </a>
     </div>
     <!-- 底部时间栏 -->

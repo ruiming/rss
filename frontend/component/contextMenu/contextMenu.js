@@ -35,6 +35,13 @@
                         return feed.feed_id != data.feed_id;
                     });
                 })
+                $scope.$on('READ_POST', (event, data) => {
+                    for(let feed of vm.feeds) {
+                        if(feed.feed_id === data) {
+                            feed.unread --;
+                        }
+                    }
+                })
 
                 function setTitle() {
                     storage.title = '';

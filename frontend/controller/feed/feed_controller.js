@@ -45,11 +45,13 @@
                 return;
             } else {
                 post.read = true;
+                $rootScope.$broadcast('READ_POST', post.feed_id[0]);
                 Post.update({feed_id: post.feed_id[0], id: post._id}, {type: 'read'});
             }
         }
         function readall() {
             for(let post of vm.posts) {
+                $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
                 post.read = true;
             }
             Post.update({feed_id: vm.feed.feed_id, id: 0}, {type: 'read'});

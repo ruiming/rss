@@ -1,10 +1,12 @@
 import FeedModel from '../models/feed';
 import PostModel from '../models/post';
-import UserFeedModel from '../models/userFeed'
+import UserFeedModel from '../models/userFeed';
+import UserPostModel from '../models/userPost';
 import FeedParser from 'feedparser';
 import request from 'request';
 import help from '../helper/help';
 import fetchFavicon from 'favicon-getter';
+import _ from 'underscore';
 
 /**
  * 这里主要是订阅源管理的接口
@@ -141,9 +143,16 @@ exports.list = async (ctx, next) => {
  */
 exports.listAll = async (ctx, next) => {
     var user_id = ctx.state.user.id;
-    var result = await UserFeedModel.find({user_id: user_id}, {user_id: 0})
-        .populate('feed_id', {favicon: 1, title: 1}).exec().catch(e => e);
-    ctx.body = { success: true, data: result };
+    var items = await UserFeedModel.find({user_id: user_id}, {user_id: 0})
+        .populate('feed_id', {favicon: 1, title: 1}).lean().exec((err, items) => {
+            Promise.all(_.map(items, item => new Promise(async (resolve, reject) => {
+                var unreadcount = await UserPostModel.count({feed_id: item.feed_id, user_id: user_id, read: true});
+                var count = await PostModel.count({feed_id: item.feed_id});
+                resolve(Object.assign(item, {unread: count - unreadcount}));
+            }))).then(items => {
+                ctx.body = { success: true, data: items };
+            });
+        });
 }
 
 /**

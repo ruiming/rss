@@ -3,7 +3,7 @@
         .module('app')
         .controller('PostsController', PostsController);
 
-    function PostsController($stateParams, posts, $state, Post, Posts) {
+    function PostsController($stateParams, posts, $state, Post, Posts, $rootScope) {
         var vm = this;
         vm.posts = posts.data;
         vm.readall = readall;
@@ -23,6 +23,7 @@
             } else {
                 vm.count --;
                 post.read = true;
+                $rootScope.$broadcast('READ_POST', post.feed_id);
                 Post.update({feed_id: post.feed_id, id: post._id}, {type: 'read'});
             }
             $state.current.data = post.feed_id;
@@ -33,6 +34,7 @@
             for(let post of vm.posts) {
                 post.read = true;
                 str += str === '' ? post._id : ',' + post._id;
+                $rootScope.$broadcast('READ_POST', post.feed_id);
             }
             Posts.save({id: str});
         }
