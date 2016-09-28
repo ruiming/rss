@@ -570,10 +570,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    PostsController.$inject = ["$stateParams", "posts", "$state", "Post"];
+    PostsController.$inject = ["$stateParams", "posts", "$state", "Post", "Posts"];
     angular.module('app').controller('PostsController', PostsController);
 
-    function PostsController($stateParams, posts, $state, Post) {
+    function PostsController($stateParams, posts, $state, Post, Posts) {
         var vm = this;
         vm.posts = posts.data;
         vm.readall = readall;
@@ -645,7 +645,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }
 
-            Posts.post(str);
+            Posts.save({ id: str });
         }
     }
 })();

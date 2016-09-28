@@ -35,26 +35,27 @@ exports.list = async (ctx, next) => {
  * 更新全部未读文章
  * @method: post
  * @url:    /api/posts
- * @params: {string | array} id
  */
 exports.update = async (ctx, next) => {
-    var ids = ctx.params.id, user_id = ctx.state.user.id,
-        type = ctx.request.body.type && ctx.request.body.type.trim(), revert = ctx.request.body.revert == true;
+    var ids = ctx.request.body.id, user_id = ctx.state.user.id;
     ids = ids.split(',');
+    console.log(user_id);
+    UserFeedModel.update({user_id: user_id}, {$set: {unread: 0}}, {multi: true}).exec();
     _.each(ids, id => {
         setTimeout(async () => {
             var state = await UserPostModel.findOne({user_id: user_id, post_id: id});
-            if(state && stat._id) {
-                state = true;
+            var feed = await PostModel.findOne({_id: id}, {_id: 1, feed_id: 1});
+            if(state && state._id) {
+                state.read = true;
                 state.save();
             } else {
-                var feed = await PostModel.findOne({_id: id}, {_id: 1});
-                if(feed && feed_id) {
-                    state = {user_id: user_id, feed_id: feed_id, post_id: id};
+                if(feed && feed._id) {
+                    state = {user_id: user_id, feed_id: feed.feed_id, post_id: id, read: true};
                     state = new UserPostModel(state);
                     state.save();
                 }
             }
         }, 0);
     });
+    ctx.body = { success: true, data: '操作成功' };
 }

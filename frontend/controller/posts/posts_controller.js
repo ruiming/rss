@@ -3,7 +3,7 @@
         .module('app')
         .controller('PostsController', PostsController);
 
-    function PostsController($stateParams, posts, $state, Post) {
+    function PostsController($stateParams, posts, $state, Post, Posts) {
         var vm = this;
         vm.posts = posts.data;
         vm.readall = readall;
@@ -31,7 +31,7 @@
                 post.read = true;
                 str += str === '' ? post._id : ',' + post._id;
             }
-            Posts.post(str);
+            Posts.save({id: str});
         }
     }
 }());
