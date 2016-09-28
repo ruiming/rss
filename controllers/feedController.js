@@ -91,7 +91,7 @@ exports.create = async (ctx, next) => {
                     feedparser.on('end', function() {
                         ctx.body = { success: true, data: store._id };
                         resolve();
-                    })
+                    });
                 } else {
                     setTimeout(() => {
                         feedparser.on('readable', function() {
