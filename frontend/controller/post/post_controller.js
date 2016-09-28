@@ -23,13 +23,6 @@
             $scope.$digest();
         }, 1000);
 
-        // TODO: 黑人问号? I just want to get the title but avoid the break of inherit
-        if(void 0 !== $state.router.globals.$current.parent.self.data) {
-            vm.origin = $state.router.globals.$current.parent.self.data;
-        } else {
-            vm.origin = $state.router.globals.current.data;
-        }
-
         // Check if the post has been read yet
         if(vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
             vm.status = '已经读过啦~\(≧▽≦)/~';

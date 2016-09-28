@@ -79,11 +79,11 @@ exports.create = async (ctx, next) => {
                 var data = search ? {absurl: feedlink, favicon: favicon} : {absurl: feedlink, favicon: favicon, feedNum: 1};
                 var feed = new FeedModel(Object.assign(this.meta, data));
                 var store = await feed.save();
-                var feedid = store._id, count = 0;
+                var feedid = store._id, link = store.link, count = 0;
                 if(search) {
                     feedparser.on('readable', function() {
                         while(result = this.read()) {
-                            var post = new PostModel(Object.assign(result, {feed_id: feedid}));
+                            var post = new PostModel(Object.assign(result, {feed_id: feedid, link: link}));
                             post.save();
                             count ++;
                         }
@@ -96,7 +96,7 @@ exports.create = async (ctx, next) => {
                     setTimeout(() => {
                         feedparser.on('readable', function() {
                             while(result = this.read()) {
-                                var post = new PostModel(Object.assign(result, {feed_id: feedid}));
+                                var post = new PostModel(Object.assign(result, {feed_id: feedid, link: link}));
                                 post.save();
                                 count ++;
                             }

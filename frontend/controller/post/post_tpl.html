@@ -14,7 +14,7 @@
         </small>
     </section>
     <section>
-        <article ng-bind-html="::vm.currentPost.description | linkFix: vm.origin" >
+        <article ng-bind-html="::vm.currentPost.description | linkFix: vm.currentPost.link" >
         </article>
     </section>
     <footer class="status-bar">
