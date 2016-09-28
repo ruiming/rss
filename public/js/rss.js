@@ -437,9 +437,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.options = {
             chart: {
                 type: 'discreteBarChart',
-                height: 450,
+                height: 380,
                 margin: {
-                    top: 20,
+                    top: 30,
                     right: 20,
                     bottom: 50,
                     left: 55
@@ -452,14 +452,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 },
                 showValues: true,
                 valueFormat: function valueFormat(d) {
-                    return d3.format(',.4f')(d);
+                    return d3.format(',.0f')(d);
                 },
                 duration: 500,
                 xAxis: {
-                    axisLabel: 'X Axis'
+                    axisLabel: '月份'
                 },
                 yAxis: {
-                    axisLabel: 'Y Axis',
+                    axisLabel: '月更新文章数',
                     axisLabelDistance: -10
                 }
             }
