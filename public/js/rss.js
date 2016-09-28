@@ -55,8 +55,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             templateUrl: 'posts/posts_tpl.html',
             controller: 'PostsController as vm',
             resolve: {
-                posts: ["Posts", "$stateParams", function (Posts, $stateParams) {
-                    return Posts.get({ type: $stateParams.type }).$promise;
+                posts: ["Posts", "$stateParams", "$q", function (Posts, $stateParams, $q) {
+                    var defer = $q.defer();
+                    if (['unread', 'mark'].indexOf($stateParams.type) !== -1) {
+                        defer.resolve(Posts.get({ type: $stateParams.type }).$promise);
+                    } else {
+                        defer.reject('参数不正确');
+                    }
+                    return defer.promise;
                 }]
             }
         }).state('posts.post', {
@@ -180,31 +186,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }]);
 })();
 (function () {
-    angular.module('app').factory('Feed', function ($resource) {
-        return $resource('/api/feed/:id', { id: '@_id' }, {
-            search: { method: 'POST', params: { search: true } }
-        });
-    });
-})();
-
-(function () {
-    angular.module('app').factory('Post', function ($cacheFactory, $resource) {
-        return $resource('/api/feed/:feed_id/post/:id', { feed_id: '@feed_id', id: '@_id' }, {
-            update: { method: 'PUT' },
-            get: { method: 'GET', params: { type: '@type' } }
-        });
-    });
-})();
-
-(function () {
-    angular.module('app').factory('Posts', function ($resource) {
-        return $resource('/api/posts', null, {
-            get: { method: 'GET', params: { type: '@type' } }
-        });
-    });
-})();
-
-(function () {
     angular.module('app').filter('linkFix', function () {
         return function (input, origin) {
             var re = /src="(\/[^\/].+?)"/g;
@@ -253,50 +234,30 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "Feed", "storage", "_", function contextMenuController($scope, Feed, storage, _) {
-                var vm = this;
-                vm.time = Date.now();
-                vm.feeds = [];
-
-                // Function
-                vm.setTitle = setTitle;
-
-                Feed.get(function (res) {
-                    vm.feeds = res.data;
-                });
-
-                setInterval(function () {
-                    vm.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
-
-                $scope.$on('ADD_FEED', function (event, data) {
-                    vm.feeds.push(data);
-                });
-                $scope.$on('DELETE_FEED', function (event, data) {
-                    vm.feeds = _.filter(vm.feeds, function (feed) {
-                        return feed.feed_id != data.feed_id;
-                    });
-                });
-
-                function setTitle() {
-                    storage.title = '';
-                    storage.status = '';
-                    storage.begintime = '';
-                }
-            }]
-        };
-    }
+    angular.module('app').factory('Feed', function ($resource) {
+        return $resource('/api/feed/:id', { id: '@_id' }, {
+            search: { method: 'POST', params: { search: true } }
+        });
+    });
 })();
+
+(function () {
+    angular.module('app').factory('Post', function ($cacheFactory, $resource) {
+        return $resource('/api/feed/:feed_id/post/:id', { feed_id: '@feed_id', id: '@_id' }, {
+            update: { method: 'PUT' },
+            get: { method: 'GET', params: { type: '@type' } }
+        });
+    });
+})();
+
+(function () {
+    angular.module('app').factory('Posts', function ($resource) {
+        return $resource('/api/posts', null, {
+            get: { method: 'GET', params: { type: '@type' } }
+        });
+    });
+})();
+
 (function () {
     angular.module('app').directive('feedPanel', feedPanel);
 
@@ -336,6 +297,51 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             console.log(err);
                         });
                     }
+                }
+            }]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "Feed", "storage", "_", function contextMenuController($scope, Feed, storage, _) {
+                var vm = this;
+                vm.time = Date.now();
+                vm.feeds = [];
+
+                // Function
+                vm.setTitle = setTitle;
+
+                Feed.get(function (res) {
+                    vm.feeds = res.data;
+                });
+
+                setInterval(function () {
+                    vm.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+
+                $scope.$on('ADD_FEED', function (event, data) {
+                    vm.feeds.push(data);
+                });
+                $scope.$on('DELETE_FEED', function (event, data) {
+                    vm.feeds = _.filter(vm.feeds, function (feed) {
+                        return feed.feed_id != data.feed_id;
+                    });
+                });
+
+                function setTitle() {
+                    storage.title = '';
+                    storage.status = '';
+                    storage.begintime = '';
                 }
             }]
         };
@@ -577,6 +583,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var vm = this;
         vm.posts = posts.data;
         vm.readall = readall;
+        vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
 
         // Function
         vm.goto = goto;

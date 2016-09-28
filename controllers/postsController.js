@@ -19,19 +19,24 @@ import _ from 'underscore';
  */
 exports.list = async (ctx, next) => {
     var user_id = ctx.state.user.id, type = ctx.request.query.type;
-    var feeds = await UserFeedModel.find({user_id: user_id}, {feed_id: 1});
-    var posts = [];
-    await Promise.all(feeds.map(feed => new Promise(async (resolve, reject) => {
-        var query = {feed_id: feed.feed_id[0], user_id: user_id};
-        type === 'mark' ? query['mark'] = true : query['read'] = true;
-        var result = await UserPostModel.find(query, {_id: 0, post_id: 1});
-        var data = _.invoke(_.flatten(_.pluck(result, 'post_id'), true), 'toString');
-        var items = await PostModel.find({feed_id: feed.feed_id}, {summary: 0, description: 0});
-        if(type === 'mark') _.each(items, item => _.contains(data, item._id.toString()) ? posts.push(item) : _.noop());
-        else _.each(items, item => !_.contains(data, item._id.toString()) ? posts.push(item) : _.noop());
-        resolve();
-    })));
-    ctx.body = { success: true, data: posts };
+    if(['mark', 'unread'].indexOf(type) === -1) {
+        ctx.throw(404, '不支持的查询类型');
+    } else {
+        var feeds = await UserFeedModel.find({user_id: user_id}, {feed_id: 1});
+        var posts = [];
+        await Promise.all(feeds.map(feed => new Promise(async (resolve, reject) => {
+            var query = {feed_id: feed.feed_id[0], user_id: user_id};
+            type === 'mark' ? query['mark'] = true : query['read'] = true;
+            var result = await UserPostModel.find(query, {_id: 0, post_id: 1});
+            var data = _.invoke(_.flatten(_.pluck(result, 'post_id'), true), 'toString');
+            var items = await PostModel.find({feed_id: feed.feed_id}, {summary: 0, description: 0});
+            if(type === 'mark') _.each(items, item => _.contains(data, item._id.toString()) ? posts.push(item) : _.noop());
+            else _.each(items, item => !_.contains(data, item._id.toString()) ? posts.push(item) : _.noop());
+            resolve();
+        })));
+        ctx.body = { success: true, data: posts };
+    }
+
 }
 
 

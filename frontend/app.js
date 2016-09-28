@@ -66,9 +66,15 @@
                 templateUrl: 'posts/posts_tpl.html',
                 controller: 'PostsController as vm',
                 resolve: {
-                    posts: function(Posts, $stateParams) {
-                        return Posts.get({type: $stateParams.type}).$promise;
-                    }
+                    posts: function(Posts, $stateParams, $q) {
+                        let defer = $q.defer();
+                        if(['unread', 'mark'].indexOf($stateParams.type) !== -1) {
+                            defer.resolve(Posts.get({type: $stateParams.type}).$promise);
+                        } else {
+                            defer.reject('参数不正确');
+                        }
+                        return defer.promise;
+                    },
                 }
             })
             .state('posts.post', {

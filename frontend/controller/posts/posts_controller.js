@@ -7,6 +7,7 @@
         var vm = this;
         vm.posts = posts.data;
         vm.readall = readall;
+        vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
         
         // Function
         vm.goto = goto;
