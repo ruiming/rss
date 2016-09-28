@@ -4,7 +4,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 (function () {
     config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider", "$transitionsProvider"];
-    angular.module('app', ['ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'ui.router', 'ui.bootstrap', 'base64', 'underscore', 'app.tools']).config(config);
+    angular.module('app', ['ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'ui.router', 'ui.bootstrap', 'base64', 'underscore', 'app.tools', 'nvd3']).config(config);
 
     function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $transitionsProvider) {
 
@@ -432,6 +432,55 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.feed.feed_id = $stateParams.id;
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
+
+        // Graphy Start 订阅源文章更新情况
+        vm.options = {
+            chart: {
+                type: 'discreteBarChart',
+                height: 450,
+                margin: {
+                    top: 20,
+                    right: 20,
+                    bottom: 50,
+                    left: 55
+                },
+                x: function x(d) {
+                    return d.label;
+                },
+                y: function y(d) {
+                    return d.value;
+                },
+                showValues: true,
+                valueFormat: function valueFormat(d) {
+                    return d3.format(',.4f')(d);
+                },
+                duration: 500,
+                xAxis: {
+                    axisLabel: 'X Axis'
+                },
+                yAxis: {
+                    axisLabel: 'Y Axis',
+                    axisLabelDistance: -10
+                }
+            }
+        };
+        vm.data = [{
+            key: "kkkk",
+            values: []
+        }];
+        _.each(_.groupBy(posts.data.posts, 'pubdate'), function (value, key) {
+            var date = key.slice(0, 7),
+                exist = false;
+            _.each(vm.data[0].values, function (value, key) {
+                if (value.label === date) {
+                    value.value++;
+                    exist = true;
+                }
+            });
+            if (!exist) vm.data[0].values.push({ label: date, value: 1 });
+        });
+        // Graphy End
+
 
         // Function
         vm.read = read;

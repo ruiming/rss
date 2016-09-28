@@ -22,7 +22,10 @@ gulp.task('angular', () => {
         'node_modules/angular-cookies/angular-cookies.min.js',
         'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
         'node_modules/angular-base64/angular-base64.js',
-        'node_modules/angular-ui-router/release/angular-ui-router.min.js'])
+        'node_modules/angular-ui-router/release/angular-ui-router.min.js',
+        'node_modules/d3/d3.min.js',
+        'node_modules/nvd3/build/nv.d3.min.js',
+        'node_modules/angular-nvd3/dist/angular-nvd3.js'])
         .pipe(concat('app.min.js'))
         .pipe(gulp.dest('public/js'));
     // Backend & Frontend
@@ -35,7 +38,8 @@ gulp.task('angular', () => {
 gulp.task('css', () => {
     gulp.src([
         'node_modules/normalize.css/normalize.css',
-        'node_modules/bootstrap/dist/css/bootstrap.min.css'])
+        'node_modules/bootstrap/dist/css/bootstrap.min.css',
+        'node_modules/nvd3/build/nv.d3.css'])
         .pipe(concat('common.css'))
         .pipe(cleanCSS())
         .pipe(gulp.dest('public/css'));

@@ -10,7 +10,8 @@
             'ui.bootstrap',
             'base64',
             'underscore',
-            'app.tools'
+            'app.tools',
+            'nvd3'
         ])
         .config(config);
 

@@ -11,6 +11,50 @@
         vm.posts = posts.data.posts;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
 
+        // Graphy Start 订阅源文章更新情况
+        vm.options = {
+            chart: {
+                type: 'discreteBarChart',
+                height: 450,
+                margin : {
+                    top: 20,
+                    right: 20,
+                    bottom: 50,
+                    left: 55
+                },
+                x: function(d){return d.label;},
+                y: function(d){return d.value;},
+                showValues: true,
+                valueFormat: function(d){
+                    return d3.format(',.4f')(d);
+                },
+                duration: 500,
+                xAxis: {
+                    axisLabel: 'X Axis'
+                },
+                yAxis: {
+                    axisLabel: 'Y Axis',
+                    axisLabelDistance: -10
+                }
+            }
+        }
+        vm.data = [{
+            key: "kkkk",
+            values: []
+        }]
+        _.each(_.groupBy(posts.data.posts, 'pubdate'), (value, key) => {
+            let date = key.slice(0, 7), exist = false;
+            _.each(vm.data[0].values, (value, key) => {
+                if(value.label === date) {
+                    value.value ++;
+                    exist = true;
+                }
+            });
+            if(!exist)  vm.data[0].values.push({label: date, value: 1})
+        })
+        // Graphy End
+
+
         // Function
         vm.read = read;
         vm.readall = readall;
@@ -25,7 +69,7 @@
                 post.read = true;
             }
         }
-         
+        
         function feedit() {
             Feed.save({feedlink: vm.feed.absurl}, res => {
                 vm.feed.feeded = true;
