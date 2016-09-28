@@ -523,7 +523,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 for (var _iterator4 = vm.posts[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
                     var post = _step4.value;
 
-                    $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
+                    console.log(post.read);
+                    if (!post.read) $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
                     post.read = true;
                 }
             } catch (err) {
@@ -667,9 +668,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 for (var _iterator6 = vm.posts[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
                     var post = _step6.value;
 
+                    if (!post.read) $rootScope.$broadcast('READ_POST', post.feed_id);
                     post.read = true;
                     str += str === '' ? post._id : ',' + post._id;
-                    $rootScope.$broadcast('READ_POST', post.feed_id);
                 }
             } catch (err) {
                 _didIteratorError6 = true;

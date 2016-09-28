@@ -32,9 +32,9 @@
         function readall() {
             var str = '';
             for(let post of vm.posts) {
-                post.read = true;
+                if(!post.read) $rootScope.$broadcast('READ_POST', post.feed_id);
+                post.read = true;                
                 str += str === '' ? post._id : ',' + post._id;
-                $rootScope.$broadcast('READ_POST', post.feed_id);
             }
             Posts.save({id: str});
         }

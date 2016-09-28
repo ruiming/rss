@@ -51,7 +51,8 @@
         }
         function readall() {
             for(let post of vm.posts) {
-                $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
+                console.log(post.read);
+                if(!post.read) $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
                 post.read = true;
             }
             Post.update({feed_id: vm.feed.feed_id, id: 0}, {type: 'read'});
