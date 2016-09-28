@@ -8,10 +8,7 @@ const UserFeedSchema = new Schema({
     user_id:        [{type: Schema.Types.ObjectId, ref: 'User'}],   // 用户 ID
 
     own_title:      {type: String},
-    feed_time:      {type: Date, default: Date.now()},
-    mark:           {type: Number},
-    read:           {type: Number, default: 0},
-    unread:         {type: Number, default: 0}
+    feed_time:      {type: Date, default: Date.now()}
 });
 
 var UserFeed = mongoose.model('UserFeed', UserFeedSchema);

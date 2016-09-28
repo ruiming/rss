@@ -7,6 +7,10 @@ import help from '../helper/help';
 import fetchFavicon from 'favicon-getter';
 
 /**
+ * 这里主要是订阅源管理的接口
+ */
+
+/**
  * 创建/订阅 订阅源
  * @method: post
  * @url:    /api/feed

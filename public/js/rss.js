@@ -180,6 +180,31 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }]);
 })();
 (function () {
+    angular.module('app').factory('Feed', function ($resource) {
+        return $resource('/api/feed/:id', { id: '@_id' }, {
+            search: { method: 'POST', params: { search: true } }
+        });
+    });
+})();
+
+(function () {
+    angular.module('app').factory('Post', function ($cacheFactory, $resource) {
+        return $resource('/api/feed/:feed_id/post/:id', { feed_id: '@feed_id', id: '@_id' }, {
+            update: { method: 'PUT' },
+            get: { method: 'GET', params: { type: '@type' } }
+        });
+    });
+})();
+
+(function () {
+    angular.module('app').factory('Posts', function ($resource) {
+        return $resource('/api/posts', null, {
+            get: { method: 'GET', params: { type: '@type' } }
+        });
+    });
+})();
+
+(function () {
     angular.module('app').filter('linkFix', function () {
         return function (input, origin) {
             var re = /src="(\/[^\/].+?)"/g;
@@ -225,31 +250,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return $filter('date')(Date.parse(input), format);
         };
     }]);
-})();
-
-(function () {
-    angular.module('app').factory('Feed', function ($resource) {
-        return $resource('/api/feed/:id', { id: '@_id' }, {
-            search: { method: 'POST', params: { search: true } }
-        });
-    });
-})();
-
-(function () {
-    angular.module('app').factory('Post', function ($cacheFactory, $resource) {
-        return $resource('/api/feed/:feed_id/post/:id', { feed_id: '@feed_id', id: '@_id' }, {
-            update: { method: 'PUT' },
-            get: { method: 'GET' }
-        });
-    });
-})();
-
-(function () {
-    angular.module('app').factory('Posts', function ($resource) {
-        return $resource('/api/posts', null, {
-            get: { method: 'GET', params: { type: '@type' } }
-        });
-    });
 })();
 
 (function () {

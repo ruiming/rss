@@ -4,6 +4,10 @@ import config from '../config/config'
 import send from 'koa-send';
 
 /**
+ * 这里主要是涉及用户的接口
+ */
+
+/**
  * 注册用户
  * @method: post
  * @url:    /auth/register

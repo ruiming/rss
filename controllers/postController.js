@@ -5,6 +5,9 @@ import FeedParser from 'feedparser';
 import request from 'request';
 import _ from 'underscore';
 
+/**
+ * 这里主要是用户操作一个订阅源下面的文章的接口
+ */
 
 /**
  * 获取订阅源的文章摘要
@@ -39,7 +42,7 @@ exports.listOne = async (ctx, next) => {
  * @url:    /api/feed/{feed_id}/post/{id}
  * @params: {string} feed_id
  * @params: {string} id
- * @params: {read|mark|love} type
+ * @params: {read|mark|love|finish} type
  * @params: {boolean true|false} revert
  * @Important: 当 id 为 0 时表示更新该订阅源下的全部文章状态
  * @Important: 已读分两种情况, read 和 finish
@@ -64,7 +67,7 @@ exports.update = async (ctx, next) => {
             });
             for(let item of items) {
                 var state = await UserPostModel.findOne({user_id: user_id, feed_id: feed_id, post_id: item});
-                if(type === 'finish')   state['read'] = true;                
+                if(type === 'finish')   state['read'] = revert ? !state[type] : true;                
                 if(state && state._id) {
                     state[type] = revert ? !state[type] : true;
                     state.save()
