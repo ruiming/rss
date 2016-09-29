@@ -1,3 +1,7 @@
 <div class="search-panel container-fluid">
-    <p class="lead"> 搜索中...</p>
+    <div class="searching" ng-if="!vm.err">
+        <p class="lead"> 搜索中...</p>
+        <small>订阅源第一次被搜索时会比较久，请耐心等待...</small>
+    </div>
+    <div class="alert alert-danger" role="alert" ng-if="vm.err">{{vm.err}}</div>
 </div>

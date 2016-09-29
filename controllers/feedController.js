@@ -54,7 +54,7 @@ exports.create = async (ctx, next) => {
             var req = request(feedlink);
             req.on('response', res => {
                 if(res.statusCode != 200) {
-                    reject(res.statusCode);
+                    reject('链接不可达');
                 } else {
                     res.pipe(feedparser);
                     feedparser.on('error', err => {

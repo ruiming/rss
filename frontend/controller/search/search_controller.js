@@ -10,7 +10,7 @@
             $state.go('feed', {id: res.data});
         }, err => {
             // TODO
-            vm.err = err;
+            vm.err = err.data.message;
         });
     }
 }());

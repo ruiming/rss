@@ -31,9 +31,19 @@
             width: 250px;
             transition: 0.3s linear all;
         }
+        .input-err {
+            border:1px solid red;
+        }
     }
-    .search-btn {
+    .search-wrap {
+        width: 34px !important;
+        right: 0 !important;
+        z-index: 5 !important;
+        background-color: transparent !important;
+    }
+    .search-btn, .search-wrap {
         display: table;
+        z-index: 1;
         position: absolute;
         right: -30px;
         color: #333;

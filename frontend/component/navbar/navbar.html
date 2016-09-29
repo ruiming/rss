@@ -3,12 +3,13 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Rss</a>
         </div>
-        <form name="form" class="search" novalidate>
+        <form name="form" class="search">
             <div class="search-btn btn btn-default" ng-click="vm.search(feedlink)" ng-mouseover="vm.focus()">
+                <input class="search-wrap" type="submit" value=''></input>
                 <span class="glyphicon glyphicon-search"></span>
             </div>
             <input type="url" id="search" class="form-control" name="input" placeholder="输入 URL 添加订阅源" autocomplete="off"
-                ng-class="{true: 'input-active', false: ''}[vm.active]" ng-model="feedlink" required
+                ng-class="{true: 'input-active', false: ''}[vm.active]" ng-model="feedlink"
                 ng-focus="vm.focus()"  ng-blur="vm.blur()" ng-keypress="$event.which === 13 ? vm.search(feedlink) : ''">
         </form>
         <div class="collapse navbar-collapse" id="navbar-collapse">

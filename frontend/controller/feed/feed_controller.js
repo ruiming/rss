@@ -54,7 +54,6 @@
         })
         // Graphy End
 
-
         // Function
         vm.read = read;
         vm.readall = readall;

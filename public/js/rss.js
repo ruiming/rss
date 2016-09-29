@@ -481,7 +481,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
         // Graphy End
 
-
         // Function
         vm.read = read;
         vm.readall = readall;
@@ -747,7 +746,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             $state.go('feed', { id: res.data });
         }, function (err) {
             // TODO
-            vm.err = err;
+            vm.err = err.data.message;
         });
     }
 })();
