@@ -10,46 +10,22 @@
             replace: true,
             templateUrl: 'contextMenu/contextMenu.html',
             controllerAs: 'vm',
-            controller: function contextMenuController($scope, Feed, storage, _) {
+            controller: function contextMenuController($scope, Feed, _) {
                 let vm = this;
                 vm.time = Date.now();
                 vm.feeds = [];
 
-                // Function
-                vm.setTitle = setTitle;
-
-                Feed.get(res => {
-                    vm.feeds = res.data;
-                });
+                Feed.get(res => vm.feeds = res.data);
 
                 setInterval(() => {
                     vm.time = Date.now();
                     $scope.$digest();
                 }, 1000);
                 
-                $scope.$on('ADD_FEED', (event, data) => {
-                    vm.feeds.push(data);
-                })
-                $scope.$on('DELETE_FEED', (event, data) => {
-                    vm.feeds = _.filter(vm.feeds, feed => {
-                        return feed.feed_id != data.feed_id;
-                    });
-                })
-                $scope.$on('READ_POST', (event, data) => {
-                    for(let feed of vm.feeds) {
-                        if(feed.feed_id === data) {
-                            feed.unread --;
-                        }
-                    }
-                })
-
-                function setTitle() {
-                    storage.title = '';
-                    storage.status = '';
-                    storage.begintime = '';
-                }
+                $scope.$on('ADD_FEED', (event, data) => vm.feeds.push(data));
+                $scope.$on('DELETE_FEED', (event, data) => vm.feeds = _.filter(vm.feeds, feed => feed.feed_id != data.feed_id));
+                $scope.$on('READ_POST', (event, data) => _.each(vm.feeds, feed => feed.feed_id === data ? feed.unread -- : ''));
             }
         }
     }
-
 }());
