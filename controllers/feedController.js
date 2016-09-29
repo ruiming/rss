@@ -77,7 +77,7 @@ exports.create = async (ctx, next) => {
                     resolve(favicon);
                 }));
                 var data = search ? {absurl: feedlink, favicon: favicon} : {absurl: feedlink, favicon: favicon, feedNum: 1};
-                var feed = new FeedModel(Object.assign(this.meta, data));
+                var feed = new FeedModel(Object.assign(this.meta, data, {lastScan: Date.now()}));
                 var store = await feed.save();
                 var feedid = store._id, link = store.link, count = 0;
                 if(search) {
@@ -123,11 +123,14 @@ exports.create = async (ctx, next) => {
 exports.list = async (ctx, next) => {
     var id = ctx.params.id;
     var user_id = ctx.state.user.id;
-    var result = await UserFeedModel.findOne({user_id: user_id, feed_id: id}, {user_id: 0}).populate('feed_id').exec().catch(e => e);
+    var unreadcount = await UserPostModel.count({feed_id: id, user_id: user_id, read: true});
+    var count = await PostModel.count({feed_id: id});
+    var result = await UserFeedModel.findOne({user_id: user_id, feed_id: id}, {user_id: 0}).populate('feed_id').lean()
+        .exec((err, data) => data ? data.unread = count - unreadcount : data);
     if (result && result._id) {
         ctx.body = { success: true, data: result };
     } else {
-        var result = await FeedModel.findOne({_id: id});
+        var result = await FeedModel.findOne({_id: id}).lean().exec((err, data) => data ? data.unread = count : data);
         if(result && result._id) {
             ctx.body = { success: true, data: result };
         } else {

@@ -9,6 +9,7 @@
         vm.feed.feeded = angular.isDefined(feed.data.feed_time);        
         vm.feed.feed_id = $stateParams.id;        
         vm.posts = posts.data.posts;
+        vm.unread = vm.feed.unread;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
 
         // Graphy Start 订阅源文章更新情况
@@ -87,6 +88,7 @@
             if(post.read) {
                 return;
             } else {
+                vm.unread --;
                 post.read = true;
                 $rootScope.$broadcast('READ_POST', post.feed_id[0]);
                 Post.update({feed_id: post.feed_id[0], id: post._id}, {type: 'read'});
@@ -94,8 +96,10 @@
         }
         function readall() {
             for(let post of vm.posts) {
-                console.log(post.read);
-                if(!post.read) $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
+                if(!post.read) {
+                    vm.unread --;
+                    $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
+                }
                 post.read = true;
             }
             Post.update({feed_id: vm.feed.feed_id, id: 0}, {type: 'read'});

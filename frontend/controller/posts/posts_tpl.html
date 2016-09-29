@@ -11,13 +11,13 @@
         <div class="status-bar">
             <button class="posts btn btn-primary" ng-click="vm.readall()" ng-if="vm.type === '未读'">
                 <span class="glyphicon glyphicon-ok"></span>
-                全部标记为已读 <span>( {{vm.count}} )</span>
+                全部标记为已读 <span>( {{vm.unread}} )</span>
             </button>
         </div>
     </div>
     <div ui-view class="center" scroll-listen="post.read">
         <div class="page-header">
-            <h1>{{vm.type}}文章 <strong>{{vm.count}}</strong> 篇</h1>
+            <h1>{{vm.type}}文章 <strong>{{vm.unread}}</strong> 篇</h1>
         </div>
     </div>
 </div>

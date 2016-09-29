@@ -431,6 +431,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.feed.feeded = angular.isDefined(feed.data.feed_time);
         vm.feed.feed_id = $stateParams.id;
         vm.posts = posts.data.posts;
+        vm.unread = vm.feed.unread;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
 
         // Graphy Start 订阅源文章更新情况
@@ -557,6 +558,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (post.read) {
                 return;
             } else {
+                vm.unread--;
                 post.read = true;
                 $rootScope.$broadcast('READ_POST', post.feed_id[0]);
                 Post.update({ feed_id: post.feed_id[0], id: post._id }, { type: 'read' });
@@ -571,8 +573,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 for (var _iterator4 = vm.posts[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
                     var post = _step4.value;
 
-                    console.log(post.read);
-                    if (!post.read) $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
+                    if (!post.read) {
+                        vm.unread--;
+                        $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
+                    }
                     post.read = true;
                 }
             } catch (err) {
@@ -656,7 +660,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.posts = posts.data;
         vm.readall = readall;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
-        vm.count = vm.posts.length;
+        vm.unread = vm.posts.length;
 
         // Function
         vm.goto = goto;
@@ -691,7 +695,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (post.read) {
                 return;
             } else {
-                vm.count--;
+                vm.unread--;
                 if ($stateParams.type === 'unread') {
                     $rootScope.$broadcast('READ_POST', post.feed_id);
                 }
@@ -711,7 +715,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 for (var _iterator6 = vm.posts[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
                     var post = _step6.value;
 
-                    if (!post.read) $rootScope.$broadcast('READ_POST', post.feed_id);
+                    if (!post.read) {
+                        $rootScope.$broadcast('READ_POST', post.feed_id);
+                        vm.unread--;
+                    }
                     post.read = true;
                     str += str === '' ? post._id : ',' + post._id;
                 }

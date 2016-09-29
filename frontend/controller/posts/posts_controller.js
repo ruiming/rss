@@ -8,7 +8,7 @@
         vm.posts = posts.data;
         vm.readall = readall;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
-        vm.count = vm.posts.length;
+        vm.unread = vm.posts.length;
 
         // Function
         vm.goto = goto;
@@ -21,7 +21,7 @@
             if(post.read) {
                 return;
             } else {
-                vm.count --;
+                vm.unread --;
                 if($stateParams.type === 'unread') {
                     $rootScope.$broadcast('READ_POST', post.feed_id);
                 }
@@ -34,7 +34,10 @@
         function readall() {
             var str = '';
             for(let post of vm.posts) {
-                if(!post.read) $rootScope.$broadcast('READ_POST', post.feed_id);
+                if(!post.read) {
+                    $rootScope.$broadcast('READ_POST', post.feed_id);
+                    vm.unread--;
+                }
                 post.read = true;                
                 str += str === '' ? post._id : ',' + post._id;
             }
