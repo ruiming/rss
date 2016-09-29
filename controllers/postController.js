@@ -67,15 +67,51 @@ exports.update = async (ctx, next) => {
             });
             for(let item of items) {
                 var state = await UserPostModel.findOne({user_id: user_id, feed_id: feed_id, post_id: item});
-                if(type === 'finish')   state['read'] = revert ? !state[type] : true;                
-                if(state && state._id) {
-                    state[type] = revert ? !state[type] : true;
-                    state.save()
-                } else {
-                    state = {user_id: user_id, feed_id: feed_id, post_id: item};
-                    state[type] = !revert;
-                    state = new UserPostModel(state);
-                    state.save();
+                var basic = {user_id: user_id, feed_id: feed_id, post_id: item};
+                switch(type) {
+                    // 真已读
+                    case 'finish': 
+                        if(state && state._id) {
+                            state['finish'] = state['read'] = true;
+                            state['finish_date'] = Date.now();
+                            state.save();    
+                        } else {
+                            state = new UserPostModel(Object.assign(basic, {finish: true, read: true, finish_date: Date.now()}));
+                            state.save();
+                        }
+                        break;
+                    // 标记已读，可反
+                    case 'read':
+                        if(state && state._id) {
+                            state['read'] = revert ? !state['read'] : true;
+                            if(!revert) state['read_date'] = Date.now();
+                            state.save();    
+                        } else {
+                            state = new UserPostModel(Object.assign(basic, {read: true}));
+                            state.save();
+                        }
+                        break;
+                    case 'mark':
+                        if(state && state._id) {
+                            state['mark'] = revert ? !state['mark'] : true;
+                            if(!revert) state['mark_date'] = Date.now();
+                            state.save();
+                        } else {
+                            state = new UserPostModel(Object.assign(basic, {mark: true, mark_date: Date.now()}));
+                            state.save();
+                        }
+                        break;
+                    case 'love':
+                        if(state && state._id) {
+                            state['love'] = revert ? !state['love'] : true;
+                            if(!revert) state['love_date'] = Date.now();
+                            state.save();
+                        }  else {
+                            state = new UserPostModel(Object.assign(basic, {love: true, love_date: Date.now()}));
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         }, 0);
