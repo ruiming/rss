@@ -34,13 +34,18 @@
                     axisLabel: '月份'
                 },
                 yAxis: {
-                    axisLabel: '月更新文章数',
+                    axisLabel: '最近更新文章数',
                     axisLabelDistance: -10
+                },
+                tooltip: {
+                    valueFormatter: function (d, i) {
+                        return d + "篇";
+                    }
                 }
             }
         }
         vm.data = [{
-            key: "kkkk",
+            key: "最近更新文章数",
             values: []
         }]
         _.each(_.groupBy(posts.data.posts, 'pubdate'), (value, key) => {
@@ -53,6 +58,7 @@
             });
             if(!exist)  vm.data[0].values.push({label: date, value: 1})
         })
+        vm.data[0].values = _.sortBy(vm.data[0].values, 'label').reverse();
         // Graphy End
 
         // Function

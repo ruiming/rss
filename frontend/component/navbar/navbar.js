@@ -33,7 +33,6 @@
                     }, 800);
                 }
                 function search(feedlink) {
-                    // Check again
                     if(!tools.checkUrl(feedlink)) {
                         return false;
                     } else {
