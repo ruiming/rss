@@ -6,22 +6,25 @@
     function PostsController(_, $stateParams, posts, $state, Post, Posts, $rootScope) {
         var vm = this;
         vm.posts = posts.data;
+
         vm.readall = readall;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
         vm.unread = vm.posts.length;
         vm.postsByFeed = _.toArray(_.groupBy(posts.data, 'feed_id'));
-        console.log((vm.postsByFeed));
+
         // Function
         vm.goto = goto;
 
-        function goto(post) {
-            for(let post of vm.posts) {
-                post.active = false;
+        function goto(id) {
+            var post = null;
+            for(let item of vm.posts) {
+                if(item._id === id) {
+                    item.active = true;
+                    post = item;
+                } 
+                else item.active = false;
             }
-            post.active = true;
-            if(post.read) {
-                return;
-            } else {
+            if(!post.read) {
                 vm.unread --;
                 if($stateParams.type === 'unread') {
                     $rootScope.$broadcast('READ_POST', post.feed_id);

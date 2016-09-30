@@ -29,7 +29,7 @@ exports.list = async (ctx, next) => {
             type === 'mark' ? query['mark'] = true : query['read'] = true;
             var result = await UserPostModel.find(query, {_id: 0, post_id: 1});
             var data = _.invoke(_.flatten(_.pluck(result, 'post_id'), true), 'toString');
-            var items = await PostModel.find({feed_id: feed.feed_id}, {summary: 0, description: 0}).populate('feed_id');
+            var items = await PostModel.find({feed_id: feed.feed_id}, {summary: 0, description: 0}).populate('feed_id', {_id: 1, title: 1, favicon: 1});
             if(type === 'mark') _.each(items, item => _.contains(data, item._id.toString()) ? posts.push(item) : _.noop());
             else _.each(items, item => !_.contains(data, item._id.toString()) ? posts.push(item) : _.noop());
             resolve();

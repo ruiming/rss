@@ -91,9 +91,7 @@
                 post.active = false;
             }
             post.active = true;
-            if(post.read) {
-                return;
-            } else {
+            if(!post.read) {
                 vm.unread --;
                 post.read = true;
                 $rootScope.$broadcast('READ_POST', post.feed_id[0]);

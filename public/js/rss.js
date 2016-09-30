@@ -148,17 +148,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             response: function response(config) {
                 var data = config.data.data;
                 if (Array.isArray(data)) {
-                    for (var _i = 0, len = data.length; _i < len; _i++) {
-                        if (void 0 !== data[_i].feed_id && Array.isArray(data[_i].feed_id)) {
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        if (void 0 !== data[i].feed_id && Array.isArray(data[i].feed_id)) {
                             // 提取 feed_id 
-                            if (typeof data[_i].feed_id[0] === 'string') {
-                                config.data.data[_i].feed_id = data[_i].feed_id[0];
+                            if (typeof data[i].feed_id[0] === 'string') {
+                                config.data.data[i].feed_id = data[i].feed_id[0];
                             } else {
-                                config.data.data[_i] = Object.assign(data[_i].feed_id[0], data[_i], { feed_id: data[_i].feed_id[0]._id, feed_title: data[_i].feed_id[0].title });
+                                config.data.data[i] = Object.assign(data[i].feed_id[0], data[i], { feed_id: data[i].feed_id[0]._id, feed_title: data[i].feed_id[0].title });
                             }
                         }
-                        if (void 0 !== data[_i].user_id && Array.isArray(data[_i].user_id)) {
-                            config.data.data[_i].user_id = data[_i].user_id[0];
+                        if (void 0 !== data[i].user_id && Array.isArray(data[i].user_id)) {
+                            config.data.data[i].user_id = data[i].user_id[0];
                         }
                     }
                 } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === 'object') {
@@ -166,7 +166,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         if (typeof data.feed_id[0] === 'string') {
                             config.data.data.feed_id = data.feed_id[0];
                         } else {
-                            config.data.data = Object.assign(data.feed_id[0], data, { feed_id: data.feed_id[0]._id, feed_title: data[i].feed_id[0].title });
+                            config.data.data = Object.assign(data.feed_id[0], data, { feed_id: data.feed_id[0]._id, feed_title: data.feed_id[0].title });
                         }
                     }
                     if (void 0 !== data.user_id && Array.isArray(data.user_id)) {
@@ -528,9 +528,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
 
             post.active = true;
-            if (post.read) {
-                return;
-            } else {
+            if (!post.read) {
                 vm.unread--;
                 post.read = true;
                 $rootScope.$broadcast('READ_POST', post.feed_id[0]);
@@ -583,30 +581,78 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
+    PostController.$inject = ["$state", "post", "Post", "storage", "$scope", "_", "$rootScope", "$timeout", "$cacheFactory"];
+    angular.module('app').controller('PostController', PostController);
+
+    function PostController($state, post, Post, storage, $scope, _, $rootScope, $timeout, $cacheFactory) {
+        var vm = this;
+        vm.post = post;
+        vm.currentPost = post.data.result;
+        vm.currentPostDetail = post.data.detail;
+        vm.begintime = Date.now();
+        vm.currenttime = Date.now();
+        vm.status = '';
+
+        // Functon
+        vm.love = love;
+        vm.mark = mark;
+        vm.home = home;
+
+        // Date auto change
+        setInterval(function () {
+            vm.currenttime = Date.now();
+            $scope.$digest();
+        }, 1000);
+
+        // Check if the post has been read yet
+        if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
+            vm.status = '已经读过啦~\(≧▽≦)/~';
+        }
+
+        function love() {
+            vm.currentPostDetail.love = !vm.currentPostDetail.love;
+            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'love', revert: true });
+        }
+        function mark() {
+            vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
+            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'mark', revert: true });
+        }
+        function home() {
+            $state.go('feed', { id: vm.currentPost.feed_id[0] });
+        }
+    }
+})();
+
+(function () {
     PostsController.$inject = ["_", "$stateParams", "posts", "$state", "Post", "Posts", "$rootScope"];
     angular.module('app').controller('PostsController', PostsController);
 
     function PostsController(_, $stateParams, posts, $state, Post, Posts, $rootScope) {
         var vm = this;
         vm.posts = posts.data;
+
         vm.readall = readall;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
         vm.unread = vm.posts.length;
         vm.postsByFeed = _.toArray(_.groupBy(posts.data, 'feed_id'));
-        console.log(vm.postsByFeed);
+
         // Function
         vm.goto = goto;
 
-        function goto(post) {
+        function goto(id) {
+            var post = null;
             var _iteratorNormalCompletion4 = true;
             var _didIteratorError4 = false;
             var _iteratorError4 = undefined;
 
             try {
                 for (var _iterator4 = vm.posts[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var _post2 = _step4.value;
+                    var item = _step4.value;
 
-                    _post2.active = false;
+                    if (item._id === id) {
+                        item.active = true;
+                        post = item;
+                    } else item.active = false;
                 }
             } catch (err) {
                 _didIteratorError4 = true;
@@ -623,10 +669,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }
 
-            post.active = true;
-            if (post.read) {
-                return;
-            } else {
+            if (!post.read) {
                 vm.unread--;
                 if ($stateParams.type === 'unread') {
                     $rootScope.$broadcast('READ_POST', post.feed_id);
