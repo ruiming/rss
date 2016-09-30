@@ -23,8 +23,8 @@
             <div class="bs-callout bs-callout-info" ng-repeat="feed in vm.postsByFeed">
                 <h4>{{feed[0].feed_title}}<small>{{feed.length}}</small></h4>
                 <ul>
-                    <li ng-repeat="post in feed | orderBy:'date':true track by post._id ">
-                        <a ng-click="vm.goto(post._id)">{{post.title}}</a><small>{{post.date | timeago}}</small>
+                    <li ng-repeat="post in feed | orderBy:'date':true track by post._id">
+                        <a ng-click="vm.goto(post._id)" ng-class="{true: 'visit', false: ''}[post.read && vm.type==='未读']">{{post.title}}</a><small>{{post.date | timeago}}</small>
                     </li>
                 </ul>
             </div>
