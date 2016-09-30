@@ -8,6 +8,7 @@
         vm.posts = posts.data;
 
         vm.readall = readall;
+        vm.randomcolor = randomcolor;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
         vm.unread = vm.posts.length;
         vm.postsByFeed = _.toArray(_.groupBy(posts.data, 'feed_id'));
@@ -46,6 +47,10 @@
                 str += str === '' ? post._id : ',' + post._id;
             }
             Posts.save({id: str});
+        }
+        function randomcolor() {
+            var random = Math.floor(Math.random() * 3);
+            return  random === 0 ? 'warning' : random === 1 ? 'info' : random === 2 ? 'danger' : '';
         }
     }
 }());

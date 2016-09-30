@@ -79,6 +79,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
+    angular.module('app').directive('ngRandomClass', ngRandomClass);
+
+    function ngRandomClass() {
+        return {
+            restrict: 'EA',
+            replace: false,
+            scope: {
+                ngClasses: "=ngRandomClass"
+            },
+            link: function link(scope, elem, attr) {
+                elem.addClass(scope.ngClasses[Math.floor(Math.random() * scope.ngClasses.length)]);
+            }
+        };
+    }
+})();
+(function () {
     scrollListen.$inject = ["_", "Post", "storage"];
     angular.module('app').directive('scrollListen', scrollListen);
 
@@ -632,6 +648,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.posts = posts.data;
 
         vm.readall = readall;
+        vm.randomcolor = randomcolor;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
         vm.unread = vm.posts.length;
         vm.postsByFeed = _.toArray(_.groupBy(posts.data, 'feed_id'));
@@ -713,6 +730,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
 
             Posts.save({ id: str });
+        }
+        function randomcolor() {
+            var random = Math.floor(Math.random() * 3);
+            return random === 0 ? 'warning' : random === 1 ? 'info' : random === 2 ? 'danger' : '';
         }
     }
 })();
