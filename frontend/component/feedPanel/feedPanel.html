@@ -10,17 +10,13 @@
             <p class="col-sm-2">订阅源标题</p>
             <p class="col-sm-10">{{feed.title}}</p>
         </div>
-        <div class="row">
+        <div class="row" ng-if="feed.author">
             <p class="col-sm-2">作者</p>
             <p class="col-sm-10">{{feed.author}}</p>
         </div>
-        <div class="row">
-            <p class="col-sm-2">本周文章</p>
-            <p class="col-sm-10">TODO</p>
-        </div>
-        <div class="row">
+        <div class="row" ng-if="feed.pubdate">
             <p class="col-sm-2">最近更新时间</p>
-            <p class="col-sm-10">{{feed.pubdate | toLocalString}}</p>
+            <p class="col-sm-10">{{feed.pubdate | toLocalString: 'yyyy-MM-dd'}}</p>
         </div>
         <div class="row">
             <p class="col-sm-2">订阅人数</p>
