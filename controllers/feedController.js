@@ -83,7 +83,7 @@ exports.create = async (ctx, next) => {
                 if(search) {
                     feedparser.on('readable', function() {
                         while(result = this.read()) {
-                            var post = new PostModel(Object.assign(result, {feed_id: feedid, link: link}));
+                            var post = new PostModel(Object.assign(result, {feed_id: feedid, website: link}));
                             post.save();
                             count ++;
                         }
@@ -96,7 +96,7 @@ exports.create = async (ctx, next) => {
                     setTimeout(() => {
                         feedparser.on('readable', function() {
                             while(result = this.read()) {
-                                var post = new PostModel(Object.assign(result, {feed_id: feedid, link: link}));
+                                var post = new PostModel(Object.assign(result, {feed_id: feedid, website: link}));
                                 post.save();
                                 count ++;
                             }

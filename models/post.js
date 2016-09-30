@@ -16,6 +16,7 @@ const PostSchema = new Schema({
     origlink:       {type: String},
     categories:     {type: Array},
 
+    website:        {type: String},
     feed_id:        [{type: Schema.Types.ObjectId, ref: 'Feed'}],   // 订阅源 ID
     loveNum:        {type: Number, default: 0},                     // 点赞数量
     markNum:        {type: Number, default: 0}                      // 星标人数

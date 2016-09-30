@@ -28,6 +28,8 @@
                     </li>
                 </ul>
             </div>
+            <p ng-if="!vm.posts.length && vm.type==='未读'">全部读完啦</p>
+            <p ng-if="!vm.posts.length && vm.type==='星标'">没有收藏哦</p>
         </div>
     </div>
 </div>
