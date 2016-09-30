@@ -8,8 +8,17 @@
         margin-top: 0;
         margin-bottom: 15px;
     }
+    small {
+        float: right;
+    }
     ul {
         margin-bottom: 0;
+    }
+    a {
+        color: #444;
+        &:hover {
+            cursor: pointer;
+        }
     }
     li {
         font-size: 1.2rem;

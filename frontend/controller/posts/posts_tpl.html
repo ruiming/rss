@@ -21,10 +21,10 @@
                 <h1>{{vm.type}}文章 <strong>{{vm.unread}}</strong> 篇</h1>
             </div>
             <div class="bs-callout bs-callout-info" ng-repeat="feed in vm.postsByFeed">
-                <h4>{{feed[0].feed_title}}</h4>
+                <h4>{{feed[0].feed_title}}<small>{{feed.length}}</small></h4>
                 <ul>
-                    <li ng-repeat="post in feed track by post._id" ng-click="vm.goto(post._id)">
-                        {{post.title}}
+                    <li ng-repeat="post in feed | orderBy:'date':true track by post._id ">
+                        <a ng-click="vm.goto(post._id)">{{post.title}}</a><small>{{post.date | timeago}}</small>
                     </li>
                 </ul>
             </div>
