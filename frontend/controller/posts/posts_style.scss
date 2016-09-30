@@ -1,0 +1,28 @@
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    h4 {
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+    ul {
+        margin-bottom: 0;
+    }
+    li {
+        font-size: 1.2rem;
+        line-height: 1.75;
+        margin-bottom: 5px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+.bs-callout-info {
+    border-left-color: #5bc0de;
+    h4 {
+        color: #5bc0de;
+    }
+}

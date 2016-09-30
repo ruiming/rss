@@ -21,7 +21,7 @@
                     vm.time = Date.now();
                     $scope.$digest();
                 }, 1000);
-                
+                         
                 $scope.$on('ADD_FEED', (event, data) => vm.feeds.push(data));
                 $scope.$on('DELETE_FEED', (event, data) => vm.feeds = _.filter(vm.feeds, feed => feed.feed_id != data.feed_id));
                 $scope.$on('READ_POST', (event, data) => _.each(vm.feeds, feed => feed.feed_id === data ? feed.unread -- : ''));

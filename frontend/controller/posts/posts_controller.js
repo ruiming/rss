@@ -3,13 +3,14 @@
         .module('app')
         .controller('PostsController', PostsController);
 
-    function PostsController($stateParams, posts, $state, Post, Posts, $rootScope) {
+    function PostsController(_, $stateParams, posts, $state, Post, Posts, $rootScope) {
         var vm = this;
         vm.posts = posts.data;
         vm.readall = readall;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
         vm.unread = vm.posts.length;
-
+        vm.postsByFeed = _.toArray(_.groupBy(posts.data, 'feed_id'));
+        console.log((vm.postsByFeed));
         // Function
         vm.goto = goto;
 

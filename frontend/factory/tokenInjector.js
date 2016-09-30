@@ -25,7 +25,7 @@
                             if(typeof data[i].feed_id[0] === 'string') {
                                 config.data.data[i].feed_id = data[i].feed_id[0];
                             } else {
-                                config.data.data[i] = Object.assign(data[i].feed_id[0], data[i], {feed_id: data[i].feed_id[0]._id});                             
+                                config.data.data[i] = Object.assign(data[i].feed_id[0], data[i], {feed_id: data[i].feed_id[0]._id, feed_title: data[i].feed_id[0].title});                             
                             }
                         }
                         if(void 0 !== data[i].user_id && Array.isArray(data[i].user_id)) {
@@ -37,7 +37,7 @@
                             if(typeof data.feed_id[0] === 'string') {
                                 config.data.data.feed_id = data.feed_id[0];
                             } else {
-                                config.data.data = Object.assign(data.feed_id[0], data, {feed_id: data.feed_id[0]._id});                                                            
+                                config.data.data = Object.assign(data.feed_id[0], data, {feed_id: data.feed_id[0]._id, feed_title: data[i].feed_id[0].title});                                                            
                             }
                         }
                         if(void 0 !== data.user_id && Array.isArray(data.user_id)) {

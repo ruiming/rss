@@ -118,6 +118,73 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }
 })();
+/**
+ * 单体通信
+ */
+(function () {
+    angular.module('app').factory('storage', storage);
+
+    function storage() {
+        return {};
+    }
+})();
+(function () {
+    tokenInjector.$inject = ["$injector", "$q", "$cookies", "$cacheFactory", "$timeout"];
+    angular.module('app').factory('tokenInjector', tokenInjector);
+
+    function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
+        var jwt = undefined;
+
+        return {
+            // Warning: The cookie should set to httponly to keep safe.
+            request: function request(config) {
+                if (void 0 === jwt) {
+                    jwt = $cookies.get('jwt');
+                }
+                config.headers['Authorization'] = "Bearer " + jwt;
+                return $q.when(config);
+            },
+
+            response: function response(config) {
+                var data = config.data.data;
+                if (Array.isArray(data)) {
+                    for (var _i = 0, len = data.length; _i < len; _i++) {
+                        if (void 0 !== data[_i].feed_id && Array.isArray(data[_i].feed_id)) {
+                            // 提取 feed_id 
+                            if (typeof data[_i].feed_id[0] === 'string') {
+                                config.data.data[_i].feed_id = data[_i].feed_id[0];
+                            } else {
+                                config.data.data[_i] = Object.assign(data[_i].feed_id[0], data[_i], { feed_id: data[_i].feed_id[0]._id, feed_title: data[_i].feed_id[0].title });
+                            }
+                        }
+                        if (void 0 !== data[_i].user_id && Array.isArray(data[_i].user_id)) {
+                            config.data.data[_i].user_id = data[_i].user_id[0];
+                        }
+                    }
+                } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === 'object') {
+                    if (void 0 !== data.feed_id && Array.isArray(data.feed_id)) {
+                        if (typeof data.feed_id[0] === 'string') {
+                            config.data.data.feed_id = data.feed_id[0];
+                        } else {
+                            config.data.data = Object.assign(data.feed_id[0], data, { feed_id: data.feed_id[0]._id, feed_title: data[i].feed_id[0].title });
+                        }
+                    }
+                    if (void 0 !== data.user_id && Array.isArray(data.user_id)) {
+                        config.data.data.user_id = data.user_id[0];
+                    }
+                }
+                return $q.when(config);
+            }
+        };
+    }
+})();
+
+(function () {
+    var underscore = angular.module('underscore', []);
+    underscore.factory('_', ['$window', function ($window) {
+        return $window._;
+    }]);
+})();
 (function () {
     angular.module('app').filter('linkFix', function () {
         return function (input, origin) {
@@ -191,72 +258,135 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     });
 })();
 
-/**
- * 单体通信
- */
 (function () {
-    angular.module('app').factory('storage', storage);
+    angular.module('app').directive('contextMenu', contextMenu);
 
-    function storage() {
-        return {};
-    }
-})();
-(function () {
-    tokenInjector.$inject = ["$injector", "$q", "$cookies", "$cacheFactory", "$timeout"];
-    angular.module('app').factory('tokenInjector', tokenInjector);
-
-    function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
-        var jwt = undefined;
-
+    function contextMenu() {
         return {
-            // Warning: The cookie should set to httponly to keep safe.
-            request: function request(config) {
-                if (void 0 === jwt) {
-                    jwt = $cookies.get('jwt');
-                }
-                config.headers['Authorization'] = "Bearer " + jwt;
-                return $q.when(config);
-            },
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "Feed", "_", function contextMenuController($scope, Feed, _) {
+                var vm = this;
+                vm.time = Date.now();
+                vm.feeds = [];
 
-            response: function response(config) {
-                var data = config.data.data;
-                if (Array.isArray(data)) {
-                    for (var i = 0, len = data.length; i < len; i++) {
-                        if (void 0 !== data[i].feed_id && Array.isArray(data[i].feed_id)) {
-                            // 提取 feed_id 
-                            if (typeof data[i].feed_id[0] === 'string') {
-                                config.data.data[i].feed_id = data[i].feed_id[0];
-                            } else {
-                                config.data.data[i] = Object.assign(data[i].feed_id[0], data[i], { feed_id: data[i].feed_id[0]._id });
-                            }
-                        }
-                        if (void 0 !== data[i].user_id && Array.isArray(data[i].user_id)) {
-                            config.data.data[i].user_id = data[i].user_id[0];
-                        }
-                    }
-                } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === 'object') {
-                    if (void 0 !== data.feed_id && Array.isArray(data.feed_id)) {
-                        if (typeof data.feed_id[0] === 'string') {
-                            config.data.data.feed_id = data.feed_id[0];
-                        } else {
-                            config.data.data = Object.assign(data.feed_id[0], data, { feed_id: data.feed_id[0]._id });
-                        }
-                    }
-                    if (void 0 !== data.user_id && Array.isArray(data.user_id)) {
-                        config.data.data.user_id = data.user_id[0];
-                    }
-                }
-                return $q.when(config);
-            }
+                Feed.get(function (res) {
+                    return vm.feeds = res.data;
+                });
+
+                setInterval(function () {
+                    vm.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+
+                $scope.$on('ADD_FEED', function (event, data) {
+                    return vm.feeds.push(data);
+                });
+                $scope.$on('DELETE_FEED', function (event, data) {
+                    return vm.feeds = _.filter(vm.feeds, function (feed) {
+                        return feed.feed_id != data.feed_id;
+                    });
+                });
+                $scope.$on('READ_POST', function (event, data) {
+                    return _.each(vm.feeds, function (feed) {
+                        return feed.feed_id === data ? feed.unread-- : '';
+                    });
+                });
+            }]
         };
     }
 })();
-
 (function () {
-    var underscore = angular.module('underscore', []);
-    underscore.factory('_', ['$window', function ($window) {
-        return $window._;
-    }]);
+    angular.module('app').directive('feedPanel', feedPanel);
+
+    function feedPanel() {
+        return {
+            restrict: 'EA',
+            scope: {
+                feed: '='
+            },
+            replace: true,
+            templateUrl: 'feedPanel/feedPanel.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
+                var vm = this;
+
+                // Function
+                vm.feedit = feedit;
+
+                function feedit() {
+                    $scope.feed.feeded = !$scope.feed.feeded;
+                    if ($scope.feed.feeded) {
+                        Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
+                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
+                            $scope.feed.feeded = true;
+                            $scope.feed.feedNum++;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    } else {
+                        Feed.delete({ id: $scope.feed.feed_id }, function (res) {
+                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
+                            $scope.feed.feeded = false;
+                            $scope.feed.feedNum--;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    }
+                }
+            }]
+        };
+    }
+})();
+(function () {
+    navbar.$inject = ["$state", "$base64"];
+    angular.module('app').directive('navbar', navbar);
+
+    function navbar($state, $base64) {
+        return {
+            restrict: 'EA',
+            scope: {
+                title: '='
+            },
+            replace: true,
+            templateUrl: 'navbar/navbar.html',
+            controllerAs: 'vm',
+            controller: ["$timeout", "tools", function navbarController($timeout, tools) {
+                var vm = this,
+                    timeout = void 0;
+
+                // Function
+                vm.blur = blur;
+                vm.search = search;
+                vm.focus = focus;
+
+                function focus() {
+                    form.input.focus();
+                    if (timeout) {
+                        $timeout.cancel(timeout);
+                    }
+                    vm.active = true;
+                }
+                function blur() {
+                    timeout = $timeout(function () {
+                        vm.active = false;
+                    }, 800);
+                }
+                function search(feedlink) {
+                    if (!tools.checkUrl(feedlink)) {
+                        return false;
+                    } else {
+                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
+                    }
+                }
+            }]
+        };
+    }
 })();
 (function () {
     FeedController.$inject = ["$rootScope", "feed", "posts", "_", "storage", "$scope", "Post", "$state", "Feed", "$stateParams"];
@@ -443,68 +573,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
+    HomeController.$inject = ["$timeout"];
     angular.module('app').controller('HomeController', HomeController);
 
-    function HomeController() {
+    function HomeController($timeout) {
         var vm = this;
         vm.title = 'It works!';
     }
 })();
 
 (function () {
-    PostController.$inject = ["$state", "post", "Post", "storage", "$scope", "_", "$rootScope", "$timeout", "$cacheFactory"];
-    angular.module('app').controller('PostController', PostController);
-
-    function PostController($state, post, Post, storage, $scope, _, $rootScope, $timeout, $cacheFactory) {
-        var vm = this;
-        vm.post = post;
-        vm.currentPost = post.data.result;
-        vm.currentPostDetail = post.data.detail;
-        vm.begintime = Date.now();
-        vm.currenttime = Date.now();
-        vm.status = '';
-
-        // Functon
-        vm.love = love;
-        vm.mark = mark;
-        vm.home = home;
-
-        // Date auto change
-        setInterval(function () {
-            vm.currenttime = Date.now();
-            $scope.$digest();
-        }, 1000);
-
-        // Check if the post has been read yet
-        if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
-            vm.status = '已经读过啦~\(≧▽≦)/~';
-        }
-
-        function love() {
-            vm.currentPostDetail.love = !vm.currentPostDetail.love;
-            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'love', revert: true });
-        }
-        function mark() {
-            vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
-            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'mark', revert: true });
-        }
-        function home() {
-            $state.go('feed', { id: vm.currentPost.feed_id[0] });
-        }
-    }
-})();
-
-(function () {
-    PostsController.$inject = ["$stateParams", "posts", "$state", "Post", "Posts", "$rootScope"];
+    PostsController.$inject = ["_", "$stateParams", "posts", "$state", "Post", "Posts", "$rootScope"];
     angular.module('app').controller('PostsController', PostsController);
 
-    function PostsController($stateParams, posts, $state, Post, Posts, $rootScope) {
+    function PostsController(_, $stateParams, posts, $state, Post, Posts, $rootScope) {
         var vm = this;
         vm.posts = posts.data;
         vm.readall = readall;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
         vm.unread = vm.posts.length;
-
+        vm.postsByFeed = _.toArray(_.groupBy(posts.data, 'feed_id'));
+        console.log(vm.postsByFeed);
         // Function
         vm.goto = goto;
 
@@ -601,136 +690,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 
-(function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "Feed", "_", function contextMenuController($scope, Feed, _) {
-                var vm = this;
-                vm.time = Date.now();
-                vm.feeds = [];
-
-                Feed.get(function (res) {
-                    return vm.feeds = res.data;
-                });
-
-                setInterval(function () {
-                    vm.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
-
-                $scope.$on('ADD_FEED', function (event, data) {
-                    return vm.feeds.push(data);
-                });
-                $scope.$on('DELETE_FEED', function (event, data) {
-                    return vm.feeds = _.filter(vm.feeds, function (feed) {
-                        return feed.feed_id != data.feed_id;
-                    });
-                });
-                $scope.$on('READ_POST', function (event, data) {
-                    return _.each(vm.feeds, function (feed) {
-                        return feed.feed_id === data ? feed.unread-- : '';
-                    });
-                });
-            }]
-        };
-    }
-})();
-(function () {
-    angular.module('app').directive('feedPanel', feedPanel);
-
-    function feedPanel() {
-        return {
-            restrict: 'EA',
-            scope: {
-                feed: '='
-            },
-            replace: true,
-            templateUrl: 'feedPanel/feedPanel.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
-                var vm = this;
-
-                // Function
-                vm.feedit = feedit;
-
-                function feedit() {
-                    $scope.feed.feeded = !$scope.feed.feeded;
-                    if ($scope.feed.feeded) {
-                        Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
-                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
-                            $scope.feed.feeded = true;
-                            $scope.feed.feedNum++;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    } else {
-                        Feed.delete({ id: $scope.feed.feed_id }, function (res) {
-                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
-                            $scope.feed.feeded = false;
-                            $scope.feed.feedNum--;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    }
-                }
-            }]
-        };
-    }
-})();
-(function () {
-    navbar.$inject = ["$state", "$base64"];
-    angular.module('app').directive('navbar', navbar);
-
-    function navbar($state, $base64) {
-        return {
-            restrict: 'EA',
-            scope: {
-                title: '='
-            },
-            replace: true,
-            templateUrl: 'navbar/navbar.html',
-            controllerAs: 'vm',
-            controller: ["$timeout", "tools", function navbarController($timeout, tools) {
-                var vm = this,
-                    timeout = void 0;
-
-                // Function
-                vm.blur = blur;
-                vm.search = search;
-                vm.focus = focus;
-
-                function focus() {
-                    form.input.focus();
-                    if (timeout) {
-                        $timeout.cancel(timeout);
-                    }
-                    vm.active = true;
-                }
-                function blur() {
-                    timeout = $timeout(function () {
-                        vm.active = false;
-                    }, 800);
-                }
-                function search(feedlink) {
-                    if (!tools.checkUrl(feedlink)) {
-                        return false;
-                    } else {
-                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
-                    }
-                }
-            }]
-        };
-    }
-})();
 (function () {
     var help = {
         // 检测 URL 是否合法
