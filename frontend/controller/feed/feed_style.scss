@@ -75,6 +75,16 @@
 }
 .page-header {
     margin-top: 20px;
+    position: relative;
+    h1 {
+        margin-left: 40px;
+    }
+    img {
+        position: absolute;
+        top: 0;
+        width: 30px;
+        height: 30px;
+    }
 }
 .graphy {
     display: table;
