@@ -1,0 +1,26 @@
+<% include layout/header %>
+    <div class="container">
+        <div class="page-header">
+            <img src="/img/rss.png"><h1>Rsser<a href="/register">登录</a></h1>
+        </div>
+        <form class="form-horizontal col-sm-offset-3 col-sm-6 auth" method="POST" action="auth/register">
+            <div class="form-group">
+                <label class="col-xs-2 control-label" for="email">邮箱</label>
+                <div class="col-xs-10">
+                    <input type="email" name="email" class="form-control" id="email" placeholder="请输入邮箱地址" required>                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label" for="password">密码</label>
+                <div class="col-xs-10">
+                    <input type="password" name="password" class="form-control" required id="password" minlength=6 maxlength=18 placeholder="请输入密码">                    
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10 text-right">
+                    <button type="submit" class="btn btn-default">注册</button>
+                </div>
+            </div>
+        </form>
+    </div>
+<% include layout/footer %>

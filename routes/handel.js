@@ -11,16 +11,16 @@ router.get('/', async (ctx, next) => {
     if(ctx.cookies.get('jwt') && jwt.verify(ctx.cookies.get('jwt'), config.app.secretKey)) {
         await send(ctx, './public/index.html');
     } else {
-        await ctx.render('index.ejs', {test: 'Hey, this page is render by ejs'});  
+        await ctx.render('login.ejs', {test: 'Hey, this page is render by ejs'});  
     }
 });
 
-router.get('/auth', async (ctx, next) => {
+router.get('/register', async (ctx, next) => {
     // If visitor is login, let it alone  to Angular big brother
     if(ctx.cookies.get('jwt') && jwt.verify(ctx.cookies.get('jwt'), config.app.secretKey)) {
         await send(ctx, './public/index.html');
     } else {
-        await ctx.render('auth.ejs');  
+        await ctx.render('register.ejs');  
     }
 })
 
