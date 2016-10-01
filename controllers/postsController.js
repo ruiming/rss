@@ -50,13 +50,24 @@ exports.main = async (ctx, next) => {
         .populate('feed_id', {favicon: 1, title: 1}).lean().exec((err, items) => {
             Promise.all(_.map(items, item => new Promise(async (resolve, reject) => {
                 var userposts = await UserPostModel.find({feed_id: item.feed_id, user_id: user_id, read: true});
-                await PostModel.find({feed_id: item.feed_id}, {description: 0}).lean().exec((err, posts) => {
+                await PostModel.find({feed_id: item.feed_id}).lean().exec((err, posts) => {
                     var count = posts.length - userposts.length,
                     read_ids = _.invoke(_.pluck(userposts, 'post_id'), 'toString');
                     for(let post of posts) {
                         if(read_ids.indexOf(post._id.toString()) === -1) {
-                            post.summary = post.summary.replace(/<[^>]+>/g,"").slice(0, 500);
-                            resolve(Object.assign(post, item, {unread: count}));
+                            post.summary = post.description.replace(/<[^>]+>/g,"").slice(0, 550);
+                            post.description = post.description.match(/<img\s+src="(.*?)"/);
+                            // 图片处理
+                            if(post.description) {
+                                if(post.description[1].slice(0, 2) !== '//' && post.description[1].slice(0, 2) !== 'ht') {
+                                    post.description = post.website + post.description[1];
+                                } else {
+                                    post.description = post.description[1];
+                                }
+                            }
+                            else   post.description = '/img/noimg.png';
+                            resolve(Object.assign(item, post, {unread: count}));
+                            break;
                         }
                     }
                     resolve();

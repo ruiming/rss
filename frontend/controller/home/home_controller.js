@@ -6,7 +6,6 @@
     function HomeController(posts) {
         var vm = this;
         vm.posts = posts.data;
-        console.log(vm.posts);
     }
     
 }());

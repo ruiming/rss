@@ -366,6 +366,51 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 (function () {
+    navbar.$inject = ["$state", "$base64"];
+    angular.module('app').directive('navbar', navbar);
+
+    function navbar($state, $base64) {
+        return {
+            restrict: 'EA',
+            scope: {
+                title: '='
+            },
+            replace: true,
+            templateUrl: 'navbar/navbar.html',
+            controllerAs: 'vm',
+            controller: ["$timeout", "tools", function navbarController($timeout, tools) {
+                var vm = this,
+                    timeout = void 0;
+
+                // Function
+                vm.blur = blur;
+                vm.search = search;
+                vm.focus = focus;
+
+                function focus() {
+                    form.input.focus();
+                    if (timeout) {
+                        $timeout.cancel(timeout);
+                    }
+                    vm.active = true;
+                }
+                function blur() {
+                    timeout = $timeout(function () {
+                        vm.active = false;
+                    }, 800);
+                }
+                function search(feedlink) {
+                    if (!tools.checkUrl(feedlink)) {
+                        return false;
+                    } else {
+                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
+                    }
+                }
+            }]
+        };
+    }
+})();
+(function () {
     FeedController.$inject = ["$rootScope", "feed", "posts", "_", "storage", "$scope", "Post", "$state", "Feed", "$stateParams"];
     angular.module('app').controller('FeedController', FeedController);
 
@@ -548,58 +593,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    navbar.$inject = ["$state", "$base64"];
-    angular.module('app').directive('navbar', navbar);
-
-    function navbar($state, $base64) {
-        return {
-            restrict: 'EA',
-            scope: {
-                title: '='
-            },
-            replace: true,
-            templateUrl: 'navbar/navbar.html',
-            controllerAs: 'vm',
-            controller: ["$timeout", "tools", function navbarController($timeout, tools) {
-                var vm = this,
-                    timeout = void 0;
-
-                // Function
-                vm.blur = blur;
-                vm.search = search;
-                vm.focus = focus;
-
-                function focus() {
-                    form.input.focus();
-                    if (timeout) {
-                        $timeout.cancel(timeout);
-                    }
-                    vm.active = true;
-                }
-                function blur() {
-                    timeout = $timeout(function () {
-                        vm.active = false;
-                    }, 800);
-                }
-                function search(feedlink) {
-                    if (!tools.checkUrl(feedlink)) {
-                        return false;
-                    } else {
-                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
-                    }
-                }
-            }]
-        };
-    }
-})();
-(function () {
     HomeController.$inject = ["posts"];
     angular.module('app').controller('HomeController', HomeController);
 
     function HomeController(posts) {
         var vm = this;
         vm.posts = posts.data;
-        console.log(vm.posts);
     }
 })();
 

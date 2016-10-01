@@ -4,14 +4,16 @@
             <header class="feed-title">
                 <h2>{{post.feed_title}}<small>{{post.unread}}</small></h2>
             </header>
-            <section>
-                <header class="post-title">
-                    <h3>{{post.title}}</h3>
-                </header>
-                <article class="post-summary">
-                    {{post.summary}}
-                </article>
-            </section>
+            <section class="post">
+                <img ng-src="{{post.description}}">
+                <section class="post-content">
+                    <header class="post-title">
+                        <h3 ui-sref="feed.post({id: post.feed_id, post_id: post._id})">{{post.title}}</h3>
+                    </header>
+                    <article class="post-summary">
+                        {{post.summary}}
+                    </article>
+                </section>
         </article>
     </div>
 </div>

@@ -2,9 +2,36 @@
     margin: 10px 15px;
     .feed-title {
         font-size: 1.2rem;
-        font-weight: bold;
+        font-weight: bolder;
+        position: relative;
+        color: #009688;
         small {
-            float: right;
+            position: absolute;
+            right: 0;
+            padding: 5px 0;
+        }
+    }
+    .post {
+        overflow: hidden;
+        position: relative;
+        margin: 15px 0;
+        h3 {
+            margin-top: 0;
+        }
+        img {
+            width: 135px;
+            height: 135px;
+            float: left;
+            padding: 10px;
+        }
+        .post-content {
+            max-height: 135px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-left: 160px;
+            article {
+                color: #616161;
+            }
         }
     }
 }
