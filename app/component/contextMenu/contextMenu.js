@@ -10,12 +10,13 @@
             replace: true,
             templateUrl: 'contextMenu/contextMenu.html',
             controllerAs: 'vm',
-            controller: function contextMenuController($scope, Feed, _) {
+            controller: function contextMenuController($scope, Feed, _, User) {
                 let vm = this;
                 vm.time = Date.now();
                 vm.feeds = [];
 
                 Feed.get(res => vm.feeds = res.data);
+                User.get(res => vm.user = res.data);
 
                 setInterval(() => {
                     vm.time = Date.now();

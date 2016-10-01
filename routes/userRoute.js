@@ -3,7 +3,6 @@ import userController from '../controllers/userController';
 
 var router = new Router();
 
-router.post('/login', userController.get);
-router.post('/register', userController.create);
+router.get('/', userController.list);
 
 export default router;

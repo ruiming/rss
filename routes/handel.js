@@ -1,7 +1,7 @@
 import Router from 'koa-router';
 import send from 'koa-send';
 import jwt from 'jsonwebtoken';
-import userRoute from './userRoute';
+import authRoute from './authRoute';
 import config from '../config/config';
 
 var router = new Router();
@@ -25,6 +25,6 @@ router.get('/register', async (ctx, next) => {
 })
 
 // Login & Register
-router.use('/auth', userRoute.routes(), userRoute.allowedMethods());
+router.use('/auth', authRoute.routes(), authRoute.allowedMethods());
 
 export default router;

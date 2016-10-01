@@ -281,6 +281,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
+    angular.module('app').factory('User', function ($resource) {
+        return $resource('/api/user');
+    });
+})();
+
+(function () {
     angular.module('app').directive('contextMenu', contextMenu);
 
     function contextMenu() {
@@ -290,13 +296,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             replace: true,
             templateUrl: 'contextMenu/contextMenu.html',
             controllerAs: 'vm',
-            controller: ["$scope", "Feed", "_", function contextMenuController($scope, Feed, _) {
+            controller: ["$scope", "Feed", "_", "User", function contextMenuController($scope, Feed, _, User) {
                 var vm = this;
                 vm.time = Date.now();
                 vm.feeds = [];
 
                 Feed.get(function (res) {
                     return vm.feeds = res.data;
+                });
+                User.get(function (res) {
+                    return vm.user = res.data;
                 });
 
                 setInterval(function () {
