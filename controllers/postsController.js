@@ -70,11 +70,11 @@ exports.main = async (ctx, next) => {
                             break;
                         }
                     }
-                    resolve();
+                    resolve([]);
                 })
             }))).then(items => {
-                ctx.body = { success: true, data: items };
-            });
+                ctx.body = { success: true, data: _.filter(items, item => item.length !== 0) };
+            }).catch(e => e);
         });
 }
 
