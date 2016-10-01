@@ -1,5 +1,7 @@
 .summary {
-    margin: 10px 15px;
+    overflow-y: auto;
+    height: 100%;
+    padding: 10px 20px;
     .feed-title {
         font-size: 1.2rem;
         font-weight: bolder;
