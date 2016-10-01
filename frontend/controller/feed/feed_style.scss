@@ -73,8 +73,7 @@
         color: currentColor;
     }
 }
-.page-header {
-    margin-top: 20px;
+.feed-header {
     position: relative;
     h1 {
         margin-left: 40px;
@@ -85,6 +84,9 @@
         width: 30px;
         height: 30px;
     }
+}
+.page-header {
+    margin-top: 20px;
 }
 .graphy {
     display: table;

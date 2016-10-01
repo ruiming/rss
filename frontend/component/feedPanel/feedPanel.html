@@ -7,28 +7,28 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <p class="col-sm-2">订阅源标题</p>
-            <p class="col-sm-10">{{feed.title}}</p>
+            <p class="col-xs-5 col-sm-4 col-md-3">订阅源标题</p>
+            <p class="col-xs-7 col-sm-8 col-md-9">{{feed.title}}</p>
         </div>
         <div class="row" ng-if="feed.author">
-            <p class="col-sm-2">作者</p>
-            <p class="col-sm-10">{{feed.author}}</p>
+            <p class="col-xs-5 col-sm-4 col-md-3">作者</p>
+            <p class="col-xs-7 col-sm-8 col-md-9">{{feed.author}}</p>
         </div>
         <div class="row" ng-if="feed.pubdate">
-            <p class="col-sm-2">最近更新时间</p>
-            <p class="col-sm-10">{{feed.pubdate | toLocalString: 'yyyy-MM-dd'}}</p>
+            <p class="col-xs-5 col-sm-4 col-md-3">最近更新时间</p>
+            <p class="col-xs-7 col-sm-8 col-md-9">{{feed.pubdate | toLocalString: 'yyyy-MM-dd'}}</p>
         </div>
         <div class="row">
-            <p class="col-sm-2">订阅人数</p>
-            <p class="col-sm-10">{{feed.feedNum}}</p>
+            <p class="col-xs-5 col-sm-4 col-md-3">订阅人数</p>
+            <p class="col-xs-7 col-sm-8 col-md-9">{{feed.feedNum}}</p>
         </div>
         <div class="row">
-            <p class="col-sm-2">订阅源网站</p>
-            <p class="col-sm-10">{{feed.link}}</p>
+            <p class="col-xs-5 col-sm-4 col-md-3">订阅源网站</p>
+            <p class="col-xs-7 col-sm-8 col-md-9">{{feed.link}}</p>
         </div>
         <div class="row">
-            <p class="col-sm-2">XML 地址</p>
-            <p class="col-sm-10">{{feed.absurl}}</p>
+            <p class="col-xs-5 col-sm-4 col-md-3">XML 地址</p>
+            <p class="col-xs-7 col-sm-8 col-md-9">{{feed.absurl}}</p>
         </div>
     </div>
 </div>
