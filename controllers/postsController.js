@@ -54,7 +54,10 @@ exports.main = async (ctx, next) => {
                     var count = posts.length - userposts.length,
                     read_ids = _.invoke(_.pluck(userposts, 'post_id'), 'toString');
                     for(let post of posts) {
-                        if(read_ids.indexOf(post._id.toString()) === -1)   resolve(Object.assign(post, item, {unread: count}));
+                        if(read_ids.indexOf(post._id.toString()) === -1) {
+                            post.summary = post.summary.replace(/<[^>]+>/g,"").slice(0, 500);
+                            resolve(Object.assign(post, item, {unread: count}));
+                        }
                     }
                     resolve();
                 })

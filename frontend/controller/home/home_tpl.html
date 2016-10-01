@@ -1,15 +1,17 @@
 <div>
-    <div class="col-md-8">
-        <div class="col-xs-12 graphy">
-            <p>用户阅读情况</p>
-        </div>
-        <div class="col-xs-12 graphy">
-            <p>最新公告</p>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="hidden-sm col-md-12 graphy">
-            <p>订阅源推荐</p>
-        </div>
+    <div class="summary">
+        <article ng-repeat="post in vm.posts">
+            <header class="feed-title">
+                <h2>{{post.feed_title}}<small>{{post.unread}}</small></h2>
+            </header>
+            <section>
+                <header class="post-title">
+                    <h3>{{post.title}}</h3>
+                </header>
+                <article class="post-summary">
+                    {{post.summary}}
+                </article>
+            </section>
+        </article>
     </div>
 </div>

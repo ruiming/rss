@@ -3,9 +3,10 @@
         .module('app')
         .controller('HomeController', HomeController);
 
-    function HomeController($timeout) {
+    function HomeController(posts) {
         var vm = this;
-        vm.title = 'It works!'
+        vm.posts = posts.data;
+        console.log(vm.posts);
     }
     
 }());
