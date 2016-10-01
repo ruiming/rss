@@ -1,5 +1,8 @@
 <div>
     <div class="summary">
+        <div class="page-header">
+            <h1>最新的未读文章</h1>
+        </div>
         <article ng-repeat="post in vm.posts">
             <header class="feed-title">
                 <h2>{{post.feed_title}}<small>{{post.unread}}</small></h2>
@@ -8,7 +11,7 @@
                 <img ng-src="{{post.description}}">
                 <section class="post-content">
                     <header class="post-title">
-                        <h3 ui-sref="feed.post({id: post.feed_id, post_id: post._id})">{{post.title}}</h3>
+                        <a href="javascript: void 0" ng-click="vm.goto(post)">{{post.title}}</a>
                     </header>
                     <article class="post-summary">
                         {{post.summary}}

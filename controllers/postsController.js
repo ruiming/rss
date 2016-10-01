@@ -66,7 +66,7 @@ exports.main = async (ctx, next) => {
                                 }
                             }
                             else   post.description = '/img/noimg.png';
-                            resolve(Object.assign(item, post, {unread: count}));
+                            resolve(Object.assign(post, item, {_id: post._id, unread: count}));
                             break;
                         }
                     }

@@ -15,17 +15,19 @@
         overflow: hidden;
         position: relative;
         margin: 15px 0;
-        h3 {
+        a {
+            font-size: 1.3rem;
             margin-top: 0;
+            color: #333;
         }
         img {
-            width: 135px;
-            height: 135px;
+            width: 130px;
+            height: 130px;
             float: left;
             padding: 10px;
         }
         .post-content {
-            max-height: 135px;
+            max-height: 130px;
             overflow: hidden;
             text-overflow: ellipsis;
             margin-left: 160px;

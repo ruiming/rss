@@ -28,7 +28,7 @@ gulp.task('angular', () => {
         'node_modules/angular-nvd3/dist/angular-nvd3.js'])
         .pipe(concat('app.min.js'))
         .pipe(gulp.dest('public/js'));
-    // Backend & Frontend
+    // Backend & app
     gulp.src([
         'node_modules/underscore/underscore-min.js'])
         .pipe(gulp.dest('public/js'));
@@ -60,8 +60,8 @@ gulp.task('font', () => {
 // Packaging templates
 gulp.task('template', () => {
     gulp.src([
-        'frontend/controller/**/*.html',
-        'frontend/component/**/*.html'])
+        'app/controller/**/*.html',
+        'app/component/**/*.html'])
         .pipe(htmlify())
         .pipe(minifyHtml({empty: true, quotes: true}))
         .pipe(ngTemplate({
@@ -74,9 +74,9 @@ gulp.task('template', () => {
 // Packaging own JS code
 gulp.task('js', () => {
     gulp.src([
-        'frontend/*.js',
-        'frontend/**/*.js',
-        'frontend/**/**/*.js',
+        'app/*.js',
+        'app/**/*.js',
+        'app/**/**/*.js',
         'helper/help.js'])
     .pipe(plumber())
     .pipe(ngAnnotate())
@@ -88,9 +88,9 @@ gulp.task('js', () => {
 // Packaging own CSS code
 gulp.task('sass', () => {
     gulp.src([
-        'frontend/*.scss',
-        'frontend/**/*.scss',
-        'frontend/**/**/*.scss'])
+        'app/*.scss',
+        'app/**/*.scss',
+        'app/**/**/*.scss'])
         .pipe(plumber())
         .pipe(concat('rss.css'))
         .pipe(sass())
@@ -104,9 +104,9 @@ gulp.task('sass', () => {
 });
 
 // Auto watch and build
-gulp.watch(['frontend/*.js', 'frontend/**/*.js', 'frontend/**/**/*.js', 'helper/help.js'], ['js']);
-gulp.watch(['frontend/*.scss', 'frontend/**/*.scss', 'frontend/**/**/*.scss', 'views/*.scss'], ['sass']);
-gulp.watch(['frontend/controller/**/*.html', 'frontend/component/**/*.html'], ['template']);
+gulp.watch(['app/*.js', 'app/**/*.js', 'app/**/**/*.js', 'helper/help.js'], ['js']);
+gulp.watch(['app/*.scss', 'app/**/*.scss', 'app/**/**/*.scss', 'views/*.scss'], ['sass']);
+gulp.watch(['app/controller/**/*.html', 'app/component/**/*.html'], ['template']);
 
 // Task
 gulp.task('default', ['angular', 'css', 'font', 'js', 'sass', 'template']);
