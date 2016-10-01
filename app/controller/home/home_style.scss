@@ -3,22 +3,16 @@
     height: 100%;
     padding: 0 15px;
     .feed-title {
-        font-size: 1.2rem;
+        font-size: 1.8rem;
         font-weight: bolder;
-        position: relative;
         color: #009688;
-        small {
-            position: absolute;
-            right: 0;
-            padding: 5px 0;
-        }
     }
     .post {
         overflow: hidden;
         position: relative;
         margin: 15px 0;
         a {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             margin-top: 0;
             color: #333;
         }

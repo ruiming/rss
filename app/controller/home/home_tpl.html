@@ -5,7 +5,7 @@
     <p ng-if="!vm.posts.length">还没有未读内容～</p>
     <article ng-repeat="post in vm.posts">
         <header class="feed-title">
-            <h2>{{post.feed_title}}<small>{{post.unread}}</small></h2>
+            <a ui-sref="feed({id: post.feed_id})">{{post.feed_title}}<small>({{post.unread}})</small></a>
         </header>
         <section class="post">
             <img ng-src="{{post.description}}">
