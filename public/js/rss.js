@@ -24,7 +24,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         $stateProvider.state('home', {
             url: '/',
             templateUrl: 'home/home_tpl.html',
-            controller: 'HomeController as vm'
+            controller: 'HomeController as vm',
+            resolve: {
+                posts: ["Posts", function (Posts) {
+                    return Posts.recent().$promise;
+                }]
+            }
         }).state('search', {
             url: '/search/:feedlink',
             templateUrl: 'search/search_tpl.html',
@@ -269,52 +274,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function () {
     angular.module('app').factory('Posts', function ($resource) {
         return $resource('/api/posts', null, {
-            get: { method: 'GET', params: { type: '@type' } }
+            get: { method: 'GET', params: { type: '@type' } },
+            recent: { method: 'GET', url: '/api/posts/recent' }
         });
     });
 })();
 
-(function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "Feed", "_", function contextMenuController($scope, Feed, _) {
-                var vm = this;
-                vm.time = Date.now();
-                vm.feeds = [];
-
-                Feed.get(function (res) {
-                    return vm.feeds = res.data;
-                });
-
-                setInterval(function () {
-                    vm.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
-
-                $scope.$on('ADD_FEED', function (event, data) {
-                    return vm.feeds.push(data);
-                });
-                $scope.$on('DELETE_FEED', function (event, data) {
-                    return vm.feeds = _.filter(vm.feeds, function (feed) {
-                        return feed.feed_id != data.feed_id;
-                    });
-                });
-                $scope.$on('READ_POST', function (event, data) {
-                    return _.each(vm.feeds, function (feed) {
-                        return feed.feed_id === data ? feed.unread-- : '';
-                    });
-                });
-            }]
-        };
-    }
-})();
 (function () {
     angular.module('app').directive('feedPanel', feedPanel);
 
@@ -355,6 +320,47 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         });
                     }
                 }
+            }]
+        };
+    }
+})();
+(function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "Feed", "_", function contextMenuController($scope, Feed, _) {
+                var vm = this;
+                vm.time = Date.now();
+                vm.feeds = [];
+
+                Feed.get(function (res) {
+                    return vm.feeds = res.data;
+                });
+
+                setInterval(function () {
+                    vm.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+
+                $scope.$on('ADD_FEED', function (event, data) {
+                    return vm.feeds.push(data);
+                });
+                $scope.$on('DELETE_FEED', function (event, data) {
+                    return vm.feeds = _.filter(vm.feeds, function (feed) {
+                        return feed.feed_id != data.feed_id;
+                    });
+                });
+                $scope.$on('READ_POST', function (event, data) {
+                    return _.each(vm.feeds, function (feed) {
+                        return feed.feed_id === data ? feed.unread-- : '';
+                    });
+                });
             }]
         };
     }

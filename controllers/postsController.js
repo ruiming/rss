@@ -40,6 +40,31 @@ exports.list = async (ctx, next) => {
 }
 
 /**
+ * 最近更新的未读的文章
+ * @method: get
+ * @url:    /api/posts/recent
+ */
+exports.main = async (ctx, next) => {
+    var user_id = ctx.state.user.id;
+    var items = await UserFeedModel.find({user_id: user_id}, {user_id: 0})
+        .populate('feed_id', {favicon: 1, title: 1}).lean().exec((err, items) => {
+            Promise.all(_.map(items, item => new Promise(async (resolve, reject) => {
+                var userposts = await UserPostModel.find({feed_id: item.feed_id, user_id: user_id, read: true});
+                await PostModel.find({feed_id: item.feed_id}, {description: 0}).lean().exec((err, posts) => {
+                    var count = posts.length - userposts.length,
+                    read_ids = _.invoke(_.pluck(userposts, 'post_id'), 'toString');
+                    for(let post of posts) {
+                        if(read_ids.indexOf(post._id.toString()) === -1)   resolve(Object.assign(post, item, {unread: count}));
+                    }
+                    resolve();
+                })
+            }))).then(items => {
+                ctx.body = { success: true, data: items };
+            });
+        });
+}
+
+/**
  * 更新全部未读文章
  * @method: post
  * @url:    /api/posts

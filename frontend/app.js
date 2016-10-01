@@ -32,7 +32,12 @@
             .state('home', {
                 url: '/',
                 templateUrl: 'home/home_tpl.html',
-                controller: 'HomeController as vm'
+                controller: 'HomeController as vm',
+                resolve: {
+                    posts: function(Posts) {
+                        return Posts.recent().$promise;
+                    }
+                }
             })
             .state('search', {
                 url: '/search/:feedlink',
