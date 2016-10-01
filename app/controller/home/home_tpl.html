@@ -2,6 +2,7 @@
     <div class="page-header">
         <h1>最新的未读文章</h1>
     </div>
+    <p ng-if="!vm.posts.length">还没有未读内容～</p>
     <article ng-repeat="post in vm.posts">
         <header class="feed-title">
             <h2>{{post.feed_title}}<small>{{post.unread}}</small></h2>
