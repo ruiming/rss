@@ -92,6 +92,6 @@
                         return Post.get({feed_id: $state.$current.self.data, id: $stateParams.id}).$promise;
                     }
                 }
-            })
+            });
     }
 }());

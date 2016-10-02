@@ -47,7 +47,7 @@
         vm.data = [{
             key: "最近更新文章数",
             values: []
-        }]
+        }];
         _.each(_.groupBy(posts.data.posts, 'pubdate'), (value, key) => {
             let date = key.slice(0, 7), exist = false;
             _.each(vm.data[0].values, (value, key) => {

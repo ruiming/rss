@@ -41,7 +41,7 @@
                             }
                         }
                         if(void 0 !== data.user_id && Array.isArray(data.user_id)) {
-                            config.data.data.user_id = data.user_id[0]
+                            config.data.data.user_id = data.user_id[0];
                         }
                 }
                 return $q.when(config);
