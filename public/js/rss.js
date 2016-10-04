@@ -302,7 +302,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 vm.feeds = [];
 
                 Feed.get(function (res) {
-                    return vm.feeds = res.data;
+                    return vm.feeds = _.groupBy(res.data, 'folder');
                 });
                 User.get(function (res) {
                     return vm.user = res.data;

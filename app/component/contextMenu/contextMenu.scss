@@ -21,8 +21,16 @@
         span:before {
             padding: 0 5px;
         }
-        a {
+        a, .list-group-item {
             border: 0 none !important;
+        }
+        img {
+            border-radius: 50%;
+            transition: 0.3s linear all;
+            &:hover {
+                transition: 0.3s linear all;
+                transform: rotate(360deg);
+            }
         }
     }
     .badge {
@@ -32,6 +40,9 @@
     }
     .list-group-item {
         padding: 8px 15px;
+    }
+    .inner {
+        margin-left: 15px !important;
     }
     .feed-item {
         position: relative;

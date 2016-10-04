@@ -14,14 +14,20 @@
     <!-- feed_id is FeedModel's _id, not UserFeedModel's _id 
          UserFeedModel's _id is not used -->
     <div class="list-group">
-        <a class="list-group-item feed-item" ui-sref="feed({id: feed.feed_id})"
-            ng-click="vm.setTitle()"
-            ng-repeat="feed in vm.feeds track by feed.feed_id">
-            <!-- TODO: still has the failure get info -->
-            <img class="favicon" ng-src="{{feed.favicon}}" onerror="this.src='/img/rss.png';">
-            <span class="title">{{feed.title}}</span>
-            <span class="badge" ng-if="feed.unread">{{feed.unread}}</span>
-        </a>
+        <div ng-repeat="(folder, feeds) in vm.feeds">
+            <div class="list-group-item feed-item folder-item" ng-if="folder !== 'default'">
+                <img class="favicon" src="img/folder.png">
+                <span class="title">{{folder}}</span>
+            </div>
+            <a class="list-group-item feed-item" ui-sref="feed({id: feed.feed_id})"
+                ng-click="vm.setTitle()" ng-class="{true: 'inner', false: ''}[folder !== 'default']"
+                ng-repeat="feed in feeds track by feed.feed_id">
+                <!-- TODO: still has the failure get info -->
+                <img class="favicon" ng-src="{{feed.favicon}}" onerror="this.src='/img/rss.png';">
+                <span class="title">{{feed.title}}</span>
+                <span class="badge" ng-if="feed.unread">{{feed.unread}}</span>
+            </a>
+        </div>
     </div>
     <!-- 底部时间栏 -->
     <div class="status-bar">

@@ -15,7 +15,7 @@
                 vm.time = Date.now();
                 vm.feeds = [];
 
-                Feed.get(res => vm.feeds = res.data);
+                Feed.get(res => vm.feeds = _.groupBy(res.data, 'folder'));
                 User.get(res => vm.user = res.data);
 
                 setInterval(() => {
