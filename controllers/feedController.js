@@ -130,7 +130,7 @@ exports.list = async (ctx, next) => {
     if (result && result._id) {
         ctx.body = { success: true, data: result };
     } else {
-        var result = await FeedModel.findOne({_id: id}).lean().exec((err, data) => data ? data.unread = count : data);
+        var result = await FeedModel.findOne({_id: id}).lean().exec((err, data) => data ? data.unread = count - unreadcount : data);
         if(result && result._id) {
             ctx.body = { success: true, data: result };
         } else {
