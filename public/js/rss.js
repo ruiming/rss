@@ -314,11 +314,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }, 1000);
 
                 $scope.$on('ADD_FEED', function (event, data) {
-                    return vm.feeds.push(data);
+                    if (vm.feeds.default) {
+                        vm.feeds.default.push(data);
+                    } else {
+                        vm.feeds['default'] = [data];
+                    }
                 });
                 $scope.$on('DELETE_FEED', function (event, data) {
-                    return vm.feeds = _.filter(vm.feeds, function (feed) {
-                        return feed.feed_id != data.feed_id;
+                    _.mapObject(vm.feeds, function (feeds) {
+                        return _.filter(feeds, function (feed) {
+                            return feed.feed_id !== data;
+                        });
                     });
                 });
                 $scope.$on('READ_POST', function (event, data) {

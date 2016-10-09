@@ -23,12 +23,19 @@
                     $scope.$digest();
                 }, 1000);
                          
-                $scope.$on('ADD_FEED', (event, data) => vm.feeds.push(data));
-                $scope.$on('DELETE_FEED', (event, data) => vm.feeds = _.filter(vm.feeds, feed => feed.feed_id != data.feed_id));
+                $scope.$on('ADD_FEED', (event, data) => {
+                    if(vm.feeds.default) {
+                        vm.feeds.default.push(data);
+                    } else {
+                        vm.feeds['default'] = [data];
+                    }
+                });
+                $scope.$on('DELETE_FEED', (event, data) => {
+                    _.mapObject(vm.feeds, feeds => _.filter(feeds, feed => feed.feed_id !== data))}); 
                 $scope.$on('READ_POST', (event, data) => {
                     _.mapObject(vm.feeds, feeds => _.each(feeds, feed =>
                         feed.feed_id === data ? feed.unread -- : ''));
-                })
+                });
             }
         }
     }
