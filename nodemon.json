@@ -1,4 +1,4 @@
 {
   "verbose": true,
-  "ignore": ["*.test.js", "public/*", "frontend/*"]
+  "ignore": ["*.test.js", "public/*", "app/*"]
 }
