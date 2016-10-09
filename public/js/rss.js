@@ -322,14 +322,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     });
                 });
                 $scope.$on('READ_POST', function (event, data) {
-                    return _.each(vm.feeds, function (feed) {
-                        return feed.feed_id === data ? feed.unread-- : '';
+                    _.mapObject(vm.feeds, function (feeds) {
+                        return _.each(feeds, function (feed) {
+                            return feed.feed_id === data ? feed.unread-- : '';
+                        });
                     });
                 });
             }]
         };
     }
 })();
+
 (function () {
     angular.module('app').directive('feedPanel', feedPanel);
 

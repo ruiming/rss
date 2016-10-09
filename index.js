@@ -15,6 +15,7 @@ import co from 'co';
 import render from 'koa-ejs';
 import json from 'koa-json';
 import favicon from 'koa-favicon';
+import compress from 'koa-compress';
 
 mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${config.MongoDB.NAME}`);
 mongoose.Promise = require('bluebird');
@@ -23,6 +24,11 @@ global.Promise = require('bluebird');
 var app = new Koa();
 var bodyparser = new Bodyparser();
 
+app.use(compress({
+    filter: content_type => /text|application/i.test(content_type),
+    threshold: 2048,
+    flush: require('zlib').Z_SYNC_FLUSH
+}));
 app.use(json());
 app.use(convert(bodyparser));
 app.use(convert(logger()))
