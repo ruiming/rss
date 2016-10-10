@@ -263,6 +263,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
+    angular.module('app').factory('Feeds', function ($resource) {
+        return $resource('/api/feeds', {}, {
+            popular: { method: 'GET', params: { order: 'feedNum' } }
+        });
+    });
+})();
+
+(function () {
     angular.module('app').factory('Post', function ($cacheFactory, $resource) {
         return $resource('/api/feed/:feed_id/post/:id', { feed_id: '@feed_id', id: '@_id' }, {
             update: { method: 'PUT' },
