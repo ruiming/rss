@@ -321,14 +321,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 });
                 $scope.$on('DELETE_FEED', function (event, data) {
-                    _.mapObject(vm.feeds, function (feeds) {
-                        return _.filter(feeds, function (feed) {
-                            return feed.feed_id !== data;
+                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
+                        return feeds = _.filter(feeds, function (feed) {
+                            return feed.feed_id !== data.feed_id;
                         });
                     });
                 });
                 $scope.$on('READ_POST', function (event, data) {
-                    _.mapObject(vm.feeds, function (feeds) {
+                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
                         return _.each(feeds, function (feed) {
                             return feed.feed_id === data ? feed.unread-- : '';
                         });

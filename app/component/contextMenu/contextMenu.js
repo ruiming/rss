@@ -31,10 +31,10 @@
                     }
                 });
                 $scope.$on('DELETE_FEED', (event, data) => {
-                    _.mapObject(vm.feeds, feeds => _.filter(feeds, feed => feed.feed_id !== data))}); 
+                    vm.feeds = _.mapObject(vm.feeds, feeds => feeds = _.filter(feeds, feed => feed.feed_id !== data.feed_id));
+                });
                 $scope.$on('READ_POST', (event, data) => {
-                    _.mapObject(vm.feeds, feeds => _.each(feeds, feed =>
-                        feed.feed_id === data ? feed.unread -- : ''));
+                    vm.feeds = _.mapObject(vm.feeds, feeds => _.each(feeds, feed => feed.feed_id === data ? feed.unread -- : ''));
                 });
             }
         }
