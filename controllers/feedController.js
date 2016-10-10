@@ -20,21 +20,21 @@ import _ from 'underscore';
  * @query:  {string true|false} search
  */
 exports.create = async (ctx, next) => {
-    var feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim();
-    var search = ctx.request.query.search === 'true';
+    let feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim();
+    let search = ctx.request.query.search === 'true';
     if(!help.checkUrl(feedlink)) {
         ctx.throw(404, 'URL 不合法');
     }
-    var user_id = ctx.state.user.id;
-    var feedparser = new FeedParser(), feed = new FeedModel(), _id;
+    let user_id = ctx.state.user.id;
+    let feedparser = new FeedParser(), feed = new FeedModel(), _id;
     // 查找数据库是否有该订阅源
-    var result = await FeedModel.findOne({absurl: feedlink});
+    let result = await FeedModel.findOne({absurl: feedlink});
     // 判断数据库已存在该订阅源
     if(result && result._id) {
         if(search) {
             return ctx.body = { success: true, data: result._id };
         } else {
-            var userresult = await UserFeedModel.findOne({user_id: user_id, feed_id: result._id});
+            let userresult = await UserFeedModel.findOne({user_id: user_id, feed_id: result._id});
             // 判断用户是否已经订阅该订阅源
             if(userresult && userresult._id) {
                 ctx.throw(409, `已订阅源 ${result.title}(${result.id})`)
@@ -42,8 +42,8 @@ exports.create = async (ctx, next) => {
                 // 订阅源的订阅人数 +1
                 result.feedNum += 1;
                 result.save();
-                var count = await PostModel.find({feed_id: result._id}).count();
-                var userfeed = UserFeedModel({feed_id: result._id, user_id: user_id, unread: count});
+                let count = await PostModel.find({feed_id: result._id}).count();
+                let userfeed = UserFeedModel({feed_id: result._id, user_id: user_id, unread: count});
                 // 添加到用户订阅表
                 userfeed.save();
                 return ctx.body = { success: true, data: result };
@@ -51,7 +51,7 @@ exports.create = async (ctx, next) => {
         }
     } else {
         await new Promise(async (resolve, reject) => {
-            var req = request(feedlink);
+            let req = request(feedlink);
             req.on('response', res => {
                 if(res.statusCode != 200) {
                     reject('链接不可达');
@@ -68,7 +68,7 @@ exports.create = async (ctx, next) => {
             });
             req.on('error', err => reject(err));
             feedparser.on('meta', async function() {
-                var favicon = null;
+                let favicon = null;
                 await fetchFavicon(this.meta.link).then(data => favicon = data);
                 await new Promise(resolve => request(favicon, (err, response, body) => {
                     if(response.statusCode != 200) {
@@ -76,14 +76,14 @@ exports.create = async (ctx, next) => {
                     }
                     resolve(favicon);
                 }));
-                var data = search ? {absurl: feedlink, favicon: favicon} : {absurl: feedlink, favicon: favicon, feedNum: 1};
-                var feed = new FeedModel(Object.assign(this.meta, data, {lastScan: Date.now()}));
-                var store = await feed.save();
-                var feedid = store._id, link = store.link, count = 0;
+                let data = search ? {absurl: feedlink, favicon: favicon} : {absurl: feedlink, favicon: favicon, feedNum: 1};
+                let feed = new FeedModel(Object.assign(this.meta, data, {lastScan: Date.now()}));
+                let store = await feed.save();
+                let feedid = store._id, link = store.link, count = 0;
                 if(search) {
                     feedparser.on('readable', function() {
                         while(result = this.read()) {
-                            var post = new PostModel(Object.assign(result, {feed_id: feedid, website: link}));
+                            let post = new PostModel(Object.assign(result, {feed_id: feedid, website: link}));
                             post.save();
                             count ++;
                         }
@@ -96,13 +96,13 @@ exports.create = async (ctx, next) => {
                     setTimeout(() => {
                         feedparser.on('readable', function() {
                             while(result = this.read()) {
-                                var post = new PostModel(Object.assign(result, {feed_id: feedid, website: link}));
+                                let post = new PostModel(Object.assign(result, {feed_id: feedid, website: link}));
                                 post.save();
                                 count ++;
                             }
                         });
                         feedparser.on('end', function() {
-                            var userfeed = new UserFeedModel({feed_id: feedid, user_id: user_id, unread: count});
+                            let userfeed = new UserFeedModel({feed_id: feedid, user_id: user_id, unread: count});
                             userfeed.save();
                         })
                     }, 0);
@@ -121,16 +121,16 @@ exports.create = async (ctx, next) => {
  * @params: {string} id
  */
 exports.list = async (ctx, next) => {
-    var id = ctx.params.id;
-    var user_id = ctx.state.user.id;
-    var unreadcount = await UserPostModel.count({feed_id: id, user_id: user_id, read: true});
-    var count = await PostModel.count({feed_id: id});
-    var result = await UserFeedModel.findOne({user_id: user_id, feed_id: id}, {user_id: 0}).populate('feed_id').lean()
+    let id = ctx.params.id, user_id = ctx.state.user.id;
+    let unreadcount, count;
+    await Promise.all([Promise.resolve().then(async () => unreadcount = await UserPostModel.count({feed_id: id, user_id: user_id, read: true})),
+            Promise.resolve().then(async () => count = await PostModel.count({feed_id: id}))]);
+    let result = await UserFeedModel.findOne({user_id: user_id, feed_id: id}, {user_id: 0}).populate('feed_id').lean()
         .exec((err, data) => data ? data.unread = count - unreadcount : data);
     if (result && result._id) {
         ctx.body = { success: true, data: result };
     } else {
-        var result = await FeedModel.findOne({_id: id}).lean().exec((err, data) => data ? data.unread = count - unreadcount : data);
+        result = await FeedModel.findOne({_id: id}).lean().exec((err, data) => data ? data.unread = count - unreadcount : data);
         if(result && result._id) {
             ctx.body = { success: true, data: result };
         } else {
@@ -145,12 +145,13 @@ exports.list = async (ctx, next) => {
  * @url:    /api/feed
  */
 exports.listAll = async (ctx, next) => {
-    var user_id = ctx.state.user.id;
-    var items = await UserFeedModel.find({user_id: user_id}, {user_id: 0})
+    let user_id = ctx.state.user.id;
+    let items = await UserFeedModel.find({user_id: user_id}, {user_id: 0})
         .populate('feed_id', {favicon: 1, title: 1}).lean().exec((err, items) => {
             Promise.all(_.map(items, item => new Promise(async (resolve, reject) => {
-                var unreadcount = await UserPostModel.count({feed_id: item.feed_id, user_id: user_id, read: true});
-                var count = await PostModel.count({feed_id: item.feed_id});
+                let unreadcount, count;
+                await Promise.all([Promise.resolve().then(async () => unreadcount = await UserPostModel.count({feed_id: item.feed_id, user_id: user_id, read: true})),
+                        Promise.resolve().then(async () => count = await PostModel.count({feed_id: item.feed_id}))]);
                 resolve(Object.assign(item, {unread: count - unreadcount}));
             }))).then(items => {
                 ctx.body = { success: true, data: items };
@@ -165,9 +166,8 @@ exports.listAll = async (ctx, next) => {
  * @params: {string} id
  */
 exports.remove = async (ctx, next) => {
-    var user_id = ctx.state.user.id;
-    var feed_id = ctx.params.id;
-    var result = await UserFeedModel.find({user_id: user_id, feed_id: feed_id}).remove();
+    let user_id = ctx.state.user.id, feed_id = ctx.params.id;
+    let result = await UserFeedModel.find({user_id: user_id, feed_id: feed_id}).remove();
     if(result.result.n === 0) {
         ctx.throw(404, '你没有订阅该订阅源');
     } else {
