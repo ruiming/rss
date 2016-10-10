@@ -20,14 +20,14 @@ exports.register = async (ctx, next) => {
     if(ctx.request.body.password.length < 6 || ctx.request.body.password.length > 18) ctx.throw(404, '密码长度有误');
     else if(!email.test(ctx.request.body.email)) ctx.throw(404, '邮箱有误');
     else {
-        var user = new UserModel({
+        let user = new UserModel({
             email: ctx.request.body.email,
             password: SHA256(ctx.request.body.password),
             username: ctx.request.body.email && ctx.request.body.email.split('@')[0]    // Default name
         });
-        var result = await user.save();
+        let result = await user.save();
         if(result && result._id) {
-            var token = jwt.sign({id: result._id}, config.app.secretKey);
+            let token = jwt.sign({id: result._id}, config.app.secretKey);
             ctx.cookies.set("jwt", token, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
             await ctx.redirect('/');
         } else {
@@ -44,11 +44,11 @@ exports.register = async (ctx, next) => {
  * @params: {string} password
  */
 exports.login = async (ctx, next) => {
-    var result = await UserModel.findOne({
+    let result = await UserModel.findOne({
         email: ctx.request.body.email, 
         password: SHA256(ctx.request.body.password).toString()});
     if(result && result._id) {
-        var token = jwt.sign({id: result._id}, config.app.secretKey);
+        let token = jwt.sign({id: result._id}, config.app.secretKey);
         ctx.cookies.set("jwt", token, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
         await ctx.redirect('/');
     } else {

@@ -16,9 +16,9 @@ import _ from 'underscore';
  * @params: {string} feed_id
  */
 exports.listAll = async (ctx, next) => {
-    var feed_id = ctx.params.feed_id, user_id = ctx.state.user.id;
-    var result = await PostModel.find({feed_id: feed_id}, {description: 0, summary: 0});
-    var detail = await UserPostModel.find({feed_id: feed_id, user_id: user_id}, {user_id: 0, feed_id: 0});
+    let feed_id = ctx.params.feed_id, user_id = ctx.state.user.id, result, detail;
+    await Promise.all([Promise.resolve().then(async () => result = await PostModel.find({feed_id: feed_id}, {description: 0, summary: 0})),
+            Promise.resolve().then(async() => detail = await UserPostModel.find({feed_id: feed_id, user_id: user_id}, {user_id: 0, feed_id: 0}))]);
     ctx.body = { success: true, data: { posts: result, detail: detail} };
 }
 
@@ -30,10 +30,14 @@ exports.listAll = async (ctx, next) => {
  * @params: {string} id
  */
 exports.listOne = async (ctx, next) => {
-    var feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id;
-    var result = await PostModel.findOne({_id: id, feed_id: feed_id});
-    var readresult = await UserPostModel.findOne({feed_id: feed_id, post_id: id, user_id: user_id});
-    result ? ctx.body = { success: true, data: {result: result, detail: readresult} } : ctx.throw(404, result);
+    let feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id, result, readresult;
+    await Promise.all([Promise.resolve().then(async () => result = await PostModel.findOne({_id: id, feed_id: feed_id})),
+            Promise.resolve().then(async () => readresult = await UserPostModel.findOne({feed_id: feed_id, post_id: id, user_id: user_id}))]);
+    if(result && result._id) {
+        return ctx.body = { success: true, data: { result: result, detail: readresult } };
+    } else {
+        ctx.throw(404, result);
+    }
 }
 
 /**
@@ -48,16 +52,16 @@ exports.listOne = async (ctx, next) => {
  * @Important: 已读分两种情况, read 和 finish
  */
 exports.update = async (ctx, next) => {
-    var feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id,
+    let feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id,
         type = ctx.request.body.type && ctx.request.body.type.trim(), revert = ctx.request.body.revert == true;
     if(['read', 'mark', 'love', 'finish'].indexOf(type) === -1) {
         ctx.throw(404, '参数非法');
     } else {
         setTimeout(async () => {
-            var items = [];
+            let items = [];
             await new Promise(async (resolve, reject) => {
                 if(id == 0) {
-                    var post = await PostModel.find({feed_id: feed_id}, {_id: 1});
+                    let post = await PostModel.find({feed_id: feed_id}, {_id: 1});
                     items = _.pluck(post, '_id');
                     resolve(items);
                 } else {
@@ -66,8 +70,8 @@ exports.update = async (ctx, next) => {
                 }
             });
             for(let item of items) {
-                var state = await UserPostModel.findOne({user_id: user_id, feed_id: feed_id, post_id: item});
-                var basic = {user_id: user_id, feed_id: feed_id, post_id: item};
+                let state = await UserPostModel.findOne({user_id: user_id, feed_id: feed_id, post_id: item});
+                let basic = {user_id: user_id, feed_id: feed_id, post_id: item};
                 switch(type) {
                     // 真已读
                     case 'finish': 
