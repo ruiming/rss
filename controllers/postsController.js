@@ -83,17 +83,19 @@ exports.main = async (ctx, next) => {
  * @url:    /api/posts
  */
 exports.update = async (ctx, next) => {
-    let ids = ctx.request.body.id.split(','), user_id = ctx.state.user.id, state, feed;
+    let ids = ctx.request.body.id.split(','), user_id = ctx.state.user.id;
     UserFeedModel.update({user_id: user_id}, {$set: {unread: 0}}, {multi: true}).exec();
     _.each(ids, id => {
         setTimeout(async () => {
+            let state, feed;
             await Promise.all([Promise.resolve().then(async () => state = await UserPostModel.findOne({user_id: user_id, post_id: id})),
-                    Promise.resolve().then(async () => feed = await PostModel.findOne({_id: id}, {_id: 1, feed_id: 1}))]);
+                    Promise.resolve().then(async () =>  feed = await PostModel.findOne({_id: id}, {_id: 1, feed_id: 1}))]);
             if(state && state._id) {
                 state.read = true;
                 state.save();
             } else {
                 if(feed && feed._id) {
+                    console.log(id);
                     state = {user_id: user_id, feed_id: feed.feed_id, post_id: id, read: true};
                     state = new UserPostModel(state);
                     state.save();
