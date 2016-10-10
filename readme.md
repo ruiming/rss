@@ -4,6 +4,11 @@
 
 ![image](https://raw.githubusercontent.com/ruiming/rss/master/public/img/preview.png)
 
+### 演示
+
+目前网站已经上线，欢迎试用[119.29.195.141](http://119.29.195.141/)
+但不保证数据持久
+
 ### 已实现功能
 
 - 登录注册
@@ -18,7 +23,6 @@
 
 - 登录注册 JWT 时效设置和 httpOnly 处理
 - 用户组系统
-- 自动更新订阅源文章
 - 用户手动更新订阅源文章
 - 订阅源推荐
 - 订阅源关键字分析
