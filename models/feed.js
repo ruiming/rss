@@ -19,7 +19,7 @@ const FeedSchema = new Schema({
     favicon:        {type: String},
     copyright:      {type: String},
     generator:      {type: String},
-    categories:     {type: String},
+    categories:     {type: String, default: 'default'},
 
     feedNum:        {type: Number, default: 0},         // 订阅人数
     lastScan:       {type: Date, defaukt: Date.now()}   // 上次扫描时间
