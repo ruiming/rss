@@ -10,8 +10,8 @@ import UserModel from '../models/user';
  * @url:    /user
  */
 exports.list = async (ctx, next) => {
-    var user_id = ctx.state.user.id;
-    var result = await UserModel.findOne({_id: user_id}, {password: 0, _id: 0});
+    let user_id = ctx.state.user.id;
+    let result = await UserModel.findOne({_id: user_id}, {password: 0, _id: 0});
     if(result && result.email) {
         ctx.body = { success: true, data: result};
     } else {

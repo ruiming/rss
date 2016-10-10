@@ -54,7 +54,7 @@ exports.listOne = async (ctx, next) => {
 exports.update = async (ctx, next) => {
     let feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id,
         type = ctx.request.body.type && ctx.request.body.type.trim(), revert = ctx.request.body.revert == true;
-    if(['read', 'mark', 'love', 'finish'].indexOf(type) === -1) {
+    if(!['read', 'mark', 'love', 'finish'].includes(type)) {
         ctx.throw(404, '参数非法');
     } else {
         setTimeout(async () => {
