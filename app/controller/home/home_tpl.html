@@ -1,14 +1,16 @@
 <div class="summary">
-    <div class="page-header">
-        <h1>最新的未读文章</h1>
-    </div>
-    <p ng-if="!vm.posts.length">还没有未读内容～</p>
-    <article ng-repeat="post in vm.posts">
-        <header class="feed-title">
-            <a ui-sref="feed({id: post.feed_id})">{{post.feed_title}}<small>({{post.unread}})</small></a>
-        </header>
-        <section class="post">
-            <img ng-src="{{post.description}}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="page-header">
+                <h1>最新的未读文章</h1>
+            </div>
+            <p ng-if="!vm.posts.length">还没有未读内容～</p>
+            <article ng-repeat="post in vm.posts">
+                <header class="feed-title">
+                    <a ui-sref="feed({id: post.feed_id})">{{post.feed_title}}<small>({{post.unread}})</small></a>
+                </header>
+            <section class="post">
+                <img ng-src="{{post.description}}">
             <section class="post-content">
                 <header class="post-title">
                     <a href="javascript: void 0" ng-click="vm.goto(post)">{{post.title}}</a>
@@ -17,5 +19,21 @@
                     {{post.summary}}
                 </article>
             </section>
-    </article>
-</div>
+            </article>
+        </div>
+        <div class="col-md-4">
+            <div class="page-header">
+                <h1>最近热门订阅源</h1>
+            </div>
+            <p ng-if="!vm.feeds.length">没有东西</p>
+            <div class="list-group feed">
+                <a class="list-group-item" ui-sref="feed({id: feed._id})" ng-repeat="feed in vm.feeds">
+                    <img ng-src="{{feed.favicon}}">
+                    <p>{{feed.title}}</p>                    
+                    <p>订阅人数：{{feed.feedNum}}</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+

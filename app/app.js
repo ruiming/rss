@@ -36,6 +36,9 @@
                 resolve: {
                     posts: function(Posts) {
                         return Posts.recent().$promise;
+                    },
+                    feeds: function(Feeds) {
+                        return Feeds.popular({page: 0}).$promise;
                     }
                 }
             })

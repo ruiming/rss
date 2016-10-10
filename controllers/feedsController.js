@@ -20,5 +20,5 @@ exports.list = async (ctx, next) => {
         per_page = +ctx.request.query.per_page,
         desc = ctx.request.query.desc === 'true' ? '1' : '-1',
         result = await FeedModel.find().sort({[order]: desc}).skip(page*per_page).limit(per_page || limit);
-    ctx.body = result;
+    ctx.body = { success: true, data: result };
 }
