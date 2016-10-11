@@ -4,9 +4,20 @@
     border: 0;
     color: #fff;
     margin-bottom: 0;
-    .navbar-brand {
-        width: $leftbar;
+    .navbar-header {
+        width: $leftbar - 15px;
         border-right: 1px solid $border-color;
+        span {
+            color: #333;
+            float: left;
+            height: 50px;
+            padding: 15px 0;
+            margin-right: 10px;
+            font-size: 18px;
+            line-height: 20px;
+            border: 0;
+            background-color: transparent;
+        }
     }
     ul {
         float: right;

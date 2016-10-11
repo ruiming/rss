@@ -10,11 +10,12 @@
             replace: true,
             templateUrl: 'contextMenu/contextMenu.html',
             controllerAs: 'vm',
-            controller: function contextMenuController($scope, Feed, _, User) {
+            controller: function contextMenuController($scope, Feed, _, User, $window) {
                 let vm = this;
                 vm.time = Date.now();
+                vm.expand  = false;
                 vm.feeds = [];
-
+                
                 Feed.get(res => vm.feeds = _.groupBy(res.data, 'folder'));
                 User.get(res => vm.user = res.data);
 
@@ -23,6 +24,7 @@
                     $scope.$digest();
                 }, 1000);
                          
+                $scope.$on('EXPAND', (event, data) => vm.expand = !vm.expand);
                 $scope.$on('ADD_FEED', (event, data) => {
                     if(vm.feeds.default) {
                         vm.feeds.default.push(data);

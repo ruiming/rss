@@ -103,6 +103,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 })();
 (function () {
+    resize.$inject = ["_", "$window"];
+    angular.module('app').directive('resize', resize);
+
+    function resize(_, $window) {
+        return {
+            restrict: 'EA',
+            scope: true,
+            link: function link(scope, elem, attrs) {
+                scope.width = $window.innerWidth;
+
+                angular.element($window).bind('resize', function () {
+                    scope.width = $window.innerWidth;
+                    scope.$digest();
+                });
+            }
+        };
+    }
+})();
+
+(function () {
     scrollListen.$inject = ["_", "Post", "storage"];
     angular.module('app').directive('scrollListen', scrollListen);
 
@@ -307,9 +327,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             replace: true,
             templateUrl: 'contextMenu/contextMenu.html',
             controllerAs: 'vm',
-            controller: ["$scope", "Feed", "_", "User", function contextMenuController($scope, Feed, _, User) {
+            controller: ["$scope", "Feed", "_", "User", "$window", function contextMenuController($scope, Feed, _, User, $window) {
                 var vm = this;
                 vm.time = Date.now();
+                vm.expand = false;
                 vm.feeds = [];
 
                 Feed.get(function (res) {
@@ -324,6 +345,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     $scope.$digest();
                 }, 1000);
 
+                $scope.$on('EXPAND', function (event, data) {
+                    return vm.expand = !vm.expand;
+                });
                 $scope.$on('ADD_FEED', function (event, data) {
                     if (vm.feeds.default) {
                         vm.feeds.default.push(data);

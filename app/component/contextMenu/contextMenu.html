@@ -1,4 +1,4 @@
-<div class="context-menu">
+<div class="context-menu" resize ng-show="width > 1024 || vm.expand">
     <div class="user-avatar">
         <img ng-src="{{vm.user.avatar}}">
         <span>{{vm.user.username}}</span>
@@ -37,3 +37,4 @@
         </p>
     </div>
 </div>
+
