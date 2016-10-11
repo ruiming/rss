@@ -13,7 +13,15 @@
             'app.tools',
             'nvd3'
         ])
-        .config(config);
+        .config(config)
+        // uglify break di of $transitions, seems will be fixed in the next version
+        .run(['$transitions', '$rootScope', runFn]);
+
+    function runFn($transitions, $rootScope) {
+        $transitions.onSuccess({}, () => {
+            $rootScope.$broadcast('FOLD');
+        })
+    }
 
     function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $transitionsProvider) {
 

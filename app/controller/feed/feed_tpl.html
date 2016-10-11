@@ -1,5 +1,5 @@
 <div class="post-panel">
-    <div class="sidebar list-group" resize ng-show="width >= 768 || vm.expand">
+    <div class="sidebar list-group" resize ng-show="width > 768 || vm.expand">
         <a class="post-select list-group-item" ng-repeat="post in vm.posts | orderBy: 'pubdate' : true"
             ng-click="vm.read(post)" ng-class="{true: 'active', false: ''}[post.active]"
             ui-sref="feed.post({id: post.feed_id, post_id: post._id})">
