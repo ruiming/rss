@@ -23,7 +23,7 @@
                     vm.time = Date.now();
                     $scope.$digest();
                 }, 1000);
-                         
+                
                 $scope.$on('EXPAND', (event, data) => vm.expand = !vm.expand);
                 $scope.$on('ADD_FEED', (event, data) => {
                     if(vm.feeds.default) {

@@ -431,7 +431,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             replace: true,
             templateUrl: 'navbar/navbar.html',
             controllerAs: 'vm',
-            controller: ["$timeout", "tools", function navbarController($timeout, tools) {
+            controller: ["$scope", "$rootScope", "$timeout", "tools", function navbarController($scope, $rootScope, $timeout, tools) {
                 var vm = this,
                     timeout = void 0;
 
@@ -439,7 +439,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 vm.blur = blur;
                 vm.search = search;
                 vm.focus = focus;
+                vm.expand = expand;
 
+                function expand() {
+                    $rootScope.$broadcast('EXPAND');
+                }
                 function focus() {
                     form.input.focus();
                     if (timeout) {
@@ -463,6 +467,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }
 })();
+
 (function () {
     FeedController.$inject = ["$rootScope", "feed", "posts", "_", "storage", "$scope", "Post", "$state", "Feed", "$stateParams"];
     angular.module('app').controller('FeedController', FeedController);

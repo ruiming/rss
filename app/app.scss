@@ -79,3 +79,13 @@ h3 {
         border-radius: 0;    
     }
 }
+@media screen and (max-width: 1024px) {
+    .time-bar {
+        display: none;
+    }
+    .posts-bar, 
+    .feed-bar, 
+    .post-bar {
+        left: 0 !important;
+    }
+}

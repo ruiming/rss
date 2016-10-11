@@ -12,14 +12,18 @@
             replace: true,
             templateUrl: 'navbar/navbar.html',
             controllerAs: 'vm',            
-            controller: function navbarController($timeout, tools) {
+            controller: function navbarController($scope, $rootScope, $timeout, tools) {
                 let vm = this, timeout;
 
                 // Function
                 vm.blur = blur;
                 vm.search = search;
                 vm.focus = focus;
+                vm.expand = expand;
 
+                function expand() {
+                    $rootScope.$broadcast('EXPAND');
+                }
                 function focus() {
                     form.input.focus();
                     if(timeout) {

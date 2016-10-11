@@ -1,7 +1,7 @@
 <nav class="rssnav navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <span class="glyphicon glyphicon-align-justify"></span>
+            <span ng-show="width < 1024" resize class="glyphicon glyphicon-align-justify" ng-click="vm.expand()" ></span>
             <a class="navbar-brand" href="#">Rss</a>
         </div>
         <form name="form" class="search">
