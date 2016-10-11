@@ -1,5 +1,5 @@
 <div class="post-panel">
-    <div class="sidebar list-group">
+    <div class="sidebar list-group" resize ng-show="width >= 768 || vm.expand">
         <a class="post-select list-group-item" ng-repeat="post in vm.posts | orderBy: 'pubdate' : true"
             ng-click="vm.read(post)" ng-class="{true: 'active', false: ''}[post.active]"
             ui-sref="feed.post({id: post.feed_id, post_id: post._id})">
@@ -8,7 +8,7 @@
             <span>{{::post.pubdate | toLocalString}}</span>
         </a>
         <!-- 底部 Posts 管理栏 -->
-        <div class="status-bar">
+        <div class="status-bar side-bar">
             <button class="posts btn btn-primary" ng-click="vm.readall()" ng-if="vm.feed.feeded">
                 <!-- TODO -->
                 全部标记为已读 <span ng-if="vm.unread">( {{vm.unread}} )</span>

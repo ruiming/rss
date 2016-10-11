@@ -24,7 +24,8 @@
                     $scope.$digest();
                 }, 1000);
                 
-                $scope.$on('EXPAND', (event, data) => vm.expand = !vm.expand);
+                $scope.$on('EXPAND', () => vm.expand = !vm.expand);
+                $scope.$on('FOLD', () => vm.expand = false);
                 $scope.$on('ADD_FEED', (event, data) => {
                     if(vm.feeds.default) {
                         vm.feeds.default.push(data);

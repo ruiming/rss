@@ -5,8 +5,10 @@
     color: #fff;
     margin-bottom: 0;
     .navbar-header {
+        margin: 0 !important;
         width: $leftbar - 15px;
         border-right: 1px solid $border-color;
+        float: left;
         span {
             color: #333;
             float: left;
@@ -17,6 +19,9 @@
             line-height: 20px;
             border: 0;
             background-color: transparent;
+        }
+        a {
+            margin-left: -15px !important;
         }
     }
     ul {
@@ -73,5 +78,26 @@
         }
         border-top-right-radius: 4px;
         border-bottom-right-radius: 4px;
+    }
+    .feed-nav {
+        padding-left:0;
+        list-style: none;
+        margin: 0;
+        li {
+            float: left;
+            display: block;
+            position: relative;
+            a {
+                color: #777;
+                line-height: 20px;
+                padding: 15px;
+                display: block;
+                position: relative;
+                &:hover {
+                    text-decoration: none;
+                    color: #333;
+                }
+            }
+        }
     }
 }

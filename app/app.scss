@@ -88,4 +88,27 @@ h3 {
     .post-bar {
         left: 0 !important;
     }
+    .navbar-header {
+        width: 75px !important;
+    }
+    .sidebar {
+        width: 220px !important;
+    }
+    .side-bar {
+        width: 220px !important;
+        button {
+           width: 220px !important;
+        }
+    }
+    .post-bar {
+        right: 220px !important;
+    }
+}
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 100% !important;
+    }
+    .side-bar button {
+        display: none;
+    }
 }
