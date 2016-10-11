@@ -55,12 +55,16 @@ h3 {
     height: calc(100% - 80px);
     padding: 0;
 }
+.center {
+    height: calc(100% - 30px) !important;
+}
 .status-bg {
     left: 0;
     right: 0;
-    z-index: -1;
+    z-index: 1 !important;
 }
 .status-bar {
+    z-index: 2;
     position: fixed;
     bottom: 0;
     background-color: $status-bar-bg-color;

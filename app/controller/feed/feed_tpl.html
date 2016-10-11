@@ -26,13 +26,7 @@
             <h1>{{::vm.feed.title}}</h1>
         </div>
         <feed-panel feed=vm.feed></feed-panel>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12 graphy">
-                    <nvd3 options="vm.options" data="vm.data"></nvd3>
-                </div>
-            </div>
-        </div>
+        <nvd3 options="vm.options" data="vm.data"></nvd3>
         <!-- 底部 Feed 状态栏 -->
         <div class="status-bar feed-bar">
             <p class="title" >{{ ::vm.feed.title }}</p>
