@@ -87,7 +87,7 @@ h3 {
     .time-bar {
         display: none;
     }
-    .posts-bar, 
+    .posts-bar,
     .feed-bar, 
     .post-bar {
         left: 0 !important;
@@ -107,6 +107,9 @@ h3 {
     .post-bar {
         right: 220px !important;
     }
+    .feed-bar {
+        right: 0 !important;
+    }
 }
 @media screen and (max-width: 768px) {
     .sidebar {
@@ -114,5 +117,14 @@ h3 {
     }
     .side-bar button {
         display: none;
+    }
+    .input-active {
+        width: 150px !important;
+    }
+    .context-menu {
+        width: auto !important;
+    }
+    .post-bar {
+        right: 0 !important;
     }
 }

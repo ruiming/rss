@@ -13,7 +13,7 @@
                 ng-class="{true: 'input-active', false: ''}[vm.active]" ng-model="feedlink"
                 ng-focus="vm.focus()"  ng-blur="vm.blur()" ng-keypress="$event.which === 13 ? vm.search(feedlink) : ''">
         </form>
-        <div>
+        <div resize ng-show="width >= 640">
             <ul class="feed-nav">
                 <li><a ui-sref="home">仪表盘</a></li>
                 <li><a ui-sref="posts({type: 'unread'})">未读文章</a></li>
