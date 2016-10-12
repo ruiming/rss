@@ -40,6 +40,10 @@
 
 }
 @media screen and (max-width: 768px) {
+    .markdown-body {
+        padding-left: 0;
+        padding-right: 0;
+    }
     .sidebar.ng-hide {
         width: 0 !important;
         transition: 0.3s linear all;
