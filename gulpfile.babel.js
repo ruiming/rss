@@ -88,9 +88,9 @@ gulp.task('js', () => {
 // Packaging own CSS code
 gulp.task('sass', () => {
     gulp.src([
-        'app/*.scss',
-        'app/**/*.scss',
-        'app/**/**/*.scss'])
+        'app/app.scss',
+        'app/controller/**/*.scss',
+        'app/component/**/*.scss'])
         .pipe(plumber())
         .pipe(concat('rss.css'))
         .pipe(sass())
@@ -100,7 +100,12 @@ gulp.task('sass', () => {
         .pipe(plumber())
         .pipe(sass())
         .pipe(cleanCSS())
-        .pipe(gulp.dest('public/css/'))
+        .pipe(gulp.dest('public/css'));
+    gulp.src('app/screen.scss')
+        .pipe(plumber())
+        .pipe(sass())
+        .pipe(cleanCSS())
+        .pipe(gulp.dest('public/css'));
 });
 
 // Auto watch and build

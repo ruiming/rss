@@ -3,10 +3,10 @@
         .module('app')
         .controller('PostsController', PostsController);
 
-    function PostsController(_, $stateParams, posts, $state, Post, Posts, $rootScope) {
+    function PostsController(_, $stateParams, $scope, posts, $state, Post, Posts, $rootScope) {
         var vm = this;
         vm.posts = posts.data;
-
+        vm.expand = false;
         vm.readall = readall;
         vm.randomcolor = randomcolor;
         vm.type = $stateParams.type === 'unread' ? "未读" : "星标";
@@ -52,5 +52,7 @@
             var random = Math.floor(Math.random() * 3);
             return  random === 0 ? 'warning' : random === 1 ? 'info' : random === 2 ? 'danger' : '';
         }
+        $scope.$on('EXPAND', () => vm.expand = !vm.expand);
+        $scope.$on('FOLD', () => vm.expand = false);
     }
 }());

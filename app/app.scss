@@ -55,9 +55,6 @@ h3 {
     height: calc(100% - 80px);
     padding: 0;
 }
-.center {
-    height: calc(100% - 30px) !important;
-}
 .status-bg {
     left: 0;
     right: 0;
@@ -81,50 +78,5 @@ h3 {
         margin: 0;   
         border: 0 none;
         border-radius: 0;    
-    }
-}
-@media screen and (max-width: 1024px) {
-    .time-bar {
-        display: none;
-    }
-    .posts-bar,
-    .feed-bar, 
-    .post-bar {
-        left: 0 !important;
-    }
-    .navbar-header {
-        width: 75px !important;
-    }
-    .sidebar {
-        width: 220px !important;
-    }
-    .side-bar {
-        width: 220px !important;
-        button {
-           width: 220px !important;
-        }
-    }
-    .post-bar {
-        right: 220px !important;
-    }
-    .feed-bar {
-        right: 0 !important;
-    }
-}
-@media screen and (max-width: 768px) {
-    .sidebar {
-        width: 100% !important;
-    }
-    .side-bar button {
-        display: none;
-    }
-    .input-active {
-        width: 150px !important;
-    }
-    .context-menu {
-        width: auto !important;
-    }
-    .post-bar {
-        right: 0 !important;
     }
 }

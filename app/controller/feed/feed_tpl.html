@@ -20,7 +20,7 @@
             </button>
         </div>
     </div>
-    <div ui-view class="center" scroll-listen="post.read">
+    <div ui-view class="center" scroll-listen="post.read" ng-hide="vm.expand">
         <div class="page-header feed-header">
             <img ng-src="{{vm.feed.favicon}}">
             <h1>{{::vm.feed.title}}</h1>

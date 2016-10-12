@@ -1,5 +1,5 @@
 <div class="post-panel">
-    <div class="sidebar list-group">
+    <div class="sidebar list-group" resize ng-show="width > 768 || vm.expand">
         <a class="post-select list-group-item" ng-repeat="post in vm.posts | orderBy: 'pubdate' : true"
             ng-class="{true: 'active', false: ''}[post.active]"
             ng-click="vm.goto(post._id)">
@@ -15,7 +15,7 @@
             </button>
         </div>
     </div>
-    <div ui-view class="center" scroll-listen="post.read">
+    <div ui-view class="center" scroll-listen="post.read" ng-hide="vm.expand">
         <div>
             <div class="page-header">
                 <h1>{{vm.type}}文章 <strong>{{vm.unread}}</strong> 篇</h1>
