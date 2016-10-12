@@ -47,7 +47,7 @@ app.use(async (ctx, next) => {
         console.log(`发生了一个错误`);
         console.log(err);
         ctx.status = (err && err.status) || 500;
-        if(err === null)    ctx.body = { success: false, message: '???'};
+        if(err === null || err === undefined)    ctx.body = { success: false, message: '???'};
         else    ctx.body = { success: false, message: err.toString()};
     }
 });

@@ -1,6 +1,10 @@
 .search-panel {
-    width: 100%;
+    width: calc(100% - 250px);
+    overflow: hidden;
     float: left;
     margin: 15px 0;
     text-align: center;
+    .alert {
+        overflow: auto;
+    }
 }

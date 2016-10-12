@@ -51,10 +51,12 @@ exports.create = async (ctx, next) => {
         }
     } else {
         await new Promise(async (resolve, reject) => {
-            let req = request(feedlink);
+            let req = request({url: feedlink, headers: {'User-Agent': 'request'}});
             req.on('response', res => {
                 if(res.statusCode != 200) {
-                    reject('链接不可达');
+                   res.on("data", chunk => {
+                      reject(chunk);
+                   });
                 } else {
                     res.pipe(feedparser);
                     feedparser.on('error', err => {
