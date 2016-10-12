@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start server.js -i max -e log/err.log -o log/out.log --name='api'",
+    "start": "pm2 start server.js -e './logs/err.log' -o './logs/out.log' --name='api' --watch --ignore-watch='node_modules app logs' ",
     "test": "./node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha -- --compilers js:babel-core/register --timeout 2500",
     "db": "mongod --dbpath='/home/ruiming/data/db' --rest"
   },

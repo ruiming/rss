@@ -1,0 +1,2 @@
+Wed, 12 Oct 2016 11:01:28 GMT koa deprecated Support for generators will been removed in v3. See the documentation for examples of how to convert old middleware https://github.com/koajs/koa/tree/v2.x#old-signature-middleware-v1x at index.js:145:5
+Wed, 12 Oct 2016 11:01:35 GMT koa deprecated Support for generators will been removed in v3. See the documentation for examples of how to convert old middleware https://github.com/koajs/koa/tree/v2.x#old-signature-middleware-v1x at index.js:145:5
