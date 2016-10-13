@@ -25,7 +25,7 @@
                 } 
                 else item.active = false;
             }
-            if(!post.read) {
+            if(!post.read && vm.type === '未读') {
                 vm.unread --;
                 if($stateParams.type === 'unread') {
                     $rootScope.$broadcast('READ_POST', post.feed_id);
