@@ -12,7 +12,7 @@ var api = new Router({
 
 api.use('/feeds', feedsRoute.routes(), feedsRoute.allowedMethods());
 api.use('/feed', feedRoute.routes(), feedRoute.allowedMethods());
-api.use('/feed/:feed_id/post', postRoute.routes(), postRoute.allowedMethods());
+api.use('/post', postRoute.routes(), postRoute.allowedMethods());
 api.use('/posts', postsRoute.routes(), postsRoute.allowedMethods());
 api.use('/user', userRoute.routes(), userRoute.allowedMethods());
 

@@ -17,7 +17,7 @@
         vm.goto = goto;
 
         function goto(id) {
-            var post = null;
+            let post = null;
             for(let item of vm.posts) {
                 if(item._id === id) {
                     item.active = true;
@@ -31,22 +31,19 @@
                     $rootScope.$broadcast('READ_POST', post.feed_id);
                 }
                 post.read = true;
-                Post.update({feed_id: post.feed_id, id: post._id}, {type: 'read'});
+                Post.update({id: post._id}, {type: 'read'});
             }
-            $state.current.data = post.feed_id;
             $state.go('posts.post', {id: post._id});
         }
         function readall() {
-            var str = '';
             for(let post of vm.posts) {
                 if(!post.read) {
                     $rootScope.$broadcast('READ_POST', post.feed_id);
                     vm.unread--;
                 }
                 post.read = true;                
-                str += str === '' ? post._id : ',' + post._id;
             }
-            Posts.save({id: str});
+            Post.update({id: vm.posts[0].feed_id}, {type: 'read', feed: 'true'});
         }
         function randomcolor() {
             var random = Math.floor(Math.random() * 3);

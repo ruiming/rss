@@ -63,7 +63,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             controller: 'PostController as vm',
             resolve: {
                 post: ["Post", "$stateParams", "$state", function (Post, $stateParams, $state) {
-                    return Post.get({ feed_id: $stateParams.id, id: $stateParams.post_id }).$promise;
+                    return Post.get({ id: $stateParams.post_id }).$promise;
                 }]
             }
         }).state('posts', {
@@ -88,8 +88,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             controller: 'PostController as vm',
             resolve: {
                 post: ["Post", "$stateParams", "$state", function (Post, $stateParams, $state) {
-                    console.log($state);
-                    return Post.get({ feed_id: $state.$current.self.data, id: $stateParams.id }).$promise;
+                    return Post.get({ id: $stateParams.id }).$promise;
                 }]
             }
         });
@@ -305,7 +304,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 (function () {
     angular.module('app').factory('Post', function ($cacheFactory, $resource) {
-        return $resource('/api/feed/:feed_id/post/:id', { feed_id: '@feed_id', id: '@_id' }, {
+        return $resource('/api/post/:id', { id: '@_id' }, {
             update: { method: 'PUT' },
             get: { method: 'GET', params: { type: '@type' } }
         });
@@ -554,9 +553,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.readall = readall;
         vm.feedit = feedit;
 
-        // Will be used by its' child state
-        $state.current.data = feed.data.link;
-
         // get the status of each post
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -626,7 +622,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 vm.unread--;
                 post.read = true;
                 $rootScope.$broadcast('READ_POST', post.feed_id[0]);
-                Post.update({ feed_id: post.feed_id[0], id: post._id }, { type: 'read' });
+                Post.update({ id: post._id }, { type: 'read' });
             }
         }
         function readall() {
@@ -639,7 +635,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     var post = _step3.value;
 
                     if (!post.read) {
-                        vm.unread--;
                         $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
                     }
                     post.read = true;
@@ -659,7 +654,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }
 
-            Post.update({ feed_id: vm.feed.feed_id, id: 0 }, { type: 'read' });
+            Post.update({ id: vm.posts[0].feed_id }, { type: 'read', feed: 'true' });
         }
         $scope.$on('EXPAND', function () {
             return vm.expand = !vm.expand;
@@ -788,13 +783,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     $rootScope.$broadcast('READ_POST', post.feed_id);
                 }
                 post.read = true;
-                Post.update({ feed_id: post.feed_id, id: post._id }, { type: 'read' });
+                Post.update({ id: post._id }, { type: 'read' });
             }
-            $state.current.data = post.feed_id;
             $state.go('posts.post', { id: post._id });
         }
         function readall() {
-            var str = '';
             var _iteratorNormalCompletion5 = true;
             var _didIteratorError5 = false;
             var _iteratorError5 = undefined;
@@ -808,7 +801,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         vm.unread--;
                     }
                     post.read = true;
-                    str += str === '' ? post._id : ',' + post._id;
                 }
             } catch (err) {
                 _didIteratorError5 = true;
@@ -825,7 +817,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }
 
-            Posts.save({ id: str });
+            Post.update({ id: vm.posts[0].feed_id }, { type: 'read', feed: 'true' });
         }
         function randomcolor() {
             var random = Math.floor(Math.random() * 3);

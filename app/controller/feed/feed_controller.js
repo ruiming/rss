@@ -67,9 +67,6 @@
         vm.readall = readall;
         vm.feedit = feedit;
 
-        // Will be used by its' child state
-        $state.current.data = feed.data.link;
-        
         // get the status of each post
         for(let post of vm.posts) {
             if(vm.detail[post._id] && vm.detail[post._id][0].read) {
@@ -96,18 +93,17 @@
                 vm.unread --;
                 post.read = true;
                 $rootScope.$broadcast('READ_POST', post.feed_id[0]);
-                Post.update({feed_id: post.feed_id[0], id: post._id}, {type: 'read'});
+                Post.update({id: post._id}, {type: 'read'});
             }
         }
         function readall() {
             for(let post of vm.posts) {
                 if(!post.read) {
-                    vm.unread --;
                     $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
                 }
                 post.read = true;
             }
-            Post.update({feed_id: vm.feed.feed_id, id: 0}, {type: 'read'});
+            Post.update({id: vm.posts[0].feed_id}, {type: 'read', feed: 'true'});
         }
         $scope.$on('EXPAND', () => vm.expand = !vm.expand);
         $scope.$on('FOLD', () => vm.expand = false);

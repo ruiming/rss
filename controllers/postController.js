@@ -9,27 +9,16 @@ import _ from 'underscore';
  * 这里主要是用户操作一个订阅源下面的文章的接口
  */
 
-/**
- * 获取订阅源的文章摘要
- * @method: get
- * @link:   /api/feed/{feed_id}/post
- */
-exports.listAll = async (ctx, next) => {
-    let feed_id = ctx.params.feed_id, user_id = ctx.state.user.id, result, detail;
-    await Promise.all([Promise.resolve().then(async () => result = await PostModel.find({feed_id: feed_id}, {description: 0, summary: 0})),
-            Promise.resolve().then(async() => detail = await UserPostModel.find({feed_id: feed_id, user_id: user_id}, {user_id: 0, feed_id: 0}))]);
-    ctx.body = { success: true, data: { posts: result, detail: detail} };
-}
 
 /**
  * 获取一篇文章的详细信息
  * @method: get
- * @link:   /api/feed/{feed_id}/post/{id}
+ * @link:   /api/post/{id}
  */
 exports.listOne = async (ctx, next) => {
-    let feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id, result, readresult;
-    await Promise.all([Promise.resolve().then(async () => result = await PostModel.findOne({_id: id, feed_id: feed_id})),
-            Promise.resolve().then(async () => readresult = await UserPostModel.findOne({feed_id: feed_id, post_id: id, user_id: user_id}))]);
+    let id = ctx.params.id, user_id = ctx.state.user.id, result, readresult;
+    await Promise.all([Promise.resolve().then(async () => result = await PostModel.findOne({_id: id})),
+            Promise.resolve().then(async () => readresult = await UserPostModel.findOne({post_id: id, user_id: user_id}))]);
     if(result && result._id) {
         return ctx.body = { success: true, data: { result: result, detail: readresult } };
     } else {
@@ -39,76 +28,44 @@ exports.listOne = async (ctx, next) => {
 
 /**
  * 更新文章状态
+ * 当更新一篇文章时，传入文章id即可，若更新全部文章，则传入文章的Feed_id并传入all=true参数
  * @method: put
- * @link:   /api/feed/{feed_id}/post/{id}
+ * @link:   /api/post/{id}
  * @param:  {string} type [read|mark|love|finish]
- * @param:  {boolean} revert [true|false]
+ * @param:  {string} revert [true|false]
+ * @param:  {string} feed [true|false]
  */
 exports.update = async (ctx, next) => {
-    let feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id,
-        type = ctx.request.body.type && ctx.request.body.type.trim(), revert = ctx.request.body.revert == true;
+    let id = ctx.params.id, user_id = ctx.state.user.id,
+        type = ctx.request.body.type && ctx.request.body.type.trim(), revert = ctx.request.body.revert === 'true', feed = ctx.request.body.feed === 'true';
     if(!['read', 'mark', 'love', 'finish'].includes(type)) {
         ctx.throw(404, '参数非法');
     } else {
         setTimeout(async () => {
             let items = [];
-            await new Promise(async (resolve, reject) => {
-                if(id == 0) {
-                    let post = await PostModel.find({feed_id: feed_id}, {_id: 1});
-                    items = _.pluck(post, '_id');
-                    resolve(items);
+            await new Promise(async (resolve) => {
+                if(feed) {
+                    let posts = await PostModel.find({feed_id: id}, {_id: 1});
+                    resolve(_.pluck(posts, '_id'));
                 } else {
-                    items = [id];
-                    resolve(items);
+                    resolve(id.split(','));
                 }
-            });
+            }).then(data => items = data);
             for(let item of items) {
-                let state = await UserPostModel.findOne({user_id: user_id, feed_id: feed_id, post_id: item});
-                let basic = {user_id: user_id, feed_id: feed_id, post_id: item};
-                switch(type) {
-                    // 真已读
-                    case 'finish': 
-                        if(state && state._id) {
-                            state['finish'] = state['read'] = true;
-                            state['finish_date'] = Date.now();
-                            state.save();    
-                        } else {
-                            state = new UserPostModel(Object.assign(basic, {finish: true, read: true, finish_date: Date.now()}));
-                            state.save();
-                        }
-                        break;
-                    // 标记已读，可反
-                    case 'read':
-                        if(state && state._id) {
-                            state['read'] = revert ? !state['read'] : true;
-                            if(!revert) state['read_date'] = Date.now();
-                            state.save();    
-                        } else {
-                            state = new UserPostModel(Object.assign(basic, {read: true}));
-                            state.save();
-                        }
-                        break;
-                    case 'mark':
-                        if(state && state._id) {
-                            state['mark'] = revert ? !state['mark'] : true;
-                            if(!revert) state['mark_date'] = Date.now();
-                            state.save();
-                        } else {
-                            state = new UserPostModel(Object.assign(basic, {mark: true, mark_date: Date.now()}));
-                            state.save();
-                        }
-                        break;
-                    case 'love':
-                        if(state && state._id) {
-                            state['love'] = revert ? !state['love'] : true;
-                            if(!revert) state['love_date'] = Date.now();
-                            state.save();
-                        }  else {
-                            state = new UserPostModel(Object.assign(basic, {love: true, love_date: Date.now()}));
-                        }
-                        break;
-                    default:
-                        break;
+                let state, res;
+                await Promise.all([Promise.resolve().then(async () => state = await UserPostModel.findOne({user_id: user_id, post_id: item})),
+                    Promise.resolve().then(async () => res = await PostModel.findById(item))]).catch(e => e);
+                if(!(res && res._id))   continue;
+                let basic = {user_id: user_id, feed_id: res.feed_id, post_id: item};
+                if(state && state._id) {
+                    state[type] = revert ? !state[type] : true;
+                    if(!revert) state[type + '_date'] = Date.now();
+                    state.save();
+                } else {
+                    basic[type] = true;
+                    basic[type + '_date'] = Date.now();
+                    basic = new UserPostModel(basic);
+                    basic.save();
                 }
             }
         }, 0);

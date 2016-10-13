@@ -74,7 +74,7 @@
                 controller: 'PostController as vm',
                 resolve: {
                     post: function(Post, $stateParams, $state) {
-                        return Post.get({feed_id: $stateParams.id, id: $stateParams.post_id}).$promise;
+                        return Post.get({id: $stateParams.post_id}).$promise;
                     }
                 }
             })
@@ -101,8 +101,7 @@
                 controller: 'PostController as vm',
                 resolve: {
                     post: function(Post, $stateParams, $state) {
-                        console.log($state);
-                        return Post.get({feed_id: $state.$current.self.data, id: $stateParams.id}).$promise;
+                        return Post.get({id: $stateParams.id}).$promise;
                     }
                 }
             });
