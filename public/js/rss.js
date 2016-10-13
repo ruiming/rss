@@ -180,17 +180,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     angular.module('app').factory('tokenInjector', tokenInjector);
 
     function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
-        var jwt = undefined;
 
         return {
             // Warning: The cookie should set to httponly to keep safe.
-            request: function request(config) {
-                if (void 0 === jwt) {
-                    jwt = $cookies.get('jwt');
-                }
-                config.headers['Authorization'] = "Bearer " + jwt;
-                return $q.when(config);
-            },
 
             response: function response(config) {
                 var data = config.data.data;

@@ -3,11 +3,14 @@
         <div class="page-header">
             <img src="/img/rss.png"><h1>Rsser<a href="/register">注册</a></h1>
         </div>
-        <form class="form-horizontal col-sm-offset-3 col-sm-6 auth" method="POST" action="auth/login">
+        <form class="form-horizontal col-sm-offset-3 col-sm-6 auth" method="POST" action="/auth/login">
+            <% if(typeof err !== 'undefined') { %>
+                <p class="bg-danger"><%= err %></p>
+            <% } %>
             <div class="form-group">
                 <label class="col-xs-2 control-label" for="email">邮箱</label>
                 <div class="col-xs-10">
-                    <input type="email" name="email" class="form-control" id="email" placeholder="请输入邮箱地址">                    
+                    <input type="email" name="email" class="form-control" id="email" placeholder="请输入邮箱地址" <% if(locals.email) {%> value="<%= email %>" <% } %> >
                 </div>
             </div>
             <div class="form-group">

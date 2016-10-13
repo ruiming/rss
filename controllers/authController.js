@@ -18,8 +18,8 @@ import request from 'request';
  */
 exports.register = async (ctx, next) => {
     let email = /^([\w-_]+(?:\.[\w-_]+)*)@((?:[a-z0-9]+(?:-[a-zA-Z0-9]+)*)+\.[a-z]{2,6})$/i;
-    if(ctx.request.body.password.length < 6 || ctx.request.body.password.length > 18) ctx.throw(404, '密码长度有误');
-    else if(!email.test(ctx.request.body.email)) ctx.throw(404, '邮箱有误');
+    if(ctx.request.body.password.length < 6 || ctx.request.body.password.length > 18) ctx.throw(401, '密码长度有误');
+    else if(!email.test(ctx.request.body.email)) ctx.throw(401, '邮箱有误');
     else {
         let req = request({url:`https://www.gravatar.com/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`, headers: {'User-Agent': 'request'}});
         let user = null, result = null;
@@ -32,16 +32,16 @@ exports.register = async (ctx, next) => {
                     username: data.preferredUsername || data.displayName || (ctx.request.body.email && ctx.request.body.email.split('@')[0]),
                     avatar: data.thumbnailUrl
                 });
-                result = await user.save();
+                result = await user.save().catch(e => e);
                 resolve();
             });
         });
         if(result && result._id) {
             let token = jwt.sign({id: result._id}, config.app.secretKey);
-            ctx.cookies.set("jwt", token, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
+            ctx.cookies.set("jwt", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
             await ctx.redirect('/');
         } else {
-            ctx.throw(404, result.errmsg);
+            ctx.throw(401, '邮箱已经被注册了');
         }
     };
 }
@@ -59,9 +59,11 @@ exports.login = async (ctx, next) => {
         password: SHA256(ctx.request.body.password).toString()});
     if(result && result._id) {
         let token = jwt.sign({id: result._id}, config.app.secretKey);
-        ctx.cookies.set("jwt", token, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
+        ctx.cookies.set("jwt", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
         await ctx.redirect('/');
     } else {
-        ctx.throw(404, '用户不存在');
+        let exist = await UserModel.findOne({email: ctx.request.body.email});
+        if(exist && exist._id)  ctx.throw(401, '密码错误');
+        else ctx.throw(401, '邮箱未注册');
     }
 }

@@ -4,17 +4,9 @@
         .factory('tokenInjector', tokenInjector);
 
     function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
-        let jwt = undefined;
         
         return {
             // Warning: The cookie should set to httponly to keep safe.
-            request: function(config) {
-                if(void 0 === jwt) {
-                    jwt = $cookies.get('jwt');
-                }
-                config.headers['Authorization'] = "Bearer " + jwt;
-                return $q.when(config);
-            },
 
             response: function(config) {
                 let data = config.data.data;
@@ -47,6 +39,7 @@
                 return $q.when(config);
             }
         }
+
     }
 
 }());

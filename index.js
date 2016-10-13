@@ -44,14 +44,16 @@ app.use(async (ctx, next) => {
     try {
         await next();
     } catch (err) {
-        console.log(`发生了一个错误`);
-        console.log(err);
-        ctx.status = (err && err.status) || 500;
-        if(err === null || err === undefined)    ctx.body = { success: false, message: '???'};
-        else    ctx.body = { success: false, message: err.toString()};
+        if(401 === err.status) {
+            ctx.cookies.set("jwt", null, {overwrite: true, expires: new Date()});
+            await ctx.render('login.ejs', {err: err, email: ctx.request.body.email});
+        } else {
+            ctx.status = (err && err.status) || 500;
+            if(null === err || undefined === err) ctx.body = { success: false, message: 'Unknown' };
+            else ctx.body = { success:false, message: err.toString()};
+        }
     }
 });
-
 // 后端视图处理 (Unprotected)
 app.use(handel.routes())
    .use(handel.allowedMethods());

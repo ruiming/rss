@@ -6,7 +6,7 @@ import config from '../config/config';
 
 var router = new Router();
 
-router.get('/', async (ctx, next) => {
+router.get(['/', '/login'], async (ctx, next) => {
     // If visitor is login, let it alone  to Angular big brother
     if(ctx.cookies.get('jwt') && jwt.verify(ctx.cookies.get('jwt'), config.app.secretKey)) {
         await send(ctx, './public/index.html');
