@@ -14,16 +14,18 @@ import _ from 'underscore';
 /**
  * 获取全部 ** 文章
  * @method: get
- * @url:    /api/posts
- * @params: {string unread|mark} type
+ * @link:   /api/posts
+ * @param:  type [mark|unread]
+ * @param:  feed_id
  */
 exports.list = async (ctx, next) => {
-    let user_id = ctx.state.user.id, type = ctx.request.query.type;
+    let user_id = ctx.state.user.id, type = ctx.request.query.type, feed_id = ctx.request.query.feed_id, result ,detail;
     if(['mark', 'unread'].includes(type)) {
         let feeds = await UserFeedModel.find({user_id: user_id}, {feed_id: 1}), posts = [];
         await Promise.all(feeds.map(feed => new Promise(async (resolve, reject) => {
             let query = {feed_id: feed.feed_id[0], user_id: user_id};
-            type === 'mark' ? query['mark'] = true : query['read'] = true;
+            if(type === 'mark') query['mark'] = true;
+            else query['read'] = true;
             let result = await UserPostModel.find(query, {_id: 0, post_id: 1});
             let data = _.invoke(_.flatten(_.pluck(result, 'post_id'), true), 'toString');
             let items = await PostModel.find({feed_id: feed.feed_id}, {summary: 0, description: 0}).populate('feed_id', {_id: 1, title: 1, favicon: 1});
@@ -32,16 +34,19 @@ exports.list = async (ctx, next) => {
             resolve();
         })));
         ctx.body = { success: true, data: posts };
+    } else if (feed_id !== undefined) {
+        await Promise.all([Promise.resolve().then(async () => result = await PostModel.find({feed_id: feed_id}, {description: 0, summary: 0})),
+            Promise.resolve().then(async () => detail = await UserPostModel.find({feed_id: feed_id, user_id: user_id}, {user_id: 0, feed_id: 0}))]);
+        ctx.body = { success: true, data: { posts: result, detail: detail} };
     } else {
-        ctx.throw(404, '不支持的类型查询');
+        ctx.throw(404, '不支持的查询');
     }
-
 }
 
 /**
  * 最近更新的未读的文章
  * @method: get
- * @url:    /api/posts/recent
+ * @link:   /api/posts/recent
  */
 exports.main = async (ctx, next) => {
     let user_id = ctx.state.user.id;
@@ -80,7 +85,8 @@ exports.main = async (ctx, next) => {
 /**
  * 更新全部未读文章
  * @method: post
- * @url:    /api/posts
+ * @link:   /api/posts
+ * @param:  {Array} id
  */
 exports.update = async (ctx, next) => {
     let ids = ctx.request.body.id.split(','), user_id = ctx.state.user.id;

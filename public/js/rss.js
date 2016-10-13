@@ -53,8 +53,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 feed: ["Feed", "$stateParams", function (Feed, $stateParams) {
                     return Feed.get({ id: $stateParams.id }).$promise;
                 }],
-                posts: ["Post", "$stateParams", function (Post, $stateParams) {
-                    return Post.get({ feed_id: $stateParams.id }).$promise;
+                posts: ["Posts", "$stateParams", function (Posts, $stateParams) {
+                    return Posts.get({ feed_id: $stateParams.id }).$promise;
                 }]
             }
         }).state('feed.post', {
@@ -68,6 +68,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         }).state('posts', {
             url: '/posts/:type',
+            abstract: false,
             templateUrl: 'posts/posts_tpl.html',
             controller: 'PostsController as vm',
             resolve: {
@@ -87,6 +88,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             controller: 'PostController as vm',
             resolve: {
                 post: ["Post", "$stateParams", "$state", function (Post, $stateParams, $state) {
+                    console.log($state);
                     return Post.get({ feed_id: $state.$current.self.data, id: $stateParams.id }).$promise;
                 }]
             }
@@ -313,8 +315,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function () {
     angular.module('app').factory('Posts', function ($resource) {
         return $resource('/api/posts', null, {
-            get: { method: 'GET', params: { type: '@type' } },
-            recent: { method: 'GET', url: '/api/posts/recent' }
+            get: { method: 'GET', params: { type: '@type', feed_id: '@feed_id' } }, // 获取指定类型的订阅文章
+            recent: { method: 'GET', url: '/api/posts/recent' } // 获取最近的未读订阅文章
         });
     });
 })();
@@ -323,6 +325,66 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     angular.module('app').factory('User', function ($resource) {
         return $resource('/api/user');
     });
+})();
+
+(function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "Feed", "_", "User", "$window", function contextMenuController($scope, Feed, _, User, $window) {
+                var vm = this;
+                vm.time = Date.now();
+                vm.expand = false;
+                vm.feeds = [];
+
+                Feed.get(function (res) {
+                    return vm.feeds = _.groupBy(res.data, 'folder');
+                });
+                User.get(function (res) {
+                    return vm.user = res.data;
+                });
+
+                setInterval(function () {
+                    vm.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+
+                $scope.$on('EXPAND', function () {
+                    return vm.expand = !vm.expand;
+                });
+                $scope.$on('FOLD', function () {
+                    return vm.expand = false;
+                });
+                $scope.$on('ADD_FEED', function (event, data) {
+                    if (vm.feeds.default) {
+                        vm.feeds.default.push(data);
+                    } else {
+                        vm.feeds['default'] = [data];
+                    }
+                });
+                $scope.$on('DELETE_FEED', function (event, data) {
+                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
+                        return feeds = _.filter(feeds, function (feed) {
+                            return feed.feed_id !== data.feed_id;
+                        });
+                    });
+                });
+                $scope.$on('READ_POST', function (event, data) {
+                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
+                        return _.each(feeds, function (feed) {
+                            return feed.feed_id === data ? feed.unread-- : '';
+                        });
+                    });
+                });
+            }]
+        };
+    }
 })();
 
 (function () {
@@ -631,66 +693,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "Feed", "_", "User", "$window", function contextMenuController($scope, Feed, _, User, $window) {
-                var vm = this;
-                vm.time = Date.now();
-                vm.expand = false;
-                vm.feeds = [];
-
-                Feed.get(function (res) {
-                    return vm.feeds = _.groupBy(res.data, 'folder');
-                });
-                User.get(function (res) {
-                    return vm.user = res.data;
-                });
-
-                setInterval(function () {
-                    vm.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
-
-                $scope.$on('EXPAND', function () {
-                    return vm.expand = !vm.expand;
-                });
-                $scope.$on('FOLD', function () {
-                    return vm.expand = false;
-                });
-                $scope.$on('ADD_FEED', function (event, data) {
-                    if (vm.feeds.default) {
-                        vm.feeds.default.push(data);
-                    } else {
-                        vm.feeds['default'] = [data];
-                    }
-                });
-                $scope.$on('DELETE_FEED', function (event, data) {
-                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
-                        return feeds = _.filter(feeds, function (feed) {
-                            return feed.feed_id !== data.feed_id;
-                        });
-                    });
-                });
-                $scope.$on('READ_POST', function (event, data) {
-                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
-                        return _.each(feeds, function (feed) {
-                            return feed.feed_id === data ? feed.unread-- : '';
-                        });
-                    });
-                });
-            }]
-        };
-    }
-})();
-
-(function () {
     PostController.$inject = ["$state", "post", "Post", "storage", "$scope", "_", "$rootScope", "$timeout", "$cacheFactory"];
     angular.module('app').controller('PostController', PostController);
 
@@ -780,7 +782,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }
 
-            if (!post.read) {
+            if (!post.read && vm.type === '未读') {
                 vm.unread--;
                 if ($stateParams.type === 'unread') {
                     $rootScope.$broadcast('READ_POST', post.feed_id);

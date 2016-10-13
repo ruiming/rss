@@ -4,12 +4,12 @@ import _ from 'underscore';
 /**
  * 获取特定订阅源
  * @method: get
- * @url:    /api/feeds
- * @query:  {string} order
- * @query:  {string} desc
- * @query:  {string} limit
- * @query:  {string} page
- * @query:  {string} per_page
+ * @link:   /api/feeds
+ * @param:  order
+ * @param:  desc
+ * @param:  limit
+ * @param:  page
+ * @param:  per_page
  */
 
 exports.list = async (ctx, next) => {

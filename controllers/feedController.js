@@ -15,9 +15,9 @@ import _ from 'underscore';
 /**
  * 创建/订阅 订阅源
  * @method: post
- * @url:    /api/feed
- * @params: {string url} feedlink
- * @query:  {string true|false} search
+ * @link:   /api/feed
+ * @param:  feedlink
+ * @param:  search
  */
 exports.create = async (ctx, next) => {
     let feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim();
@@ -119,8 +119,7 @@ exports.create = async (ctx, next) => {
 /**
  * 获取 订阅源信息
  * @method: get
- * @url:    /api/feed/{id}
- * @params: {string} id
+ * @link:   /api/feed/{id}
  */
 exports.list = async (ctx, next) => {
     let id = ctx.params.id, user_id = ctx.state.user.id;
@@ -144,7 +143,7 @@ exports.list = async (ctx, next) => {
 /**
  * 获取 全部订阅源
  * @method: get
- * @url:    /api/feed
+ * @link:   /api/feed
  */
 exports.listAll = async (ctx, next) => {
     let user_id = ctx.state.user.id;
@@ -164,8 +163,8 @@ exports.listAll = async (ctx, next) => {
 /**
  * 取消/删除 订阅源
  * @method: delete
- * @url:    /api/feed/{id}
- * @params: {string} id
+ * @link:   /api/feed/{id}
+ * @param:  {string} feed_id
  */
 exports.remove = async (ctx, next) => {
     let user_id = ctx.state.user.id, feed_id = ctx.params.id;

@@ -63,8 +63,8 @@
                     feed: function(Feed, $stateParams) {
                         return Feed.get({id: $stateParams.id}).$promise;
                     },
-                    posts: function(Post, $stateParams) {
-                        return Post.get({feed_id: $stateParams.id}).$promise;
+                    posts: function(Posts, $stateParams) {
+                        return Posts.get({feed_id: $stateParams.id}).$promise;
                     }
                 }
             })
@@ -80,6 +80,7 @@
             })
             .state('posts', {
                 url: '/posts/:type',
+                abstract: false,
                 templateUrl: 'posts/posts_tpl.html',
                 controller: 'PostsController as vm',
                 resolve: {
@@ -100,6 +101,7 @@
                 controller: 'PostController as vm',
                 resolve: {
                     post: function(Post, $stateParams, $state) {
+                        console.log($state);
                         return Post.get({feed_id: $state.$current.self.data, id: $stateParams.id}).$promise;
                     }
                 }

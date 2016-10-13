@@ -28,16 +28,24 @@
     .context-menu.ng-hide {
         width: 0;
         transition: 0.3s linear all;
+        .user-avatar img {
+            width: 0;
+            height: 0;
+            transition: 0.3s linear all;
+        }
+        .list-group {
+            transition: 0.2s linear all;
+            opacity: 0;
+        }
+        .badge {
+            opacity: 0;
+            transition: 0.2s linear all;
+        }
     }
     .context-menu.ng-hide-remove.ng-hide-remove-active {
         width: 250px;
         transition: 0.3s linear all;
     }
-    .context-menu {
-        width: 250px;
-        transition: 0.3s linear all;
-    }
-
 }
 @media screen and (max-width: 768px) {
     .markdown-body {
@@ -71,5 +79,9 @@
     }
     .post-bar {
         right: 0 !important;
+    }
+    .center.ng-hide {
+        opacity: 0;
+        transition: 0.3s linear all;
     }
 }

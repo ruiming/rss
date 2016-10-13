@@ -7,7 +7,7 @@ import UserModel from '../models/user';
 /**
  * 获取用户信息
  * @method: get 
- * @url:    /user
+ * @link:   /user
  */
 exports.list = async (ctx, next) => {
     let user_id = ctx.state.user.id;

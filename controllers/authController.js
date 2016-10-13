@@ -12,9 +12,9 @@ import request from 'request';
 /**
  * 注册用户
  * @method: post
- * @url:    /auth/register
- * @params: {string} email
- * @params: {string} password
+ * @link:   /auth/register
+ * @param:  {string} email
+ * @param:  {string} password
  */
 exports.register = async (ctx, next) => {
     let email = /^([\w-_]+(?:\.[\w-_]+)*)@((?:[a-z0-9]+(?:-[a-zA-Z0-9]+)*)+\.[a-z]{2,6})$/i;
@@ -49,9 +49,9 @@ exports.register = async (ctx, next) => {
 /**
  * 登陆
  * @method: post
- * @url:    /auth/login
- * @params: {string} email
- * @params: {string} password
+ * @link:   /auth/login
+ * @param:  {string} email
+ * @param:  {string} password
  */
 exports.login = async (ctx, next) => {
     let result = await UserModel.findOne({

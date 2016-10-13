@@ -12,8 +12,7 @@ import _ from 'underscore';
 /**
  * 获取订阅源的文章摘要
  * @method: get
- * @url:    /api/feed/{feed_id}/post
- * @params: {string} feed_id
+ * @link:   /api/feed/{feed_id}/post
  */
 exports.listAll = async (ctx, next) => {
     let feed_id = ctx.params.feed_id, user_id = ctx.state.user.id, result, detail;
@@ -25,9 +24,7 @@ exports.listAll = async (ctx, next) => {
 /**
  * 获取一篇文章的详细信息
  * @method: get
- * @url:    /api/feed/{feed_id}/post/{id}
- * @params: {string} feed_id
- * @params: {string} id
+ * @link:   /api/feed/{feed_id}/post/{id}
  */
 exports.listOne = async (ctx, next) => {
     let feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id, result, readresult;
@@ -43,13 +40,9 @@ exports.listOne = async (ctx, next) => {
 /**
  * 更新文章状态
  * @method: put
- * @url:    /api/feed/{feed_id}/post/{id}
- * @params: {string} feed_id
- * @params: {string} id
- * @params: {read|mark|love|finish} type
- * @params: {boolean true|false} revert
- * @Important: 当 id 为 0 时表示更新该订阅源下的全部文章状态
- * @Important: 已读分两种情况, read 和 finish
+ * @link:   /api/feed/{feed_id}/post/{id}
+ * @param:  {string} type [read|mark|love|finish]
+ * @param:  {boolean} revert [true|false]
  */
 exports.update = async (ctx, next) => {
     let feed_id = ctx.params.feed_id, id = ctx.params.id, user_id = ctx.state.user.id,
