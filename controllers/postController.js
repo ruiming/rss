@@ -28,29 +28,19 @@ exports.listOne = async (ctx, next) => {
 
 /**
  * 更新文章状态
- * 当更新一篇文章时，传入文章id即可，若更新全部文章，则传入文章的Feed_id并传入all=true参数
  * @method: put
  * @link:   /api/post/{id}
  * @param:  {string} type [read|mark|love|finish]
- * @param:  {string} revert [true|false]
- * @param:  {string} feed [true|false]
+ * @param:  {boolean} revert [true|false]
  */
 exports.update = async (ctx, next) => {
     let id = ctx.params.id, user_id = ctx.state.user.id,
-        type = ctx.request.body.type && ctx.request.body.type.trim(), revert = ctx.request.body.revert === 'true', feed = ctx.request.body.feed === 'true';
+        type = ctx.request.body.type && ctx.request.body.type.trim(), revert = ctx.request.body.revert === true, feed = ctx.request.body.feed === true;
     if(!['read', 'mark', 'love', 'finish'].includes(type)) {
         ctx.throw(404, '参数非法');
     } else {
         setTimeout(async () => {
-            let items = [];
-            await new Promise(async (resolve) => {
-                if(feed) {
-                    let posts = await PostModel.find({feed_id: id}, {_id: 1});
-                    resolve(_.pluck(posts, '_id'));
-                } else {
-                    resolve(id.split(','));
-                }
-            }).then(data => items = data);
+            let items = id.split(',');
             for(let item of items) {
                 let state, res;
                 await Promise.all([Promise.resolve().then(async () => state = await UserPostModel.findOne({user_id: user_id, post_id: item})),

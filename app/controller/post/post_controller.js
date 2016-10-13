@@ -30,11 +30,11 @@
 
         function love() {
             vm.currentPostDetail.love = !vm.currentPostDetail.love;
-            Post.update({feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id}, {type: 'love', revert: true});
+            Post.update({id: vm.currentPost._id}, {type: 'love', revert: true});
         }
         function mark() {
             vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
-            Post.update({feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id}, {type: 'mark', revert: true});
+            Post.update({id: vm.currentPost._id}, {type: 'mark', revert: true});
         }
         function home() {
             $state.go('feed',{id: vm.currentPost.feed_id[0]});

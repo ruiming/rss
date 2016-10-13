@@ -43,7 +43,8 @@
                 }
                 post.read = true;                
             }
-            Post.update({id: vm.posts[0].feed_id}, {type: 'read', feed: 'true'});
+            let ids = _.uniq(_.pluck(vm.posts, 'feed_id')).toString();
+            Posts.update({feed_id: ids, type: 'read'});
         }
         function randomcolor() {
             var random = Math.floor(Math.random() * 3);

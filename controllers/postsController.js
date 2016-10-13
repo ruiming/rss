@@ -84,30 +84,28 @@ exports.main = async (ctx, next) => {
 
 /**
  * 更新全部未读文章
- * @method: post
+ * @method: put
  * @link:   /api/posts
- * @param:  {Array} id
+ * @param:  {string} feed_id
  */
 exports.update = async (ctx, next) => {
-    let ids = ctx.request.body.id.split(','), user_id = ctx.state.user.id;
-    UserFeedModel.update({user_id: user_id}, {$set: {unread: 0}}, {multi: true}).exec();
-    _.each(ids, id => {
-        setTimeout(async () => {
-            let state, feed;
-            await Promise.all([Promise.resolve().then(async () => state = await UserPostModel.findOne({user_id: user_id, post_id: id})),
-                    Promise.resolve().then(async () =>  feed = await PostModel.findOne({_id: id}, {_id: 1, feed_id: 1}))]);
+    let ids = ctx.request.body.feed_id.split(','), user_id = ctx.state.user.id;
+    _.each(ids, async (id) => {
+        let posts = await PostModel.find({feed_id: id});
+        posts = _.pluck(posts, '_id');
+        _.each(posts, async (post) => {
+            let state = await UserPostModel.findOne({user_id: user_id, post_id: post});
             if(state && state._id) {
-                state.read = true;
-                state.save();
+                if(state.read) return;
+                else {
+                   state.read = true;
+                   state.save();
+                } 
             } else {
-                if(feed && feed._id) {
-                    console.log(id);
-                    state = {user_id: user_id, feed_id: feed.feed_id, post_id: id, read: true};
-                    state = new UserPostModel(state);
-                    state.save();
-                }
+                state = new UserPostModel({user_id: user_id, feed_id: id, post_id: post, read: true, read_date: Date.now()});
+                state.save();
             }
-        }, 0);
+        });
     });
     ctx.body = { success: true, data: '操作成功' };
 }

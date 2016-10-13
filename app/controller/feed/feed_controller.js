@@ -3,7 +3,7 @@
         .module('app')
         .controller('FeedController', FeedController);
 
-    function FeedController($rootScope, feed, posts, _, storage, $scope, Post, $state, Feed, $stateParams) {
+    function FeedController($rootScope, feed, posts, _, storage, $scope, Post, $state, Feed, $stateParams, Posts) {
         var vm = this;
         vm.expand = false;
         vm.feed = feed.data;
@@ -103,7 +103,7 @@
                 }
                 post.read = true;
             }
-            Post.update({id: vm.posts[0].feed_id}, {type: 'read', feed: 'true'});
+            Posts.update({feed_id: $stateParams.id , type: 'read'});
         }
         $scope.$on('EXPAND', () => vm.expand = !vm.expand);
         $scope.$on('FOLD', () => vm.expand = false);

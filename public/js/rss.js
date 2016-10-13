@@ -308,8 +308,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function () {
     angular.module('app').factory('Posts', function ($resource) {
         return $resource('/api/posts', null, {
-            get: { method: 'GET', params: { type: '@type', feed_id: '@feed_id' } }, // 获取指定类型的订阅文章
-            recent: { method: 'GET', url: '/api/posts/recent' } // 获取最近的未读订阅文章
+            get: { method: 'GET', params: { type: '@type', feed_id: '@feed_id' } },
+            recent: { method: 'GET', url: '/api/posts/recent' },
+            update: { method: 'PUT' }
         });
     });
 })();
@@ -475,10 +476,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 })();
 
 (function () {
-    FeedController.$inject = ["$rootScope", "feed", "posts", "_", "storage", "$scope", "Post", "$state", "Feed", "$stateParams"];
+    FeedController.$inject = ["$rootScope", "feed", "posts", "_", "storage", "$scope", "Post", "$state", "Feed", "$stateParams", "Posts"];
     angular.module('app').controller('FeedController', FeedController);
 
-    function FeedController($rootScope, feed, posts, _, storage, $scope, Post, $state, Feed, $stateParams) {
+    function FeedController($rootScope, feed, posts, _, storage, $scope, Post, $state, Feed, $stateParams, Posts) {
         var vm = this;
         vm.expand = false;
         vm.feed = feed.data;
@@ -648,7 +649,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }
 
-            Post.update({ id: vm.posts[0].feed_id }, { type: 'read', feed: 'true' });
+            Posts.update({ feed_id: $stateParams.id, type: 'read' });
         }
         $scope.$on('EXPAND', function () {
             return vm.expand = !vm.expand;
@@ -712,11 +713,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         function love() {
             vm.currentPostDetail.love = !vm.currentPostDetail.love;
-            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'love', revert: true });
+            Post.update({ id: vm.currentPost._id }, { type: 'love', revert: true });
         }
         function mark() {
             vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
-            Post.update({ feed_id: vm.currentPost.feed_id[0], id: vm.currentPost._id }, { type: 'mark', revert: true });
+            Post.update({ id: vm.currentPost._id }, { type: 'mark', revert: true });
         }
         function home() {
             $state.go('feed', { id: vm.currentPost.feed_id[0] });
@@ -811,7 +812,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }
 
-            Post.update({ id: vm.posts[0].feed_id }, { type: 'read', feed: 'true' });
+            var ids = _.uniq(_.pluck(vm.posts, 'feed_id')).toString();
+            Posts.update({ feed_id: ids, type: 'read' });
         }
         function randomcolor() {
             var random = Math.floor(Math.random() * 3);
