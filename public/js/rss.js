@@ -1,14 +1,12 @@
 "use strict";
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 (function () {
     config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider", "$transitionsProvider"];
     angular.module('app', ['ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'ui.router', 'ui.bootstrap', 'base64', 'underscore', 'app.tools', 'nvd3']).config(config)
     // uglify break di of $transitions, seems will be fixed in the next version
-    .run(['$http', '$cookies', '$transitions', '$rootScope', runFn]);
+    .run(['$transitions', '$rootScope', runFn]);
 
-    function runFn($http, $cookies, $transitions, $rootScope) {
+    function runFn($transitions, $rootScope) {
         $transitions.onSuccess({}, function () {
             $rootScope.$broadcast('FOLD');
         });
@@ -94,6 +92,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
     }
 })();
+'use strict';
 
 (function () {
     angular.module('app').directive('ngRandomClass', ngRandomClass);
@@ -111,6 +110,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }
 })();
+"use strict";
+
 (function () {
     resize.$inject = ["_", "$window"];
     angular.module('app').directive('resize', resize);
@@ -130,6 +131,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }
 })();
+"use strict";
 
 (function () {
     scrollListen.$inject = ["_", "Post", "storage"];
@@ -164,6 +166,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }
 })();
+'use strict';
 
 /**
  * 单体通信
@@ -175,6 +178,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return {};
     }
 })();
+"use strict";
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 (function () {
     tokenInjector.$inject = ["$injector", "$q", "$cookies", "$cacheFactory", "$timeout"];
     angular.module('app').factory('tokenInjector', tokenInjector);
@@ -229,6 +236,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }
 })();
+'use strict';
 
 (function () {
     var underscore = angular.module('underscore', []);
@@ -236,17 +244,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return $window._;
     }]);
 })();
+'use strict';
+
 (function () {
     angular.module('app').filter('linkFix', function () {
         return function (input, origin) {
             var re = /src="(\/[^\/].+?)"/g;
             var result = input.replace(re, function (match, p, offset, string) {
-                return "src=\"" + origin + p.slice(1) + "\"";
+                return 'src="' + origin + p.slice(1) + '"';
             });
             return result;
         };
     });
 })();
+'use strict';
 
 (function () {
     angular.module('app').filter('timeago', function () {
@@ -257,17 +268,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var output = null;
             // TODO: if I want to make it change in real time.
             if (ago < 10 * 60) {
-                output = "刚刚";
+                output = '刚刚';
             } else if (ago < 60 * 60) {
-                output = Math.round(ago / 60) + " 分钟前";
+                output = Math.round(ago / 60) + ' 分钟前';
             } else if (ago < 60 * 60 * 24) {
-                output = Math.round(ago / 60 / 60) + " 小时前";
+                output = Math.round(ago / 60 / 60) + ' 小时前';
             } else if (ago < 60 * 60 * 24 * 30) {
-                output = Math.round(ago / 60 / 60 / 24) + " 天前";
+                output = Math.round(ago / 60 / 60 / 24) + ' 天前';
             } else if (ago < 60 * 60 * 24 * 365) {
-                output = Math.round(ago / 60 / 60 / 24 / 30) + " 个月前";
+                output = Math.round(ago / 60 / 60 / 24 / 30) + ' 个月前';
             } else if (ago < 60 * 60 * 24 * 365 * 3) {
-                output = Math.round(ago / 60 / 60 / 24 / 365) + " 年前";
+                output = Math.round(ago / 60 / 60 / 24 / 365) + ' 年前';
             } else {
                 output = '很久很久以前';
             }
@@ -275,6 +286,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     });
 })();
+'use strict';
 
 (function () {
     angular.module('app').filter('toLocalString', ["$filter", function ($filter) {
@@ -283,6 +295,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }]);
 })();
+'use strict';
 
 (function () {
     angular.module('app').factory('Feed', function ($resource) {
@@ -291,6 +304,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
     });
 })();
+'use strict';
 
 (function () {
     angular.module('app').factory('Feeds', function ($resource) {
@@ -299,6 +313,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
     });
 })();
+'use strict';
 
 (function () {
     angular.module('app').factory('Post', function ($cacheFactory, $resource) {
@@ -308,6 +323,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
     });
 })();
+'use strict';
 
 (function () {
     angular.module('app').factory('Posts', function ($resource) {
@@ -318,166 +334,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
     });
 })();
+'use strict';
 
 (function () {
     angular.module('app').factory('User', function ($resource) {
         return $resource('/api/user');
     });
 })();
-
-(function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "Feed", "_", "User", "$window", function contextMenuController($scope, Feed, _, User, $window) {
-                var vm = this;
-                vm.time = Date.now();
-                vm.expand = false;
-                vm.feeds = [];
-
-                Feed.get(function (res) {
-                    return vm.feeds = _.groupBy(res.data, 'folder');
-                });
-                User.get(function (res) {
-                    return vm.user = res.data;
-                });
-
-                setInterval(function () {
-                    vm.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
-
-                $scope.$on('EXPAND', function () {
-                    return vm.expand = !vm.expand;
-                });
-                $scope.$on('FOLD', function () {
-                    return vm.expand = false;
-                });
-                $scope.$on('ADD_FEED', function (event, data) {
-                    if (vm.feeds.default) {
-                        vm.feeds.default.push(data);
-                    } else {
-                        vm.feeds['default'] = [data];
-                    }
-                });
-                $scope.$on('DELETE_FEED', function (event, data) {
-                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
-                        return feeds = _.filter(feeds, function (feed) {
-                            return feed.feed_id !== data.feed_id;
-                        });
-                    });
-                });
-                $scope.$on('READ_POST', function (event, data) {
-                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
-                        return _.each(feeds, function (feed) {
-                            return feed.feed_id === data ? feed.unread-- : '';
-                        });
-                    });
-                });
-            }]
-        };
-    }
-})();
-
-(function () {
-    angular.module('app').directive('feedPanel', feedPanel);
-
-    function feedPanel() {
-        return {
-            restrict: 'EA',
-            scope: {
-                feed: '='
-            },
-            replace: true,
-            templateUrl: 'feedPanel/feedPanel.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
-                var vm = this;
-
-                // Function
-                vm.feedit = feedit;
-
-                function feedit() {
-                    $scope.feed.feeded = !$scope.feed.feeded;
-                    if ($scope.feed.feeded) {
-                        Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
-                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
-                            $scope.feed.feeded = true;
-                            $scope.feed.feedNum++;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    } else {
-                        Feed.delete({ id: $scope.feed.feed_id }, function (res) {
-                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
-                            $scope.feed.feeded = false;
-                            $scope.feed.feedNum--;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    }
-                }
-            }]
-        };
-    }
-})();
-(function () {
-    navbar.$inject = ["$state", "$base64"];
-    angular.module('app').directive('navbar', navbar);
-
-    function navbar($state, $base64) {
-        return {
-            restrict: 'EA',
-            scope: {
-                title: '='
-            },
-            replace: true,
-            templateUrl: 'navbar/navbar.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "$rootScope", "$timeout", "tools", function navbarController($scope, $rootScope, $timeout, tools) {
-                var vm = this,
-                    timeout = void 0;
-
-                // Function
-                vm.blur = blur;
-                vm.search = search;
-                vm.focus = focus;
-                vm.expand = expand;
-
-                function expand() {
-                    $rootScope.$broadcast('EXPAND');
-                }
-                function focus() {
-                    form.input.focus();
-                    if (timeout) {
-                        $timeout.cancel(timeout);
-                    }
-                    vm.active = true;
-                }
-                function blur() {
-                    timeout = $timeout(function () {
-                        vm.active = false;
-                    }, 800);
-                }
-                function search(feedlink) {
-                    if (!tools.checkUrl(feedlink)) {
-                        return false;
-                    } else {
-                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
-                    }
-                }
-            }]
-        };
-    }
-})();
+"use strict";
 
 (function () {
     FeedController.$inject = ["$rootScope", "feed", "posts", "_", "storage", "$scope", "Post", "$state", "Feed", "$stateParams", "Posts"];
@@ -663,6 +527,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
     }
 })();
+"use strict";
 
 (function () {
     HomeController.$inject = ["Feeds", "feeds", "posts", "Post", "$state", "$timeout"];
@@ -685,6 +550,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     }
 })();
+"use strict";
 
 (function () {
     PostController.$inject = ["$state", "post", "Post", "storage", "$scope", "_", "$rootScope", "$timeout", "$cacheFactory"];
@@ -728,6 +594,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     }
 })();
+"use strict";
 
 (function () {
     PostsController.$inject = ["_", "$stateParams", "$scope", "posts", "$state", "Post", "Posts", "$rootScope"];
@@ -748,13 +615,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         function goto(id) {
             var post = null;
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
 
             try {
-                for (var _iterator4 = vm.posts[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var item = _step4.value;
+                for (var _iterator = vm.posts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var item = _step.value;
 
                     if (item._id === id) {
                         item.active = true;
@@ -762,16 +629,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     } else item.active = false;
                 }
             } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
+                _didIteratorError = true;
+                _iteratorError = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                        _iterator4.return();
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
                     }
                 } finally {
-                    if (_didIteratorError4) {
-                        throw _iteratorError4;
+                    if (_didIteratorError) {
+                        throw _iteratorError;
                     }
                 }
             }
@@ -787,13 +654,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             $state.go('posts.post', { id: post._id });
         }
         function readall() {
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
             try {
-                for (var _iterator5 = vm.posts[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var post = _step5.value;
+                for (var _iterator2 = vm.posts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var post = _step2.value;
 
                     if (!post.read) {
                         $rootScope.$broadcast('READ_POST', post.feed_id);
@@ -802,16 +669,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     post.read = true;
                 }
             } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
                     }
                 } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
                     }
                 }
             }
@@ -831,6 +698,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
     }
 })();
+"use strict";
 
 (function () {
     SearchController.$inject = ["$stateParams", "$base64", "$state", "Feed"];
@@ -847,6 +715,165 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
     }
 })();
+'use strict';
+
+(function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "Feed", "_", "User", "$window", function contextMenuController($scope, Feed, _, User, $window) {
+                var vm = this;
+                vm.time = Date.now();
+                vm.expand = false;
+                vm.feeds = [];
+
+                Feed.get(function (res) {
+                    return vm.feeds = _.groupBy(res.data, 'folder');
+                });
+                User.get(function (res) {
+                    return vm.user = res.data;
+                });
+
+                setInterval(function () {
+                    vm.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+
+                $scope.$on('EXPAND', function () {
+                    return vm.expand = !vm.expand;
+                });
+                $scope.$on('FOLD', function () {
+                    return vm.expand = false;
+                });
+                $scope.$on('ADD_FEED', function (event, data) {
+                    if (vm.feeds.default) {
+                        vm.feeds.default.push(data);
+                    } else {
+                        vm.feeds['default'] = [data];
+                    }
+                });
+                $scope.$on('DELETE_FEED', function (event, data) {
+                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
+                        return feeds = _.filter(feeds, function (feed) {
+                            return feed.feed_id !== data.feed_id;
+                        });
+                    });
+                });
+                $scope.$on('READ_POST', function (event, data) {
+                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
+                        return _.each(feeds, function (feed) {
+                            return feed.feed_id === data ? feed.unread-- : '';
+                        });
+                    });
+                });
+            }]
+        };
+    }
+})();
+'use strict';
+
+(function () {
+    angular.module('app').directive('feedPanel', feedPanel);
+
+    function feedPanel() {
+        return {
+            restrict: 'EA',
+            scope: {
+                feed: '='
+            },
+            replace: true,
+            templateUrl: 'feedPanel/feedPanel.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
+                var vm = this;
+
+                // Function
+                vm.feedit = feedit;
+
+                function feedit() {
+                    $scope.feed.feeded = !$scope.feed.feeded;
+                    if ($scope.feed.feeded) {
+                        Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
+                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
+                            $scope.feed.feeded = true;
+                            $scope.feed.feedNum++;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    } else {
+                        Feed.delete({ id: $scope.feed.feed_id }, function (res) {
+                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
+                            $scope.feed.feeded = false;
+                            $scope.feed.feedNum--;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    }
+                }
+            }]
+        };
+    }
+})();
+"use strict";
+
+(function () {
+    navbar.$inject = ["$state", "$base64"];
+    angular.module('app').directive('navbar', navbar);
+
+    function navbar($state, $base64) {
+        return {
+            restrict: 'EA',
+            scope: {
+                title: '='
+            },
+            replace: true,
+            templateUrl: 'navbar/navbar.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "$rootScope", "$timeout", "tools", function navbarController($scope, $rootScope, $timeout, tools) {
+                var vm = this,
+                    timeout = void 0;
+
+                // Function
+                vm.blur = blur;
+                vm.search = search;
+                vm.focus = focus;
+                vm.expand = expand;
+
+                function expand() {
+                    $rootScope.$broadcast('EXPAND');
+                }
+                function focus() {
+                    form.input.focus();
+                    if (timeout) {
+                        $timeout.cancel(timeout);
+                    }
+                    vm.active = true;
+                }
+                function blur() {
+                    timeout = $timeout(function () {
+                        vm.active = false;
+                    }, 800);
+                }
+                function search(feedlink) {
+                    if (!tools.checkUrl(feedlink)) {
+                        return false;
+                    } else {
+                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
+                    }
+                }
+            }]
+        };
+    }
+})();
+'use strict';
 
 (function () {
     var help = {

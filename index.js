@@ -43,7 +43,7 @@ app.use(async (ctx, next) => {
     let token = ctx.cookies.get('jwt'), xsrf = ctx.request.headers['x-xsrf-token'];
     ctx.request.header.authorization = 'Bearer ' + token;
     // 当 JWT 存在且访问 API 时，检测 XSRF 
-    if(token !== void 0 && /^\/api\//.test(ctx.url)) {;
+    if(undefined !== token && /^\/api\//.test(ctx.url)) {;
         let verify = Promise.promisify(jwt.verify);
         await verify(token, config.app.secretKey).then(async (data) => {
             if(xsrf !== data.xsrf) {

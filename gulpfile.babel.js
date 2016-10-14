@@ -1,5 +1,7 @@
 import gulp from 'gulp';
+import gulpUtil from 'gulp-util';
 import babel from 'gulp-babel';
+import uglifyes6 from 'uglify-js';
 import uglify from 'gulp-uglify';
 import ngAnnotate from 'gulp-ng-annotate';
 import concat from 'gulp-concat';
@@ -10,6 +12,8 @@ import plumber from 'gulp-plumber';
 import sass from 'gulp-sass';
 import usemin from 'gulp-usemin';
 import htmlify from 'gulp-angular-htmlify';
+import minifier from 'gulp-uglify/minifier';
+import pump from 'pump';
 
 // Packaging JS dependence
 gulp.task('angular', () => {
@@ -27,6 +31,7 @@ gulp.task('angular', () => {
         'node_modules/nvd3/build/nv.d3.min.js',
         'node_modules/angular-nvd3/dist/angular-nvd3.js'])
         .pipe(concat('app.min.js'))
+        .pipe(uglify())
         .pipe(gulp.dest('public/js'));
     // Backend & app
     gulp.src([
@@ -45,8 +50,10 @@ gulp.task('css', () => {
         .pipe(gulp.dest('public/css'));
     // Backend
     gulp.src('node_modules/normalize.css/normalize.css')
+        .pipe(cleanCSS())
         .pipe(gulp.dest('public/css'));
     gulp.src('node_modules/bootstrap/dist/css/bootstrap.min.css')
+        .pipe(cleanCSS())
         .pipe(gulp.dest('public/css'));
 });
 
@@ -56,7 +63,6 @@ gulp.task('font', () => {
         'node_modules/bootstrap/dist/fonts/*.*'])
         .pipe(gulp.dest('public/fonts'));
 });
-
 // Packaging templates
 gulp.task('template', () => {
     gulp.src([
@@ -68,21 +74,24 @@ gulp.task('template', () => {
             moduleName: 'app',
             filePath: 'templates.js'
         }))
-        .pipe(gulp.dest('public/js'));
+        .pipe(uglify())
+        .pipe(gulp.dest('public/js'))
 });
 
 // Packaging own JS code
 gulp.task('js', () => {
+pump([
     gulp.src([
         'app/*.js',
         'app/**/*.js',
         'app/**/**/*.js',
-        'helper/help.js'])
-    .pipe(plumber())
-    .pipe(ngAnnotate())
-    .pipe(concat('rss.js'))
-    .pipe(babel())
-    .pipe(gulp.dest('public/js'));
+        'helper/help.js']),
+    plumber(),
+    ngAnnotate(),
+    babel(),
+    concat('rss.js'),
+    gulp.dest('public/js')
+])
 });
 
 // Packaging own CSS code
@@ -112,6 +121,5 @@ gulp.task('sass', () => {
 gulp.watch(['app/*.js', 'app/**/*.js', 'app/**/**/*.js', 'helper/help.js'], ['js']);
 gulp.watch(['app/*.scss', 'app/**/*.scss', 'app/**/**/*.scss', 'views/*.scss'], ['sass']);
 gulp.watch(['app/controller/**/*.html', 'app/component/**/*.html'], ['template']);
-
 // Task
 gulp.task('default', ['angular', 'css', 'font', 'js', 'sass', 'template']);
