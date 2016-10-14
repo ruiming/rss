@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
+import _ from 'underscore';
 import UserModel from '../models/user';
 import send from 'koa-send';
 import config from '../config/config';
-import { MD5, SHA256 } from 'crypto-js';
+import { MD5, SHA256, AES } from 'crypto-js';
 import request from 'request';
 
 /**
@@ -37,8 +38,10 @@ exports.register = async (ctx, next) => {
             });
         });
         if(result && result._id) {
-            let token = jwt.sign({id: result._id}, config.app.secretKey);
-            ctx.cookies.set("jwt", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
+            let xsrf = SHA256(_.random(999999999)).toString();
+            let token = jwt.sign({id: result._id, xsrf: xsrf}, config.app.secretKey);
+            ctx.cookies.set("XSRF-TOKEN", xsrf, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
+            ctx.cookies.set("jwt", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
             await ctx.redirect('/');
         } else {
             ctx.throw(401, '邮箱已经被注册了');
@@ -57,9 +60,11 @@ exports.login = async (ctx, next) => {
     let result = await UserModel.findOne({
         email: ctx.request.body.email, 
         password: SHA256(ctx.request.body.password).toString()});
+    let xsrf = SHA256(_.random(999999999)).toString();
     if(result && result._id) {
-        let token = jwt.sign({id: result._id}, config.app.secretKey);
-        ctx.cookies.set("jwt", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() +  86400000000)});
+        let token = jwt.sign({id: result._id, xsrf: xsrf}, config.app.secretKey);
+        ctx.cookies.set("XSRF-TOKEN", xsrf, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
+        ctx.cookies.set("jwt", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
         await ctx.redirect('/');
     } else {
         let exist = await UserModel.findOne({email: ctx.request.body.email});

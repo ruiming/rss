@@ -3,20 +3,28 @@ import send from 'koa-send';
 import jwt from 'jsonwebtoken';
 import authRoute from './authRoute';
 import config from '../config/config';
+import UserModel from '../models/user';
 
 var router = new Router();
 
 router.get(['/', '/login'], async (ctx, next) => {
-    // If visitor is login, let it alone  to Angular big brother
-    if(ctx.cookies.get('jwt') && jwt.verify(ctx.cookies.get('jwt'), config.app.secretKey)) {
-        await send(ctx, './public/index.html');
+    // 如果用户正确授权，跳转 Angular
+    // 如果 JWT 有误，跳转登录 
+    if(ctx.cookies.get('jwt')) {
+        let token = jwt.decode(ctx.cookies.get('jwt'));
+        if(token.id) {
+            let result = await UserModel.findById(token.id);
+            if(result && result._id) await send(ctx, './public/index.html');
+        } else {
+            ctx.cookies.set('jwt', null, {overwrite: true, expires: new Date()});
+            ctx.render('login.ejs', {err: 'JWT 验证失败'});
+        }
     } else {
-        await ctx.render('login.ejs', {test: 'Hey, this page is render by ejs'});  
+        await ctx.render('login.ejs');  
     }
 });
 
 router.get('/register', async (ctx, next) => {
-    // If visitor is login, let it alone  to Angular big brother
     if(ctx.cookies.get('jwt') && jwt.verify(ctx.cookies.get('jwt'), config.app.secretKey)) {
         await send(ctx, './public/index.html');
     } else {

@@ -6,9 +6,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider", "$transitionsProvider"];
     angular.module('app', ['ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'ui.router', 'ui.bootstrap', 'base64', 'underscore', 'app.tools', 'nvd3']).config(config)
     // uglify break di of $transitions, seems will be fixed in the next version
-    .run(['$transitions', '$rootScope', runFn]);
+    .run(['$http', '$cookies', '$transitions', '$rootScope', runFn]);
 
-    function runFn($transitions, $rootScope) {
+    function runFn($http, $cookies, $transitions, $rootScope) {
         $transitions.onSuccess({}, function () {
             $rootScope.$broadcast('FOLD');
         });
@@ -182,7 +182,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
 
         return {
-            // Warning: The cookie should set to httponly to keep safe.
 
             response: function response(config) {
                 var data = config.data.data;
@@ -213,6 +212,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 }
                 return $q.when(config);
+            },
+
+            // 正常情况下，XSRF 不正确会触发该错误
+            // 从而触发跳转到登录页面
+            // TODO 全局提示弹框
+            responseError: function responseError(rejection) {
+                if (rejection.status === 401) {
+                    console.log(rejection.data.message);
+                    setTimeout(function () {
+                        return document.location.replace('/');
+                    }, 1000);
+                    return $q.reject(rejection);
+                }
             }
         };
     }

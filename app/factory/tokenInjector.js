@@ -6,7 +6,6 @@
     function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
         
         return {
-            // Warning: The cookie should set to httponly to keep safe.
 
             response: function(config) {
                 let data = config.data.data;
@@ -37,9 +36,20 @@
                         }
                 }
                 return $q.when(config);
+            },
+        
+            // 正常情况下，XSRF 不正确会触发该错误
+            // 从而触发跳转到登录页面
+            // TODO 全局提示弹框
+            responseError: function(rejection) {
+                if(rejection.status === 401) {
+                    console.log(rejection.data.message);
+                    setTimeout(() => document.location.replace('/'), 1000);
+                    return $q.reject(rejection);
+                }
             }
         }
-
+        
     }
 
 }());

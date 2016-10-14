@@ -15,9 +15,9 @@
         ])
         .config(config)
         // uglify break di of $transitions, seems will be fixed in the next version
-        .run(['$transitions', '$rootScope', runFn]);
+        .run(['$http', '$cookies', '$transitions', '$rootScope', runFn]);
 
-    function runFn($transitions, $rootScope) {
+    function runFn($http, $cookies, $transitions, $rootScope) {
         $transitions.onSuccess({}, () => {
             $rootScope.$broadcast('FOLD');
         })
