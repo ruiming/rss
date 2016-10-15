@@ -75,7 +75,13 @@
 }
 .user-avatar {
     text-align: center;
+    overflow: hidden;
+    display: block;
     padding: 15px;
+    color: #333;
+    &:hover, &:link {
+        color: #333;
+    }
     img {
         width: 75px;
         height: 75px;

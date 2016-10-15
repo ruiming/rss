@@ -18,3 +18,18 @@ exports.list = async (ctx, next) => {
         ctx.throw(404, '资源不存在');
     }
 }
+
+/**
+ * 修改用户信息
+ * @method: put
+ * @link:   /user
+ */
+exports.update = async (ctx, next) => {
+    let user = ctx.request.body, user_id = ctx.state.user.id;
+    let result = await UserModel.update({_id: user_id}, user);
+    if(result.ok) {
+        ctx.body = { success: true,  data: result };
+    } else {
+        ctx.body = { success: false, data: '出错了' };
+    }
+}

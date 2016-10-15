@@ -104,6 +104,16 @@
                         return Post.get({id: $stateParams.id}).$promise;
                     }
                 }
-            });
+            })
+            .state('me', {
+                url: '/me',
+                templateUrl: 'me/me_tpl.html',
+                controller: 'MeController as vm',
+                resolve: {
+                    user: function(User) {
+                        return User.get().$promise;
+                    }
+                }
+            })
     }
 }());

@@ -2,6 +2,8 @@
     angular
         .module('app')
         .factory('User', $resource => {
-            return $resource('/api/user');
+            return $resource('/api/user', {}, {
+                'update': {method: 'PUT'}
+            });
         })
 }());

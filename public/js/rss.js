@@ -89,6 +89,15 @@
                     return Post.get({ id: $stateParams.id }).$promise;
                 }]
             }
+        }).state('me', {
+            url: '/me',
+            templateUrl: 'me/me_tpl.html',
+            controller: 'MeController as vm',
+            resolve: {
+                user: ["User", function (User) {
+                    return User.get().$promise;
+                }]
+            }
         });
     }
 })();
@@ -339,7 +348,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 (function () {
     angular.module('app').factory('User', function ($resource) {
-        return $resource('/api/user');
+        return $resource('/api/user', {}, {
+            'update': { method: 'PUT' }
+        });
     });
 })();
 'use strict';
@@ -689,6 +700,45 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 "use strict";
 
 (function () {
+    HomeController.$inject = ["Feeds", "feeds", "posts", "Post", "$state", "$timeout"];
+    angular.module('app').controller('HomeController', HomeController);
+
+    function HomeController(Feeds, feeds, posts, Post, $state, $timeout) {
+        var vm = this;
+        vm.currentPage = 0;
+        vm.posts = posts.data;
+        vm.feeds = feeds.data;
+
+        vm.goto = goto;
+
+        function goto(post) {
+            Post.update({ feed_id: post.feed_id, id: post._id }, { type: 'read' });
+            $state.go('feed.post', { id: post.feed_id, post_id: post._id });
+        }
+        function next() {
+            vm.feeds = Feeds.popular({ page: ++vm.currentPage }).$promise.data;
+        }
+    }
+})();
+"use strict";
+
+(function () {
+    MeController.$inject = ["user", "User"];
+    angular.module('app').controller('MeController', MeController);
+
+    function MeController(user, User) {
+        var vm = this;
+        vm.user = user.data;
+        vm.update = update;
+
+        function update() {
+            return User.update(vm.user).$promise;
+        }
+    }
+})();
+"use strict";
+
+(function () {
     PostController.$inject = ["$state", "post", "Post", "storage", "$scope", "_", "$rootScope", "$timeout", "$cacheFactory"];
     angular.module('app').controller('PostController', PostController);
 
@@ -727,29 +777,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         function home() {
             $state.go('feed', { id: vm.currentPost.feed_id[0] });
-        }
-    }
-})();
-"use strict";
-
-(function () {
-    HomeController.$inject = ["Feeds", "feeds", "posts", "Post", "$state", "$timeout"];
-    angular.module('app').controller('HomeController', HomeController);
-
-    function HomeController(Feeds, feeds, posts, Post, $state, $timeout) {
-        var vm = this;
-        vm.currentPage = 0;
-        vm.posts = posts.data;
-        vm.feeds = feeds.data;
-
-        vm.goto = goto;
-
-        function goto(post) {
-            Post.update({ feed_id: post.feed_id, id: post._id }, { type: 'read' });
-            $state.go('feed.post', { id: post.feed_id, post_id: post._id });
-        }
-        function next() {
-            vm.feeds = Feeds.popular({ page: ++vm.currentPage }).$promise.data;
         }
     }
 })();

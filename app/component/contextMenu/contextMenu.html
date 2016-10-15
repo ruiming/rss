@@ -1,8 +1,8 @@
 <div class="context-menu" resize ng-show="width > 1024 || vm.expand">
-    <div class="user-avatar">
+    <a class="user-avatar" ui-sref="me" >
         <img ng-src="{{vm.user.avatar}}">
         <span>{{vm.user.username}}</span>
-    </div>
+    </a>
     <div class="list-group">
         <a href="#" class="list-group-item"> <span class="glyphicon glyphicon-globe"></span> 仪表盘 </a>
         <a ui-sref="posts({type: 'unread'})" class="list-group-item"> <span class="glyphicon glyphicon-list"></span> 未读文章 </a>
