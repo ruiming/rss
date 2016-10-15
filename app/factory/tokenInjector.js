@@ -47,6 +47,7 @@
                     setTimeout(() => document.location.replace('/'), 1000);
                     return $q.reject(rejection);
                 }
+                return $q.reject(rejection);
             }
         }
         

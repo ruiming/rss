@@ -75,7 +75,7 @@ app.use(async (ctx, next) => {
             ctx.cookies.set("XSRF-TOKEN", null, {overwrite: true, expires: new Date()});
             await ctx.render('login.ejs', {err: err, email: ctx.request.body.email});
         } else {
-            ctx.status = (err && err.status) || 500;
+            ctx.status = (err && err.status) || 404;
             if(null === err || undefined === err) ctx.body = { success: false, message: 'Unknown' };
             else ctx.body = { success:false, message: err.toString()};
         }
