@@ -1,13 +1,12 @@
 ## RSS 订阅器
 
-基于 Angular1, Koa2, D3, Mongoose, Bootstrap 的 RSS 订阅器.
+基于 Angular1, Koa2, D3, Mongoose, Bootstrap, Underscore 的 RSS 订阅器.
 
 ![image](https://raw.githubusercontent.com/ruiming/rss/master/public/img/preview.png)
 
 ### 演示
 
 目前网站已经上线，欢迎试用[119.29.195.141](http://119.29.195.141/)
-
 
 
 ### 已实现功能
@@ -24,12 +23,10 @@
 
 ### TODO
 
-- 登录注册 JWT 时效设置和 httpOnly 处理
 - 用户组系统
 - 用户手动更新订阅源文章
 - 订阅源推荐
 - 订阅源关键字分析
 - 公告栏
 - 文件夹分类
-- 用户信息修改
 

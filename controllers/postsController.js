@@ -91,7 +91,7 @@ exports.main = async (ctx, next) => {
 exports.update = async (ctx, next) => {
     let ids = ctx.request.body.feed_id.split(','), user_id = ctx.state.user.id;
     _.each(ids, async (id) => {
-        let posts = await PostModel.find({feed_id: id});
+        let posts = await PostModel.find({feed_id: id}).sort('date');
         posts = _.pluck(posts, '_id');
         _.each(posts, async (post) => {
             let state = await UserPostModel.findOne({user_id: user_id, post_id: post});

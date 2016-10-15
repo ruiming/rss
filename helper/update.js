@@ -20,7 +20,7 @@ async function update() {
     var starttime = Date.now(), updateCount=0, newCount=0, equalCount=0;
     let promises = items.map(item => {
         return new Promise((resolve, reject) => {
-            let req = request({url: item.absurl, headers: {'User-Agent': 'request'}, timeout: 3000});
+            let req = request({url: item.absurl, headers: {'User-Agent': 'request'}, timeout: 5000});
             let feedparser = new FeedParser();
             FeedModel.update({_id: item._id}, {recent_update: Date.now()});
             req.on('response', res => {
