@@ -4,8 +4,8 @@
   "description": "A rss feeder based on Angular1, Koa2, D3, Mongoose, Bootstrap, Underscore",
   "main": "server.js",
   "scripts": {
-    "start": "pm2 start server.js -e './logs/err.log' -o './logs/out.log' --name='api'",
-    "devstart": "pm2 pm2.development.json",
+    "start": "pm2 start production.json",
+    "dev": "pm2 start development.json",
     "test": "./node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha -- --compilers js:babel-core/register --timeout 2500",
     "db": "mongod --dbpath='/root/db' --rest",
     "devdb": "mongod --dbpath='/home/ruiming/data/db' --rest",

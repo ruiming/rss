@@ -40,7 +40,7 @@
   - 运行
 
   ```
-  pm2 start pm2.development.json
+  npm run dev
   ```
 
   - 访问
