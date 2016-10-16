@@ -13,7 +13,14 @@
   },
   "author": "ruiming",
   "license": "MIT",
-  "keywords": ["node.js", "javascript", "koa", "angular", "rss", "feed"],
+  "keywords": [
+    "node.js",
+    "javascript",
+    "koa",
+    "angular",
+    "rss",
+    "feed"
+  ],
   "dependencies": {
     "angular": "^1.5.8",
     "angular-animate": "^1.5.8",
@@ -39,6 +46,7 @@
     "feedparser": "^1.1.4",
     "github-markdown-css": "^2.4.1",
     "gulp-util": "^3.0.7",
+    "http2": "^3.3.6",
     "jquery": "^3.1.0",
     "jsonwebtoken": "^7.1.9",
     "koa": "^2.0.0-alpha.7",

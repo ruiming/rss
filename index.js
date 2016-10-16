@@ -17,7 +17,7 @@ import json from 'koa-json';
 import favicon from 'koa-favicon';
 import compress from 'koa-compress';
 import http from 'http';
-import https from 'https';
+import http2 from 'http2';
 import fs from 'fs';
 import enforceHttps from 'koa-sslify';
 
@@ -114,5 +114,5 @@ const options = {
 };
 
 http.createServer(app.callback()).listen(80);
-https.createServer(options, app.callback()).listen(443);
+http2.createServer(options, app.callback()).listen(443);
 
