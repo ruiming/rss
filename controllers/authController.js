@@ -31,7 +31,7 @@ exports.register = async (ctx, next) => {
                     email: ctx.request.body.email.trim(),
                     password: SHA256(ctx.request.body.password),
                     username: data.preferredUsername || data.displayName || (ctx.request.body.email && ctx.request.body.email.split('@')[0]),
-                    avatar: data.thumbnailUrl
+                    avatar: `https://www.gravatar.com/avatar/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`
                 });
                 result = await user.save().catch(e => e);
                 resolve();

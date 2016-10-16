@@ -4,9 +4,12 @@
   "description": "A rss feeder based on Angular1, Koa2, D3, Mongoose, Bootstrap, Underscore",
   "main": "server.js",
   "scripts": {
-    "start": "pm2 start server.js -e './logs/err.log' -o './logs/out.log' --name='api' --watch --ignore-watch='node_modules app logs .git' ",
+    "start": "pm2 start server.js -e './logs/err.log' -o './logs/out.log' --name='api'",
+    "startandwatch": "pm2 start server.js -e './logs/err.log -o './logs/out.log' --name='api' --watch --ignore-watch='node_modules app logs .git'",
     "test": "./node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha -- --compilers js:babel-core/register --timeout 2500",
-    "db": "mongod --dbpath='/home/ruiming/data/db' --rest"
+    "db": "mongod --dbpath='/root/db' --rest",
+    "generatessl": "./certbot-auto certonly --webroot -w /root/rss -d enjoyrss.com -d www.enjoyrss.com",
+    "updatessl": "./certbot-auto renew --quiet"
   },
   "author": "ruiming",
   "license": "MIT",
@@ -36,6 +39,7 @@
     "feedparser": "^1.1.4",
     "github-markdown-css": "^2.4.1",
     "gulp-util": "^3.0.7",
+    "http2": "^3.3.6",
     "jquery": "^3.1.0",
     "jsonwebtoken": "^7.1.9",
     "koa": "^2.0.0-alpha.7",
@@ -49,17 +53,18 @@
     "koa-onerror": "^2.0.0",
     "koa-router": "^7.0.1",
     "koa-send": "^3.2.0",
+    "koa-sslify": "^2.1.0",
     "koa-static": "^2.0.0",
     "koa-views": "^5.0.2",
     "mongoose": "^4.6.0",
     "normalize.css": "^4.2.0",
     "nvd3": "^1.8.4",
     "pm2": "^2.0.18",
-    "pump": "^1.0.1",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
+    "pump": "^1.0.1",
     "babel-istanbul": "^0.11.0",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",

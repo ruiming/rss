@@ -16,6 +16,10 @@ import render from 'koa-ejs';
 import json from 'koa-json';
 import favicon from 'koa-favicon';
 import compress from 'koa-compress';
+import http from 'http';
+import http2 from 'http2';
+import fs from 'fs';
+import enforceHttps from 'koa-sslify';
 
 mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${config.MongoDB.NAME}`);
 mongoose.Promise = require('bluebird');
@@ -24,6 +28,16 @@ global.Promise = require('bluebird');
 var app = new Koa();
 var bodyparser = new Bodyparser();
 
+app.use(enforceHttps());
+app.use(async (ctx, next) => {
+    if(/^https:\/\/[^www\.]/.test(ctx.origin)) {
+        ctx.status = 301;
+        ctx.redirect(ctx.protocol + '://www.' + ctx.host)
+    } else {
+        await next();
+    }
+
+});
 app.use(compress({
     filter: content_type => /text|application/i.test(content_type),
     threshold: 2048,
@@ -88,7 +102,17 @@ app.use(handel.routes())
 
 // Below needs JWT verfiy
 app.use(jwt({ secret: config.app.secretKey, algorithm: 'RS256' }).unless({ path: [/^\/css|js|img|fonts/] }));
+
 // API (Protected)
 app.use(api.routes())
    .use(api.allowedMethods());
-app.listen(3000);
+
+// Let's encrypt default ssl directory.
+const options = {
+    key: fs.readFileSync('/etc/letsencrypt/archive/enjoyrss.com/privkey1.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/archive/enjoyrss.com/cert1.pem')
+};
+
+http.createServer(app.callback()).listen(80);
+http2.createServer(options, app.callback()).listen(443);
+
