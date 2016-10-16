@@ -29,11 +29,14 @@ var app = new Koa();
 var bodyparser = new Bodyparser();
 
 app.use(enforceHttps());
-app.use((ctx, next) => {
+app.use(async (ctx, next) => {
     if(/^https:\/\/[^www\.]/.test(ctx.origin)) {
         ctx.status = 301;
         ctx.redirect(ctx.protocol + '://www.' + ctx.host)
+    } else {
+        await next();
     }
+
 });
 app.use(compress({
     filter: content_type => /text|application/i.test(content_type),
