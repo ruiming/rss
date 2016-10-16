@@ -39,7 +39,7 @@ exports.register = async (ctx, next) => {
         });
         if(result && result._id) {
             let xsrf = SHA256(_.random(999999999)).toString();
-            let token = jwt.sign({id: result._id, xsrf: xsrf}, config.app.secretKey);
+            let token = jwt.sign({id: result._id, xsrf: xsrf}, config.APP.JWT_KEY);
             ctx.cookies.set("XSRF-TOKEN", xsrf, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
             ctx.cookies.set("jwt", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
             await ctx.redirect('/');
@@ -62,7 +62,7 @@ exports.login = async (ctx, next) => {
         password: SHA256(ctx.request.body.password).toString()});
     let xsrf = SHA256(_.random(999999999)).toString();
     if(result && result._id) {
-        let token = jwt.sign({id: result._id, xsrf: xsrf}, config.app.secretKey);
+        let token = jwt.sign({id: result._id, xsrf: xsrf}, config.APP.JWT_KEY);
         ctx.cookies.set("XSRF-TOKEN", xsrf, {httpOnly: false, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
         ctx.cookies.set("jwt", token, {httpOnly: true, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
         await ctx.redirect('/');

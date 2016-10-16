@@ -42,5 +42,10 @@
 - 运行
 
   ```
-  npm start
+  pm2 start pm2.development.json
   ```
+
+- 访问
+
+  输入 http://127.0.0.1:8000/ 即可
+

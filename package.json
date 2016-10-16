@@ -5,9 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "pm2 start server.js -e './logs/err.log' -o './logs/out.log' --name='api'",
-    "startandwatch": "pm2 start server.js -e './logs/err.log -o './logs/out.log' --name='api' --watch --ignore-watch='node_modules app logs .git'",
+    "devstart": "pm2 pm2.development.json",
     "test": "./node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha -- --compilers js:babel-core/register --timeout 2500",
     "db": "mongod --dbpath='/root/db' --rest",
+    "devdb": "mongod --dbpath='/home/ruiming/data/db' --rest",
     "generatessl": "./certbot-auto certonly --webroot -w /root/rss -d enjoyrss.com -d www.enjoyrss.com",
     "updatessl": "./certbot-auto renew --quiet"
   },

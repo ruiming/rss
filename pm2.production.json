@@ -1,0 +1,12 @@
+{
+    "name": "API",
+    "script": "./server.js",
+    "cwd": "./",
+    "max_memory_restart": "768M",
+    "log_date_format": "YYYY-MM-DD HH:mm:ss SSS",
+    "out_file": "./logs/app.log",
+    "error_file": "./logs/err.log",
+    "env": {
+        "NODE_ENV": "production"
+    }
+}

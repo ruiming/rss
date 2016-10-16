@@ -26,7 +26,7 @@ router.get(['/', '/login'], async (ctx, next) => {
 });
 
 router.get('/register', async (ctx, next) => {
-    if(ctx.cookies.get('jwt') && jwt.verify(ctx.cookies.get('jwt'), config.app.secretKey)) {
+    if(ctx.cookies.get('jwt') && jwt.verify(ctx.cookies.get('jwt'), config.APP.JWT_KEY)) {
         await send(ctx, './public/index.html');
     } else {
         await ctx.render('register.ejs');  

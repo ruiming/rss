@@ -1,15 +1,15 @@
 import fs from 'fs';
+import path from 'path';
 
-module.exports = {
-    PORT: 3000,
-    MongoDB: {
-        PORT: 27017,
-        HOST: "localhost",
-        USER: "root",
-        PASSWORD: "root",
-        NAME: "rss"
-    },
-    app: {
-        secretKey: 'CjpBSJPTyr3ZfRp+yML1ubBAXR9XIbmg+uMIcN'
-    }
+var env = process.env.NODE_ENV || 'production';
+env = env.toLowerCase();
+
+var file = path.resolve(__dirname, env);
+console.log(env);
+try {
+    var config = module.exports = require(file);
+    console.log(`Load config: [${env}] ${file}`);
+} catch (err) {
+    console.error(`Cannot load config: [${env}] ${file}`);
+    throw err;    
 }
