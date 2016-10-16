@@ -29,6 +29,12 @@ var app = new Koa();
 var bodyparser = new Bodyparser();
 
 app.use(enforceHttps());
+app.use((ctx, next) => {
+    if(/^https:\/\/[^www\.]/.test(ctx.origin)) {
+        ctx.status = 301;
+        ctx.redirect(ctx.protocol + '://www.' + ctx.host)
+    }
+});
 app.use(compress({
     filter: content_type => /text|application/i.test(content_type),
     threshold: 2048,
@@ -104,6 +110,6 @@ const options = {
     cert: fs.readFileSync('/etc/letsencrypt/archive/enjoyrss.com/cert1.pem')
 };
 
-http.createServer(app.callback()).listen(8080);
+http.createServer(app.callback()).listen(80);
 https.createServer(options, app.callback()).listen(443);
 
