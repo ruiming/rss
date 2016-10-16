@@ -25,27 +25,25 @@
 
   ### 使用
 
-### 使用
-
-- 安装依赖
+  - 安装依赖
 
   ```
   npm install --production
   ```
 
-- 运行数据库(根据自己情况修改 package.json 中的数据库存储路径)
+  - 运行数据库(根据自己情况修改 package.json 中的数据库存储路径)
 
   ```
   npm run db
   ```
 
-- 运行
+  - 运行
 
   ```
   pm2 start pm2.development.json
   ```
 
-- 访问
+  - 访问
 
   输入 http://127.0.0.1:8000/ 即可
 
