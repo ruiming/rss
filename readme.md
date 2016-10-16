@@ -24,3 +24,23 @@
 - 文件夹
 - 订阅源推荐
 
+### 使用
+
+- 安装依赖
+
+  ```
+  npm install --production
+  ```
+
+- 运行数据库(根据自己情况修改 package.json 中的数据库存储路径)
+
+  ```
+  npm run db
+  ```
+
+- 运行
+
+  ```
+  npm start
+  ```
+
