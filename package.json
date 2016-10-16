@@ -1,15 +1,16 @@
 {
   "name": "rss",
   "version": "1.2.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A rss feeder based on Angular1, Koa2, D3, Mongoose, Bootstrap, Underscore",
+  "main": "server.js",
   "scripts": {
     "start": "pm2 start server.js -e './logs/err.log' -o './logs/out.log' --name='api' --watch --ignore-watch='node_modules app logs .git' ",
     "test": "./node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha -- --compilers js:babel-core/register --timeout 2500",
     "db": "mongod --dbpath='/home/ruiming/data/db' --rest"
   },
   "author": "ruiming",
-  "license": "ISC",
+  "license": "MIT",
+  "keywords": ["node.js", "javascript", "koa", "angular", "rss", "feed"],
   "dependencies": {
     "angular": "^1.5.8",
     "angular-animate": "^1.5.8",
