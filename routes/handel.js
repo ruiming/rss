@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import authRoute from './authRoute';
 import config from '../config/config';
 import UserModel from '../models/user';
+import fs from 'fs';
 
 var router = new Router();
 
@@ -31,6 +32,13 @@ router.get('/register', async (ctx, next) => {
         await ctx.render('register.ejs');  
     }
 })
+
+// Update SSL only
+router.get('/.well-known/acme-challenge/:id', (ctx, next) => {
+    ctx.status = 200;
+    ctx.type = 'text/plain; charset=utf-8';
+    ctx.body = fs.readFileSync(__dirname + '/..' +  ctx.url);
+});
 
 // Login & Register
 router.use('/auth', authRoute.routes(), authRoute.allowedMethods());
