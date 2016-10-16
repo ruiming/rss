@@ -20,7 +20,10 @@ import http from 'http';
 import http2 from 'http2';
 import fs from 'fs';
 import enforceHttps from 'koa-sslify';
-
+import enforceWww from './middlewares/enforce-www';
+import onerror from './middlewares/onerror';
+import xsrf from './middlewares/xsrf';
+import cookies from './middlewares/cookies';
 mongoose.connect(`mongodb://${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`);
 mongoose.Promise = require('bluebird');
 global.Promise = require('bluebird');
@@ -28,20 +31,12 @@ global.Promise = require('bluebird');
 var app = new Koa();
 var bodyparser = new Bodyparser();
 
-// Belows only needed in the production
 if(config.ENV === 'production') {
     app.use(enforceHttps());
-    app.use(async (ctx, next) => {
-        if(/^https:\/\/[^www\.]/.test(ctx.origin)) {
-            ctx.status = 301;
-            ctx.redirect(ctx.protocol + '://www.' + ctx.host)
-        } else {
-                await next();
-        }
-
-    });
+    app.use(enforceWww());
 }
 
+app.use(cookies);
 app.use(compress({
     filter: content_type => /text|application/i.test(content_type),
     threshold: 2048,
@@ -59,48 +54,10 @@ app.use(convert(serve(path.resolve(__dirname, 'public'), {defer: true})));
 app.use(favicon(__dirname + '/public/img/rss.png'));
 
 // XSRF 检测，处理客户端未授权问题
-app.use(async (ctx, next) => {
-    let token = ctx.cookies.get('jwt'), xsrf = ctx.request.headers['x-xsrf-token'];
-    ctx.request.header.authorization = 'Bearer ' + token;
-    // 当 JWT 存在且访问 API 时，检测 XSRF 
-    if(undefined !== token && /^\/api\//.test(ctx.url)) {;
-        let verify = Promise.promisify(jwt.verify);
-        await verify(token, config.APP.JWT_KEY).then(async (data) => {
-            if(xsrf !== data.xsrf) {
-                ctx.cookies.set("XSRF-TOKEN", null, {overwrite: true, expires: new Date()});
-                ctx.cookies.set("jwt", null, {overwrite: true, expires: new Date()});
-                ctx.status = 401;
-                ctx.body =  { success: false, message: '用户验证失败'};
-            } else {
-                await next();
-            }
-        }, err => {
-            ctx.cookies.set("XSRF-TOKEN", null, {overwrite: true, expires: new Date()});
-            ctx.cookies.set("jwt", null, {overwrite: true, expires: new Date()})
-            ctx.status = 401;
-            ctx.body = { success: false, message: '用户验证失败'};
-        });
-    } else {
-        await next();
-    }
-});
+app.use(xsrf);
 
 // 全局错误处理，处理全局错误和登录注册错误问题
-app.use(async (ctx, next) => {
-    try {
-        await next();
-    } catch (err) {
-        if(401 === err.status) {
-            ctx.cookies.set("jwt", null, {overwrite: true, expires: new Date()});
-            ctx.cookies.set("XSRF-TOKEN", null, {overwrite: true, expires: new Date()});
-            await ctx.render('login.ejs', {err: err, email: ctx.request.body.email});
-        } else {
-            ctx.status = (err && err.status) || 404;
-            if(null === err || undefined === err) ctx.body = { success: false, message: 'Unknown' };
-            else ctx.body = { success:false, message: err.toString()};
-        }
-    }
-});
+app.use(onerror);
 
 // 后端视图处理 (Unprotected)
 app.use(handel.routes())
