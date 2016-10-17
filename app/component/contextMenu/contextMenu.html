@@ -4,7 +4,7 @@
         <span>{{vm.user.username}}</span>
     </a>
     <div class="list-group">
-        <a href="#" class="list-group-item"> <span class="glyphicon glyphicon-globe"></span> 仪表盘 </a>
+        <a ui-sref="home"  class="list-group-item"> <span class="glyphicon glyphicon-globe"></span> 仪表盘 </a>
         <a ui-sref="posts({type: 'unread'})" class="list-group-item"> <span class="glyphicon glyphicon-list"></span> 未读文章 </a>
         <a ui-sref="posts({type: 'mark'})" class="list-group-item"> <span class="glyphicon glyphicon-star"></span> 星标文章 </a>
     </div>
