@@ -4,11 +4,12 @@
     config.$inject = ["$httpProvider", "$stateProvider", "$locationProvider", "$urlRouterProvider", "$transitionsProvider"];
     angular.module('app', ['ngTouch', 'ngAnimate', 'ngResource', 'ngSanitize', 'ngCookies', 'ui.router', 'ui.bootstrap', 'base64', 'underscore', 'app.tools', 'nvd3']).config(config)
     // uglify break di of $transitions, seems will be fixed in the next version
-    .run(['$transitions', '$rootScope', runFn]);
+    .run(['$transitions', '$rootScope', '$location', runFn]);
 
-    function runFn($transitions, $rootScope) {
+    function runFn($transitions, $rootScope, $location) {
         $transitions.onSuccess({}, function () {
             $rootScope.$broadcast('FOLD');
+            ga('send', 'pageview', $location.path());
         });
     }
 
