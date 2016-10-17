@@ -10,7 +10,8 @@
     "db": "mongod --dbpath='/root/db' --rest",
     "devdb": "mongod --dbpath='/home/ruiming/data/db' --rest",
     "generatessl": "./certbot-auto certonly --webroot -w /root/rss -d enjoyrss.com -d www.enjoyrss.com",
-    "updatessl": "./certbot-auto renew --quiet"
+    "updatessl": "./certbot-auto renew --quiet",
+    "cron": "crontab ./helper/cron"
   },
   "author": "ruiming",
   "license": "MIT",

@@ -2,18 +2,16 @@
     "name": "API",
     "script": "./server.js",
     "cwd": "./",
-    "watch": [
-        "config",
-        "controllers",
-        "helper",
-        "models",
-        "routes",
-        "views"
-    ],
+    "watch": true,
     "ignore_watch": [
         "logs",
         "public",
-        "node_modules"
+        "node_modules",
+        ".git",
+        "coverage",
+        "app",
+        "test",
+        "views"
     ],
     "watch_options": {
         "followSymlinks": false
