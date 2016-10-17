@@ -14,6 +14,7 @@ import json from 'koa-json';
 import favicon from 'koa-favicon';
 import compress from 'koa-compress';
 import http from 'http';
+import logger from 'koa-logger';
 import http2 from 'http2';
 import enforceHttps from 'koa-sslify';
 import enforceWww from './middlewares/enforce-www';
