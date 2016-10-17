@@ -2,7 +2,7 @@ import fs from 'fs';
 
 module.exports = {
     ENV: 'development',
-    PORT: 8000,
+    PORT: 3000,
     MONGODB: {
         PORT: 27017,
         HOST: "localhost",
