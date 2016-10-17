@@ -25,6 +25,8 @@
 
     function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $transitionsProvider) {
 
+        $locationProvider.html5Mode(true);
+
         $httpProvider.interceptors.push('tokenInjector');
 
         $transitionsProvider.onBefore({

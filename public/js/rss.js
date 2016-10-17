@@ -14,6 +14,8 @@
 
     function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $transitionsProvider) {
 
+        $locationProvider.html5Mode(true);
+
         $httpProvider.interceptors.push('tokenInjector');
 
         $transitionsProvider.onBefore({
@@ -197,10 +199,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
 
+        var count = {};
+
         return {
 
             response: function response(config) {
                 var data = config.data.data;
+                count[config.config.url] = undefined;
                 if (Array.isArray(data)) {
                     for (var i = 0, len = data.length; i < len; i++) {
                         if (void 0 !== data[i].feed_id && Array.isArray(data[i].feed_id)) {
@@ -240,6 +245,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return document.location.replace('/');
                     }, 1000);
                     return $q.reject(rejection);
+                } else if ((rejection.status === 404 || rejection.status === -1) && (rejection.data === unll || rejection.data.success !== undefined) && count[rejection.config.url] === undefined) {
+                    count[rejection.config.url] = true;
+                    var $http = $injector.get('$http');
+                    return $http(rejection.config);
                 }
                 return $q.reject(rejection);
             }

@@ -8,13 +8,18 @@ module.exports = function() {
         } catch (err) {
             if(401 === err.status) {
                 ctx.clearcookies();
-                await ctx.render('login.ejs', {err: err, email: ctx.request.body.email});
+                if(ctx.request.body.email) {
+                    await ctx.render('login.ejs', {err: err, email: ctx.request.body.email});
+                } else {
+                    ctx.status = 401;
+                    ctx.body = { success: false, message: err };
+                }
             } else {
                 ctx.status = (err && err.status) || 404;
                 if([null, undefined].includes(err)) {
                     ctx.body = { success: false, message: 'Unknown' };
                 } else {
-                    ctx.body = { success: false, message: err.tString() };
+                    ctx.body = { success: false, message: err.toString() };
                 }
             }
         }

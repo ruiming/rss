@@ -5,10 +5,13 @@
 
     function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
         
+        var count = {};
+
         return {
 
             response: function(config) {
                 let data = config.data.data;
+                count[config.config.url] = undefined;
                 if(Array.isArray(data)) {
                     for(let i = 0, len = data.length; i < len; i++) {
                         if(void 0 !== data[i].feed_id && Array.isArray(data[i].feed_id)) {
@@ -46,6 +49,10 @@
                     console.log(rejection.data.message);
                     setTimeout(() => document.location.replace('/'), 1000);
                     return $q.reject(rejection);
+                } else if ((rejection.status === 404 || rejection.status === -1) && (rejection.data === unll || rejection.data.success !== undefined) && count[rejection.config.url] === undefined) {
+                    count[rejection.config.url] = true;
+                    var $http = $injector.get('$http');
+                    return $http(rejection.config);
                 }
                 return $q.reject(rejection);
             }

@@ -21,6 +21,7 @@ import enforceWww from './middlewares/enforce-www';
 import onerror from './middlewares/onerror';
 import xsrf from './middlewares/xsrf';
 import cookies from './middlewares/cookies';
+import nghtml5 from './middlewares/nghtml5';
 
 mongoose.connect(`mongodb://${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`);
 mongoose.Promise = require('bluebird');
@@ -61,7 +62,7 @@ app.use(jwt({ secret: config.APP.JWT_KEY, algorithm: 'RS256' }).unless({ path: [
 // API (Protected)
 app.use(api.routes())
    .use(api.allowedMethods());
-
+app.use(nghtml5());
 http.createServer(app.callback()).listen(config.PORT);
 // Production Only
 if(config.ENV === 'production') {

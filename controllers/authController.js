@@ -26,7 +26,11 @@ exports.register = async (ctx, next) => {
         let user = null, result = null;
         await new Promise(async (resolve, reject) => {
             req.on('data', async (data) => {
-                data = JSON.parse(data.toString()).entry[0];
+                if(JSON.parse(data.toString()).entry) {
+                    data = JSON.parse(data.toString()).entry[0];
+                } else {
+                    data = {preferredUsername: ctx.request.body.email.split('@')[0]};
+                }
                 user = new UserModel({
                     email: ctx.request.body.email.trim(),
                     password: SHA256(ctx.request.body.password),
