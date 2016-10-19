@@ -9,7 +9,7 @@ import config from '../config/config';
 import mongoose from 'mongoose';
 import process from 'process';
 
-mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${config.MongoDB.NAME}`);
+mongoose.connect(`mongodb://${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`);
 mongoose.Promise = require('bluebird');
 global.Promise = require('bluebird');
 /**
