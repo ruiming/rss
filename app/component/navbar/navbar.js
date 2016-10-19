@@ -12,7 +12,7 @@
             replace: true,
             templateUrl: 'navbar/navbar.html',
             controllerAs: 'vm',            
-            controller: function navbarController($scope, $rootScope, $timeout, tools) {
+            controller: function navbarController($scope, User, $location,  $rootScope, $timeout, tools) {
                 let vm = this, timeout;
 
                 // Function
@@ -20,6 +20,7 @@
                 vm.search = search;
                 vm.focus = focus;
                 vm.expand = expand;
+                vm.logout = logout;
 
                 function expand() {
                     $rootScope.$broadcast('EXPAND');
@@ -42,6 +43,11 @@
                     } else {
                         $state.go('search', {feedlink: $base64.encode(unescape(encodeURIComponent(feedlink)))});
                     }
+                }
+                function logout() {
+                    User.logout().$promise.then(data => {
+                        $location.path('/').replace();
+                    });
                 }
             }
         }

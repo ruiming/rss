@@ -78,3 +78,14 @@ exports.login = async (ctx, next) => {
         else ctx.throw(401, '邮箱未注册');
     }
 }
+
+/**
+ * 注销
+ * @method: post
+ * @link:   /auth/logout
+ */
+exports.logout = (ctx, next) => {
+    ctx.clearcookies();
+    ctx.status = 401;
+    ctx.body = { success: true, message: '已退出系统' };
+}

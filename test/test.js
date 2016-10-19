@@ -5,6 +5,7 @@ import UserModel from '../models/user';
 
 mongoose.connect(`mongodb://${config.MongoDB.HOST}:${config.MongoDB.PORT}/${config.MongoDB.NAME}`);
 mongoose.Promise = require('bluebird');
+
 var should = require('chai').should();
 
 /**

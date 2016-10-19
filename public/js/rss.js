@@ -359,7 +359,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function () {
     angular.module('app').factory('User', function ($resource) {
         return $resource('/api/user', {}, {
-            'update': { method: 'PUT' }
+            'update': { method: 'PUT' },
+            'logout': { method: 'POST', url: '/auth/logout' }
         });
     });
 })();
@@ -485,7 +486,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             replace: true,
             templateUrl: 'navbar/navbar.html',
             controllerAs: 'vm',
-            controller: ["$scope", "$rootScope", "$timeout", "tools", function navbarController($scope, $rootScope, $timeout, tools) {
+            controller: ["$scope", "User", "$location", "$rootScope", "$timeout", "tools", function navbarController($scope, User, $location, $rootScope, $timeout, tools) {
                 var vm = this,
                     timeout = void 0;
 
@@ -494,6 +495,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 vm.search = search;
                 vm.focus = focus;
                 vm.expand = expand;
+                vm.logout = logout;
 
                 function expand() {
                     $rootScope.$broadcast('EXPAND');
@@ -516,6 +518,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     } else {
                         $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
                     }
+                }
+                function logout() {
+                    User.logout().$promise.then(function (data) {
+                        $location.path('/').replace();
+                    });
                 }
             }]
         };
