@@ -29,13 +29,13 @@ exports.register = async (ctx, next) => {
                 if(JSON.parse(data.toString()).entry) {
                     data = JSON.parse(data.toString()).entry[0];
                 } else {
-                    data = {preferredUsername: ctx.request.body.email.split('@')[0]};
+                    data = {preferredUsername: ctx.request.body.email.split('@')[0], thumbnailUrl: '/img/avatar.png'};
                 }
                 user = new UserModel({
                     email: ctx.request.body.email.trim(),
                     password: SHA256(ctx.request.body.password),
                     username: data.preferredUsername || data.displayName || (ctx.request.body.email && ctx.request.body.email.split('@')[0]),
-                    avatar: `https://www.gravatar.com/avatar/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`
+                    avatar: data.thumbnailUrl
                 });
                 result = await user.save().catch(e => e);
                 resolve();
