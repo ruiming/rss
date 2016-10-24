@@ -5,8 +5,12 @@
         <header>
             <h1>{{post.title}}</h1>
         </header>
+        <section class="detail">
+            <span v-if="post.pubdate">更新于 {{post.pubdate}} </span>
+            <span v-if="post.author">由 {{post.author}} 发布</span>
+        </section>
         <section>
-            <article v-html="post.description"></article>
+            <article v-html="post.description" class="article"></article>
         </section>
     </article>
     <navbar></navbar>
@@ -36,20 +40,21 @@ export default {
 </script>
 
 <style lang="sass">
-#feeds {
-    font-size: 14px;
-    .feed-group {
-        font-weight: 500;
-        p {
-            margin-bottom: 0;
+#post {
+    p {
+        font-size: 14px;
+    }
+    h1 {
+        margin-top: 18px;
+        padding-bottom: 5px;
+        border-bottom: 0;
+    }
+    .detail {
+        span {
+            display: block;
         }
-        small {
-            line-height: 1.7;
-            float: right;
-        }
-        .list-group-item {
-            padding: 12px 15px;
-        }
+        padding: 5px 0 10px 0;
+        font-size: 12px;
     }
 }
 </style>

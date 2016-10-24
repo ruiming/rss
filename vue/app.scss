@@ -1,5 +1,6 @@
 body {
     color: #333;
+    font-size: 14px;
 }
 .favicon {
     width: 20px;
@@ -16,12 +17,21 @@ a {
 .center {
     margin: 40px 0 !important;
 }
+h1 {
+    font-size: 2.0rem;
+}
+h2 {
+    font-size: 1.6rem;
+}
+h3 {
+    font-size: 1.4rem;
+}
 .markdown-body {
     box-sizing: border-box;
     min-width: 200px;
     max-width: 980px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 10px;
     & > header h1{
         margin-bottom: 0;
     }
@@ -69,38 +79,6 @@ a {
         .gutter, .code {
             padding: 0;
             border: 0;
-        }
-    }
-    .post-bar {
-        left: 250px;
-        right: 250px;
-        .title {
-            padding-left: 25px;
-        }
-        .readtime {
-            padding: 0 15px;        
-            margin: 0;   
-            border: 0 none;
-            border-radius: 0; 
-            float: right;
-        }
-        .status {
-            padding-right: 10px;
-            float: right;
-            &.ng-enter {
-                margin-top: 20px;
-                transition: 0.4s linear all;
-            }
-            &.ng-enter.ng-enter-active {
-                margin-top: 0;
-            }
-        }
-        .mark, .love {
-            float: right;
-        }
-        .home {
-            float: left;
-            padding: 5px 10px;
         }
     }
     article {
