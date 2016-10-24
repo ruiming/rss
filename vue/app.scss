@@ -7,3 +7,163 @@ body {
     float: left;
     margin-right: 15px;
 }
+a {
+    color: #333;
+    &:hover {
+        color: #333;
+    }
+}
+.center {
+    margin: 40px 0 !important;
+}
+.markdown-body {
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 20px;
+    & > header h1{
+        margin-bottom: 0;
+    }
+    & > header + section {
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+        overflow: hidden;
+        span {
+            padding-right: 5px;
+        }
+        small:first-child {
+            float: left;            
+        }
+        small:last-child {
+            float: right;
+            letter-spacing: 0.5px;
+        }
+    }
+    figure, .highlight {
+        overflow: auto;
+        margin: 20px 0;
+        padding: 15px;
+        font-size: 13px;
+        color: #4d4d4c;
+        background: #f7f7f7;
+        line-height: 1.6;
+        table {
+            margin-bottom: 0;
+        }
+        tr {
+            border:0 none;
+            background-color: #f9f9f9;
+        }
+        .gutter pre {
+            padding: 0 20px 0 0;
+            color: #666;
+            text-align: right;
+            border: 0;
+        }
+        .code pre {
+            padding: 0 20px 0 0;
+            color: #666;
+            border: 0;
+        }
+        .gutter, .code {
+            padding: 0;
+            border: 0;
+        }
+    }
+    .post-bar {
+        left: 250px;
+        right: 250px;
+        .title {
+            padding-left: 25px;
+        }
+        .readtime {
+            padding: 0 15px;        
+            margin: 0;   
+            border: 0 none;
+            border-radius: 0; 
+            float: right;
+        }
+        .status {
+            padding-right: 10px;
+            float: right;
+            &.ng-enter {
+                margin-top: 20px;
+                transition: 0.4s linear all;
+            }
+            &.ng-enter.ng-enter-active {
+                margin-top: 0;
+            }
+        }
+        .mark, .love {
+            float: right;
+        }
+        .home {
+            float: left;
+            padding: 5px 10px;
+        }
+    }
+    article {
+        padding: 20px 0;
+    }
+    img {
+        max-width: 100%;
+    }
+    pre .comment {
+        color: #8e908c;
+    }
+    pre .variable,
+    pre .attribute,
+    pre .tag,
+    pre .regexp,
+    pre .ruby .constant,
+    pre .xml .tag .title,
+    pre .xml .pi,
+    pre .xml .doctype,
+    pre .html .doctype,
+    pre .css .id,
+    pre .css .class,
+    pre .css .pseudo {
+        color: #c82829;
+    }
+    pre .number,
+    pre .preprocessor,
+    pre .built_in,
+    pre .literal,
+    pre .params,
+    pre .constant,
+    pre .command {
+        color: #f5871f;
+    }
+    pre .ruby .class .title,
+    pre .css .rules .attribute,
+    pre .string,
+    pre .value,
+    pre .inheritance,
+    pre .header,
+    pre .ruby .symbol,
+    pre .xml .cdata,
+    pre .special,
+    pre .number,
+    pre .formula {
+        color: #718c00;
+    }
+    pre .title,
+    pre .css .hexcolor {
+        color: #3e999f;
+    }
+    pre .function,
+    pre .python .decorator,
+    pre .python .title,
+    pre .ruby .function .title,
+    pre .ruby .title .keyword,
+    pre .perl .sub,
+    pre .javascript .title,
+    pre .coffeescript .title {
+        color: #4271ae;
+    }
+    pre .keyword,
+    pre .javascript .function {
+        color: #8959a8;
+    }
+}

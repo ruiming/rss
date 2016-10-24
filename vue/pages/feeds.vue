@@ -1,7 +1,7 @@
 <template>
 <div id="feeds">
     <headbar>订阅源</headbar>
-    <div class="list-group feed-group">
+    <div class="list-group feed-group center">
         <template v-for="(feed, folder) in feeds">
         <div class="list-group-item" v-if="folder !== 'default'">
             <img class="favicon" src="img/folder.png">

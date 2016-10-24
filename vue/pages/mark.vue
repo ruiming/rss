@@ -1,13 +1,13 @@
 <template>
 <div id="mark">
     <headbar>星标文章</headbar>
-    <ul class="list-group">
+    <ul class="list-group center">
         <template v-for="post in posts">
         <li class="list-group-item">
-            <div class="info">
+            <router-link :to="{name: 'post', params: {id: post._id}}" class="info">
                 <img class="favicon" :src="post.favicon">
                 <p>{{post.title}}</p>
-            </div>
+            </router-link>
         </li>
         </template>
     </ul>
@@ -50,6 +50,9 @@ export default {
     li {
         padding: 0;
         border: 0 none;
+    }
+    a {
+        display: block;
     }
     .info {
         font-weight: 500;

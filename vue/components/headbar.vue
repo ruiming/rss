@@ -14,6 +14,10 @@ export default {
 
 <style lang="sass">
 #head {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     color: white;
     header {
         padding: 10px 0;

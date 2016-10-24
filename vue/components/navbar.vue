@@ -26,6 +26,7 @@ export default {
     margin: 0;
     border-top: 1px solid #eee;
     font-weight: 500;
+    background-color: white;
     a {
         box-sizing: border-box;
         text-align: center;

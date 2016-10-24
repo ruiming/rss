@@ -8,6 +8,7 @@ import 'jquery';
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
+import 'github-markdown-css';
 import './app.scss';
 
 Vue.config.debug = true;
@@ -26,6 +27,7 @@ import register from './pages/register.vue';
 import home from './pages/home.vue';
 import feeds from './pages/feeds.vue';
 import mark from './pages/mark.vue';
+import post from './pages/post.vue';
 
 const router = new VueRouter({
     //mode: 'history',
@@ -50,6 +52,10 @@ const router = new VueRouter({
         name: 'mark',
         path: '/mark',
         component: mark
+    }, {
+        name: 'post',
+        path: '/post/:id',
+        component: post
     }]
 })
 

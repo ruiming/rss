@@ -1,7 +1,7 @@
 <template>
 <div id="home">
     <headbar>未读文章</headbar>
-    <ul class="list-group">
+    <ul class="list-group center">
         <template v-for="post in posts">
         <li class="list-group-item">
             <div class="info">
