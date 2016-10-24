@@ -3,10 +3,14 @@
  */
 module.exports = function() {
     return async (ctx, next) => {
+        const deviceAgent = ctx.headers['user-agent'].toLowerCase();
+        const mobile = deviceAgent.match(/(iphone|ipod|ipad|android)/);
         try {
             await next();
+
         } catch (err) {
-            if(401 === err.status) {
+            // Angular way            
+            if(401 === err.status && !mobile) {
                 ctx.clearcookies();
                 if(ctx.request.body.email) {
                     await ctx.render('login.ejs', {err: err, email: ctx.request.body.email});

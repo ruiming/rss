@@ -6,6 +6,7 @@
   "scripts": {
     "start": "pm2 start production.json",
     "dev": "pm2 start development.json",
+    "vue": "webpack-dev-server --open --inline --hot",
     "test": "./node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha -- --compilers js:babel-core/register --timeout 2500",
     "db": "mongod --dbpath='/root/db' --rest",
     "devdb": "mongod --dbpath='/home/ruiming/data/db' --rest",
@@ -15,7 +16,14 @@
   },
   "author": "ruiming",
   "license": "MIT",
-  "keywords": ["node.js", "javascript", "koa", "angular", "rss", "feed"],
+  "keywords": [
+    "node.js",
+    "javascript",
+    "koa",
+    "angular",
+    "rss",
+    "feed"
+  ],
   "dependencies": {
     "angular": "^1.5.8",
     "angular-animate": "^1.5.8",
@@ -62,13 +70,19 @@
     "normalize.css": "^4.2.0",
     "nvd3": "^1.8.4",
     "pm2": "^2.0.18",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "vue": "^2.0.3",
+    "vue-resource": "^1.0.3",
+    "vue-router": "^2.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
-    "pump": "^1.0.1",
     "babel-istanbul": "^0.11.0",
+    "babel-loader": "^6.0.0",
     "chai": "^3.5.0",
+    "cross-env": "^3.0.0",
+    "css-loader": "^0.25.0",
+    "file-loader": "^0.9.0",
     "gulp": "^3.9.1",
     "gulp-angular-htmlify": "^2.3.0",
     "gulp-babel": "^6.1.2",
@@ -83,7 +97,14 @@
     "gulp-usemin": "^0.3.24",
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
+    "node-sass": "^3.10.1",
+    "pump": "^1.0.1",
+    "sass-loader": "^4.0.2",
     "should": "^11.1.0",
-    "uglify-js": "^2.7.3"
+    "style-loader": "^0.13.1",
+    "uglify-js": "^2.7.3",
+    "vue-loader": "^9.5.1",
+    "webpack": "2.1.0-beta.22",
+    "webpack-dev-server": "^2.1.0-beta.0"
   }
 }
