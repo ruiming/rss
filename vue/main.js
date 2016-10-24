@@ -28,6 +28,7 @@ import home from './pages/home.vue';
 import feeds from './pages/feeds.vue';
 import mark from './pages/mark.vue';
 import post from './pages/post.vue';
+import feed from './pages/feed.vue';
 
 const router = new VueRouter({
     //mode: 'history',
@@ -56,6 +57,10 @@ const router = new VueRouter({
         name: 'post',
         path: '/post/:id',
         component: post
+    }, {
+        name: 'feed',
+        path: '/feed/:id',
+        component: feed
     }]
 })
 

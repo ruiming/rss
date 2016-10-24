@@ -27,6 +27,7 @@ export default {
     border-top: 1px solid #eee;
     font-weight: 500;
     background-color: white;
+    z-index: 1;
     a {
         box-sizing: border-box;
         text-align: center;

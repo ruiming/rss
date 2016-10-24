@@ -7,10 +7,10 @@
             <img class="favicon" src="img/folder.png">
             <span class="title">{{folder}}</span>
         </div>
-        <a class="list-group-item" v-for="fee in feed">
+        <router-link :to="{name: 'feed', params: {id: fee.feed_id}}" class="list-group-item" v-for="fee in feed">
             <img class="favicon" :src="fee.favicon">
             <p>{{fee.title}}<small>{{fee.unread}}</p>
-        </a>
+        </router-link>
         </template>
     </div>
     <navbar></navbar>

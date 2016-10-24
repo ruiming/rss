@@ -60,14 +60,5 @@ export default {
         border-top: 1px solid #ddd;
         border-bottom: 1px solid #ddd;
     }
-    .context {
-        padding: 10px 15px;
-        border-bottom: 1px solid #ddd;
-    }
-    .summary {
-        max-height: 140px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
 }
 </style>
