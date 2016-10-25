@@ -10,7 +10,7 @@
             <span v-if="post.author">由 {{post.author}} 发布</span>
         </section>
         <section>
-            <article v-html="post.description" class="article"></article>
+            <article v-html="content" class="article"></article>
         </section>
     </article>
     <navbar></navbar>
@@ -32,6 +32,17 @@ export default {
             this.post = response.data.data.result;
             this.status = response.data.data.detail;
         });
+    },
+    computed: {
+        content: function() {
+            let re = /src="(\/[^\/].+?)"/g;
+            if(this.post.description) {
+                return this.post.description.replace(re, (match, p, offset, string) => {
+                    return `src="${this.post.website}${p.slice(1)}"`;
+                });
+            }
+            return;
+        }
     },
     components: {
         headbar, navbar

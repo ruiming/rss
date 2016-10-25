@@ -1,7 +1,7 @@
 export default function(response) {
     if(response.status === 401) {
         if(!['/auth/login', '/auth/register'].includes(response.url)) {
-            window.location.href = '/login';
+            window.location.href = '#/login';
         }
     } else {
         var data = response.body.data;

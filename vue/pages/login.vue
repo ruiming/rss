@@ -35,7 +35,7 @@ export default {
            this.$http.post('/auth/login', user).then(response => {
                this.$router.replace('/');
            }, err => {
-               this.error.push(err.body.message);
+               this.error.push(err.data.message);
            })
         }
     },

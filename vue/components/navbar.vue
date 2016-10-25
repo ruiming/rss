@@ -1,10 +1,10 @@
 <template>
 <div id="navbar">
     <ul class="list-group">
-        <router-link :to="{name: 'home'}" >首页</router-link>
-        <router-link :to="{name: 'feeds'}" >订阅源</router-link>
-        <router-link :to="{name: 'mark'}" >星标文章</router-link>
-        <router-link :to="{name: 'home'}" >我</router-link>
+        <router-link :to="{name: 'home'}">未读</router-link>
+        <router-link :to="{name: 'feeds'}">订阅源</router-link>
+        <router-link :to="{name: 'mark'}">星标文章</router-link>
+        <router-link :to="{name: 'home'}">我</router-link>
     </ul>
 </div>
 </template>

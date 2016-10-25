@@ -3,7 +3,7 @@
     <headbar>订阅源</headbar>
     <div class="center">
         <div class="feed-header">
-            <img :src="feed.favicon">
+            <img :src="feed.favicon" onerror="this.src='/img/rss.png';">
             <h1>{{feed.title}}</h1>
         </div>
         <div class="panel">

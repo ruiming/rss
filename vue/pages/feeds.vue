@@ -4,12 +4,12 @@
     <div class="list-group feed-group center">
         <template v-for="(feed, folder) in feeds">
         <div class="list-group-item" v-if="folder !== 'default'">
-            <img class="favicon" src="img/folder.png">
+            <img class="favicon" src="img/folder.png" onerror="this.src='/img/rss.png';">
             <span class="title">{{folder}}</span>
         </div>
         <router-link :to="{name: 'feed', params: {id: fee.feed_id}}" class="list-group-item" v-for="fee in feed">
-            <img class="favicon" :src="fee.favicon">
-            <p>{{fee.title}}<small>{{fee.unread}}</p>
+            <img class="favicon" :src="fee.favicon" onerror="this.src='/img/rss.png';">
+            <p>{{fee.title}}<small v-if="fee.unread">{{fee.unread}}</small></p>
         </router-link>
         </template>
     </div>
@@ -50,6 +50,9 @@ export default {
         }
         .list-group-item {
             padding: 12px 15px;
+            border-left: 0;
+            border-right: 0;
+            border-radius: 0;
         }
     }
 }

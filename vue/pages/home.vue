@@ -1,17 +1,17 @@
 <template>
 <div id="home">
-    <headbar>未读文章</headbar>
+    <headbar>未读</headbar>
     <ul class="list-group center">
         <template v-for="post in posts">
         <li class="list-group-item">
-            <div class="info">
-                <img class="favicon" :src="post.favicon">
+            <router-link :to="{name: 'feed', params: {id: post.feed_id}}" class="info">
+                <img class="favicon" :src="post.favicon" onerror="this.src='/img/rss.png';">
                 <p>{{post.feed_title}}<small>{{post.unread}}</small></p>
-            </div>
-            <div class="context">
+            </router-link>
+            <router-link :to="{name: 'post', params: {id: post._id}}" class="context">
                 <p>{{post.title}}<small>{{post.pubdate}}</small></p>
                 <p class="summary">{{post.summary}}</p>
-            </div>
+            </router-link>
         </li>
         </template>
     </ul>
@@ -42,6 +42,9 @@ export default {
 <style lang="sass">
 #home {
     font-size: 14px;
+    a {
+        display: block;
+    }
     ul {
         p {
             margin-bottom: 0;
