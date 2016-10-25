@@ -9,7 +9,7 @@
                 <p>{{post.title}}</p>
             </router-link>
             <div class="option" v-on:click="mark(post)">
-                <span class="glyphicon" v-bind:class="{'glyphicon-star-empty': post.mark, 'glyphicon-star': !post.mark}"></span>
+                <span v-bind:class="{'icon-star-empty': post.mark, 'icon-star-full': !post.mark}"></span>
             </div>
         </li>
         </template>
@@ -81,6 +81,7 @@ export default {
         position: absolute;
         right: 0;
         display: table;
+        color: #3f51b5;
         span {
             display: table-cell;
             vertical-align: middle;

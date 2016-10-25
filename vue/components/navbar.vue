@@ -1,10 +1,10 @@
 <template>
 <div id="navbar">
     <ul class="list-group">
-        <router-link :to="{name: 'home'}">未读</router-link>
-        <router-link :to="{name: 'feeds'}">订阅源</router-link>
-        <router-link :to="{name: 'mark'}">星标文章</router-link>
-        <router-link :to="{name: 'home'}">我</router-link>
+        <router-link :to="{name: 'home'}"><span class="icon-home3"></span></router-link>
+        <router-link :to="{name: 'feeds'}"><span class="icon-folder"></span></router-link>
+        <router-link :to="{name: 'mark'}"><span class="icon-star-full"></span></router-link>
+        <router-link :to="{name: 'home'}"><span class="icon-user"></span></router-link>
     </ul>
 </div>
 </template>
@@ -26,16 +26,17 @@ export default {
     margin: 0;
     border-top: 1px solid #eee;
     font-weight: 500;
-    background-color: white;
+    background-color: #fff;
     z-index: 1;
     a {
         box-sizing: border-box;
         text-align: center;
-        padding: 10px 0;
-        color: #333;
+        padding: 8px 0;
+        color: #424242;
         width: 25%;
         float: left;
         border-right: 1px solid #eee;
+        font-size: 17px;
         &:last-child {
             border-right: 0;
         }

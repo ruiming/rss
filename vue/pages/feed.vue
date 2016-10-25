@@ -4,7 +4,7 @@
     <div class="center">
         <div class="feed-header">
             <img :src="feed.favicon" onerror="this.src='/img/rss.png';">
-            <h1>{{feed.title}}</h1>
+            <h1>{{feed.title}}<small>{{feed.unread}}</small></h1>
         </div>
         <div class="panel">
             <div class="row">
@@ -21,7 +21,7 @@
             </div>
             <div class="row">
                 <p class="col-xs-4">订阅人数</p>
-                <p class="col-xs-8">{{feed.feedNum}}</p>
+                <p class="col-xs-8">{{feed.feedNum}} 人</p>
             </div>
             <div class="row">
                 <p class="col-xs-4">订阅源网站</p>
@@ -32,7 +32,7 @@
             <template v-for="post in posts">
             <li class="list-group-item">
                 <router-link :to="{name: 'post', params: {id: post._id}}" class="info">
-                    <p v-bind:class="{'unread': post.read}">{{post.title}}</p>
+                    <p v-bind:class="{'unread': !post.read}">{{post.title}}</p>
                     <small>{{post.pubdate}}</small>
                 </router-link>
             </li>
@@ -56,7 +56,10 @@ export default {
         }
     },
     mounted: function() {
-        Feed.get({id: this.$route.params.id}).then(response => this.feed = response.data.data);
+        Feed.get({id: this.$route.params.id}).then(response => {
+            this.feed = response.data.data;
+            this.feed.pubdate = new timeago().format(this.feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
+        });
         Posts.get({feed_id: this.$route.params.id}).then(response => {
             this.posts = response.data.data.posts;
             this.status = _.groupBy(response.data.data.detail, 'post_id');
@@ -81,14 +84,24 @@ export default {
     padding: 10px;
     border-bottom: 1px solid #ddd;
     margin-bottom: 0;
+    margin-top: 53px;
 }
 .feed-header {
-    position: relative;
+    position: fixed;
+    top: 40px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    background-color: white;
     height: 53px;
     overflow: hidden;
     border-bottom: 1px solid #ddd;
     h1 {
         margin: 15px 0 15px 50px;
+        small {
+            float: right;
+            padding: 4px 10px;
+        }
     }
     img {
         position: absolute;
@@ -135,9 +148,12 @@ export default {
         p {
             display: block;
             position: absolute;
-            left: 10px;
+            left: 5px;
             right: 90px;
-        }    
+            &:before {
+                content: '    ';
+            }
+        }
         .unread:before {
             content: ' \B7 ';
             color: #3f51b5;

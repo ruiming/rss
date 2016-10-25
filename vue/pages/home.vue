@@ -9,7 +9,10 @@
                 <p>{{post.feed_title}}<small>{{post.unread}}</small></p>
             </router-link>
             <router-link :to="{name: 'post', params: {id: post._id}}" class="context">
-                <p>{{post.title}}<small>{{post.pubdate}}</small></p>
+                <div class="title">
+                    <p>{{post.title}}</p>
+                    <small>{{post.pubdate}}</small>
+                </div>
                 <p class="summary">{{post.summary}}</p>
             </router-link>
         </li>
@@ -50,9 +53,28 @@ export default {
     font-size: 14px;
     a {
         display: block;
+        position: relative;
+        .title {
+            position: relative;
+            height: 20px;
+            p {
+                position: absolute;
+                right: 80px;
+                left: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            small {
+                width: 80px;
+                position: absolute;
+                right: 0;
+            }
+        }
     }
     ul {
         p {
+            overflow: hidden;
             margin-bottom: 0;
         }
         small {

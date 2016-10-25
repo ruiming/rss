@@ -13,7 +13,7 @@
             <article v-html="content" class="article"></article>
         </section>
     </article>
-    <navbar></navbar>
+    <optionbar v-bind:post="post"></optionbar>
 </div>
 </template>
 
@@ -21,6 +21,7 @@
 import { Post } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
+import optionbar from '../components/option.vue';
 export default {
     data() {
         return {
@@ -31,6 +32,9 @@ export default {
         Post.get({id: this.$route.params.id}).then(response => {
             this.post = response.data.data.result;
             this.status = response.data.data.detail;
+            if(this.status === null || this.status.read === false) {
+                Post.update({id: this.post._id}, {type: 'read'});
+            }
         });
     },
     computed: {
@@ -45,7 +49,7 @@ export default {
         }
     },
     components: {
-        headbar, navbar
+        headbar, navbar, optionbar
     }
 }
 </script>
@@ -68,7 +72,7 @@ export default {
         font-size: 12px;
     }
     .article {
-        padding-top: 0;
+        padding-top: 10px;
     }
 }
 </style>
