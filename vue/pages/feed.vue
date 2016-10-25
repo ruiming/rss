@@ -32,7 +32,7 @@
             <template v-for="post in posts">
             <li class="list-group-item">
                 <router-link :to="{name: 'post', params: {id: post._id}}" class="info">
-                    <p>{{post.title}}</p>
+                    <p v-bind:class="{'unread': post.read}">{{post.title}}</p>
                     <small>{{post.pubdate}}</small>
                 </router-link>
             </li>
@@ -62,6 +62,11 @@ export default {
             this.status = _.groupBy(response.data.data.detail, 'post_id');
             for(let post of this.posts) {
                 post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
+                if(this.status[post._id] && this.status[post._id][0].read) {
+                    this.$set(post, 'read', true);
+                } else {
+                    this.$set(post, 'read', false);
+                }
             }
         });
     },
@@ -132,12 +137,17 @@ export default {
             position: absolute;
             left: 10px;
             right: 90px;
+        }    
+        .unread:before {
+            content: ' \B7 ';
+            color: #3f51b5;
+            font-weight: 900;
         }
         small {
             position: absolute;
             text-align: right;
             right: 10px;
-            width: 75px;
+            width: 85px;
         }
     }
 }
