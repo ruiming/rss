@@ -39,8 +39,8 @@ export default {
 <style lang="sass">
 #feeds {
     font-size: 14px;
+    font-weight: 500;
     .feed-group {
-        font-weight: 500;
         p {
             margin-bottom: 0;
         }
@@ -49,6 +49,7 @@ export default {
             float: right;
         }
         .list-group-item {
+            color: #333;
             padding: 12px 15px;
             border-left: 0;
             border-right: 0;

@@ -67,5 +67,8 @@ export default {
         padding: 5px 0 10px 0;
         font-size: 12px;
     }
+    .article {
+        padding-top: 0;
+    }
 }
 </style>

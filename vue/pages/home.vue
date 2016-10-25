@@ -24,6 +24,7 @@ import { Posts } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
 import _ from 'underscore';
+import timeago from 'timeago.js';
 export default {
     data() {
         return {
@@ -31,7 +32,12 @@ export default {
         }
     },
     mounted: function() {
-        Posts.recent().then(response => this.posts = response.data.data);
+        Posts.recent().then(response => {
+            this.posts = response.data.data
+            for(let post of this.posts) {
+                post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
+            }
+        });
     },
     components: {
         headbar, navbar

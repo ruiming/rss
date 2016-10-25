@@ -5,6 +5,7 @@ import VueResource from 'vue-resource';
 import responseTransformer from './interceptors/response.js';
 import _ from 'underscore';
 import 'jquery';
+import 'timeago.js';
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';

@@ -33,6 +33,7 @@
             <li class="list-group-item">
                 <router-link :to="{name: 'post', params: {id: post._id}}" class="info">
                     <p>{{post.title}}</p>
+                    <small>{{post.pubdate}}</small>
                 </router-link>
             </li>
             </template>
@@ -46,6 +47,7 @@
 import { Feed, Posts } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
+import timeago from 'timeago.js'
 export default {
     data() {
         return {
@@ -58,6 +60,9 @@ export default {
         Posts.get({feed_id: this.$route.params.id}).then(response => {
             this.posts = response.data.data.posts;
             this.status = _.groupBy(response.data.data.detail, 'post_id');
+            for(let post of this.posts) {
+                post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
+            }
         });
     },
     components: {
@@ -91,8 +96,12 @@ export default {
 #feed {
     font-size: 14px;
     ul {
+        margin-bottom: 0;
         p {
             margin-bottom: 0;
+            overflow: hidden;
+            white-space: pre;
+            text-overflow: ellipsis;
         }
         small {
             line-height: 1.7;
@@ -102,15 +111,34 @@ export default {
     li {
         padding: 0;
         border: 0 none;
-    }
-    a {
-        display: block;
-    }
-    .info {
-        font-weight: 500;
-        padding: 12px 15px;
         border-top: 1px solid #ddd;
         border-bottom: 1px solid #ddd;
+        &:first-child {
+            border-top: 0;
+        }
+    }
+    .row:last-child p {
+        margin-bottom: 0;
+    }
+    .info {
+        display: block;
+        position: relative;
+        font-weight: 500;
+        padding: 12px 15px;
+        overflow: hidden;
+        height: 45px;
+        p {
+            display: block;
+            position: absolute;
+            left: 10px;
+            right: 90px;
+        }
+        small {
+            position: absolute;
+            text-align: right;
+            right: 10px;
+            width: 75px;
+        }
     }
 }
 </style>
