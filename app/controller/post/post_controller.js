@@ -7,7 +7,7 @@
         var vm = this;
         vm.post = post;
         vm.currentPost = post.data.result;
-        vm.currentPostDetail = post.data.detail;
+        vm.currentPostDetail = post.data.detail || { mark: false, love: false };
         vm.begintime = Date.now();
         vm.currenttime = Date.now();
         vm.status = '';
