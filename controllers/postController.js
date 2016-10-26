@@ -20,7 +20,10 @@ exports.listOne = async (ctx, next) => {
     await Promise.all([Promise.resolve().then(async () => result = await PostModel.findOne({_id: id})),
             Promise.resolve().then(async () => readresult = await UserPostModel.findOne({post_id: id, user_id: user_id}))]);
     if(result && result._id) {
-        return ctx.body = { success: true, data: { result: result, detail: readresult } };
+        let posts = await PostModel.find({feed_id: result.feed_id}, {_id: 1}).sort({pubdate: -1});
+        posts = _.invoke(_.flatten(_.pluck(posts, '_id'), true), 'toString');
+        let pre = posts[posts.indexOf(id) - 1], next = posts[posts.indexOf(id) + 1];
+        return ctx.body = { success: true, data: { result: result, detail: readresult, pre: pre, next: next } };
     } else {
         ctx.throw(404, result);
     }

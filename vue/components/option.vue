@@ -1,18 +1,18 @@
 <template>
 <div id="option">
     <ul class="list-group">
-        <li class="list-group-item">
+        <router-link :to="{name: 'post', params: {id: pre||status.post_id[0]}}" replace class="list-group-item">
             <span class="icon-arrow-left"><small>上一篇</small></span>
-        </li>
+        </router-link>
         <li class="list-group-item" v-on:click="mark(status)">
             <span v-bind:class="{'icon-star-empty': !status.mark, 'icon-star-full': status.mark}"><small>收藏</small></span>
         </li>
         <li class="list-group-item" v-on:click="love(status)">
             <span v-bind:class="{'icon-smile': !status.love, 'icon-smile2': status.love}"><small>点赞</small></span>
         </li>
-        <li class="list-group-item">
+        <router-link :to="{name: 'post', params: {id: next||status.post_id[0]}}" replace class="list-group-item">
             <span class="icon-arrow-right"><small>下一篇</small></span>
-        </li>
+        </router-link>
     </ul>
 </div>
 </template>
@@ -21,7 +21,7 @@
 import { Posts, Post } from '../resource/resource.js';
 import _ from 'underscore';
 export default {
-    props: ['post', 'status'],
+    props: ['post', 'status', 'pre', 'next'],
     methods: {
         mark: function(status) {
             this.$set(status, 'mark', !status.mark);
@@ -49,7 +49,7 @@ export default {
         margin-bottom: 0;
         border-top: 1px solid #ddd;
     }
-    li {
+    a, li {
         box-sizing: border-box;
         text-align: center;
         width: 25%;
@@ -60,6 +60,9 @@ export default {
         padding: 5px 15px;
         &:last-child {
             border-right: 1px solid #ddd;
+        }
+        &:hover {
+            background-color: white;
         }
         span small {
             display: block;

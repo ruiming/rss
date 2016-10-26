@@ -13,7 +13,7 @@
             <article v-html="content" class="article"></article>
         </section>
     </article>
-    <optionbar v-bind:post="post" v-bind:status="status"></optionbar>
+    <optionbar v-bind:post="post" v-bind:status="status" v-bind:pre="pre" v-bind:next="next"></optionbar>
 </div>
 </template>
 
@@ -26,13 +26,17 @@ export default {
     data() {
         return {
             post: {},
-            status: {}
+            status: {},
+            pre: 0,
+            next: 0
         }
     },
     mounted: function() {
         Post.get({id: this.$route.params.id}).then(response => {
             this.post = response.data.data.result;
             this.status = response.data.data.detail;
+            this.pre = response.data.data.pre;
+            this.next = response.data.data.next;
             if(this.status === null || this.status.read === false) {
                 Post.update({id: this.post._id}, {type: 'read'});
             }
@@ -49,6 +53,19 @@ export default {
             return;
         }
     },
+    watch: {
+        '$route' (to, from) {
+            return Post.get({id: this.$route.params.id}).then(response => {
+                this.post = response.data.data.result;
+                this.status = response.data.data.detail;
+                this.pre = response.data.data.pre;
+                this.next = response.data.data.next;
+                if(this.status === null || this.status.read === false) {
+                    Post.update({id: this.post._id}, {type: 'read'});
+                }
+            });
+        }
+    },
     components: {
         headbar, navbar, optionbar
     }
@@ -62,6 +79,7 @@ export default {
     }
     h1 {
         margin-top: 18px;
+        word-break: break-all;
         padding-bottom: 5px;
         border-bottom: 0;
     }
