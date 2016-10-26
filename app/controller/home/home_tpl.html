@@ -28,7 +28,7 @@
             <p ng-if="!vm.feeds.length">没有东西</p>
             <div class="list-group feed">
                 <a class="list-group-item" ui-sref="feed({id: feed._id})" ng-repeat="feed in vm.feeds">
-                    <img ng-src="{{feed.favicon}}">
+                    <img ng-src="{{feed.favicon}}" onerror="this.src='/img/rss.png';">
                     <p>{{feed.title}}</p>                    
                     <p>订阅人数：{{feed.feedNum}}</p>
                 </a>
@@ -42,7 +42,7 @@
                     <p>EnjoyRSS 是一个基于 Angular1 和 Koa2 的 RSS 订阅器</p>
                     <p>本项目开源在<a href="https://github.com/ruiming/rss">Github</a> 上面</p>
                     <p>持续完善中，欢迎您的使用...</p>
-                    <p class="text-right">2016-10-12 19:30</p>
+                    <p class="text-right">2016-10-26 19:10</p>
                 </div>
             </div>
         </div>

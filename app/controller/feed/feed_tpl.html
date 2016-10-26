@@ -22,7 +22,7 @@
     </div>
     <div ui-view class="center" scroll-listen="post.read" ng-show="!vm.expand">
         <div class="page-header feed-header">
-            <img ng-src="{{vm.feed.favicon}}">
+            <img ng-src="{{vm.feed.favicon}}" onerror="this.src='/img/rss.png';">
             <h1>{{::vm.feed.title}}</h1>
         </div>
         <feed-panel feed=vm.feed></feed-panel>
