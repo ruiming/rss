@@ -1,10 +1,10 @@
 <template>
 <div id="navbar">
     <ul class="list-group">
-        <router-link :to="{name: 'home'}"><span class="icon-home3"></span></router-link>
-        <router-link :to="{name: 'feeds'}"><span class="icon-folder"></span></router-link>
-        <router-link :to="{name: 'mark'}"><span class="icon-star-full"></span></router-link>
-        <router-link :to="{name: 'home'}"><span class="icon-user"></span></router-link>
+        <router-link :to="{name: 'home'}"><span class="icon-home3"><small>未读</small></span></router-link>
+        <router-link :to="{name: 'feeds'}"><span class="icon-folder"><small>订阅源</small></span></router-link>
+        <router-link :to="{name: 'mark'}"><span class="icon-star-full"><small>收藏</small></span></router-link>
+        <router-link :to="{name: 'home'}"><span class="icon-pacman"><small>广场</small></span></router-link>
     </ul>
 </div>
 </template>
@@ -31,19 +31,24 @@ export default {
     a {
         box-sizing: border-box;
         text-align: center;
-        padding: 8px 0;
         color: #616161;
         font-family: 'icomoon' !important;
         width: 25%;
         float: left;
         border-right: 1px solid #eee;
-        font-size: 17px;
+        padding: 5px 15px;
         &:last-child {
             border-right: 0;
         }
         &:hover {
             text-decoration: none;
         }
+    }
+    span small {
+        display: block;
+        width:100%;
+        font-size: 12px !important;
+        line-height: 1;
     }
 }
 </style>

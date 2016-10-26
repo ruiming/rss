@@ -2,16 +2,16 @@
 <div id="option">
     <ul class="list-group">
         <li class="list-group-item">
-            <span class="icon-arrow-left"></span>
+            <span class="icon-arrow-left"><small>上一篇</small></span>
         </li>
         <li class="list-group-item" v-on:click="mark(status)">
-            <span v-bind:class="{'icon-star-empty': !status.mark, 'icon-star-full': status.mark}"></span>
+            <span v-bind:class="{'icon-star-empty': !status.mark, 'icon-star-full': status.mark}"><small>收藏</small></span>
         </li>
         <li class="list-group-item" v-on:click="love(status)">
-            <span v-bind:class="{'icon-smile': !status.love, 'icon-smile2': status.love}"></span>
+            <span v-bind:class="{'icon-smile': !status.love, 'icon-smile2': status.love}"><small>点赞</small></span>
         </li>
         <li class="list-group-item">
-            <span class="icon-arrow-right"></span>
+            <span class="icon-arrow-right"><small>下一篇</small></span>
         </li>
     </ul>
 </div>
@@ -57,8 +57,13 @@ export default {
         border: 0 none;
         border-radius: 0;
         border-right: 1px solid #ddd;
+        padding: 5px 15px;
         &:last-child {
             border-right: 1px solid #ddd;
+        }
+        span small {
+            display: block;
+            font-size: 12px !important;
         }
     }
 }
