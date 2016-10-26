@@ -5,7 +5,7 @@
         <template v-for="post in posts">
         <li class="list-group-item">
             <router-link :to="{name: 'post', params: {id: post._id}}" class="info">
-                <img class="favicon" :src="post.favicon">
+                <img class="favicon" :src="post.favicon" onerror="this.src='/img/rss.png';">
                 <p>{{post.title}}</p>
             </router-link>
             <div class="option" v-on:click="mark(post)">
