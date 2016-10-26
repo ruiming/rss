@@ -34,7 +34,7 @@
 - 运行数据库（根据情况修改 package.json 中的数据库路径）
 
   ```
-  npm run db
+  npm run devdb
   ```
 
 - 运行开发环境
