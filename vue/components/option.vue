@@ -1,16 +1,17 @@
 <template>
 <div id="option">
     <ul class="list-group">
-        <router-link :to="{name: 'post', params: {id: pre||status.post_id[0]}}" replace class="list-group-item">
+        <!-- id not defined when initial -->
+        <router-link :to="{name: 'post', params: {id: pre||post._id||0}}" replace class="list-group-item">
             <span class="icon-arrow-left"><small>上一篇</small></span>
         </router-link>
-        <li class="list-group-item" v-on:click="mark(status)">
-            <span v-bind:class="{'icon-star-empty': !status.mark, 'icon-star-full': status.mark}"><small>收藏</small></span>
+        <li class="list-group-item" v-on:click="mark(post)">
+            <span v-bind:class="{'icon-star-empty': !smark, 'icon-star-full': smark}"><small>收藏</small></span>
         </li>
-        <li class="list-group-item" v-on:click="love(status)">
-            <span v-bind:class="{'icon-smile': !status.love, 'icon-smile2': status.love}"><small>点赞</small></span>
+        <li class="list-group-item" v-on:click="love(post)">
+            <span v-bind:class="{'icon-smile': !slove, 'icon-smile2': slove}"><small>点赞</small></span>
         </li>
-        <router-link :to="{name: 'post', params: {id: next||status.post_id[0]}}" replace class="list-group-item">
+        <router-link :to="{name: 'post', params: {id: next||post._id||0}}" replace class="list-group-item">
             <span class="icon-arrow-right"><small>下一篇</small></span>
         </router-link>
     </ul>
@@ -23,13 +24,21 @@ import _ from 'underscore';
 export default {
     props: ['post', 'status', 'pre', 'next'],
     methods: {
-        mark: function(status) {
-            this.$set(status, 'mark', !status.mark);
+        mark: function(post) {
+            this.smark = !this.smark;
             Post.update({id: status.post_id}, {type: 'mark', revert: true});
         },
         love: function(status) {
-            this.$set(status, 'love', !status.love);
+            this.slove = !this.slove;
             Post.update({id: status.post_id}, {type: 'love', revert: true});
+        }
+    },
+    computed: {
+        smark: function() {
+            return status === null ? false : status.mark;
+        },
+        slove: function() {
+            return status === null ? false : status.love;
         }
     }
 }
