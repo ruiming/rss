@@ -23,7 +23,6 @@ import xsrf from './middlewares/xsrf';
 import cookies from './middlewares/cookies';
 import nghtml5 from './middlewares/nghtml5';
 
-mongoose.connect(`mongodb://${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`);
 mongoose.Promise = require('bluebird');
 global.Promise = require('bluebird');
 
@@ -31,8 +30,11 @@ var app = new Koa();
 var bodyparser = new Bodyparser();
 
 if(config.ENV === 'production') {
+    mongoose.connect(`mongodb://${config.MONGODB.USER}:${config.MONGODB.PASSWORD}@${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`);
     app.use(enforceHttps());
     app.use(enforceWww());
+} else {
+    mongoose.connect(`mongodb://${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`);
 }
 
 app.use(cookies());
