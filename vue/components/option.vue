@@ -1,12 +1,18 @@
 <template>
 <div id="option">
     <ul class="list-group">
-        <li class="list-group-item">上一篇</li>
-        <li class="list-group-item" v-on:click="mark(post)">
-            <span class="glyphicon" v-bind:class="{'glyphicon-star-empty': post.mark, 'glyphicon-star': !post.mark}"></span>
+        <li class="list-group-item">
+            <span class="icon-arrow-left"></span>
         </li>
-        <li class="list-group-item">点赞</li>
-        <li class="list-group-item">下一篇</li>
+        <li class="list-group-item" v-on:click="mark(status)">
+            <span v-bind:class="{'icon-star-empty': !status.mark, 'icon-star-full': status.mark}"></span>
+        </li>
+        <li class="list-group-item" v-on:click="love(status)">
+            <span v-bind:class="{'icon-smile': !status.love, 'icon-smile2': status.love}"></span>
+        </li>
+        <li class="list-group-item">
+            <span class="icon-arrow-right"></span>
+        </li>
     </ul>
 </div>
 </template>
@@ -17,13 +23,14 @@ import _ from 'underscore';
 export default {
     props: ['post', 'status'],
     methods: {
-        mark: function(post) {
-            this.$set(post, 'mark', !post.mark);
-            Post.update({id: post._id}, {type: 'mark', revert: true});
+        mark: function(status) {
+            this.$set(status, 'mark', !status.mark);
+            Post.update({id: status.post_id}, {type: 'mark', revert: true});
+        },
+        love: function(status) {
+            this.$set(status, 'love', !status.love);
+            Post.update({id: status.post_id}, {type: 'love', revert: true});
         }
-    },
-    mounted: function() {
-        Posts.get({type: 'mark'}).then(response => this.posts = response.data.data);
     }
 }
 </script>
@@ -34,6 +41,8 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
+    color: #616161;
+    font-family: 'icomoon' !important;
     ul {
         box-sizing: border-box;
         overflow: hidden;

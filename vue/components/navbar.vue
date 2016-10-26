@@ -32,7 +32,8 @@ export default {
         box-sizing: border-box;
         text-align: center;
         padding: 8px 0;
-        color: #424242;
+        color: #616161;
+        font-family: 'icomoon' !important;
         width: 25%;
         float: left;
         border-right: 1px solid #eee;

@@ -13,7 +13,7 @@
             <article v-html="content" class="article"></article>
         </section>
     </article>
-    <optionbar v-bind:post="post"></optionbar>
+    <optionbar v-bind:post="post" v-bind:status="status"></optionbar>
 </div>
 </template>
 
@@ -25,7 +25,8 @@ import optionbar from '../components/option.vue';
 export default {
     data() {
         return {
-            post: []
+            post: {},
+            status: {}
         }
     },
     mounted: function() {
