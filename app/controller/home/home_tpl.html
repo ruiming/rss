@@ -28,7 +28,7 @@
             <p ng-if="!vm.feeds.length">没有东西</p>
             <div class="list-group feed">
                 <a class="list-group-item" ui-sref="feed({id: feed._id})" ng-repeat="feed in vm.feeds">
-                    <img ng-src="{{feed.favicon}}">
+                    <img ng-src="{{feed.favicon}}" onerror="this.src='/img/rss.png';">
                     <p>{{feed.title}}</p>                    
                     <p>订阅人数：{{feed.feedNum}}</p>
                 </a>
