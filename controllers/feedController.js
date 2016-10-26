@@ -148,16 +148,15 @@ exports.list = async (ctx, next) => {
 exports.listAll = async (ctx, next) => {
     let user_id = ctx.state.user.id;
     let items = await UserFeedModel.find({user_id: user_id}, {user_id: 0})
-        .populate('feed_id', {favicon: 1, title: 1}).lean().exec((err, items) => {
-            Promise.all(_.map(items, item => new Promise(async (resolve, reject) => {
-                let unreadcount, count;
-                await Promise.all([Promise.resolve().then(async () => unreadcount = await UserPostModel.count({feed_id: item.feed_id, user_id: user_id, read: true})),
-                        Promise.resolve().then(async () => count = await PostModel.count({feed_id: item.feed_id}))]);
-                resolve(Object.assign(item, {unread: count - unreadcount}));
-            }))).then(items => {
-                ctx.body = { success: true, data: items };
-            });
-        });
+        .populate('feed_id', {favicon: 1, title: 1}).lean().exec();
+    Promise.all(_.map(items, item => new Promise(async (resolve, reject) => {
+        let unreadcount, count;
+        await Promise.all([Promise.resolve().then(async () => unreadcount = await UserPostModel.count({feed_id: item.feed_id, user_id: user_id, read: true})),
+                Promise.resolve().then(async () => count = await PostModel.count({feed_id: item.feed_id}))]);
+        resolve(Object.assign(item, {unread: count - unreadcount}));
+    }))).then(items => {
+        ctx.body = { success: true, data: items };
+    });
 }
 
 /**
