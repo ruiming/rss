@@ -106,6 +106,80 @@
 })();
 'use strict';
 
+(function () {
+    angular.module('app').directive('ngRandomClass', ngRandomClass);
+
+    function ngRandomClass() {
+        return {
+            restrict: 'EA',
+            replace: false,
+            scope: {
+                ngClasses: "=ngRandomClass"
+            },
+            link: function link(scope, elem, attr) {
+                elem.addClass(scope.ngClasses[Math.floor(Math.random() * scope.ngClasses.length)]);
+            }
+        };
+    }
+})();
+"use strict";
+
+(function () {
+    resize.$inject = ["_", "$window"];
+    angular.module('app').directive('resize', resize);
+
+    function resize(_, $window) {
+        return {
+            restrict: 'EA',
+            scope: true,
+            link: function link(scope, elem, attrs) {
+                scope.width = $window.innerWidth;
+
+                angular.element($window).bind('resize', function () {
+                    scope.width = $window.innerWidth;
+                    scope.$digest();
+                });
+            }
+        };
+    }
+})();
+"use strict";
+
+(function () {
+    scrollListen.$inject = ["_", "Post", "storage"];
+    angular.module('app').directive('scrollListen', scrollListen);
+
+    function scrollListen(_, Post, storage) {
+        return {
+            restrict: 'EA',
+            scope: true,
+            link: function link(scope, elem, attrs) {
+                var first = true;
+                var func = _.throttle(function (e) {
+                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail) {
+                        var target = e.target;
+                        // 100px 偏差
+                        if (first && target.scrollHeight - target.clientHeight - 100 < target.scrollTop) {
+                            first = false;
+                            scope.vm.status = '到底啦~\(≧▽≦)/~';
+                        }
+                    }
+                }, 200);
+                angular.element(elem).on('scroll', func);
+                // 如果没有滚动条的话，则立即标为读完
+                setTimeout(function () {
+                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail) {
+                        if (angular.element(elem[0].scrollHeight)[0] === angular.element(elem[0].offsetHeight)[0]) {
+                            scope.vm.status = '到底啦~\(≧▽≦)/~';
+                        }
+                    }
+                }, 0);
+            }
+        };
+    }
+})();
+'use strict';
+
 /**
  * 单体通信
  */
@@ -189,80 +263,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     underscore.factory('_', ['$window', function ($window) {
         return $window._;
     }]);
-})();
-'use strict';
-
-(function () {
-    angular.module('app').directive('ngRandomClass', ngRandomClass);
-
-    function ngRandomClass() {
-        return {
-            restrict: 'EA',
-            replace: false,
-            scope: {
-                ngClasses: "=ngRandomClass"
-            },
-            link: function link(scope, elem, attr) {
-                elem.addClass(scope.ngClasses[Math.floor(Math.random() * scope.ngClasses.length)]);
-            }
-        };
-    }
-})();
-"use strict";
-
-(function () {
-    resize.$inject = ["_", "$window"];
-    angular.module('app').directive('resize', resize);
-
-    function resize(_, $window) {
-        return {
-            restrict: 'EA',
-            scope: true,
-            link: function link(scope, elem, attrs) {
-                scope.width = $window.innerWidth;
-
-                angular.element($window).bind('resize', function () {
-                    scope.width = $window.innerWidth;
-                    scope.$digest();
-                });
-            }
-        };
-    }
-})();
-"use strict";
-
-(function () {
-    scrollListen.$inject = ["_", "Post", "storage"];
-    angular.module('app').directive('scrollListen', scrollListen);
-
-    function scrollListen(_, Post, storage) {
-        return {
-            restrict: 'EA',
-            scope: true,
-            link: function link(scope, elem, attrs) {
-                var first = true;
-                var func = _.throttle(function (e) {
-                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail) {
-                        var target = e.target;
-                        // 100px 偏差
-                        if (first && target.scrollHeight - target.clientHeight - 100 < target.scrollTop) {
-                            first = false;
-                            scope.vm.status = '到底啦~\(≧▽≦)/~';
-                        }
-                    }
-                }, 200);
-                angular.element(elem).on('scroll', func);
-                // 如果没有滚动条的话，则立即标为读完
-                setTimeout(function () {
-                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail) {
-                        if (angular.element(elem[0].scrollHeight)[0] === angular.element(elem[0].offsetHeight)[0]) {
-                            scope.vm.status = '到底啦~\(≧▽≦)/~';
-                        }
-                    }
-                }, 0);
-            }
-        };
-    }
 })();
 'use strict';
 
@@ -363,170 +363,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             'logout': { method: 'POST', url: '/auth/logout' }
         });
     });
-})();
-'use strict';
-
-(function () {
-    angular.module('app').directive('feedPanel', feedPanel);
-
-    function feedPanel() {
-        return {
-            restrict: 'EA',
-            scope: {
-                feed: '='
-            },
-            replace: true,
-            templateUrl: 'feedPanel/feedPanel.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
-                var vm = this;
-
-                // Function
-                vm.feedit = feedit;
-
-                function feedit() {
-                    $scope.feed.feeded = !$scope.feed.feeded;
-                    if ($scope.feed.feeded) {
-                        Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
-                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
-                            $scope.feed.feeded = true;
-                            $scope.feed.feedNum++;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    } else {
-                        Feed.delete({ id: $scope.feed.feed_id }, function (res) {
-                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
-                            $scope.feed.feeded = false;
-                            $scope.feed.feedNum--;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    }
-                }
-            }]
-        };
-    }
-})();
-'use strict';
-
-(function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "Feed", "_", "User", "$window", function contextMenuController($scope, Feed, _, User, $window) {
-                var vm = this;
-                vm.time = Date.now();
-                vm.expand = false;
-                vm.feeds = [];
-
-                Feed.get(function (res) {
-                    return vm.feeds = _.groupBy(res.data, 'folder');
-                });
-                User.get(function (res) {
-                    return vm.user = res.data;
-                });
-
-                setInterval(function () {
-                    vm.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
-
-                $scope.$on('EXPAND', function () {
-                    return vm.expand = !vm.expand;
-                });
-                $scope.$on('FOLD', function () {
-                    return vm.expand = false;
-                });
-                $scope.$on('ADD_FEED', function (event, data) {
-                    if (vm.feeds.default) {
-                        vm.feeds.default.push(data);
-                    } else {
-                        vm.feeds['default'] = [data];
-                    }
-                });
-                $scope.$on('DELETE_FEED', function (event, data) {
-                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
-                        return feeds = _.filter(feeds, function (feed) {
-                            return feed.feed_id !== data.feed_id;
-                        });
-                    });
-                });
-                $scope.$on('READ_POST', function (event, data) {
-                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
-                        return _.each(feeds, function (feed) {
-                            return feed.feed_id === data ? feed.unread-- : '';
-                        });
-                    });
-                });
-            }]
-        };
-    }
-})();
-"use strict";
-
-(function () {
-    navbar.$inject = ["$state", "$base64"];
-    angular.module('app').directive('navbar', navbar);
-
-    function navbar($state, $base64) {
-        return {
-            restrict: 'EA',
-            scope: {
-                title: '='
-            },
-            replace: true,
-            templateUrl: 'navbar/navbar.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "User", "$location", "$rootScope", "$timeout", "tools", function navbarController($scope, User, $location, $rootScope, $timeout, tools) {
-                var vm = this,
-                    timeout = void 0;
-
-                // Function
-                vm.blur = blur;
-                vm.search = search;
-                vm.focus = focus;
-                vm.expand = expand;
-                vm.logout = logout;
-
-                function expand() {
-                    $rootScope.$broadcast('EXPAND');
-                }
-                function focus() {
-                    form.input.focus();
-                    if (timeout) {
-                        $timeout.cancel(timeout);
-                    }
-                    vm.active = true;
-                }
-                function blur() {
-                    timeout = $timeout(function () {
-                        vm.active = false;
-                    }, 800);
-                }
-                function search(feedlink) {
-                    if (!tools.checkUrl(feedlink)) {
-                        return false;
-                    } else {
-                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
-                    }
-                }
-                function logout() {
-                    User.logout().$promise.then(function (data) {
-                        $location.path('/').replace();
-                    });
-                }
-            }]
-        };
-    }
 })();
 "use strict";
 
@@ -763,7 +599,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var vm = this;
         vm.post = post;
         vm.currentPost = post.data.result;
-        vm.currentPostDetail = post.data.detail;
+        vm.currentPostDetail = post.data.detail || { mark: false, love: false };
         vm.begintime = Date.now();
         vm.currenttime = Date.now();
         vm.status = '';
@@ -916,6 +752,170 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }, function (err) {
             vm.err = err.data.message;
         });
+    }
+})();
+'use strict';
+
+(function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "Feed", "_", "User", "$window", function contextMenuController($scope, Feed, _, User, $window) {
+                var vm = this;
+                vm.time = Date.now();
+                vm.expand = false;
+                vm.feeds = [];
+
+                Feed.get(function (res) {
+                    return vm.feeds = _.groupBy(res.data, 'folder');
+                });
+                User.get(function (res) {
+                    return vm.user = res.data;
+                });
+
+                setInterval(function () {
+                    vm.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+
+                $scope.$on('EXPAND', function () {
+                    return vm.expand = !vm.expand;
+                });
+                $scope.$on('FOLD', function () {
+                    return vm.expand = false;
+                });
+                $scope.$on('ADD_FEED', function (event, data) {
+                    if (vm.feeds.default) {
+                        vm.feeds.default.push(data);
+                    } else {
+                        vm.feeds['default'] = [data];
+                    }
+                });
+                $scope.$on('DELETE_FEED', function (event, data) {
+                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
+                        return feeds = _.filter(feeds, function (feed) {
+                            return feed.feed_id !== data.feed_id;
+                        });
+                    });
+                });
+                $scope.$on('READ_POST', function (event, data) {
+                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
+                        return _.each(feeds, function (feed) {
+                            return feed.feed_id === data ? feed.unread-- : '';
+                        });
+                    });
+                });
+            }]
+        };
+    }
+})();
+'use strict';
+
+(function () {
+    angular.module('app').directive('feedPanel', feedPanel);
+
+    function feedPanel() {
+        return {
+            restrict: 'EA',
+            scope: {
+                feed: '='
+            },
+            replace: true,
+            templateUrl: 'feedPanel/feedPanel.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
+                var vm = this;
+
+                // Function
+                vm.feedit = feedit;
+
+                function feedit() {
+                    $scope.feed.feeded = !$scope.feed.feeded;
+                    if ($scope.feed.feeded) {
+                        Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
+                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
+                            $scope.feed.feeded = true;
+                            $scope.feed.feedNum++;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    } else {
+                        Feed.delete({ id: $scope.feed.feed_id }, function (res) {
+                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
+                            $scope.feed.feeded = false;
+                            $scope.feed.feedNum--;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    }
+                }
+            }]
+        };
+    }
+})();
+"use strict";
+
+(function () {
+    navbar.$inject = ["$state", "$base64"];
+    angular.module('app').directive('navbar', navbar);
+
+    function navbar($state, $base64) {
+        return {
+            restrict: 'EA',
+            scope: {
+                title: '='
+            },
+            replace: true,
+            templateUrl: 'navbar/navbar.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "User", "$location", "$rootScope", "$timeout", "tools", function navbarController($scope, User, $location, $rootScope, $timeout, tools) {
+                var vm = this,
+                    timeout = void 0;
+
+                // Function
+                vm.blur = blur;
+                vm.search = search;
+                vm.focus = focus;
+                vm.expand = expand;
+                vm.logout = logout;
+
+                function expand() {
+                    $rootScope.$broadcast('EXPAND');
+                }
+                function focus() {
+                    form.input.focus();
+                    if (timeout) {
+                        $timeout.cancel(timeout);
+                    }
+                    vm.active = true;
+                }
+                function blur() {
+                    timeout = $timeout(function () {
+                        vm.active = false;
+                    }, 800);
+                }
+                function search(feedlink) {
+                    if (!tools.checkUrl(feedlink)) {
+                        return false;
+                    } else {
+                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
+                    }
+                }
+                function logout() {
+                    User.logout().$promise.then(function (data) {
+                        $location.path('/').replace();
+                    });
+                }
+            }]
+        };
     }
 })();
 'use strict';
