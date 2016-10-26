@@ -50,36 +50,35 @@ exports.list = async (ctx, next) => {
  */
 exports.main = async (ctx, next) => {
     let user_id = ctx.state.user.id;
-    await UserFeedModel.find({user_id: user_id}, {user_id: 0})
-        .populate('feed_id', {favicon: 1, title: 1}).lean().exec((err, items) => {
-            return Promise.all(_.map(items, item => new Promise(async (resolve, reject) => {
-                let userposts = await UserPostModel.find({feed_id: item.feed_id, user_id: user_id, read: true});
-                await PostModel.find({feed_id: item.feed_id}).lean().exec((err, posts) => {
-                    let count = posts.length - userposts.length,
-                    read_ids = _.invoke(_.pluck(userposts, 'post_id'), 'toString');
-                    for(let post of posts) {
-                        if(!read_ids.includes(post._id.toString())) {
-                            post.summary = post.description.replace(/<[^>]+>/g,"").slice(0, 550);
-                            post.description = post.description.match(/<img\s+src="(.*?)"/);
-                            if(post.description) {
-                                if(post.description[1].slice(0, 2) !== '//' && post.description[1].slice(0, 2) !== 'ht') {
-                                    post.description = post.website + post.description[1];
-                                } else {
-                                    post.description = post.description[1];
-                                }
+    let items = await UserFeedModel.find({user_id: user_id}, {user_id: 0})
+        .populate('feed_id', {favicon: 1, title: 1}).lean().exec();
+    Promise.all(_.map(items, item => new Promise(async (resolve, reject) => {
+            let userposts = await UserPostModel.find({feed_id: item.feed_id, user_id: user_id, read: true});
+            await PostModel.find({feed_id: item.feed_id}).lean().exec((err, posts) => {
+                let count = posts.length - userposts.length,
+                read_ids = _.invoke(_.pluck(userposts, 'post_id'), 'toString');
+                for(let post of posts) {
+                    if(!read_ids.includes(post._id.toString())) {
+                        post.summary = post.description.replace(/<[^>]+>/g,"").slice(0, 550);
+                        post.description = post.description.match(/<img\s+src="(.*?)"/);
+                        if(post.description) {
+                            if(post.description[1].slice(0, 2) !== '//' && post.description[1].slice(0, 2) !== 'ht') {
+                                post.description = post.website + post.description[1];
                             } else {
-                                post.description = '/img/noimg.png';
+                                post.description = post.description[1];
                             }
-                            resolve(Object.assign(post, item, {_id: post._id, unread: count}));
-                            break;
+                        } else {
+                            post.description = '/img/noimg.png';
                         }
+                        resolve(Object.assign(post, item, {_id: post._id, unread: count}));
+                        break;
                     }
-                    resolve([]);
-                })
-            }))).then(items => {
-                ctx.body = { success: true, data: _.filter(items, item => item.length !== 0) };
-            }).catch(e => e);
-        });
+                }
+                resolve([]);
+            })
+        }))).then(items => {
+            ctx.body = { success: true, data: _.filter(items, item => item.length !== 0) };
+        }).catch(e => e);
 }
 
 /**
