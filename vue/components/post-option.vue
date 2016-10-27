@@ -25,20 +25,20 @@ export default {
     props: ['post', 'status', 'pre', 'next'],
     methods: {
         mark: function(post) {
-            this.smark = !this.smark;
-            Post.update({id: status.post_id}, {type: 'mark', revert: true});
+            this.status.mark = !this.smark;
+            Post.update({id: post._id}, {type: 'mark', revert: true});
         },
-        love: function(status) {
-            this.slove = !this.slove;
-            Post.update({id: status.post_id}, {type: 'love', revert: true});
+        love: function(post) {
+            this.status.love = !this.slove;
+            Post.update({id: post._id}, {type: 'love', revert: true});
         }
     },
     computed: {
         smark: function() {
-            return status === null ? false : status.mark;
+            return this.status === null ? false : this.status.mark;
         },
         slove: function() {
-            return status === null ? false : status.love;
+            return this.status === null ? false : this.status.love;
         }
     }
 }

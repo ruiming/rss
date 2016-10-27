@@ -1,6 +1,7 @@
 <template>
 <div id="mark">
-    <headbar>星标文章</headbar>
+    <headbar>收藏</headbar>
+    <empty v-if="!posts.length">还没有收藏</empty>
     <ul class="list-group center">
         <template v-for="post in posts">
         <li class="list-group-item">
@@ -22,6 +23,7 @@
 import { Posts, Post } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
+import empty from '../components/empty.vue';
 import _ from 'underscore';
 export default {
     data() {
@@ -39,7 +41,7 @@ export default {
         Posts.get({type: 'mark'}).then(response => this.posts = response.data.data);
     },
     components: {
-        headbar, navbar
+        headbar, navbar, empty
     }
 }
 </script>

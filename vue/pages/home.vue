@@ -1,6 +1,7 @@
 <template>
 <div id="home">
     <headbar>未读</headbar>
+    <empty v-if="!posts.length">没有未读文章</empty>
     <ul class="list-group center">
         <template v-for="post in posts">
         <li class="list-group-item">
@@ -26,6 +27,7 @@
 import { Posts } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
+import empty from '../components/empty.vue';
 import _ from 'underscore';
 import timeago from 'timeago.js';
 export default {
@@ -43,7 +45,7 @@ export default {
         });
     },
     components: {
-        headbar, navbar
+        headbar, navbar, empty
     }
 }
 </script>

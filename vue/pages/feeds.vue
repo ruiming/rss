@@ -1,6 +1,7 @@
 <template>
 <div id="feeds">
     <headbar>订阅源</headbar>
+    <empty v-if="!feeds.default.length">还没有订阅源</empty>
     <div class="list-group feed-group center">
         <template v-for="(feed, folder) in feeds">
         <div class="list-group-item" v-if="folder !== 'default'">
@@ -22,6 +23,7 @@
 import { Feed } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
+import empty from '../components/empty.vue';
 export default {
     data() {
         return {
@@ -32,7 +34,7 @@ export default {
         Feed.get().then(response => this.feeds = _.groupBy(response.data.data, 'folder'));
     },
     components: {
-        headbar, navbar
+        headbar, navbar, empty
     }
 }
 </script>
