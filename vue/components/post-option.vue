@@ -1,5 +1,5 @@
 <template>
-<div id="option">
+<div class="bottom">
     <ul class="list-group">
         <!-- id not defined when initial -->
         <router-link :to="{name: 'post', params: {id: pre||post._id||0}}" replace class="list-group-item">
@@ -45,38 +45,5 @@ export default {
 </script>
 
 <style lang="sass">
-#option {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    color: #616161;
-    font-family: 'icomoon' !important;
-    ul {
-        box-sizing: border-box;
-        overflow: hidden;
-        margin-bottom: 0;
-        border-top: 1px solid #ddd;
-    }
-    a, li {
-        box-sizing: border-box;
-        text-align: center;
-        width: 25%;
-        float: left;
-        border: 0 none;
-        border-radius: 0;
-        border-right: 1px solid #ddd;
-        padding: 5px 15px;
-        &:last-child {
-            border-right: 1px solid #ddd;
-        }
-        &:hover {
-            background-color: white;
-        }
-        span small {
-            display: block;
-            font-size: 12px !important;
-        }
-    }
-}
+
 </style>

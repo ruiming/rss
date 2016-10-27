@@ -18,6 +18,45 @@ a {
     margin: 40px 0 43px 0 !important;
     overflow: hidden;
 }
+.bottom {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: #616161;
+    font-family: 'icomoon' !important;
+    border-top: 1px solid #eee;
+    z-index: 1;
+    ul {
+        box-sizing: border-box;
+        overflow: hidden;
+        margin-bottom: 0;
+    }
+    a, li {
+        box-sizing: border-box;
+        text-align: center;
+        color: #616161;
+        font-family: 'icomoon' !important;
+        width: 25%;
+        float: left;
+        border: 0 none;
+        border-right: 1px solid #eee;
+        padding: 5px 15px;
+        &:last-child {
+            border-right: none;
+        }
+        &:hover {
+            background-color: white;
+            text-decoration: none;
+        }
+        small {
+            display: block;
+            font-size: 12px !important;
+            width: 100%;
+            line-height: 1 !important;
+        }
+    }
+}
 h1 {
     font-size: 2.0rem;
 }

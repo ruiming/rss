@@ -1,7 +1,7 @@
 <template>
-<div id="feed">
+<div>
     <headbar>订阅源</headbar>
-    <div class="center">
+    <div class="center" id="feed">
         <div class="feed-header">
             <img :src="feed.favicon" onerror="this.src='/img/rss.png';">
             <h1>{{feed.title}}<small v-if="feed.unread">{{feed.unread}}</small></h1>
@@ -39,7 +39,7 @@
             </template>
         </ul>
     </div>
-    <navbar></navbar>
+    <feedOption v-bind:feed="feed" v-bind:posts="posts"></feedOption>
 </div>
 </template>
 
@@ -47,6 +47,7 @@
 import { Feed, Posts } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
+import feedOption from '../components/feed-option.vue';
 import timeago from 'timeago.js'
 export default {
     data() {
@@ -74,7 +75,7 @@ export default {
         });
     },
     components: {
-        headbar, navbar
+        headbar, feedOption
     }
 }
 </script>

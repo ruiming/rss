@@ -13,15 +13,14 @@
             <article v-html="content" class="article"></article>
         </section>
     </article>
-    <optionbar v-bind:post="post" v-bind:status="status" v-bind:pre="pre" v-bind:next="next"></optionbar>
+    <postOption v-bind:post="post" v-bind:status="status" v-bind:pre="pre" v-bind:next="next"></postOption>
 </div>
 </template>
 
 <script>
 import { Post } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import optionbar from '../components/option.vue';
+import postOption from '../components/post-option.vue';
 export default {
     data() {
         return {
@@ -67,7 +66,7 @@ export default {
         }
     },
     components: {
-        headbar, navbar, optionbar
+        headbar, postOption
     }
 }
 </script>
