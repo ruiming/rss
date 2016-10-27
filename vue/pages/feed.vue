@@ -30,7 +30,7 @@
         </div>
         <ul class="list-group">
             <template v-for="post in posts">
-            <li class="list-group-item">
+            <li class="list-group-item" :key="post._id">
                 <router-link :to="{name: 'post', params: {id: post._id}}" class="info">
                     <p v-bind:class="{'unread': !post.read}">{{post.title}}</p>
                     <small>{{post.pubdate}}</small>
@@ -62,7 +62,7 @@ export default {
             this.feed.pubdate = new timeago().format(this.feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
         });
         Posts.get({feed_id: this.$route.params.id}).then(response => {
-            this.posts = response.data.data.posts;
+            this.posts = _.sortBy(response.data.data.posts, 'pubdate').reverse();
             this.status = _.groupBy(response.data.data.detail, 'post_id');
             for(let post of this.posts) {
                 post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));

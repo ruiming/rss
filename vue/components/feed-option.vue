@@ -38,11 +38,11 @@ export default {
         feedit: function(feed) {
             if(!this.feeded) {
                 Feed.save({feedlink: feed.absurl}).then(response => {
-                    feed.feed_time = Date.now();
+                    this.feed.feed_time = Date.now();
                 });
             } else {
                 Feed.delete({id: feed.feed_id}).then(response => {
-                    feed.feed_time = undefined;
+                    this.feed.feed_time = undefined;
                 })
             }
         }

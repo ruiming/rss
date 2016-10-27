@@ -58,10 +58,10 @@ export default {
         right: 0;
     }
     .list-group-item {
-        height: 42px;
+        height: 46px;
         position: relative;
         color: #333;
-        padding: 12px 15px;
+        padding: 12px 10px 12px 15px;
         border-left: 0;
         border-right: 0;
         border-radius: 0;
