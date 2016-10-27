@@ -61,6 +61,6 @@ export default {
 <style lang="sass">
 .feed-option a,
 .feed-option li {
-    width: 50%;
+    width: 50% !important;
 }
 </style>
