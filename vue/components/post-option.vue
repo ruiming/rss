@@ -25,11 +25,13 @@ export default {
     props: ['post', 'status', 'pre', 'next'],
     methods: {
         mark: function(post) {
-            this.status.mark = !this.smark;
+            if(this.status === null)    this.status = {};
+            this.$set(this.status, 'mark', !this.smark);
             Post.update({id: post._id}, {type: 'mark', revert: true});
         },
         love: function(post) {
-            this.status.love = !this.slove;
+            if(this.status === null)    this.status = {};
+            this.$set(this.status, 'love', !this.slove);
             Post.update({id: post._id}, {type: 'love', revert: true});
         }
     },
