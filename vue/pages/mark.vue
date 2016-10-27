@@ -50,6 +50,9 @@ export default {
     ul {
         p {
             margin-bottom: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         small {
             line-height: 1.7;

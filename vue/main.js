@@ -30,6 +30,7 @@ import feeds from './pages/feeds.vue';
 import mark from './pages/mark.vue';
 import post from './pages/post.vue';
 import feed from './pages/feed.vue';
+import square from './pages/square.vue';
 
 const router = new VueRouter({
     //mode: 'history',
@@ -62,6 +63,10 @@ const router = new VueRouter({
         name: 'feed',
         path: '/feed/:id',
         component: feed
+    }, {
+        name: 'square',
+        path: '/square',
+        component: square
     }]
 })
 
