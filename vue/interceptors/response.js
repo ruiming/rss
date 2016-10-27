@@ -1,7 +1,9 @@
+import router from '../router.js';
+
 export default function(response) {
     if(response.status === 401) {
-        if(!['/auth/login', '/auth/register'].includes(response.url)) {
-            window.location.href = '#/login';
+        if(!['/auth/login', '/auth/register', '/api/user'].includes(response.url)) {
+            router.push({name: 'login'});
         }
     } else {
         var data = response.body.data;

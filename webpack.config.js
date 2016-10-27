@@ -1,13 +1,33 @@
 var path = require('path');
 var webpack = require('webpack');
-
-module.exports = {
-    entry: './vue/main.js',
-    output: {
+var isProduction = function() {
+    return process.env.NODE_ENV === 'production';
+}
+var plugins = [], output;
+if(isProduction()) {
+    plugins.push(
+        new webpack.optimize.UglifyJsPlugin({
+            test: /(\.vue|\.js)$/,
+            compress: {
+                warnings: false
+            },
+        })
+    );
+    output = {
+        path: path.resolve(__dirname, './public/js'),
+        publicPath: '/public/js/',
+        filename: 'build.js'
+    }
+} else {
+    output = {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/dist/',
         filename: 'build.js'
-    },
+    }
+}
+module.exports = {
+    entry: './vue/main.js',
+    output: output,
     resolveLoader: {
         root: path.join(__dirname, 'node_modules')
     },
@@ -36,21 +56,18 @@ module.exports = {
             }
         }]
     },
-    resolve: {
-        alias: {vue: 'vue/dist/vue.js'}
+    plugins: plugins,
+    externals: {
+        "vue": 'Vue',
+        "bootstrap": 'bootstrap',
+        "underscore": '_',
+        'vue-resource': 'VueResource',
+        'vue-router': 'VueRouter'
     },
-    plugins: [
-        new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery",
-            "window.jQuery": "jquery",
-            root: "window",
-            _: "underscore"
-        })
-    ],
     devServer: {
+        hot: true,
         historyApiFallback: true,
-        noInfo: true,
+        port: 7000,
         proxy: {
             '/api/*': {
                 target: 'http://127.0.0.1:3000'
@@ -64,11 +81,16 @@ module.exports = {
             '/css/*': {
                 target: 'http://127.0.0.1:3000'
             },
+            '/vue/*': {
+                target: 'http://127.0.0.1:3000'
+            },
             '/fonts/*': {
                 target: 'http://127.0.0.1:3000'
             },
+            '/js/*': {
+                target: 'http://127.0.0.1:3000'
+            }
         },
-        port: 8080        
     },
-    devtool: '#eval-source-map'
+    devtool: isProduction() ? null : '#eval-source-map'
 }

@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { User } from '../resource/resource.js';
 import msg from '../components/msg.vue';
 import headbar from '../components/headbar.vue';
 export default {
@@ -28,13 +29,19 @@ export default {
             error: []
         }
     },
+    beforeRouteEnter: function(to, from, next) {
+        return User.get().then(res => next(vm =>
+            vm.$router.back()
+        ), err => next());
+    },
     methods: {
         login: function(user) {
-           this.$http.post('/auth/login', user).then(response => {
-               this.$router.replace('/');
-           }, err => {
-               this.error.push(err.data.message);
-           })
+            this.error.length = 0;
+            this.$http.post('/auth/login', user).then(response => {
+                this.$router.replace('/');
+            }, err => {
+                this.error.push(err.data.message);
+            })
         }
     },
     components: {

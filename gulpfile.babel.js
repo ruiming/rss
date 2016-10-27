@@ -13,7 +13,6 @@ import sass from 'gulp-sass';
 import usemin from 'gulp-usemin';
 import htmlify from 'gulp-angular-htmlify';
 import minifier from 'gulp-uglify/minifier';
-import pump from 'pump';
 
 // Packaging JS dependence
 gulp.task('angular', () => {
@@ -80,18 +79,16 @@ gulp.task('template', () => {
 
 // Packaging own JS code
 gulp.task('js', () => {
-pump([
     gulp.src([
         'app/*.js',
         'app/**/*.js',
         'app/**/**/*.js',
-        'helper/help.js']),
-    plumber(),
-    ngAnnotate(),
-    babel(),
-    concat('rss.js'),
-    gulp.dest('public/js')
-])
+        'helper/help.js'])
+        .pipe(plumber())
+        .pipe(ngAnnotate())
+        .pipe(babel())
+        .pipe(concat('rss.js'))
+        .pipe(gulp.dest('public/js'));
 });
 
 // Packaging own CSS code
@@ -117,9 +114,12 @@ gulp.task('sass', () => {
         .pipe(gulp.dest('public/css'));
 });
 
-// Auto watch and build
-gulp.watch(['app/*.js', 'app/**/*.js', 'app/**/**/*.js', 'helper/help.js'], ['js']);
-gulp.watch(['app/*.scss', 'app/**/*.scss', 'app/**/**/*.scss', 'views/*.scss'], ['sass']);
-gulp.watch(['app/controller/**/*.html', 'app/component/**/*.html'], ['template']);
+gulp.task('watch', () => {
+    // Auto watch and build
+    gulp.watch(['app/*.js', 'app/**/*.js', 'app/**/**/*.js', 'helper/help.js'], ['js']);
+    gulp.watch(['app/*.scss', 'app/**/*.scss', 'app/**/**/*.scss', 'views/*.scss'], ['sass']);
+    gulp.watch(['app/controller/**/*.html', 'app/component/**/*.html'], ['template']);
+})
 // Task
-gulp.task('default', ['angular', 'css', 'font', 'js', 'sass', 'template']);
+gulp.task('default', ['angular', 'css', 'font', 'js', 'sass', 'template', 'watch']);
+gulp.task('build', ['angular', 'css', 'font', 'js', 'sass', 'template']);
