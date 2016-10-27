@@ -7,7 +7,7 @@
         <li class="list-group-item">
             <router-link :to="{name: 'feed', params: {id: post.feed_id}}" class="info">
                 <img class="favicon" :src="post.favicon" onerror="this.src='/img/rss.png';">
-                <p>{{post.feed_title}}<small>{{post.unread}}</small></p>
+                <p>{{post.feed_title}}<small>{{post.unread}} 篇未读</small></p>
             </router-link>
             <router-link :to="{name: 'post', params: {id: post._id}}" class="context">
                 <div class="title">

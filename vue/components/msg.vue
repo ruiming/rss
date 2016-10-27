@@ -14,7 +14,7 @@ export default {
 
 <style lang="sass">
 .msg {
-    margin: 10px;
+    margin: 10px 0;
     padding: 15px;
 }
 </style>
