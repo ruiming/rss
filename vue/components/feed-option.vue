@@ -2,25 +2,49 @@
 <div class="bottom feed-option">
     <ul class="list-group">
         <!-- id not defined when initial -->
-        <li class="list-group-item" v-on:click="mark()">
-            <span v-bind:class="{'icon-checkmark2': !read, 'icon-checkmark': read}"><small>收藏</small></span>
+        <li class="list-group-item" v-on:click="readall(posts)">
+            <span v-bind:class="{'icon-checkmark2': !read, 'icon-checkmark': read}">
+                <small v-if="!read">全部标记已读</small>
+                <small v-else>没有未读文章</small>
+            </span>
         </li>
-        <li class="list-group-item" v-on:click="mark()">
-            <span v-bind:class="{'icon-eye': !feeded, 'icon-eye-blocked': feeded}"><small>收藏</small></span>
+        <li class="list-group-item" v-on:click="feedit(feed)">
+            <span v-bind:class="{'icon-eye': !feeded, 'icon-eye-blocked': feeded}">
+                <small v-if="!feeded" >订阅</small>
+                <small v-else>取消订阅</small>
+            </span>
         </li>
     </ul>
 </div>
 </template>
 
 <script>
-import { Posts, Post } from '../resource/resource.js';
+import { Posts, Post, Feed } from '../resource/resource.js';
 import _ from 'underscore';
 export default {
     props: ['posts', 'feed'],
     methods: {
-        mark: function(post) {
+        readall: function(posts) {
+            if(!this.read) {
+                for(let post of posts) {
+                    post.read = true;
+                }
+                this.feed.unread = 0;
+                Posts.update({feed_id: this.feed.feed_id, type: 'read'});
+            } else {
+                return;
+            }
         },
-        love: function(status) {
+        feedit: function(feed) {
+            if(!this.feeded) {
+                Feed.save({feedlink: feed.absurl}).then(response => {
+                    feed.feed_time = Date.now();
+                });
+            } else {
+                Feed.delete({id: feed.feed_id}).then(response => {
+                    feed.feed_time = undefined;
+                })
+            }
         }
     },
     computed: {
@@ -28,7 +52,7 @@ export default {
             return this.feed.unread === 0;
         },
         feeded: function() {
-            return this.feed.feed_time === undefined;
+            return this.feed.feed_time !== undefined;
         }
     }
 }
