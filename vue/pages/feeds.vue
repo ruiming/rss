@@ -9,7 +9,8 @@
         </div>
         <router-link :to="{name: 'feed', params: {id: fee.feed_id}}" class="list-group-item" v-for="fee in feed">
             <img class="favicon" :src="fee.favicon" onerror="this.src='/img/rss.png';">
-            <p>{{fee.title}}<small v-if="fee.unread">{{fee.unread}}</small></p>
+            <p>{{fee.title}}</p>
+            <small v-if="fee.unread">{{fee.unread}} 篇未读</small>
         </router-link>
         </template>
     </div>
@@ -37,24 +38,31 @@ export default {
 </script>
 
 <style lang="sass">
-#feeds {
+.feed-group {
     font-size: 14px;
     font-weight: 500;
-    .feed-group {
-        p {
-            margin-bottom: 0;
-        }
-        small {
-            line-height: 1.7;
-            float: right;
-        }
-        .list-group-item {
-            color: #333;
-            padding: 12px 15px;
-            border-left: 0;
-            border-right: 0;
-            border-radius: 0;
-        }
+    p {
+        margin-bottom: 0;
+        position: absolute;
+        left: 45px;
+        right: 80px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    small {
+        line-height: 1.7;
+        float: right;
+        right: 0;
+    }
+    .list-group-item {
+        height: 42px;
+        position: relative;
+        color: #333;
+        padding: 12px 15px;
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
     }
 }
 </style>
