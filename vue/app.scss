@@ -25,6 +25,7 @@ a {
     bottom: 0;
     color: #616161;
     font-family: 'icomoon' !important;
+    background-color: white;
     border-top: 1px solid #eee;
     z-index: 1;
     ul {
@@ -187,4 +188,65 @@ h3 {
     pre .javascript .function {
         color: #8959a8;
     }
+}
+
+.cssload-loader{
+	display:block;
+	position:absolute;
+	height:4em;width:4em;
+	left:50%;
+	margin-top:-2em;
+	margin-left:-2em;
+	background-color:rgb(51,136,153);
+	border-radius:2.5em 2.5em 2.5em 2.5em;
+		-o-border-radius:2.5em 2.5em 2.5em 2.5em;
+		-ms-border-radius:2.5em 2.5em 2.5em 2.5em;
+		-webkit-border-radius:2.5em 2.5em 2.5em 2.5em;
+		-moz-border-radius:2.5em 2.5em 2.5em 2.5em;
+	box-shadow:inset 0 0 0 0.5em rgb(236,234,224);
+		-o-box-shadow:inset 0 0 0 0.5em rgb(236,234,224);
+		-ms-box-shadow:inset 0 0 0 0.5em rgb(236,234,224);
+		-webkit-box-shadow:inset 0 0 0 0.5em rgb(236,234,224);
+		-moz-box-shadow:inset 0 0 0 0.5em rgb(236,234,224);
+	background: linear-gradient(-45deg, rgb(0,153,0), rgb(0,153,0) 50%, rgb(204,204,0) 50%, rgb(204,204,0));
+		background: -o-linear-gradient(-45deg, rgb(0,153,0), rgb(0,153,0) 50%, rgb(204,204,0) 50%, rgb(204,204,0));
+		background: -ms-linear-gradient(-45deg, rgb(0,153,0), rgb(0,153,0) 50%, rgb(204,204,0) 50%, rgb(204,204,0));
+		background: -webkit-linear-gradient(-45deg, rgb(0,153,0), rgb(0,153,0) 50%, rgb(204,204,0) 50%, rgb(204,204,0));
+		background: -moz-linear-gradient(-45deg, rgb(0,153,0), rgb(0,153,0) 50%, rgb(204,204,0) 50%, rgb(204,204,0));
+	background-blend-mode: multiply;
+	border-top:5px solid rgb(0,153,0);
+	border-left:5px solid rgb(0,153,0);
+	border-bottom:5px solid rgb(204,204,0);
+	border-right:5px solid rgb(204,204,0);
+	animation:cssload-roto 1.15s infinite linear;
+		-o-animation:cssload-roto 1.15s infinite linear;
+		-ms-animation:cssload-roto 1.15s infinite linear;
+		-webkit-animation:cssload-roto 1.15s infinite linear;
+		-moz-animation:cssload-roto 1.15s infinite linear;
+}
+
+
+@keyframes cssload-roto {
+	0%{transform:rotateZ(0deg);}
+	100%{transform:rotateZ(360deg);}
+}
+
+@-o-keyframes cssload-roto {
+	0%{-o-transform:rotateZ(0deg);}
+	100%{-o-transform:rotateZ(360deg);}
+}
+
+@-ms-keyframes cssload-roto {
+	0%{-ms-transform:rotateZ(0deg);}
+	100%{-ms-transform:rotateZ(360deg);}
+}
+
+@-webkit-keyframes cssload-roto {
+	0%{-webkit-transform:rotateZ(0deg);}
+	100%{-webkit-transform:rotateZ(360deg);}
+}
+
+@-moz-keyframes cssload-roto {
+	0%{-moz-transform:rotateZ(0deg);}
+	100%{-moz-transform:rotateZ(360deg);}
 }

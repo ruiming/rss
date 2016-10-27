@@ -55,7 +55,7 @@ exports.create = async (ctx, next) => {
             req.on('response', res => {
                 if(res.statusCode != 200) {
                    res.on("data", chunk => {
-                      reject(chunk);
+                      reject('Error: 目的不可达, 404错误');
                    });
                 } else {
                     res.pipe(feedparser);

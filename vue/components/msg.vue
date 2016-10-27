@@ -1,7 +1,7 @@
 <template>
 <div v-if="msgs.length">
     <div v-for="msg in msgs">
-        <p>{{msg}}</p>
+        <p class="bg-danger msg">{{msg}}</p>
     </div>
 </div>
 </template>
@@ -13,5 +13,8 @@ export default {
 </script>
 
 <style lang="sass">
-
+.msg {
+    margin: 10px;
+    padding: 15px;
+}
 </style>

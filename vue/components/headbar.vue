@@ -19,7 +19,7 @@ export default {
     left: 0;
     right: 0;
     color: white;
-    z-index: 1;
+    z-index: 10;
     header {
         padding: 10px 0;
         background-color: #3f51b5;
