@@ -36,13 +36,13 @@ export default {
             posts: []
         }
     },
-    mounted: function() {
-        Posts.recent().then(response => {
-            this.posts = response.data.data
-            for(let post of this.posts) {
+    beforeRouteEnter: function(to, from, next) {
+        Posts.recent().then(response => next(vm => {
+            next.posts = response.data.data
+            for(let post of next.posts) {
                 post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
             }
-        });
+        }));
     },
     components: {
         headbar, navbar, empty

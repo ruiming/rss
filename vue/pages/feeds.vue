@@ -1,7 +1,7 @@
 <template>
 <div id="feeds">
     <headbar>订阅源</headbar>
-    <empty v-if="!feeds.default.length">还没有订阅源</empty>
+    <empty v-if="!feeds.default">还没有订阅源</empty>
     <div class="list-group feed-group center">
         <template v-for="(feed, folder) in feeds">
         <div class="list-group-item" v-if="folder !== 'default'">
@@ -30,8 +30,8 @@ export default {
             feeds: []
         }
     },
-    mounted: function() {
-        Feed.get().then(response => this.feeds = _.groupBy(response.data.data, 'folder'));
+    beforeRouteEnter: function(to, from, next) {
+        Feed.get().then(response => next(vm => vm.feeds = _.groupBy(response.data.data, 'folder')));
     },
     components: {
         headbar, navbar, empty

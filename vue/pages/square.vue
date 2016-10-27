@@ -39,11 +39,8 @@ export default {
     methods: {
 
     },
-    mounted: function() {
-        Feeds.popular({page: 0}).then(response => {
-            this.feeds = response.data.data;
-        })
-
+    beforeRouteEnter: function(to, from, next) {
+        Feeds.popular({page: 0}).then(response => next(vm => vm.feeds = response.data.data));
     },
     components: {
         headbar, navbar

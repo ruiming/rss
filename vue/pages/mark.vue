@@ -37,8 +37,8 @@ export default {
             Post.update({id: post._id}, {type: 'mark', revert: true});
         }
     },
-    mounted: function() {
-        Posts.get({type: 'mark'}).then(response => this.posts = response.data.data);
+    beforeRouteEnter: function(to, from, next) {
+        Posts.get({type: 'mark'}).then(response => next(vm => vm.posts = response.data.data));
     },
     components: {
         headbar, navbar, empty
