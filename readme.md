@@ -1,12 +1,24 @@
 ## RSS 订阅器
 
-基于 Angular1, Koa2, D3, Mongoose, Bootstrap, Underscore 的 RSS 订阅器.
+基于 Angular1, Vue2, Koa2, D3, Mongoose, Bootstrap, Underscore 的 RSS 订阅器.
+
+Web 桌面版基于 Angular1 开发
 
 ![image](https://raw.githubusercontent.com/ruiming/rss/master/public/img/preview.png)
 
+
+
+Web 手机版基于 Vue2 开发
+
+![image](https://raw.githubusercontent.com/ruiming/rss/master/public/img/preview2.png)
+
+
+
 ### 演示
 
-目前网站已经上线，欢迎试用[www.enjoyrss.com](https://www.enjoyrss.com/)
+目前网站已经上线，欢迎试用 [www.enjoyrss.com](https://www.enjoyrss.com/)
+
+
 
 ### 已完成功能
 
@@ -18,10 +30,14 @@
 - 查看星标订阅源文章和全部未读文章
 - 热门订阅文章
 
+
+
 ### TODO
 
 - 文件夹
 - 订阅源推荐
+
+
 
 ### 使用
 

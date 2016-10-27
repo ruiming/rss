@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "pm2 start production.json",
+    "dev": "pm2 start development.json",
     "angular": "pm2 start development.json",
     "vue": "webpack-dev-server --hot --open --inline --progress",
     "angular-dist": "gulp build",
