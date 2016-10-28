@@ -16,6 +16,7 @@ import request from 'request';
  * @link:   /auth/register
  * @param:  {string} email
  * @param:  {string} password
+ * @params: {boolean} json
  */
 exports.register = async (ctx, next) => {
     let email = /^([\w-_]+(?:\.[\w-_]+)*)@((?:[a-z0-9]+(?:-[a-zA-Z0-9]+)*)+\.[a-z]{2,6})$/i;
@@ -47,7 +48,11 @@ exports.register = async (ctx, next) => {
             let secure = config.ENV === 'production';
             ctx.cookies.set("XSRF-TOKEN", xsrf, {httpOnly: false, secure: secure,  overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
             ctx.cookies.set("jwt", token, {httpOnly: true, secure: secure, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
-            await ctx.redirect('/');
+            if(ctx.request.body.json === 'true' || ctx.request.body.json === true) {
+                ctx.body = { success: true, body: { jwt: token, xsrf: xsrf } };
+            } else {
+                await ctx.redirect('/');
+            }
         } else {
             ctx.throw(401, '邮箱已经被注册了');
         }
@@ -71,7 +76,11 @@ exports.login = async (ctx, next) => {
         let secure = config.ENV === 'production';
         ctx.cookies.set("XSRF-TOKEN", xsrf, {httpOnly: false, secure: secure, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
         ctx.cookies.set("jwt", token, {httpOnly: true, secure: secure, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
-        await ctx.redirect('/');
+        if(ctx.request.body.json === 'true' || ctx.request.body.json === true) {
+            ctx.body = { success: true, body: { jwt: token, xsrf: xsrf } };
+        } else {
+            await ctx.redirect('/');
+        }
     } else {
         let exist = await UserModel.findOne({email: ctx.request.body.email});
         if(exist && exist._id)  ctx.throw(401, '密码错误');
