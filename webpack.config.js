@@ -15,7 +15,7 @@ if(isProduction()) {
     );
     output = {
         path: path.resolve(__dirname, './public/js/'),
-        publicPath: '/public/js/',
+        publicPath: '/js/',
         filename: 'build.js'
     }
 } else {
@@ -59,7 +59,6 @@ module.exports = {
     plugins: plugins,
     externals: {
         "vue": 'Vue',
-        "bootstrap": 'bootstrap',
         "underscore": '_',
         'vue-resource': 'VueResource',
         'vue-router': 'VueRouter'

@@ -8,6 +8,8 @@ import cookie from 'cookie';
 import _ from 'underscore';
 import 'timeago.js';
 import 'normalize.css';
+import '../public/css/bootstrap.vue.min.css';
+import '../public/css/icomoon.css';
 import 'github-markdown-css';
 import './app.scss';
 
