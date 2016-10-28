@@ -54,10 +54,10 @@ exports.main = async (ctx, next) => {
         .populate('feed_id', {favicon: 1, title: 1}).lean().exec();
     Promise.all(_.map(items, item => new Promise(async (resolve, reject) => {
             let userposts = await UserPostModel.find({feed_id: item.feed_id, user_id: user_id, read: true});
-            await PostModel.find({feed_id: item.feed_id}).lean().exec((err, posts) => {
+            await PostModel.find({feed_id: item.feed_id}).sort('pubdate').lean().exec((err, posts) => {
                 let count = posts.length - userposts.length,
                 read_ids = _.invoke(_.pluck(userposts, 'post_id'), 'toString');
-                for(let post of posts) {
+                for(let post of posts.reverse()) {
                     if(!read_ids.includes(post._id.toString())) {
                         post.summary = post.description.replace(/<[^>]+>/g,"").slice(0, 550);
                         post.description = post.description.match(/<img\s+src="(.*?)"/);

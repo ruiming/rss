@@ -46,7 +46,7 @@ export default {
     p {
         margin-bottom: 0;
         position: absolute;
-        left: 45px;
+        left: 50px;
         right: 80px;
         overflow: hidden;
         white-space: nowrap;
