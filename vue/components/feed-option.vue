@@ -29,7 +29,7 @@ export default {
                 for(let post of posts) {
                     post.read = true;
                 }
-                this.feed.unread = 0;
+                this.$set(this.feed, 'unread', 0);
                 Posts.update({feed_id: this.feed.feed_id, type: 'read'});
             } else {
                 return;
@@ -38,11 +38,13 @@ export default {
         feedit: function(feed) {
             if(!this.feeded) {
                 Feed.save({feedlink: feed.absurl}).then(response => {
-                    this.feed.feed_time = Date.now();
+                    this.$set(this.feed, 'feed_time', Date.now());
+                    console.log(this.feed);
                 });
             } else {
-                Feed.delete({id: feed.feed_id}).then(response => {
-                    this.feed.feed_time = undefined;
+                Feed.delete({id: feed.feed_id || feed._id}).then(response => {
+                    this.$set(this.feed, 'feed_time', undefined);
+                    console.log(this.feed);
                 })
             }
         }

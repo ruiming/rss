@@ -14,7 +14,7 @@ if(isProduction()) {
         })
     );
     output = {
-        path: path.resolve(__dirname, './public/js'),
+        path: path.resolve(__dirname, './public/js/'),
         publicPath: '/public/js/',
         filename: 'build.js'
     }
