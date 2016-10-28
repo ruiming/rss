@@ -8,6 +8,7 @@ import mark from './pages/mark.vue';
 import post from './pages/post.vue';
 import feed from './pages/feed.vue';
 import square from './pages/square.vue';
+import bus from './bus.js';
 
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -47,5 +48,8 @@ const router = new VueRouter({
         component: square
     }]
 });
-
+router.beforeEach((to, from, next) => {
+    bus.$emit('EXPAND', false);
+    next();
+});
 export default router;

@@ -1,4 +1,8 @@
+html {
+    height: 100%;
+}
 body {
+    height: calc(100% - 83px);
     color: #333;
     font-size: 14px;
 }
