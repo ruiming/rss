@@ -2,7 +2,7 @@
 <div>
     <headbar>订阅源</headbar>
     <div class="center" id="feed">
-        <div class="feed-header">
+        <div class="feed-header" v-bind:class="{expand2: expand}">
             <img :src="feed.favicon" onerror="this.src='/img/rss.png';">
             <h1>{{feed.title}}<small v-if="feed.unread">{{feed.unread}}</small></h1>
         </div>
@@ -49,12 +49,17 @@ import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
 import feedOption from '../components/feed-option.vue';
 import timeago from 'timeago.js'
+import bus from '../bus.js';
 export default {
     data() {
         return {
             feed: {},
-            posts: []
+            posts: [],
+            expand: false
         }
+    },
+    created: function() {
+        bus.$on('EXPAND', status => this.expand = status);
     },
     mounted: function() {
         Feed.get({id: this.$route.params.id}).then(response => {
@@ -88,6 +93,7 @@ export default {
     margin-top: 53px;
 }
 .feed-header {
+    transition: 0.3s linear all;
     position: fixed;
     top: 40px;
     left: 0;

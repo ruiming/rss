@@ -1,5 +1,5 @@
 <template>
-<div class="bottom">
+    <div class="bottom" v-bind:class="{expand2: expand}">
     <ul class="list-group">
         <!-- id not defined when initial -->
         <router-link :to="{name: 'post', params: {id: pre||post._id||0}}" replace class="list-group-item">
@@ -21,8 +21,17 @@
 <script>
 import { Posts, Post } from '../resource/resource.js';
 import _ from 'underscore';
+import bus from '../bus.js';
 export default {
     props: ['post', 'status', 'pre', 'next'],
+    data() {
+        return {
+            expand: false
+        }
+    },
+    created: function() {
+        bus.$on('EXPAND', status => this.expand = status)
+    },
     methods: {
         mark: function(post) {
             if(this.status === null)    this.status = {};
