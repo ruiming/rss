@@ -39,12 +39,10 @@ export default {
             if(!this.feeded) {
                 Feed.save({feedlink: feed.absurl}).then(response => {
                     this.$set(this.feed, 'feed_time', Date.now());
-                    console.log(this.feed);
                 });
             } else {
                 Feed.delete({id: feed.feed_id || feed._id}).then(response => {
                     this.$set(this.feed, 'feed_time', undefined);
-                    console.log(this.feed);
                 })
             }
         }
