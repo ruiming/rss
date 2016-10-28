@@ -12,7 +12,7 @@ import square from './pages/square.vue';
 Vue.use(VueRouter);
 const router = new VueRouter({
     mode: 'history',
-    base: __dirname,
+    base: '/',
     routes: [{
         name: 'login',
         path: '/login',
