@@ -18,19 +18,28 @@ import request from 'request';
  * @param:  {string} password
  * @params: {boolean} json
  */
-exports.register = async (ctx, next) => {
+exports.register = async(ctx, next) => {
     let email = /^([\w-_]+(?:\.[\w-_]+)*)@((?:[a-z0-9]+(?:-[a-zA-Z0-9]+)*)+\.[a-z]{2,6})$/i;
-    if(ctx.request.body.password.length < 6 || ctx.request.body.password.length > 18) ctx.throw(401, '密码长度有误');
-    else if(!email.test(ctx.request.body.email)) ctx.throw(401, '邮箱有误');
+    if (ctx.request.body.password.length < 6 || ctx.request.body.password.length > 18) ctx.throw(401, '密码长度有误');
+    else if (!email.test(ctx.request.body.email)) ctx.throw(401, '邮箱有误');
     else {
-        let req = request({url:`https://www.gravatar.com/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`, headers: {'User-Agent': 'request'}});
-        let user = null, result = null;
-        await new Promise(async (resolve, reject) => {
-            req.on('data', async (data) => {
-                if(JSON.parse(data.toString()).entry) {
+        let req = request({
+            url: `https://www.gravatar.com/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`,
+            headers: {
+                'User-Agent': 'request'
+            }
+        });
+        let user = null,
+            result = null;
+        await new Promise(async(resolve, reject) => {
+            req.on('data', async(data) => {
+                if (JSON.parse(data.toString()).entry) {
                     data = JSON.parse(data.toString()).entry[0];
                 } else {
-                    data = {preferredUsername: ctx.request.body.email.split('@')[0], thumbnailUrl: '/img/avatar.png'};
+                    data = {
+                        preferredUsername: ctx.request.body.email.split('@')[0],
+                        thumbnailUrl: '/img/avatar.png'
+                    };
                 }
                 user = new UserModel({
                     email: ctx.request.body.email.trim(),
@@ -42,14 +51,33 @@ exports.register = async (ctx, next) => {
                 resolve();
             });
         });
-        if(result && result._id) {
+        if (result && result._id) {
             let xsrf = SHA256(_.random(999999999)).toString();
-            let token = jwt.sign({id: result._id, xsrf: xsrf}, config.APP.JWT_KEY);
+            let token = jwt.sign({
+                id: result._id,
+                xsrf: xsrf
+            }, config.APP.JWT_KEY);
             let secure = config.ENV === 'production';
-            ctx.cookies.set("XSRF-TOKEN", xsrf, {httpOnly: false, secure: secure,  overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
-            ctx.cookies.set("jwt", token, {httpOnly: true, secure: secure, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
-            if(ctx.request.body.json === 'true' || ctx.request.body.json === true) {
-                ctx.body = { success: true, body: { jwt: token, xsrf: xsrf } };
+            ctx.cookies.set("XSRF-TOKEN", xsrf, {
+                httpOnly: false,
+                secure: secure,
+                overwrite: true,
+                expires: new Date(new Date().getTime() + 5184000000)
+            });
+            ctx.cookies.set("jwt", token, {
+                httpOnly: true,
+                secure: secure,
+                overwrite: true,
+                expires: new Date(new Date().getTime() + 5184000000)
+            });
+            if (ctx.request.body.json === 'true' || ctx.request.body.json === true) {
+                ctx.body = {
+                    success: true,
+                    body: {
+                        jwt: token,
+                        xsrf: xsrf
+                    }
+                };
             } else {
                 await ctx.redirect('/');
             }
@@ -66,24 +94,46 @@ exports.register = async (ctx, next) => {
  * @param:  {string} email
  * @param:  {string} password
  */
-exports.login = async (ctx, next) => {
+exports.login = async(ctx, next) => {
     let result = await UserModel.findOne({
-        email: ctx.request.body.email, 
-        password: SHA256(ctx.request.body.password).toString()});
+        email: ctx.request.body.email,
+        password: SHA256(ctx.request.body.password).toString()
+    });
     let xsrf = SHA256(_.random(999999999)).toString();
-    if(result && result._id) {
-        let token = jwt.sign({id: result._id, xsrf: xsrf}, config.APP.JWT_KEY);
+    if (result && result._id) {
+        let token = jwt.sign({
+            id: result._id,
+            xsrf: xsrf
+        }, config.APP.JWT_KEY);
         let secure = config.ENV === 'production';
-        ctx.cookies.set("XSRF-TOKEN", xsrf, {httpOnly: false, secure: secure, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
-        ctx.cookies.set("jwt", token, {httpOnly: true, secure: secure, overwrite: true, expires: new Date(new Date().getTime() + 5184000000)});
-        if(ctx.request.body.json === 'true' || ctx.request.body.json === true) {
-            ctx.body = { success: true, body: { jwt: token, xsrf: xsrf } };
+        ctx.cookies.set("XSRF-TOKEN", xsrf, {
+            httpOnly: false,
+            secure: secure,
+            overwrite: true,
+            expires: new Date(new Date().getTime() + 5184000000)
+        });
+        ctx.cookies.set("jwt", token, {
+            httpOnly: true,
+            secure: secure,
+            overwrite: true,
+            expires: new Date(new Date().getTime() + 5184000000)
+        });
+        if (ctx.request.body.json === 'true' || ctx.request.body.json === true) {
+            ctx.body = {
+                success: true,
+                body: {
+                    jwt: token,
+                    xsrf: xsrf
+                }
+            };
         } else {
             await ctx.redirect('/');
         }
     } else {
-        let exist = await UserModel.findOne({email: ctx.request.body.email});
-        if(exist && exist._id)  ctx.throw(401, '密码错误');
+        let exist = await UserModel.findOne({
+            email: ctx.request.body.email
+        });
+        if (exist && exist._id) ctx.throw(401, '密码错误');
         else ctx.throw(401, '邮箱未注册');
     }
 }
@@ -96,5 +146,8 @@ exports.login = async (ctx, next) => {
 exports.logout = (ctx, next) => {
     ctx.clearcookies();
     ctx.status = 401;
-    ctx.body = { success: true, message: '已退出系统' };
+    ctx.body = {
+        success: true,
+        message: '已退出系统'
+    };
 }

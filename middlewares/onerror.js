@@ -1,28 +1,40 @@
 /**
  * 错误处理中间件
  */
-module.exports = function() {
-    return async (ctx, next) => {
+module.exports = function () {
+    return async(ctx, next) => {
         try {
             await next();
         } catch (err) {
-            if(401 === err.status && !ctx.mobile) {
-                if([null, undefined].includes(err)) err = 'Unknown';
+            if (401 === err.status && !ctx.mobile) {
+                if ([null, undefined].includes(err)) err = 'Unknown';
                 ctx.clearcookies();
-                if(ctx.request.body.email) {
-                    if(ctx.request.body.json === 'true' || ctx.request.body.json === true) {
+                if (ctx.request.body.email) {
+                    if (ctx.request.body.json === 'true' || ctx.request.body.json === true) {
                         ctx.status = 401;
-                        ctx.body = { success: false, message: err.toString() };
+                        ctx.body = {
+                            success: false,
+                            message: err.toString()
+                        };
                     } else {
-                        await ctx.render('login.ejs', {err: err, email: ctx.request.body.email});
+                        await ctx.render('login.ejs', {
+                            err: err,
+                            email: ctx.request.body.email
+                        });
                     }
                 } else {
                     ctx.status = 401;
-                    ctx.body = { success: false, message: err.toString() };
+                    ctx.body = {
+                        success: false,
+                        message: err.toString()
+                    };
                 }
             } else {
                 ctx.status = (err && err.status) || 404;
-                ctx.body = { success: false, message: err.toString() };
+                ctx.body = {
+                    success: false,
+                    message: err.toString()
+                };
             }
         }
     }

@@ -1,18 +1,23 @@
 html {
     font-size: 14px;
 }
+
 body {
-    color: #333;    
+    color: #333;
 }
+
 h1 {
     font-size: 2.0rem;
 }
+
 h2 {
     font-size: 1.6rem;
 }
+
 h3 {
     font-size: 1.4rem;
 }
+
 .page-header {
     img {
         width: 40px;
@@ -25,6 +30,7 @@ h3 {
         margin-top: 12px;
     }
 }
+
 .auth {
     padding: 30px 20px;
     text-align: center;
@@ -35,6 +41,7 @@ h3 {
         width: 100px;
     }
 }
+
 .bg-danger {
     padding: 12px;
 }

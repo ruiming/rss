@@ -1,10 +1,11 @@
 var path = require('path');
 var webpack = require('webpack');
-var isProduction = function() {
+var isProduction = function () {
     return process.env.NODE_ENV === 'production';
 }
-var plugins = [], output;
-if(isProduction()) {
+var plugins = [],
+    output;
+if (isProduction()) {
     plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             test: /(\.vue|\.js)$/,
@@ -52,7 +53,7 @@ module.exports = {
             test: /\.(png|jpg|gif|svg)$/,
             loader: 'file',
             query: {
-            name: '[name].[ext]?[hash]'
+                name: '[name].[ext]?[hash]'
             }
         }]
     },

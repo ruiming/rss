@@ -30,7 +30,7 @@ global.Promise = require('bluebird');
 var app = new Koa();
 var bodyparser = new Bodyparser();
 
-if(config.ENV === 'production') {
+if (config.ENV === 'production') {
     mongoose.connect(`mongodb://${config.MONGODB.USER}:${config.MONGODB.PASSWORD}@${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`);
     app.use(enforceHttps());
     app.use(enforceWww());
@@ -49,28 +49,37 @@ app.use(json());
 app.use(convert(bodyparser));
 app.use(convert(logger()))
 app.use(views(__dirname + '/views', {
-  extension: 'ejs'
+    extension: 'ejs'
 }));
-app.use(convert(serve(path.resolve(__dirname, 'public'), {defer: true})));
+app.use(convert(serve(path.resolve(__dirname, 'public'), {
+    defer: true
+})));
 app.use(favicon(__dirname + '/public/img/rss.png'));
 app.use(xsrf());
 app.use(onerror());
 
 // 后端视图处理 (Unprotected)
 app.use(handel.routes())
-   .use(handel.allowedMethods());
+    .use(handel.allowedMethods());
 
 // Below needs JWT verfiy
-app.use(jwt({ secret: config.APP.JWT_KEY, algorithm: 'RS256' }).unless({ path: [/^\/css|js|img|fonts/] }));
+app.use(jwt({
+    secret: config.APP.JWT_KEY,
+    algorithm: 'RS256'
+}).unless({
+    path: [/^\/css|js|img|fonts/]
+}));
 
 // API (Protected)
 app.use(api.routes())
-   .use(api.allowedMethods());
+    .use(api.allowedMethods());
 app.use(nghtml5());
 http.createServer(app.callback()).listen(config.PORT);
 // Production Only
-if(config.ENV === 'production') {
-    const options = { key: config.APP.SSL_KEY, cert: config.APP.SSL_CERT }; 
+if (config.ENV === 'production') {
+    const options = {
+        key: config.APP.SSL_KEY,
+        cert: config.APP.SSL_CERT
+    };
     http2.createServer(options, app.callback()).listen(443);
 }
-

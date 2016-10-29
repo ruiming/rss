@@ -11,5 +11,5 @@ try {
     console.log(`Load config: [${env}] ${file}`);
 } catch (err) {
     console.error(`Cannot load config: [${env}] ${file}`);
-    throw err;    
+    throw err;
 }

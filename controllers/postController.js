@@ -15,15 +15,38 @@ import _ from 'underscore';
  * @method: get
  * @link:   /api/post/{id}
  */
-exports.listOne = async (ctx, next) => {
-    let id = ctx.params.id, user_id = ctx.state.user.id, result, readresult;
-    await Promise.all([Promise.resolve().then(async () => result = await PostModel.findOne({_id: id})),
-            Promise.resolve().then(async () => readresult = await UserPostModel.findOne({post_id: id, user_id: user_id}))]);
-    if(result && result._id) {
-        let posts = await PostModel.find({feed_id: result.feed_id}, {_id: 1}).sort({pubdate: -1});
+exports.listOne = async(ctx, next) => {
+    let id = ctx.params.id,
+        user_id = ctx.state.user.id,
+        result, readresult;
+    await Promise.all([Promise.resolve().then(async() => result = await PostModel.findOne({
+            _id: id
+        })),
+        Promise.resolve().then(async() => readresult = await UserPostModel.findOne({
+            post_id: id,
+            user_id: user_id
+        }))
+    ]);
+    if (result && result._id) {
+        let posts = await PostModel.find({
+            feed_id: result.feed_id
+        }, {
+            _id: 1
+        }).sort({
+            pubdate: -1
+        });
         posts = _.invoke(_.flatten(_.pluck(posts, '_id'), true), 'toString');
-        let pre = posts[posts.indexOf(id) - 1], next = posts[posts.indexOf(id) + 1];
-        return ctx.body = { success: true, data: { result: result, detail: readresult, pre: pre, next: next } };
+        let pre = posts[posts.indexOf(id) - 1],
+            next = posts[posts.indexOf(id) + 1];
+        return ctx.body = {
+            success: true,
+            data: {
+                result: result,
+                detail: readresult,
+                pre: pre,
+                next: next
+            }
+        };
     } else {
         ctx.throw(404, result);
     }
@@ -36,23 +59,34 @@ exports.listOne = async (ctx, next) => {
  * @param:  {string} type [read|mark|love|finish]
  * @param:  {boolean} revert [true|false]
  */
-exports.update = async (ctx, next) => {
-    let id = ctx.params.id, user_id = ctx.state.user.id,
-        type = ctx.request.body.type && ctx.request.body.type.trim(), revert = ctx.request.body.revert === true, feed = ctx.request.body.feed === true;
-    if(!['read', 'mark', 'love', 'finish'].includes(type)) {
+exports.update = async(ctx, next) => {
+    let id = ctx.params.id,
+        user_id = ctx.state.user.id,
+        type = ctx.request.body.type && ctx.request.body.type.trim(),
+        revert = ctx.request.body.revert === true,
+        feed = ctx.request.body.feed === true;
+    if (!['read', 'mark', 'love', 'finish'].includes(type)) {
         ctx.throw(404, '参数非法');
     } else {
-        setTimeout(async () => {
+        setTimeout(async() => {
             let items = id.split(',');
-            for(let item of items) {
+            for (let item of items) {
                 let state, res;
-                await Promise.all([Promise.resolve().then(async () => state = await UserPostModel.findOne({user_id: user_id, post_id: item})),
-                    Promise.resolve().then(async () => res = await PostModel.findById(item))]).catch(e => e);
-                if(!(res && res._id))   continue;
-                let basic = {user_id: user_id, feed_id: res.feed_id, post_id: item};
-                if(state && state._id) {
+                await Promise.all([Promise.resolve().then(async() => state = await UserPostModel.findOne({
+                        user_id: user_id,
+                        post_id: item
+                    })),
+                    Promise.resolve().then(async() => res = await PostModel.findById(item))
+                ]).catch(e => e);
+                if (!(res && res._id)) continue;
+                let basic = {
+                    user_id: user_id,
+                    feed_id: res.feed_id,
+                    post_id: item
+                };
+                if (state && state._id) {
                     state[type] = revert ? !state[type] : true;
-                    if(!revert) state[type + '_date'] = Date.now();
+                    if (!revert) state[type + '_date'] = Date.now();
                     state.save();
                 } else {
                     basic[type] = true;
@@ -62,6 +96,9 @@ exports.update = async (ctx, next) => {
                 }
             }
         }, 0);
-        ctx.body = { success: true, data: '操作成功' };
+        ctx.body = {
+            success: true,
+            data: '操作成功'
+        };
     }
 }
