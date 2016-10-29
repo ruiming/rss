@@ -4,8 +4,8 @@
     <div class="center">
         <div class="form-group search">
             <div class="input-group">
-                <input type="url" class="form-control" placeholder="搜索订阅源" v-model="url">
-                <div class="input-group-addon" v-on:click="search(url)">
+                <input type="url" class="form-control" placeholder="搜索订阅源" v-model="url"@keyup.enter="search(url)" >
+                <div class="input-group-addon" @click="search(url)">
                     <span class="icon-search"></span>
                 </div>
             </div>
