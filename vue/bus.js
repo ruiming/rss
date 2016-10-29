@@ -1,5 +1,5 @@
 import Vue from 'vue';
 
-var bus = new Vue();
+const bus = new Vue();
 
 export default bus;
