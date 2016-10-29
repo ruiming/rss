@@ -7,10 +7,6 @@ import { MD5, SHA256, AES } from 'crypto-js';
 import request from 'request';
 
 /**
- * 这里主要是登录注册用
- */
-
-/**
  * 注册用户
  * @method: post
  * @link:   /auth/register
@@ -23,14 +19,14 @@ exports.register = async(ctx, next) => {
     if (ctx.request.body.password.length < 6 || ctx.request.body.password.length > 18) ctx.throw(401, '密码长度有误');
     else if (!email.test(ctx.request.body.email)) ctx.throw(401, '邮箱有误');
     else {
-        let req = request({
-            url: `https://www.gravatar.com/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`,
-            headers: {
-                'User-Agent': 'request'
-            }
-        });
         let user = null,
-            result = null;
+            result = null,
+            req = request({
+                url: `https://www.gravatar.com/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`,
+                headers: {
+                    'User-Agent': 'request'
+                }
+            });
         await new Promise(async(resolve, reject) => {
             req.on('data', async(data) => {
                 if (JSON.parse(data.toString()).entry) {
@@ -52,12 +48,12 @@ exports.register = async(ctx, next) => {
             });
         });
         if (result && result._id) {
-            let xsrf = SHA256(_.random(999999999)).toString();
-            let token = jwt.sign({
-                id: result._id,
-                xsrf: xsrf
-            }, config.APP.JWT_KEY);
-            let secure = config.ENV === 'production';
+            let xsrf = SHA256(_.random(999999999)).toString(),
+                secure = config.ENV === 'production',
+                token = jwt.sign({
+                    id: result._id,
+                    xsrf: xsrf
+                }, config.APP.JWT_KEY);
             ctx.cookies.set("XSRF-TOKEN", xsrf, {
                 httpOnly: false,
                 secure: secure,
@@ -95,17 +91,17 @@ exports.register = async(ctx, next) => {
  * @param:  {string} password
  */
 exports.login = async(ctx, next) => {
-    let result = await UserModel.findOne({
-        email: ctx.request.body.email,
-        password: SHA256(ctx.request.body.password).toString()
-    });
-    let xsrf = SHA256(_.random(999999999)).toString();
+    let xsrf = SHA256(_.random(999999999)).toString(),
+        result = await UserModel.findOne({
+            email: ctx.request.body.email,
+            password: SHA256(ctx.request.body.password).toString()
+        });
     if (result && result._id) {
-        let token = jwt.sign({
-            id: result._id,
-            xsrf: xsrf
-        }, config.APP.JWT_KEY);
-        let secure = config.ENV === 'production';
+        let secure = config.ENV === 'production', 
+            token = jwt.sign({
+                id: result._id,
+                xsrf: xsrf
+            }, config.APP.JWT_KEY);
         ctx.cookies.set("XSRF-TOKEN", xsrf, {
             httpOnly: false,
             secure: secure,

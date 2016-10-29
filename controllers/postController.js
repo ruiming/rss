@@ -6,11 +6,6 @@ import request from 'request';
 import _ from 'underscore';
 
 /**
- * 这里主要是用户操作一个订阅源下面的文章的接口
- */
-
-
-/**
  * 获取一篇文章的详细信息
  * @method: get
  * @link:   /api/post/{id}
@@ -19,7 +14,8 @@ exports.listOne = async(ctx, next) => {
     let id = ctx.params.id,
         user_id = ctx.state.user.id,
         result, readresult;
-    await Promise.all([Promise.resolve().then(async() => result = await PostModel.findOne({
+    await Promise.all([
+        Promise.resolve().then(async() => result = await PostModel.findOne({
             _id: id
         })),
         Promise.resolve().then(async() => readresult = await UserPostModel.findOne({

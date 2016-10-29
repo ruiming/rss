@@ -1,10 +1,6 @@
 import UserModel from '../models/user';
 
 /**
- * 这里主要是涉及用户的接口
- */
-
-/**
  * 获取用户信息
  * @method: get 
  * @link:   /user

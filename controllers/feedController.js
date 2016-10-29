@@ -7,9 +7,6 @@ import request from 'request';
 import help from '../helper/help';
 import fetchFavicon from 'favicon-getter';
 import _ from 'underscore';
-/**
- * 这里主要是订阅源管理的接口
- */
 
 /**
  * 创建/订阅 订阅源
@@ -19,13 +16,13 @@ import _ from 'underscore';
  * @param:  search
  */
 exports.create = async(ctx, next) => {
-    let feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim();
-    let search = ctx.request.query.search === 'true';
+    let feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim(),
+        search = ctx.request.query.search === 'true';
     if (!help.checkUrl(feedlink)) {
         ctx.throw(404, 'URL 不合法');
     }
-    let user_id = ctx.state.user.id;
-    let feedparser = new FeedParser(),
+    let user_id = ctx.state.user.id,
+        feedparser = new FeedParser(),
         feed = new FeedModel(),
         _id;
     // 查找数据库是否有该订阅源
@@ -175,7 +172,8 @@ exports.list = async(ctx, next) => {
     let id = ctx.params.id,
         user_id = ctx.state.user.id;
     let unreadcount, count;
-    await Promise.all([Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
+    await Promise.all([
+        Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
             feed_id: id,
             user_id: user_id,
             read: true
@@ -185,12 +183,11 @@ exports.list = async(ctx, next) => {
         }))
     ]);
     let result = await UserFeedModel.findOne({
-            user_id: user_id,
-            feed_id: id
-        }, {
-            user_id: 0
-        }).populate('feed_id').lean()
-        .exec((err, data) => data ? data.unread = count - unreadcount : data);
+        user_id: user_id,
+        feed_id: id
+    }, {
+        user_id: 0
+    }).populate('feed_id').lean().exec((err, data) => data ? data.unread = count - unreadcount : data);
     if (result && result._id) {
         ctx.body = {
             success: true,
@@ -229,7 +226,8 @@ exports.listAll = async(ctx, next) => {
         }).lean().exec();
     Promise.all(_.map(items, item => new Promise(async(resolve, reject) => {
         let unreadcount, count;
-        await Promise.all([Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
+        await Promise.all([
+            Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
                 feed_id: item.feed_id,
                 user_id: user_id,
                 read: true

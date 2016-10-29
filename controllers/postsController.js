@@ -24,12 +24,12 @@ exports.list = async(ctx, next) => {
         feed_id = ctx.request.query.feed_id,
         result, detail;
     if (['mark', 'unread'].includes(type)) {
-        let feeds = await UserFeedModel.find({
+        let posts = [],
+            feeds = await UserFeedModel.find({
                 user_id: user_id
             }, {
                 feed_id: 1
-            }),
-            posts = [];
+            });
         await Promise.all(feeds.map(feed => new Promise(async(resolve, reject) => {
             let query = {
                 feed_id: feed.feed_id[0],
@@ -61,7 +61,8 @@ exports.list = async(ctx, next) => {
             data: posts
         };
     } else if (feed_id !== undefined) {
-        await Promise.all([Promise.resolve().then(async() => result = await PostModel.find({
+        await Promise.all([
+            Promise.resolve().then(async() => result = await PostModel.find({
                 feed_id: feed_id
             }, {
                 description: 0,
