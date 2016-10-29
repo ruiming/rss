@@ -26,9 +26,7 @@ export default {
         User.get().then(response => this.user = response.data.data );
     },
     created: function() {
-        bus.$on('EXPAND', status => {
-            this.expand = status;
-        });
+        bus.$on('EXPAND', status => this.expand = status );
     }
 }
 </script>

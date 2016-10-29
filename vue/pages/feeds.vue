@@ -31,7 +31,9 @@ export default {
         }
     },
     beforeRouteEnter: function(to, from, next) {
-        Feed.get().then(response => next(vm => vm.feeds = _.groupBy(response.data.data, 'folder')));
+        Feed.get().then(response => 
+            next(vm => vm.feeds = _.groupBy(response.data.data, 'folder'))
+        );
     },
     components: {
         headbar, navbar, empty

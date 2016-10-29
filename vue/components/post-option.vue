@@ -36,12 +36,22 @@ export default {
         mark: function(post) {
             if(this.status === null)    this.status = {};
             this.$set(this.status, 'mark', !this.smark);
-            Post.update({id: post._id}, {type: 'mark', revert: true});
+            Post.update({
+                id: post._id
+            }, {
+                type: 'mark', 
+                revert: true
+            });
         },
         love: function(post) {
             if(this.status === null)    this.status = {};
             this.$set(this.status, 'love', !this.slove);
-            Post.update({id: post._id}, {type: 'love', revert: true});
+            Post.update({
+                id: post._id
+            }, {
+                type: 'love', 
+                revert: true
+            });
         }
     },
     computed: {

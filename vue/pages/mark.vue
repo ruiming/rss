@@ -34,11 +34,20 @@ export default {
     methods: {
         mark: function(post) {
             this.$set(post, 'mark', !post.mark);
-            Post.update({id: post._id}, {type: 'mark', revert: true});
+            Post.update({
+                id: post._id
+            }, {
+                type: 'mark', 
+                revert: true}
+            );
         }
     },
     beforeRouteEnter: function(to, from, next) {
-        Posts.get({type: 'mark'}).then(response => next(vm => vm.posts = response.data.data));
+        Posts.get({
+            type: 'mark'
+        }).then(response => 
+            next(vm => vm.posts = response.data.data)
+        );
     },
     components: {
         headbar, navbar, empty

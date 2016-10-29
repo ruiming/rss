@@ -31,7 +31,9 @@ export default {
         }
     },
     mounted: function() {
-        Post.get({id: this.$route.params.id}).then(response => {
+        Post.get({
+            id: this.$route.params.id
+        }).then(response => {
             this.post = response.data.data.result;
             this.status = response.data.data.detail;
             this.pre = response.data.data.pre;
@@ -54,7 +56,9 @@ export default {
     },
     watch: {
         '$route' (to, from) {
-            return Post.get({id: this.$route.params.id}).then(response => {
+            return Post.get({
+                id: this.$route.params.id
+            }).then(response => {
                 this.post = response.data.data.result;
                 this.status = response.data.data.detail;
                 this.pre = response.data.data.pre;

@@ -62,11 +62,15 @@ export default {
         bus.$on('EXPAND', status => this.expand = status);
     },
     mounted: function() {
-        Feed.get({id: this.$route.params.id}).then(response => {
+        Feed.get({
+            id: this.$route.params.id
+        }).then(response => {
             this.feed = response.data.data;
             this.feed.pubdate = new timeago().format(this.feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
         });
-        Posts.get({feed_id: this.$route.params.id}).then(response => {
+        Posts.get({
+            feed_id: this.$route.params.id
+        }).then(response => {
             this.posts = _.sortBy(response.data.data.posts, 'pubdate').reverse();
             this.status = _.groupBy(response.data.data.detail, 'post_id');
             for(let post of this.posts) {

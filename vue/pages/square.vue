@@ -52,7 +52,9 @@ export default {
             } else {
                 this.searching = true;
                 this.err.length = 0;
-                Feed.search({feedlink: url}).then(response => {
+                Feed.search({
+                    feedlink: url
+                }).then(response => {
                     this.searching = false;
                     this.$router.push({name: 'feed', params: {id: response.data.data}});
                 }, err => {
@@ -63,7 +65,11 @@ export default {
         }
     },
     beforeRouteEnter: function(to, from, next) {
-        Feeds.popular({page: 0}).then(response => next(vm => vm.feeds = response.data.data));
+        Feeds.popular({
+            page: 0
+        }).then(response => 
+            next(vm => vm.feeds = response.data.data)
+        );
     },
     components: {
         headbar, navbar, search, msg

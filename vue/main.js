@@ -18,9 +18,8 @@ Vue.config.debug = true;
 Vue.use(VueRouter);
 Vue.use(VueResource);
 
-Vue.http.interceptors.push(function(request, next) {
-    // TODO 使用第三方插件替代
-    if(cookie.parse(document.cookie)['XSRF-TOKEN']) {
+Vue.http.interceptors.push(function (request, next) {
+    if (cookie.parse(document.cookie)['XSRF-TOKEN']) {
         request.headers.set('X-XSRF-TOKEN', cookie.parse(document.cookie)['XSRF-TOKEN']);
     }
     next(responseTransformer);
