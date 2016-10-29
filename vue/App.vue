@@ -8,7 +8,7 @@
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <span class="icon-user">个人信息</span>
+                        <span class="icon-user" @click="tome()">个人信息</span>
                     </li>
                     <li class="list-group-item" @click="logout()">
                         <span class="icon-rocket">退出登录</span>
@@ -32,6 +32,11 @@ export default {
         }
     },
     methods: {
+        tome: function() {
+            let user = this.user;
+            setTimeout(() => bus.$emit('USER', user));
+            this.$router.push({name: 'me'});
+        },
         logout: function() {
             Cookies.remove('jwt');
             Cookies.remove('XSRF-TOKEN');

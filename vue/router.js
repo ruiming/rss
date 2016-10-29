@@ -8,6 +8,7 @@ import mark from './pages/mark.vue';
 import post from './pages/post.vue';
 import feed from './pages/feed.vue';
 import square from './pages/square.vue';
+import me from './pages/me.vue';
 import bus from './bus.js';
 
 Vue.use(VueRouter);
@@ -46,6 +47,10 @@ const router = new VueRouter({
         name: 'square',
         path: '/square',
         component: square
+    }, {
+        name: 'me',
+        path: '/me',
+        component: me
     }]
 });
 router.beforeEach((to, from, next) => {
