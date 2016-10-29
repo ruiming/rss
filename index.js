@@ -5,16 +5,9 @@ import handel from './routes/handel';
 import config from './config/config';
 import mongoose from 'mongoose';
 import convert from 'koa-convert';
-import Bodyparser from 'koa-bodyparser';
-import serve from 'koa-static';
-import views from 'koa-views';
 import jwt from 'koa-jwt';
 import render from 'koa-ejs';
-import json from 'koa-json';
-import favicon from 'koa-favicon';
-import compress from 'koa-compress';
 import http from 'http';
-import logger from 'koa-logger';
 import http2 from 'http2';
 import enforceHttps from 'koa-sslify';
 import enforceWww from './middlewares/enforce-www';
@@ -23,12 +16,12 @@ import xsrf from './middlewares/xsrf';
 import cookies from './middlewares/cookies';
 import nghtml5 from './middlewares/nghtml5';
 import ua from './middlewares/ua';
+import normal from './middlewares/normal';
 
 mongoose.Promise = require('bluebird');
 global.Promise = require('bluebird');
 
 var app = new Koa();
-var bodyparser = new Bodyparser();
 
 if (config.ENV === 'production') {
     mongoose.connect(`mongodb://${config.MONGODB.USER}:${config.MONGODB.PASSWORD}@${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`);
@@ -40,25 +33,10 @@ if (config.ENV === 'production') {
 
 app.use(ua());
 app.use(cookies());
-app.use(compress({
-    filter: content_type => /text|application/i.test(content_type),
-    threshold: 2048,
-    flush: require('zlib').Z_SYNC_FLUSH
-}));
-app.use(json());
-app.use(convert(bodyparser));
-app.use(convert(logger()))
-app.use(views(__dirname + '/views', {
-    extension: 'ejs'
-}));
-app.use(convert(serve(path.resolve(__dirname, 'public'), {
-    defer: true
-})));
-app.use(favicon(__dirname + '/public/img/rss.png'));
+app.use(normal());
 app.use(xsrf());
 app.use(onerror());
 
-// 后端视图处理 (Unprotected)
 app.use(handel.routes())
     .use(handel.allowedMethods());
 
