@@ -1,40 +1,37 @@
 <div class="context-menu" resize ng-show="width > 1024 || vm.expand">
-    <a class="user-avatar" ui-sref="me" >
-        <img ng-src="{{vm.user.avatar}}">
-        <span>{{vm.user.username}}</span>
-    </a>
-    <div class="list-group">
-        <a ui-sref="home"  class="list-group-item"> <span class="glyphicon glyphicon-globe"></span> 仪表盘 </a>
-        <a ui-sref="posts({type: 'unread'})" class="list-group-item"> <span class="glyphicon glyphicon-list"></span> 未读文章 </a>
-        <a ui-sref="posts({type: 'mark'})" class="list-group-item"> <span class="glyphicon glyphicon-star"></span> 星标文章 </a>
-    </div>
-    <div class="list-group">
-        <h2>订阅源</h2>
-    </div>
-    <!-- feed_id is FeedModel's _id, not UserFeedModel's _id 
+	<a class="user-avatar" ui-sref="me">
+		<img ng-src="{{vm.user.avatar}}">
+		<span>{{vm.user.username}}</span>
+	</a>
+	<div class="list-group">
+		<a ui-sref="home" class="list-group-item"> <span class="glyphicon glyphicon-globe"></span> 仪表盘 </a>
+		<a ui-sref="posts({type: 'unread'})" class="list-group-item"> <span class="glyphicon glyphicon-list"></span> 未读文章 </a>
+		<a ui-sref="posts({type: 'mark'})" class="list-group-item"> <span class="glyphicon glyphicon-star"></span> 星标文章 </a>
+	</div>
+	<div class="list-group">
+		<h2>订阅源</h2>
+	</div>
+	<!-- feed_id is FeedModel's _id, not UserFeedModel's _id 
          UserFeedModel's _id is not used -->
-    <div class="list-group">
-        <div ng-repeat="(folder, feeds) in vm.feeds">
-            <div class="list-group-item feed-item folder-item" ng-if="folder !== 'default'">
-                <img class="favicon" src="img/folder.png">
-                <span class="title">{{folder}}</span>
-            </div>
-            <a class="list-group-item feed-item" ui-sref="feed({id: feed.feed_id})"
-                ng-click="vm.setTitle()" ng-class="{true: 'inner', false: ''}[folder !== 'default']"
-                ng-repeat="feed in feeds track by feed.feed_id">
-                <!-- TODO: still has the failure get info -->
-                <img class="favicon" ng-src="{{feed.favicon}}" onerror="this.src='/img/rss.png';">
-                <span class="title">{{feed.title}}</span>
-                <span class="badge" ng-if="feed.unread">{{feed.unread}}</span>
-            </a>
-        </div>
-    </div>
-    <!-- 底部时间栏 -->
-    <div class="status-bar time-bar">
-        <p class="time">
-            <span class="glyphicon glyphicon-calendar"></span>
-            {{ vm.time | date: 'EEEE yyyy-MM-dd HH:mm:ss a' }}
-        </p>
-    </div>
+	<div class="list-group">
+		<div ng-repeat="(folder, feeds) in vm.feeds">
+			<div class="list-group-item feed-item folder-item" ng-if="folder !== 'default'">
+				<img class="favicon" src="img/folder.png">
+				<span class="title">{{folder}}</span>
+			</div>
+			<a class="list-group-item feed-item" ui-sref="feed({id: feed.feed_id})" ng-click="vm.setTitle()" ng-class="{true: 'inner', false: ''}[folder !== 'default']"
+				ng-repeat="feed in feeds track by feed.feed_id">
+				<!-- TODO: still has the failure get info -->
+				<img class="favicon" ng-src="{{feed.favicon}}" onerror="this.src='/img/rss.png';">
+				<span class="title">{{feed.title}}</span>
+				<span class="badge" ng-if="feed.unread">{{feed.unread}}</span>
+			</a>
+		</div>
+	</div>
+	<!-- 底部时间栏 -->
+	<div class="status-bar time-bar">
+		<p class="time">
+			<span class="glyphicon glyphicon-calendar"></span> {{ vm.time | date: 'EEEE yyyy-MM-dd HH:mm:ss a' }}
+		</p>
+	</div>
 </div>
-

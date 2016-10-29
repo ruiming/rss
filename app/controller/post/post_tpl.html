@@ -14,7 +14,7 @@
         </small>
     </section>
     <section>
-        <article ng-bind-html="::vm.currentPost.description | linkFix: vm.currentPost.website" >
+        <article ng-bind-html="::vm.currentPost.description | linkFix: vm.currentPost.website">
         </article>
     </section>
     <footer class="status-bar post-bar">
@@ -23,8 +23,7 @@
         </button>
         <p class="title">{{ ::vm.currentPost.title }}</p>
         <p class="readtime" ng-if="vm.begintime">
-            <span class="glyphicon glyphicon-time"></span>
-            {{ vm.currenttime - vm.begintime | date: 'mm:ss' }}
+            <span class="glyphicon glyphicon-time"></span> {{ vm.currenttime - vm.begintime | date: 'mm:ss' }}
         </p>
         <button class="mark btn btn-primary" ng-click="vm.mark()">
             <span ng-if="!vm.currentPostDetail.mark">收藏</span>

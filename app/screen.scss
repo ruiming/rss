@@ -3,7 +3,7 @@
         display: none;
     }
     .posts-bar,
-    .feed-bar, 
+    .feed-bar,
     .post-bar {
         left: 0 !important;
     }
@@ -16,7 +16,7 @@
     .side-bar {
         width: 220px;
         button {
-           width: 220px;
+            width: 220px;
         }
     }
     .post-bar {
@@ -47,6 +47,7 @@
         transition: 0.3s linear all;
     }
 }
+
 @media screen and (max-width: 768px) {
     .markdown-body {
         padding-left: 0;

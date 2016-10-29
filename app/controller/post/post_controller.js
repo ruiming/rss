@@ -1,4 +1,4 @@
-(function() {
+(function () {
     angular
         .module('app')
         .controller('PostController', PostController);
@@ -7,7 +7,10 @@
         var vm = this;
         vm.post = post;
         vm.currentPost = post.data.result;
-        vm.currentPostDetail = post.data.detail || { mark: false, love: false };
+        vm.currentPostDetail = post.data.detail || {
+            mark: false,
+            love: false
+        };
         vm.begintime = Date.now();
         vm.currenttime = Date.now();
         vm.status = '';
@@ -24,20 +27,34 @@
         }, 1000);
 
         // Check if the post has been read yet
-        if(vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
+        if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
             vm.status = '已经读过啦~\(≧▽≦)/~';
         }
 
         function love() {
             vm.currentPostDetail.love = !vm.currentPostDetail.love;
-            Post.update({id: vm.currentPost._id}, {type: 'love', revert: true});
+            Post.update({
+                id: vm.currentPost._id
+            }, {
+                type: 'love',
+                revert: true
+            });
         }
+
         function mark() {
             vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
-            Post.update({id: vm.currentPost._id}, {type: 'mark', revert: true});
+            Post.update({
+                id: vm.currentPost._id
+            }, {
+                type: 'mark',
+                revert: true
+            });
         }
+
         function home() {
-            $state.go('feed',{id: vm.currentPost.feed_id[0]});
+            $state.go('feed', {
+                id: vm.currentPost.feed_id[0]
+            });
         }
     }
 }());

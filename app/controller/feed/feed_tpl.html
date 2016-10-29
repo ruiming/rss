@@ -1,8 +1,7 @@
 <div class="post-panel">
     <div class="sidebar list-group" resize ng-show="width > 768 || vm.expand">
-        <a class="post-select list-group-item" ng-repeat="post in vm.posts | orderBy: 'pubdate' : true"
-            ng-click="vm.read(post)" ng-class="{true: 'active', false: ''}[post.active]"
-            ui-sref="feed.post({id: post.feed_id, post_id: post._id})">
+        <a class="post-select list-group-item" ng-repeat="post in vm.posts | orderBy: 'pubdate' : true" ng-click="vm.read(post)"
+            ng-class="{true: 'active', false: ''}[post.active]" ui-sref="feed.post({id: post.feed_id, post_id: post._id})">
             <h2>{{::post.title}}</h2>
             <img ng-if="post.read" class="read" src="img/ic_done_black_24dp_1x.png">
             <span>{{::post.pubdate | toLocalString}}</span>
@@ -29,7 +28,7 @@
         <nvd3 options="vm.options" data="vm.data"></nvd3>
         <!-- 底部 Feed 状态栏 -->
         <div class="status-bar feed-bar">
-            <p class="title" >{{ ::vm.feed.title }}</p>
+            <p class="title">{{ ::vm.feed.title }}</p>
         </div>
     </div>
 </div>

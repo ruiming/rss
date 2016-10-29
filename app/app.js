@@ -1,4 +1,4 @@
-(function() {
+(function () {
     angular
         .module('app', [
             'ngTouch',
@@ -33,7 +33,7 @@
         $transitionsProvider.onBefore({
             to: state => !!state.abstract
         }, ($transition, $state) => {
-            if(angular.isString($transition.to().abstract)) {
+            if (angular.isString($transition.to().abstract)) {
                 return $state.target($transition.to().abstract);
             }
         });
@@ -45,11 +45,13 @@
                 templateUrl: 'home/home_tpl.html',
                 controller: 'HomeController as vm',
                 resolve: {
-                    posts: function(Posts) {
+                    posts: function (Posts) {
                         return Posts.recent().$promise;
                     },
-                    feeds: function(Feeds) {
-                        return Feeds.popular({page: 0}).$promise;
+                    feeds: function (Feeds) {
+                        return Feeds.popular({
+                            page: 0
+                        }).$promise;
                     }
                 }
             })
@@ -63,11 +65,15 @@
                 templateUrl: 'feed/feed_tpl.html',
                 controller: 'FeedController as vm',
                 resolve: {
-                    feed: function(Feed, $stateParams) {
-                        return Feed.get({id: $stateParams.id}).$promise;
+                    feed: function (Feed, $stateParams) {
+                        return Feed.get({
+                            id: $stateParams.id
+                        }).$promise;
                     },
-                    posts: function(Posts, $stateParams) {
-                        return Posts.get({feed_id: $stateParams.id}).$promise;
+                    posts: function (Posts, $stateParams) {
+                        return Posts.get({
+                            feed_id: $stateParams.id
+                        }).$promise;
                     }
                 }
             })
@@ -76,8 +82,10 @@
                 templateUrl: 'post/post_tpl.html',
                 controller: 'PostController as vm',
                 resolve: {
-                    post: function(Post, $stateParams, $state) {
-                        return Post.get({id: $stateParams.post_id}).$promise;
+                    post: function (Post, $stateParams, $state) {
+                        return Post.get({
+                            id: $stateParams.post_id
+                        }).$promise;
                     }
                 }
             })
@@ -87,10 +95,12 @@
                 templateUrl: 'posts/posts_tpl.html',
                 controller: 'PostsController as vm',
                 resolve: {
-                    posts: function(Posts, $stateParams, $q) {
+                    posts: function (Posts, $stateParams, $q) {
                         let defer = $q.defer();
-                        if(['unread', 'mark'].indexOf($stateParams.type) !== -1) {
-                            defer.resolve(Posts.get({type: $stateParams.type}).$promise);
+                        if (['unread', 'mark'].indexOf($stateParams.type) !== -1) {
+                            defer.resolve(Posts.get({
+                                type: $stateParams.type
+                            }).$promise);
                         } else {
                             defer.reject('参数不正确');
                         }
@@ -103,8 +113,10 @@
                 templateUrl: 'post/post_tpl.html',
                 controller: 'PostController as vm',
                 resolve: {
-                    post: function(Post, $stateParams, $state) {
-                        return Post.get({id: $stateParams.id}).$promise;
+                    post: function (Post, $stateParams, $state) {
+                        return Post.get({
+                            id: $stateParams.id
+                        }).$promise;
                     }
                 }
             })
@@ -113,7 +125,7 @@
                 templateUrl: 'me/me_tpl.html',
                 controller: 'MeController as vm',
                 resolve: {
-                    user: function(User) {
+                    user: function (User) {
                         return User.get().$promise;
                     }
                 }

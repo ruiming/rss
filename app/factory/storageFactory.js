@@ -1,7 +1,7 @@
 /**
  * 单体通信
  */
-(function() {
+(function () {
     angular
         .module('app')
         .factory('storage', storage);

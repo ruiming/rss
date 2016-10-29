@@ -5,7 +5,8 @@
     border: {
         right: 1px solid $border-color;
         bottom: 1px solid $border-color;
-    };
+    }
+    ;
     font-size: 0.8rem;
     .list-group {
         margin-bottom: 0;
@@ -15,13 +16,15 @@
         }
         &:last-child {
             border: {
-                bottom: 1px solid $border-color;;
+                bottom: 1px solid $border-color;
+                ;
             }
         }
         span:before {
             padding: 0 5px;
         }
-        a, .list-group-item {
+        a,
+        .list-group-item {
             border: 0 none !important;
         }
         img {
@@ -73,13 +76,15 @@
         }
     }
 }
+
 .user-avatar {
     text-align: center;
     overflow: hidden;
     display: block;
     padding: 15px;
     color: #333;
-    &:hover, &:link {
+    &:hover,
+    &:link {
         color: #333;
     }
     img {

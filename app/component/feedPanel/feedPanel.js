@@ -1,8 +1,8 @@
-(function() {
+(function () {
     angular
         .module('app')
         .directive('feedPanel', feedPanel);
-    
+
     function feedPanel() {
         return {
             restrict: 'EA',
@@ -17,23 +17,27 @@
 
                 // Function
                 vm.feedit = feedit;
-                
+
                 function feedit() {
                     $scope.feed.feeded = !$scope.feed.feeded;
-                    if($scope.feed.feeded) {
-                        Feed.save({feedlink: $scope.feed.absurl}, res => {
+                    if ($scope.feed.feeded) {
+                        Feed.save({
+                            feedlink: $scope.feed.absurl
+                        }, res => {
                             $rootScope.$broadcast('ADD_FEED', $scope.feed);
                             $scope.feed.feeded = true;
-                            $scope.feed.feedNum ++;
+                            $scope.feed.feedNum++;
                         }, err => {
                             // TODO
                             console.log(err);
                         });
                     } else {
-                        Feed.delete({id: $scope.feed.feed_id}, res => {
+                        Feed.delete({
+                            id: $scope.feed.feed_id
+                        }, res => {
                             $rootScope.$broadcast('DELETE_FEED', $scope.feed);
                             $scope.feed.feeded = false;
-                            $scope.feed.feedNum --;
+                            $scope.feed.feedNum--;
                         }, err => {
                             // TODO
                             console.log(err);

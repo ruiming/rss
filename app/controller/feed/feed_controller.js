@@ -1,4 +1,4 @@
-(function() {
+(function () {
     angular
         .module('app')
         .controller('FeedController', FeedController);
@@ -7,12 +7,12 @@
         var vm = this;
         vm.expand = false;
         vm.feed = feed.data;
-        vm.feed.feeded = angular.isDefined(feed.data.feed_time);        
-        vm.feed.feed_id = $stateParams.id;        
+        vm.feed.feeded = angular.isDefined(feed.data.feed_time);
+        vm.feed.feed_id = $stateParams.id;
         vm.posts = posts.data.posts;
         vm.unread = vm.feed.unread;
         vm.detail = _.groupBy(posts.data.detail, 'post_id');
-        
+
         // Graphy Start 订阅源文章更新情况
         vm.options = {
             chart: {
@@ -24,10 +24,14 @@
                     bottom: 50,
                     left: 55
                 },
-                x: function(d){return d.label;},
-                y: function(d){return d.value;},
+                x: function (d) {
+                    return d.label;
+                },
+                y: function (d) {
+                    return d.value;
+                },
                 showValues: true,
-                valueFormat: function(d){
+                valueFormat: function (d) {
                     return d3.format(',.0f')(d);
                 },
                 duration: 500,
@@ -50,14 +54,18 @@
             values: []
         }];
         _.each(_.groupBy(posts.data.posts, 'pubdate'), (value, key) => {
-            let date = key.slice(0, 7), exist = false;
+            let date = key.slice(0, 7),
+                exist = false;
             _.each(vm.data[0].values, (value, key) => {
-                if(value.label === date) {
-                    value.value ++;
+                if (value.label === date) {
+                    value.value++;
                     exist = true;
                 }
             });
-            if(!exist)  vm.data[0].values.push({label: date, value: 1})
+            if (!exist) vm.data[0].values.push({
+                label: date,
+                value: 1
+            })
         })
         vm.data[0].values = _.sortBy(vm.data[0].values, 'label').reverse();
         // Graphy End
@@ -68,42 +76,53 @@
         vm.feedit = feedit;
 
         // get the status of each post
-        for(let post of vm.posts) {
-            if(vm.detail[post._id] && vm.detail[post._id][0].read) {
+        for (let post of vm.posts) {
+            if (vm.detail[post._id] && vm.detail[post._id][0].read) {
                 post.read = true;
             }
         }
-        
+
         function feedit() {
-            Feed.save({feedlink: vm.feed.absurl}, res => {
+            Feed.save({
+                feedlink: vm.feed.absurl
+            }, res => {
                 vm.feed.feeded = true;
                 $rootScope.$broadcast('ADD_FEED', vm.feed);
-                vm.feed.feedNum ++;
+                vm.feed.feedNum++;
             }, err => {
                 // TODO
                 console.log(err);
             });
         }
+
         function read(post) {
-            for(let post of vm.posts) {
+            for (let post of vm.posts) {
                 post.active = false;
             }
             post.active = true;
-            if(!post.read) {
-                vm.unread --;
+            if (!post.read) {
+                vm.unread--;
                 post.read = true;
                 $rootScope.$broadcast('READ_POST', post.feed_id[0]);
-                Post.update({id: post._id}, {type: 'read'});
+                Post.update({
+                    id: post._id
+                }, {
+                    type: 'read'
+                });
             }
         }
+
         function readall() {
-            for(let post of vm.posts) {
-                if(!post.read) {
+            for (let post of vm.posts) {
+                if (!post.read) {
                     $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
                 }
                 post.read = true;
             }
-            Posts.update({feed_id: $stateParams.id , type: 'read'});
+            Posts.update({
+                feed_id: $stateParams.id,
+                type: 'read'
+            });
         }
         $scope.$on('EXPAND', () => vm.expand = !vm.expand);
         $scope.$on('FOLD', () => vm.expand = false);

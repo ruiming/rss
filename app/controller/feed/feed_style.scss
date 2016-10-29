@@ -57,11 +57,13 @@
         }
     }
 }
+
 .read {
     position: absolute;
     right: 10px;
-    bottom: 10px; 
+    bottom: 10px;
 }
+
 .post-select {
     padding: 10px;
     position: relative;
@@ -73,6 +75,7 @@
         color: currentColor;
     }
 }
+
 .feed-header {
     position: relative;
     h1 {
@@ -85,9 +88,11 @@
         height: 30px;
     }
 }
+
 .page-header {
     margin-top: 20px;
 }
+
 .graphy {
     display: table;
     height: 300px;

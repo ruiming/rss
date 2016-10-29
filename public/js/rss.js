@@ -39,7 +39,9 @@
                     return Posts.recent().$promise;
                 }],
                 feeds: ["Feeds", function (Feeds) {
-                    return Feeds.popular({ page: 0 }).$promise;
+                    return Feeds.popular({
+                        page: 0
+                    }).$promise;
                 }]
             }
         }).state('search', {
@@ -52,10 +54,14 @@
             controller: 'FeedController as vm',
             resolve: {
                 feed: ["Feed", "$stateParams", function (Feed, $stateParams) {
-                    return Feed.get({ id: $stateParams.id }).$promise;
+                    return Feed.get({
+                        id: $stateParams.id
+                    }).$promise;
                 }],
                 posts: ["Posts", "$stateParams", function (Posts, $stateParams) {
-                    return Posts.get({ feed_id: $stateParams.id }).$promise;
+                    return Posts.get({
+                        feed_id: $stateParams.id
+                    }).$promise;
                 }]
             }
         }).state('feed.post', {
@@ -64,7 +70,9 @@
             controller: 'PostController as vm',
             resolve: {
                 post: ["Post", "$stateParams", "$state", function (Post, $stateParams, $state) {
-                    return Post.get({ id: $stateParams.post_id }).$promise;
+                    return Post.get({
+                        id: $stateParams.post_id
+                    }).$promise;
                 }]
             }
         }).state('posts', {
@@ -76,7 +84,9 @@
                 posts: ["Posts", "$stateParams", "$q", function (Posts, $stateParams, $q) {
                     var defer = $q.defer();
                     if (['unread', 'mark'].indexOf($stateParams.type) !== -1) {
-                        defer.resolve(Posts.get({ type: $stateParams.type }).$promise);
+                        defer.resolve(Posts.get({
+                            type: $stateParams.type
+                        }).$promise);
                     } else {
                         defer.reject('参数不正确');
                     }
@@ -89,7 +99,9 @@
             controller: 'PostController as vm',
             resolve: {
                 post: ["Post", "$stateParams", "$state", function (Post, $stateParams, $state) {
-                    return Post.get({ id: $stateParams.id }).$promise;
+                    return Post.get({
+                        id: $stateParams.id
+                    }).$promise;
                 }]
             }
         }).state('me', {
@@ -214,7 +226,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             if (typeof data[i].feed_id[0] === 'string') {
                                 config.data.data[i].feed_id = data[i].feed_id[0];
                             } else {
-                                config.data.data[i] = Object.assign(data[i].feed_id[0], data[i], { feed_id: data[i].feed_id[0]._id, feed_title: data[i].feed_id[0].title });
+                                config.data.data[i] = Object.assign(data[i].feed_id[0], data[i], {
+                                    feed_id: data[i].feed_id[0]._id,
+                                    feed_title: data[i].feed_id[0].title
+                                });
                             }
                         }
                         if (void 0 !== data[i].user_id && Array.isArray(data[i].user_id)) {
@@ -226,7 +241,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         if (typeof data.feed_id[0] === 'string') {
                             config.data.data.feed_id = data.feed_id[0];
                         } else {
-                            config.data.data = Object.assign(data.feed_id[0], data, { feed_id: data.feed_id[0]._id, feed_title: data.feed_id[0].title });
+                            config.data.data = Object.assign(data.feed_id[0], data, {
+                                feed_id: data.feed_id[0]._id,
+                                feed_title: data.feed_id[0].title
+                            });
                         }
                     }
                     if (void 0 !== data.user_id && Array.isArray(data.user_id)) {
@@ -429,7 +447,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     exist = true;
                 }
             });
-            if (!exist) vm.data[0].values.push({ label: date, value: 1 });
+            if (!exist) vm.data[0].values.push({
+                label: date,
+                value: 1
+            });
         });
         vm.data[0].values = _.sortBy(vm.data[0].values, 'label').reverse();
         // Graphy End
@@ -468,7 +489,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         function feedit() {
-            Feed.save({ feedlink: vm.feed.absurl }, function (res) {
+            Feed.save({
+                feedlink: vm.feed.absurl
+            }, function (res) {
                 vm.feed.feeded = true;
                 $rootScope.$broadcast('ADD_FEED', vm.feed);
                 vm.feed.feedNum++;
@@ -477,6 +500,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 console.log(err);
             });
         }
+
         function read(post) {
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
@@ -508,9 +532,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 vm.unread--;
                 post.read = true;
                 $rootScope.$broadcast('READ_POST', post.feed_id[0]);
-                Post.update({ id: post._id }, { type: 'read' });
+                Post.update({
+                    id: post._id
+                }, {
+                    type: 'read'
+                });
             }
         }
+
         function readall() {
             var _iteratorNormalCompletion3 = true;
             var _didIteratorError3 = false;
@@ -540,7 +569,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }
 
-            Posts.update({ feed_id: $stateParams.id, type: 'read' });
+            Posts.update({
+                feed_id: $stateParams.id,
+                type: 'read'
+            });
         }
         $scope.$on('EXPAND', function () {
             return vm.expand = !vm.expand;
@@ -565,11 +597,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         vm.goto = goto;
 
         function goto(post) {
-            Post.update({ feed_id: post.feed_id, id: post._id }, { type: 'read' });
-            $state.go('feed.post', { id: post.feed_id, post_id: post._id });
+            Post.update({
+                feed_id: post.feed_id,
+                id: post._id
+            }, {
+                type: 'read'
+            });
+            $state.go('feed.post', {
+                id: post.feed_id,
+                post_id: post._id
+            });
         }
+
         function next() {
-            vm.feeds = Feeds.popular({ page: ++vm.currentPage }).$promise.data;
+            vm.feeds = Feeds.popular({
+                page: ++vm.currentPage
+            }).$promise.data;
         }
     }
 })();
@@ -599,7 +642,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var vm = this;
         vm.post = post;
         vm.currentPost = post.data.result;
-        vm.currentPostDetail = post.data.detail || { mark: false, love: false };
+        vm.currentPostDetail = post.data.detail || {
+            mark: false,
+            love: false
+        };
         vm.begintime = Date.now();
         vm.currenttime = Date.now();
         vm.status = '';
@@ -622,14 +668,28 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         function love() {
             vm.currentPostDetail.love = !vm.currentPostDetail.love;
-            Post.update({ id: vm.currentPost._id }, { type: 'love', revert: true });
+            Post.update({
+                id: vm.currentPost._id
+            }, {
+                type: 'love',
+                revert: true
+            });
         }
+
         function mark() {
             vm.currentPostDetail.mark = !vm.currentPostDetail.mark;
-            Post.update({ id: vm.currentPost._id }, { type: 'mark', revert: true });
+            Post.update({
+                id: vm.currentPost._id
+            }, {
+                type: 'mark',
+                revert: true
+            });
         }
+
         function home() {
-            $state.go('feed', { id: vm.currentPost.feed_id[0] });
+            $state.go('feed', {
+                id: vm.currentPost.feed_id[0]
+            });
         }
     }
 })();
@@ -688,10 +748,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     $rootScope.$broadcast('READ_POST', post.feed_id);
                 }
                 post.read = true;
-                Post.update({ id: post._id }, { type: 'read' });
+                Post.update({
+                    id: post._id
+                }, {
+                    type: 'read'
+                });
             }
-            $state.go('posts.post', { id: post._id });
+            $state.go('posts.post', {
+                id: post._id
+            });
         }
+
         function readall() {
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
@@ -723,8 +790,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
 
             var ids = _.uniq(_.pluck(vm.posts, 'feed_id')).toString();
-            Posts.update({ feed_id: ids, type: 'read' });
+            Posts.update({
+                feed_id: ids,
+                type: 'read'
+            });
         }
+
         function randomcolor() {
             var random = Math.floor(Math.random() * 3);
             return random === 0 ? 'warning' : random === 1 ? 'info' : random === 2 ? 'danger' : '';
@@ -746,9 +817,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     function SearchController($stateParams, $base64, $state, Feed) {
         var vm = this;
         var feedlink = decodeURIComponent(escape($base64.decode($stateParams.feedlink)));
-        Feed.search({ feedlink: feedlink }).$promise.then(function (res) {
+        Feed.search({
+            feedlink: feedlink
+        }).$promise.then(function (res) {
             console.log(res);
-            $state.go('feed', { id: res.data });
+            $state.go('feed', {
+                id: res.data
+            });
         }, function (err) {
             vm.err = err.data.message;
         });
@@ -838,7 +913,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 function feedit() {
                     $scope.feed.feeded = !$scope.feed.feeded;
                     if ($scope.feed.feeded) {
-                        Feed.save({ feedlink: $scope.feed.absurl }, function (res) {
+                        Feed.save({
+                            feedlink: $scope.feed.absurl
+                        }, function (res) {
                             $rootScope.$broadcast('ADD_FEED', $scope.feed);
                             $scope.feed.feeded = true;
                             $scope.feed.feedNum++;
@@ -847,7 +924,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             console.log(err);
                         });
                     } else {
-                        Feed.delete({ id: $scope.feed.feed_id }, function (res) {
+                        Feed.delete({
+                            id: $scope.feed.feed_id
+                        }, function (res) {
                             $rootScope.$broadcast('DELETE_FEED', $scope.feed);
                             $scope.feed.feeded = false;
                             $scope.feed.feedNum--;
@@ -890,6 +969,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 function expand() {
                     $rootScope.$broadcast('EXPAND');
                 }
+
                 function focus() {
                     form.input.focus();
                     if (timeout) {
@@ -897,18 +977,23 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                     vm.active = true;
                 }
+
                 function blur() {
                     timeout = $timeout(function () {
                         vm.active = false;
                     }, 800);
                 }
+
                 function search(feedlink) {
                     if (!tools.checkUrl(feedlink)) {
                         return false;
                     } else {
-                        $state.go('search', { feedlink: $base64.encode(unescape(encodeURIComponent(feedlink))) });
+                        $state.go('search', {
+                            feedlink: $base64.encode(unescape(encodeURIComponent(feedlink)))
+                        });
                     }
                 }
+
                 function logout() {
                     User.logout().$promise.then(function (data) {
                         $location.path('/').replace();

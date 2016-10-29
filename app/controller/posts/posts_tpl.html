@@ -1,7 +1,6 @@
 <div class="post-panel">
     <div class="sidebar list-group" resize ng-show="width > 768 || vm.expand">
-        <a class="post-select list-group-item" ng-repeat="post in vm.posts | orderBy: 'pubdate' : true"
-            ng-class="{true: 'active', false: ''}[post.active]"
+        <a class="post-select list-group-item" ng-repeat="post in vm.posts | orderBy: 'pubdate' : true" ng-class="{true: 'active', false: ''}[post.active]"
             ng-click="vm.goto(post._id)">
             <h2>{{::post.title}}</h2>
             <img ng-if="post.read === true && vm.type === '未读'" class="read" src="img/ic_done_black_24dp_1x.png">

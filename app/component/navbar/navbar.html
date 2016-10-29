@@ -1,7 +1,7 @@
 <nav class="rssnav navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <span ng-show="width <= 1024" resize class="glyphicon glyphicon-align-justify" ng-click="vm.expand()" ></span>
+            <span ng-show="width <= 1024" resize class="glyphicon glyphicon-align-justify" ng-click="vm.expand()"></span>
             <a class="navbar-brand">EnjoyRSS</a>
         </div>
         <form name="form" class="search">
@@ -9,9 +9,8 @@
                 <input class="search-wrap" type="submit" value=''></input>
                 <span class="glyphicon glyphicon-search"></span>
             </div>
-            <input type="url" id="search" class="form-control" name="input" placeholder="输入 URL 添加订阅源" autocomplete="off"
-                ng-class="{true: 'input-active', false: ''}[vm.active]" ng-model="feedlink"
-                ng-focus="vm.focus()"  ng-blur="vm.blur()" ng-keypress="$event.which === 13 ? vm.search(feedlink) : ''">
+            <input type="url" id="search" class="form-control" name="input" placeholder="输入 URL 添加订阅源" autocomplete="off" ng-class="{true: 'input-active', false: ''}[vm.active]"
+                ng-model="feedlink" ng-focus="vm.focus()" ng-blur="vm.blur()" ng-keypress="$event.which === 13 ? vm.search(feedlink) : ''">
         </form>
         <div resize ng-show="width >= 640">
             <ul class="feed-nav">
