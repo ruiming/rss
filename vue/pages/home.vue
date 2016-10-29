@@ -39,7 +39,7 @@ export default {
     beforeRouteEnter: function(to, from, next) {
         Posts.recent().then(response => next(vm => {
             for(let post of response.data.data) {
-                if(post.pubdate) {
+                if(post.pubdate !== null) {
                     post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
                 }
             }
