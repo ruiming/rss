@@ -9,12 +9,14 @@
         </div>
         <button type="submit" class="btn btn-default">提交</button>
     </form>
+    <navbar></navbar>
 </div>
 </template>
 
 <script>
 import { User } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
+import navbar from '../components/navbar.vue';
 import bus from '../bus.js';
 import msg from '../components/msg.vue';
 import _ from 'underscore';
@@ -45,7 +47,7 @@ export default {
         bus.$on('USER', data => this.user = data);
     },
     components: {
-        headbar, msg
+        headbar, msg, navbar
     }
 }
 </script>
