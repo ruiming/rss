@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-// 文章表
+// 用户表
 
 const UserSchema = new Schema({ 
     username:       {type: String, required: true},
@@ -11,6 +11,6 @@ const UserSchema = new Schema({
     avatar:         {type: String}
 });
 
-var User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

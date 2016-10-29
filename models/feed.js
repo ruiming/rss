@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
 // 订阅表
 
@@ -25,6 +25,6 @@ const FeedSchema = new Schema({
     lastScan:       {type: Date, defaukt: Date.now()}   // 上次扫描时间
 });
 
-var Feed = mongoose.model('Feed', FeedSchema);
+const Feed = mongoose.model('Feed', FeedSchema);
 
 module.exports = Feed;

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
 // 文章表
 
@@ -22,6 +22,6 @@ const PostSchema = new Schema({
     markNum:        {type: Number, default: 0}                      // 星标人数
 });
 
-var Post = mongoose.model('Post', PostSchema);
+const Post = mongoose.model('Post', PostSchema);
 
 module.exports = Post;
