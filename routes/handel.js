@@ -9,8 +9,6 @@ import fs from 'fs';
 var router = new Router();
 
 router.get(['/', '/login'], async(ctx, next) => {
-    // 如果用户正确授权，跳转 Angular
-    // 如果 JWT 有误，跳转登录 
     if (ctx.cookies.get('jwt')) {
         let token = jwt.decode(ctx.cookies.get('jwt'));
         if (token.id) {
@@ -41,7 +39,7 @@ router.get('/register', async(ctx, next) => {
         else await send(ctx, './public/pc.html')
     } else {
         if (ctx.mobile) await send(ctx, './public/index.html');
-        else await ctx.renderctx.render('register.ejs');
+        else await ctx.render('register.ejs');
     }
 })
 

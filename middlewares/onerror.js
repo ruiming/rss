@@ -6,7 +6,7 @@ module.exports = function () {
         try {
             await next();
         } catch (err) {
-            if (401 === err.status && !ctx.mobile) {
+            if (err && 401 === err.status && !ctx.mobile) {
                 if ([null, undefined].includes(err)) err = 'Unknown';
                 ctx.clearcookies();
                 if (ctx.request.body.email) {
@@ -31,6 +31,7 @@ module.exports = function () {
                 }
             } else {
                 ctx.status = (err && err.status) || 404;
+                console.log(err);
                 ctx.body = {
                     success: false,
                     message: err.toString()
