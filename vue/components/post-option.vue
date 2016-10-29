@@ -5,10 +5,10 @@
         <router-link :to="{name: 'post', params: {id: pre||post._id||0}}" replace class="list-group-item">
             <span class="icon-arrow-left"><small>上一篇</small></span>
         </router-link>
-        <li class="list-group-item" v-on:click="mark(post)">
+        <li class="list-group-item" @click="mark(post)">
             <span v-bind:class="{'icon-star-empty': !smark, 'icon-star-full': smark}"><small>收藏</small></span>
         </li>
-        <li class="list-group-item" v-on:click="love(post)">
+        <li class="list-group-item" @click="love(post)">
             <span v-bind:class="{'icon-smile': !slove, 'icon-smile2': slove}"><small>点赞</small></span>
         </li>
         <router-link :to="{name: 'post', params: {id: next||post._id||0}}" replace class="list-group-item">
@@ -30,7 +30,7 @@ export default {
         }
     },
     created: function() {
-        bus.$on('EXPAND', status => this.expand = status)
+        bus.$on('EXPAND', status => this.expand = status);
     },
     methods: {
         mark: function(post) {
