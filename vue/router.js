@@ -50,6 +50,9 @@ const router = new VueRouter({
 });
 router.beforeEach((to, from, next) => {
     bus.$emit('EXPAND', false);
+    if(typeof ga !== "undefined") {
+        ga('send', 'pageview', to.fullPath);        
+    }
     next();
 });
 export default router;
