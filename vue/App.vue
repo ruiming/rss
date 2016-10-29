@@ -1,5 +1,5 @@
 <template>
-    <div style="height:calc(100% + 84px); overflow-x:hidden">
+    <div style="height:calc(100% + 83px); overflow-x:hidden">
     <transition name="sidebar">
     <div class="sidebar" >
         <div class="user">
@@ -39,7 +39,7 @@ h1 {
 }
 
 .view {
-    min-height: 100%;
+    min-height: calc(100% - 83px);
     position: relative;
     z-index: 100;
     background-color: white;
