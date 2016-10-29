@@ -14,8 +14,10 @@ body {
 }
 a {
     color: #333;
-    &:hover {
+    &:hover,
+    &:link {
         color: #333;
+        text-decoration: none;
     }
 }
 .center {

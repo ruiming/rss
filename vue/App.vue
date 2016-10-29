@@ -1,13 +1,13 @@
 <template>
     <div style="height:calc(100% + 83px); overflow-x:hidden">
-    <transition name="sidebar">
-    <div class="sidebar" >
+        <transition name="sidebar">
+    <div class="sidebar" v-show="expand">
         <div class="user">
             <img :src="user.avatar">
             <small>{{user.username}}</small>
         </div>
     </div>
-    </transition>
+        </transition>
         <router-view class="view" v-bind:class="{expand: expand}"></router-view>
     </div>
 </template>
@@ -75,14 +75,7 @@ h1 {
         }
     }
 }
-.sidebar-enter,
-.sidebar-leave-active {
-    width: 0;
+.sidebar-leave {
     transition: 0.3s linear all;
-    img {
-        width: 0 !important;
-        height: 0 !important;
-        transition: 0.3s linear all;
-    }
 }
 </style>
