@@ -40,7 +40,7 @@ export default {
                 }
                 this.$set(this.feed, 'unread', 0);
                 Posts.update({
-                    feed_id: this.feed.feed_id, 
+                    feed_id: this.feed.feed_id || this.feed._id, 
                     type: 'read'
                 });
             } else {

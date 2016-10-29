@@ -152,6 +152,10 @@ exports.main = async(ctx, next) => {
  * @param:  {string} feed_id
  */
 exports.update = async(ctx, next) => {
+    if(ctx.request.body.feed_id === undefined || ctx.request.body.feed_id === null) {
+        ctx.throw(404, '出错了');
+    }
+    // 电脑版有全部未读文章标记已读的接口，所以需要进行 split
     let ids = ctx.request.body.feed_id.split(','),
         user_id = ctx.state.user.id;
     _.each(ids, async(id) => {
