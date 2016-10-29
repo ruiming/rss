@@ -39,7 +39,9 @@ export default {
     beforeRouteEnter: function(to, from, next) {
         Posts.recent().then(response => next(vm => {
             for(let post of response.data.data) {
-                post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
+                if(post.pubdate) {
+                    post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
+                }
             }
             vm.posts = response.data.data;
         }));

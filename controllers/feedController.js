@@ -91,7 +91,8 @@ exports.create = async(ctx, next) => {
             req.on('error', err => reject(err));
             feedparser.on('meta', async function () {
                 let favicon = null;
-                await fetchFavicon(this.meta.link).then(data => favicon = data);
+                await fetchFavicon(this.meta.link).then(data => favicon = data)
+                    .catch(e => e);
                 await new Promise(resolve => request(favicon, (err, response, body) => {
                     if (response.statusCode != 200) {
                         favicon = '/img/rss.png';
