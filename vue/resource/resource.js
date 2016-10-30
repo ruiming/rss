@@ -7,7 +7,7 @@ const Feeds = Vue.resource('/api/feeds', {}, {
         method: 'GET',
         params: {
             order: 'feedNum',
-            'per_page': 5
+            'per_page': 50
         }
     }
 });

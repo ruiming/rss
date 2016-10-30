@@ -15,7 +15,7 @@ export default {
 
 <style lang="sass">
 .empty {
-    margin: 50% auto;
+    padding: 50% 0;
     span {
         display: block;
         font-size: 100px;
