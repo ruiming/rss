@@ -72,6 +72,7 @@ export default {
             small {
                 width: 80px;
                 position: absolute;
+                text-align: right;
                 right: 0;
             }
         }

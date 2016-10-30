@@ -16,7 +16,11 @@
                 </ul>
             </div>
         </transition>
-        <router-view class="view" v-bind:class="{expand: expand}"></router-view>
+        <router-view class="view" v-show="kkk" v-bind:class="{expand: expand}"></router-view>
+        <div class="loading">
+            <div class="cssload-loader" v-show="!kkk"></div>
+            <p>加载中</p>
+        </div>
     </div>
 </template>
 
@@ -28,7 +32,8 @@ export default {
     data() {
         return {
             expand: false,
-            user: {}
+            user: {},
+            kkk: true
         }
     },
     methods: {
@@ -48,11 +53,25 @@ export default {
     },
     created: function() {
         bus.$on('EXPAND', status => this.expand = status );
+        bus.$on('TRANSITION', status => this.kkk = status );
     }
 }
 </script>
 
 <style lang="sass">
+.loading {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 40%;
+    text-align: center;
+    p {
+        color: black;
+        font-size: 12px;
+        padding-top: 40px;
+    }
+}
+
 h1 {
     font-size: 18px;
 }

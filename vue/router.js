@@ -54,10 +54,14 @@ const router = new VueRouter({
     }]
 });
 router.beforeEach((to, from, next) => {
+    bus.$emit('TRANSITION', false);
     bus.$emit('EXPAND', false);
     if(typeof ga !== "undefined") {
         ga('send', 'pageview', to.fullPath);        
     }
     next();
 });
+router.afterEach((to, from, next) => {
+    bus.$emit('TRANSITION', true);
+})
 export default router;
