@@ -225,7 +225,7 @@ exports.listAll = async(ctx, next) => {
             favicon: 1,
             title: 1
         }).lean().exec();
-    Promise.all(_.map(items, item => new Promise(async(resolve, reject) => {
+    await Promise.all(_.map(items, item => new Promise(async(resolve, reject) => {
         let unreadcount, count;
         await Promise.all([
             Promise.resolve().then(async() => unreadcount = await UserPostModel.count({

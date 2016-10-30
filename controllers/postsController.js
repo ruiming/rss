@@ -104,7 +104,7 @@ exports.main = async(ctx, next) => {
             favicon: 1,
             title: 1
         }).lean().exec();
-    Promise.all(_.map(items, item => new Promise(async(resolve, reject) => {
+    await Promise.all(_.map(items, item => new Promise(async(resolve, reject) => {
         let userposts = await UserPostModel.find({
             feed_id: item.feed_id,
             user_id: user_id,
