@@ -7,7 +7,8 @@ module.exports = function () {
             await next();
         } catch (err) {
             if (err && 401 === err.status && !ctx.mobile) {
-                if ([null, undefined].includes(err)) err = 'Unknown';
+                // undefined == null
+                if (err != null) err = 'Unknown';
                 ctx.clearcookies();
                 if (ctx.request.body.email) {
                     if (ctx.request.body.json === 'true' || ctx.request.body.json === true) {
