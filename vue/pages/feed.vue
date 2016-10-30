@@ -66,7 +66,9 @@ export default {
             id: this.$route.params.id
         }).then(response => {
             this.feed = response.data.data;
-            this.feed.pubdate = new timeago().format(this.feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
+            if(this.feed.pubdate !== null) {
+                this.feed.pubdate = new timeago().format(this.feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '));                
+            }
         });
         Posts.get({
             feed_id: this.$route.params.id
@@ -74,7 +76,9 @@ export default {
             this.posts = _.sortBy(response.data.data.posts, 'pubdate').reverse();
             this.status = _.groupBy(response.data.data.detail, 'post_id');
             for(let post of this.posts) {
-                post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
+                if(post.pubdate !== null) {
+                    post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));                    
+                }
                 if(this.status[post._id] && this.status[post._id][0].read) {
                     this.$set(post, 'read', true);
                 } else {
