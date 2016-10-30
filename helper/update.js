@@ -29,9 +29,9 @@ async function update() {
             let req = request({
                 url: item.absurl,
                 headers: {
-                    'User-Agent': 'request'
+                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36'
                 },
-                timeout: 5000
+                timeout: 10000
             });
             let feedparser = new FeedParser();
             FeedModel.update({
