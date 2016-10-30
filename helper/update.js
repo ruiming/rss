@@ -58,12 +58,13 @@ async function update() {
             feedparser.on('readable', async function () {
                 let result;
                 while (result = this.read()) {
+                    // Use link to identify...
                     let origin = await PostModel.findOne({
-                        pubdate: result.pubdate,
+                        link: result.link,
                         feed_id: item._id
                     });
                     if (origin && origin._id) {
-                        if (origin.date.toString() == result.date.toString()) {
+                        if (origin.link && (origin.link.toString() == result.link.toString())) {
                             equalCount++;
                         } else {
                             Object.assign(origin, result);
