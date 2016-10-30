@@ -94,13 +94,14 @@ async function update() {
     })
     Promise.all(promises).then(data => {
         setTimeout(() => {
-            console.log('************* OK *************');
+            console.log('\r\n************* OK *************');
+            console.log(Date().toLocaleString());
             console.log('FeedNum: ' + items.length);
             console.log('TimeUsed: ' + (Date.now() - starttime) / 1000 + ' s');
             console.log('Equal: ' + equalCount);
             console.log('Update: ' + updateCount);
             console.log('New: ' + newCount);
-            console.log('************* OK *************');
+            console.log('************* OK *************\r\n');
             process.exit();
         }, 100);
     }).catch(err => {
