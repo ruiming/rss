@@ -165,20 +165,28 @@ export default {
             position: absolute;
             left: 5px;
             right: 90px;
+            color: #9e9e9e;
             &:before {
                 content: '    ';
             }
+        }
+        .unread {
+            color: #333;
         }
         .unread:before {
             content: ' \B7 ';
             color: #3f51b5;
             font-weight: 900;
         }
-        small {
+        p+small {
+            color: #9e9e9e;
             position: absolute;
             text-align: right;
             right: 10px;
             width: 85px;
+        }
+        .unread+small {
+            color: #333;
         }
     }
 }
