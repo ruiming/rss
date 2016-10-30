@@ -31,6 +31,7 @@ exports.register = async(ctx, next) => {
             req.on('data', async(data) => {
                 if (JSON.parse(data.toString()).entry) {
                     data = JSON.parse(data.toString()).entry[0];
+                    data.thumbnailUrl = data.thumbnailUrl.replace(/^(http)/, 'https');
                 } else {
                     data = {
                         preferredUsername: ctx.request.body.email.split('@')[0],
