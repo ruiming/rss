@@ -1,6 +1,6 @@
 <template>
     <div class="bottom" v-bind:class="{expand2: expand}">
-    <ul class="list-group">
+    <ul class="list-group post-option">
         <!-- id not defined when initial -->
         <router-link :to="{name: 'post', params: {id: pre||post._id||0}}" replace class="list-group-item">
             <span class="icon-arrow-left"><small>上一篇</small></span>
@@ -8,6 +8,9 @@
         <li class="list-group-item" @click="mark(post)">
             <span v-bind:class="{'icon-star-empty': !smark, 'icon-star-full': smark}"><small>收藏</small></span>
         </li>
+        <a :href="post.link" class="list-group-item">
+            <span class="icon-safari"><small>原文</small></span>
+        </a>
         <li class="list-group-item" @click="love(post)">
             <span v-bind:class="{'icon-smile': !slove, 'icon-smile2': slove}"><small>点赞</small></span>
         </li>
@@ -66,5 +69,9 @@ export default {
 </script>
 
 <style lang="sass">
-
+.post-option {
+    li, a {
+        width: 20% !important;
+    }
+}
 </style>
