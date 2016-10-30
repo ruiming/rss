@@ -118,6 +118,80 @@
 })();
 'use strict';
 
+(function () {
+    angular.module('app').directive('ngRandomClass', ngRandomClass);
+
+    function ngRandomClass() {
+        return {
+            restrict: 'EA',
+            replace: false,
+            scope: {
+                ngClasses: "=ngRandomClass"
+            },
+            link: function link(scope, elem, attr) {
+                elem.addClass(scope.ngClasses[Math.floor(Math.random() * scope.ngClasses.length)]);
+            }
+        };
+    }
+})();
+"use strict";
+
+(function () {
+    resize.$inject = ["_", "$window"];
+    angular.module('app').directive('resize', resize);
+
+    function resize(_, $window) {
+        return {
+            restrict: 'EA',
+            scope: true,
+            link: function link(scope, elem, attrs) {
+                scope.width = $window.innerWidth;
+
+                angular.element($window).bind('resize', function () {
+                    scope.width = $window.innerWidth;
+                    scope.$digest();
+                });
+            }
+        };
+    }
+})();
+"use strict";
+
+(function () {
+    scrollListen.$inject = ["_", "Post", "storage"];
+    angular.module('app').directive('scrollListen', scrollListen);
+
+    function scrollListen(_, Post, storage) {
+        return {
+            restrict: 'EA',
+            scope: true,
+            link: function link(scope, elem, attrs) {
+                var first = true;
+                var func = _.throttle(function (e) {
+                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail) {
+                        var target = e.target;
+                        // 100px 偏差
+                        if (first && target.scrollHeight - target.clientHeight - 100 < target.scrollTop) {
+                            first = false;
+                            scope.vm.status = '到底啦~\(≧▽≦)/~';
+                        }
+                    }
+                }, 200);
+                angular.element(elem).on('scroll', func);
+                // 如果没有滚动条的话，则立即标为读完
+                setTimeout(function () {
+                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail) {
+                        if (angular.element(elem[0].scrollHeight)[0] === angular.element(elem[0].offsetHeight)[0]) {
+                            scope.vm.status = '到底啦~\(≧▽≦)/~';
+                        }
+                    }
+                }, 0);
+            }
+        };
+    }
+})();
+'use strict';
+
 /**
  * 单体通信
  */
@@ -207,80 +281,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     underscore.factory('_', ['$window', function ($window) {
         return $window._;
     }]);
-})();
-'use strict';
-
-(function () {
-    angular.module('app').directive('ngRandomClass', ngRandomClass);
-
-    function ngRandomClass() {
-        return {
-            restrict: 'EA',
-            replace: false,
-            scope: {
-                ngClasses: "=ngRandomClass"
-            },
-            link: function link(scope, elem, attr) {
-                elem.addClass(scope.ngClasses[Math.floor(Math.random() * scope.ngClasses.length)]);
-            }
-        };
-    }
-})();
-"use strict";
-
-(function () {
-    resize.$inject = ["_", "$window"];
-    angular.module('app').directive('resize', resize);
-
-    function resize(_, $window) {
-        return {
-            restrict: 'EA',
-            scope: true,
-            link: function link(scope, elem, attrs) {
-                scope.width = $window.innerWidth;
-
-                angular.element($window).bind('resize', function () {
-                    scope.width = $window.innerWidth;
-                    scope.$digest();
-                });
-            }
-        };
-    }
-})();
-"use strict";
-
-(function () {
-    scrollListen.$inject = ["_", "Post", "storage"];
-    angular.module('app').directive('scrollListen', scrollListen);
-
-    function scrollListen(_, Post, storage) {
-        return {
-            restrict: 'EA',
-            scope: true,
-            link: function link(scope, elem, attrs) {
-                var first = true;
-                var func = _.throttle(function (e) {
-                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail) {
-                        var target = e.target;
-                        // 100px 偏差
-                        if (first && target.scrollHeight - target.clientHeight - 100 < target.scrollTop) {
-                            first = false;
-                            scope.vm.status = '到底啦~\(≧▽≦)/~';
-                        }
-                    }
-                }, 200);
-                angular.element(elem).on('scroll', func);
-                // 如果没有滚动条的话，则立即标为读完
-                setTimeout(function () {
-                    if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail) {
-                        if (angular.element(elem[0].scrollHeight)[0] === angular.element(elem[0].offsetHeight)[0]) {
-                            scope.vm.status = '到底啦~\(≧▽≦)/~';
-                        }
-                    }
-                }, 0);
-            }
-        };
-    }
 })();
 'use strict';
 
@@ -890,6 +890,56 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }
 })();
+'use strict';
+
+(function () {
+    angular.module('app').directive('feedPanel', feedPanel);
+
+    function feedPanel() {
+        return {
+            restrict: 'EA',
+            scope: {
+                feed: '='
+            },
+            replace: true,
+            templateUrl: 'feedPanel/feedPanel.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
+                var vm = this;
+
+                // Function
+                vm.feedit = feedit;
+
+                function feedit() {
+                    $scope.feed.feeded = !$scope.feed.feeded;
+                    if ($scope.feed.feeded) {
+                        Feed.save({
+                            feedlink: $scope.feed.absurl
+                        }, function (res) {
+                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
+                            $scope.feed.feeded = true;
+                            $scope.feed.feedNum++;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    } else {
+                        Feed.delete({
+                            id: $scope.feed.feed_id
+                        }, function (res) {
+                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
+                            $scope.feed.feeded = false;
+                            $scope.feed.feedNum--;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    }
+                }
+            }]
+        };
+    }
+})();
 "use strict";
 
 (function () {
@@ -948,56 +998,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     User.logout().$promise.then(function (data) {
                         $location.path('/').replace();
                     });
-                }
-            }]
-        };
-    }
-})();
-'use strict';
-
-(function () {
-    angular.module('app').directive('feedPanel', feedPanel);
-
-    function feedPanel() {
-        return {
-            restrict: 'EA',
-            scope: {
-                feed: '='
-            },
-            replace: true,
-            templateUrl: 'feedPanel/feedPanel.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
-                var vm = this;
-
-                // Function
-                vm.feedit = feedit;
-
-                function feedit() {
-                    $scope.feed.feeded = !$scope.feed.feeded;
-                    if ($scope.feed.feeded) {
-                        Feed.save({
-                            feedlink: $scope.feed.absurl
-                        }, function (res) {
-                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
-                            $scope.feed.feeded = true;
-                            $scope.feed.feedNum++;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    } else {
-                        Feed.delete({
-                            id: $scope.feed.feed_id
-                        }, function (res) {
-                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
-                            $scope.feed.feeded = false;
-                            $scope.feed.feedNum--;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    }
                 }
             }]
         };

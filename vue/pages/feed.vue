@@ -67,7 +67,7 @@ export default {
         }).then(response => {
             this.feed = response.data.data;
             if(this.feed.pubdate !== null) {
-                this.feed.pubdate = new timeago().format(this.feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '));                
+                this.feed.pubdate = new timeago().format(this.feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN');                
             }
         });
         Posts.get({
@@ -77,7 +77,7 @@ export default {
             this.status = _.groupBy(response.data.data.detail, 'post_id');
             for(let post of this.posts) {
                 if(post.pubdate !== null) {
-                    post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));                    
+                    post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN');                    
                 }
                 if(this.status[post._id] && this.status[post._id][0].read) {
                     this.$set(post, 'read', true);

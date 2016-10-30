@@ -21,6 +21,7 @@
 import { Post } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import postOption from '../components/post-option.vue';
+import timeago from 'timeago.js';
 export default {
     data() {
         return {
@@ -35,6 +36,9 @@ export default {
             id: this.$route.params.id
         }).then(response => {
             this.post = response.data.data.result;
+            if(this.post.pubdate !== null) {
+                this.post.pubdate = new timeago().format(this.post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN');                
+            }
             this.status = response.data.data.detail;
             this.pre = response.data.data.pre;
             this.next = response.data.data.next;

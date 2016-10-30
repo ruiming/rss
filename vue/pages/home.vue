@@ -40,7 +40,7 @@ export default {
         Posts.recent().then(response => next(vm => {
             for(let post of response.data.data) {
                 if(post.pubdate !== null) {
-                    post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '));
+                    post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN');
                 }
             }
             vm.posts = response.data.data;
@@ -103,6 +103,7 @@ export default {
     }
     .summary {
         max-height: 140px;
+        word-break: break-all;
         overflow: hidden;
         text-overflow: ellipsis;
     }
