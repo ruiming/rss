@@ -7,6 +7,8 @@ import request from 'request';
 import help from '../helper/help';
 import fetchFavicon from 'favicon-getter';
 import _ from 'underscore';
+import fs from 'fs';
+import { SHA256 } from 'crypto-js';
 
 /**
  * 创建/订阅 订阅源
@@ -91,11 +93,14 @@ exports.create = async(ctx, next) => {
             req.on('error', err => reject(err));
             feedparser.on('meta', async function () {
                 let favicon = null;
-                await fetchFavicon(this.meta.link).then(data => favicon = data)
-                    .catch(e => e);
+                let hash = SHA256(this.meta.link).toString().slice(0,10);                
+                await fetchFavicon(this.meta.link).then(data => {
+                    request.get(data).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'));
+                    favicon = `/favicon/${hash}.ico`;
+                }).catch(e => e);
                 await new Promise(resolve => request(favicon, (err, response, body) => {
-                    if (response.statusCode != 200) {
-                        favicon = '/img/rss.png';
+                    if (response && response.statusCode != 200) {
+                        favicon = '/favicon/rss.png';
                     }
                     resolve(favicon);
                 }));
