@@ -1,0 +1,1 @@
+export const feedState = state => state.feed.all;
