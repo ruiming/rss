@@ -17,7 +17,6 @@
 import { User } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
-import bus from '../bus.js';
 import msg from '../components/msg.vue';
 import _ from 'underscore';
 import { mapGetters, mapActions } from 'vuex'
@@ -30,9 +29,6 @@ export default {
     methods: mapActions({
         updateUser: 'updateUser'
     }),
-    beforeCreate: function() {
-        bus.$on('USER', data => this.user = data);
-    },
     components: {
         headbar, msg, navbar
     }

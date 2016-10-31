@@ -13,19 +13,9 @@ const mutations = {
         state.feed.feed_time = Date.now()
     },
 
-    // 订阅失败
-    [types.SUBSCRIBE_FAILURE](state, { message }) {
-        state.message.push(message)
-    },
-
     // 取消订阅成功
     [types.UNSUBSCRIBE_SUCCESS](state) {
         state.feed.feed_time = 0
-    },
-
-    // 取消订阅失败
-    [types.UNSUBSCRIBE_FAILURE](state, { message }) {
-        state.message.push(message)
     },
 
     // 获取订阅源

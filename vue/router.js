@@ -9,7 +9,7 @@ import post from './pages/post.vue';
 import feed from './pages/feed.vue';
 import square from './pages/square.vue';
 import me from './pages/me.vue';
-import bus from './bus.js';
+import store from './store';
 
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -54,14 +54,14 @@ const router = new VueRouter({
     }]
 });
 router.beforeEach((to, from, next) => {
-    bus.$emit('TRANSITION', false);
-    bus.$emit('EXPAND', false);
+    store.commit('LOADING_START')
+    store.commit('COLLAPSE')
     if(typeof ga !== "undefined") {
-        ga('send', 'pageview', to.fullPath);        
+        ga('send', 'pageview', to.fullPath)
     }
     next();
 });
 router.afterEach((to, from, next) => {
-    bus.$emit('TRANSITION', true);
+    store.commit('LOADING_END')
 })
 export default router;

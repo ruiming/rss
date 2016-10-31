@@ -1,6 +1,7 @@
 import router from '../router.js';
 
 export default function (response) {
+    // 401 response will redirect to login page
     if (response.status === 401) {
         if (!['/auth/login', '/auth/register', '/api/user'].includes(response.url)) {
             router.push({
@@ -8,11 +9,11 @@ export default function (response) {
             });
         }
     } else {
-        var data = response.body.data;
+        // transform the data
+        let data = response.body && response.body.data;
         if (Array.isArray(data)) {
             for (let i = 0, len = data.length; i < len; i++) {
                 if (void 0 !== data[i].feed_id && Array.isArray(data[i].feed_id)) {
-                    // 提取 feed_id 
                     if (typeof data[i].feed_id[0] === 'string') {
                         response.body.data[i].feed_id = data[i].feed_id[0];
                     } else {

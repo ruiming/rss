@@ -9,7 +9,7 @@
                 <img class="favicon" :src="post.favicon" onerror="this.src='/img/rss.png';">
                 <p>{{post.title}}</p>
             </router-link>
-            <div class="option" v-on:click="mark(post)">
+            <div class="option" v-on:click="mark(post._id)">
                 <span v-bind:class="{'icon-star-empty': post.mark, 'icon-star-full': !post.mark}"></span>
             </div>
         </li>
@@ -25,17 +25,19 @@ import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
 import empty from '../components/empty.vue';
 import _ from 'underscore';
+import store from '../store'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
         posts: 'posts'
     }),
+    async beforeRouteEnter (to, from, next) {
+        await store.dispatch('getPosts', 'mark')
+        next()
+    },
     methods: mapActions({
         mark: 'mark'
     }),
-    created() {
-        this.$store.dispatch('getPosts', 'mark')
-    },
     components: {
         headbar, navbar, empty
     }

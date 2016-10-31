@@ -20,7 +20,6 @@
 
 <script>
 import { Posts, Post, Feed } from '../resource/resource.js';
-import bus from '../bus.js';
 import _ from 'underscore';
 import { mapGetters, mapActions } from 'vuex'
 export default {

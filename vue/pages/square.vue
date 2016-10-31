@@ -34,6 +34,7 @@ import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
 import search from '../components/search.vue';
 import msg from '../components/msg.vue';
+import store from '../store'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
@@ -48,9 +49,9 @@ export default {
             this.$store.commit('UPDATE_URL', e.target.value)
         }
     },
-    created() {
-        // TODO: 0 page
-        this.$store.dispatch('getPopularFeeds', 0)
+    async beforeRouteEnter (to, from, next) {
+        await store.dispatch('getPopularFeeds', 0)
+        next()
     },
     components: {
         headbar, navbar, search, msg

@@ -50,3 +50,9 @@ export const user = state => state.user.user
 export const loading = state => state.global.loading
 
 export const auth = state => state.global.auth
+
+export const online = state => state.global.online
+
+export const feedPosts = state => state.posts.feedPosts
+
+export const recentPosts = state => state.posts.recentPosts

@@ -16,9 +16,9 @@
                 </ul>
             </div>
         </transition>
-        <router-view class="view" v-show="loading" v-bind:class="{expand: expand}"></router-view>
+        <router-view class="view" v-show="!loading" v-bind:class="{expand: expand}"></router-view>
         <div class="loading">
-            <div class="cssload-loader" v-show="!loading"></div>
+            <div class="cssload-loader" v-show="loading"></div>
             <p>加载中</p>
         </div>
     </div>
@@ -27,7 +27,6 @@
 <script>
 import { User } from './resource/resource.js';
 import Cookies from 'js-cookie';
-import bus from './bus.js';
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({

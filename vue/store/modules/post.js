@@ -9,23 +9,19 @@ const state = {
 
 const mutations = {
     // 收藏/取消收藏成功
-    [types.MARK_SUCCESS](state) {
-        state.status.mark = !state.status.mark
-    },
-
-    // 收藏/取消收藏失败
-    [types.MARK_FAILURE](state, { message }) {
-        state.message.push(message)
+    [types.MARK_SUCCESS](state, id) {
+        if(state.post._id === id) {
+            state.post.mark = !state.post.mark
+            state.status.mark = !state.status.mark            
+        }
     },
 
     // 点赞/取消点赞成功
-    [types.LOVE_SUCCESS](state) {
-        state.status.love = !state.status.love
-    },
-
-    // 点赞/取消点赞失败
-    [types.LOVE_FAILURE](state, { message }) {
-        state.message.push(message)
+    [types.LOVE_SUCCESS](state, id) {
+        if(state.post._id === id) {
+            state.post.love = !state.post.mark
+            state.status.love = !state.status.love            
+        }
     },
 
     // 已读

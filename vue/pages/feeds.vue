@@ -25,12 +25,14 @@ import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
 import empty from '../components/empty.vue';
 import { mapGetters, mapActions } from 'vuex'
+import store from '../store'
 export default {
     computed: mapGetters({
         feeds: 'userFeeds'
     }),
-    created() {
-        this.$store.dispatch('getAllFeeds')
+    async beforeRouteEnter (to, from, next) {
+        await store.dispatch('getAllFeeds')
+        next()
     },
     components: {
         headbar, navbar, empty

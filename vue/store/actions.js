@@ -85,27 +85,27 @@ export const read = ({ commit, state }) => {
     }
 }
 
-export const mark = ({ commit, state }) => {
+export const mark = ({ commit, state }, id) => {
     Post.update({
-        id: state.post.post._id
+        id: id || state.post.post._id
     }, {
         type: 'mark',
         revert: true
     }).then(res => {
-        commit(types.MARK_SUCCESS)
+        commit(types.MARK_SUCCESS, id || state.post.post._id)
     }, err => {
         commit(types.MARK_FAILURE, err.data)
     })
 }
 
-export const love = ({ commit, state }) => {
+export const love = ({ commit, state }, id) => {
     Post.update({
-        id: state.post.post._id
+        id: id || state.post.post._id
     }, {
         type: 'love',
         revert: true
     }).then(res => {
-        commit(types.LOVE_SUCCESS)
+        commit(types.LOVE_SUCCESS, id || state.post.post._id)
     }, err => {
         commit(types.LOVE_FAILURE, err.data)
     })
@@ -114,14 +114,14 @@ export const love = ({ commit, state }) => {
 
 // Posts
 export const getRecentPosts = ({ commit, state }) => {
-    Posts.recent().then(res => commit(types.RECEIVE_POSTS, res.data))
+    Posts.recent().then(res => commit(types.RECEIVE_RECENT_POSTS, res.data))
 }
 
 export const getFeedPosts = ({ commit, state }, id) => {
     Posts.get({
         feed_id: id
     }).then(res => {
-        commit(types.RECEIVE_POSTS, res.data)
+        commit(types.RECEIVE_FEED_POSTS, res.data)
     })
 }
 
@@ -152,6 +152,7 @@ export const readAll = ({ commit, state }, posts) => {
 export const getUser = ({ commit, state }) => {
     User.get().then(res => {
         commit(types.RECEIVE_USER, res.data)
+        commit(types.ONLINE)
     })
 }
 
@@ -169,7 +170,7 @@ export const authenticate = ({ commit, state }) => {
         email: state.global.auth.email,
         password: state.global.auth.password
     }).then(res => {
-        // Redirect?
+        commit(types.ONLINE)
     }, err => {
         commit(types.ERROR, err.data.message)
     })

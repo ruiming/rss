@@ -44,6 +44,14 @@ const mutations = {
 
     [types.INPUT_PASSWORD](state, value) {
         state.auth.password = value
+    },
+
+    [types.ONLINE](state) {
+        state.online = true
+    },
+
+    [types.OFFLINE](state) {
+        state.online = false
     }
 }
 

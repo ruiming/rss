@@ -48,18 +48,20 @@ import { Feed, Posts } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
 import feedOption from '../components/feed-option.vue';
-import timeago from 'timeago.js'
-import bus from '../bus.js';
 import { mapGetters, mapActions } from 'vuex'
+import store from '../store'
 export default {
     computed: mapGetters({
         feed: 'feed',
-        posts: 'posts',
+        posts: 'feedPosts',
         expand: 'expand',
     }),
-    created() {
-        this.$store.dispatch('getFeed', this.$route.params.id)
-        this.$store.dispatch('getFeedPosts', this.$route.params.id)
+    async beforeRouteEnter (to, from, next) {
+        await Promise.all([
+            store.dispatch('getFeed', to.params.id),
+            store.dispatch('getFeedPosts', to.params.id)
+        ])
+        next()
     },
     components: {
         headbar, feedOption
