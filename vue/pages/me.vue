@@ -1,7 +1,7 @@
 <template>
 <div class="me">
     <headbar>个人信息</headbar>
-    <form @submit.prevent="update()" class="center container-fluid">
+    <form @submit.prevent="updateUser()" class="center container-fluid">
         <msg :msgs="message"></msg>
         <div class="form-group">
             <label for="name">昵称: </label>
@@ -20,31 +20,25 @@ import navbar from '../components/navbar.vue';
 import bus from '../bus.js';
 import msg from '../components/msg.vue';
 import _ from 'underscore';
+import { mapGetters, mapActions } from 'vuex'
 export default {
+    computed: mapGetters({
+        user: 'user'
+    }),
+    methods: mapActions({
+        updateUser: 'updateUser'
+    }),
     data() {
         return {
             message: [],
             expand: false,
-            user: {
-                username: ''
-            }
-        }
-    },
-    created: function() {
-        bus.$on('EXPAND', status => this.expand = status);
-    },
-    methods: {
-        update: function() {
-            User.update(this.user).then(res => {
-                this.message = ['修改成功'];
-                setTimeout(() => this.message = [], 1500);
-            }, err => {
-                this.message = [err.data.data];
-            });
         }
     },
     beforeCreate: function() {
         bus.$on('USER', data => this.user = data);
+    },
+    created: function() {
+        bus.$on('EXPAND', status => this.expand = status);
     },
     components: {
         headbar, msg, navbar

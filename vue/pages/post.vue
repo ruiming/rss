@@ -22,30 +22,19 @@ import { Post } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import postOption from '../components/post-option.vue';
 import timeago from 'timeago.js';
+import { post, status, pre, next } from '../store/getters';
+import { getPost } from '../store/actions'
 export default {
-    data() {
-        return {
-            post: {},
-            status: {},
-            pre: 0,
-            next: 0
+    vuex: {
+        getters: {
+            post,
+            status,
+            pre,
+            next
         }
     },
-    mounted: function() {
-        Post.get({
-            id: this.$route.params.id
-        }).then(response => {
-            this.post = response.data.data.result;
-            if(this.post.pubdate !== null) {
-                this.post.pubdate = new timeago().format(this.post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN');                
-            }
-            this.status = response.data.data.detail;
-            this.pre = response.data.data.pre;
-            this.next = response.data.data.next;
-            if(this.status === null || this.status.read === false) {
-                Post.update({id: this.post._id}, {type: 'read'});
-            }
-        });
+    created() {
+        this.getPost(this.$route.params.id).then(() => this.read())
     },
     computed: {
         content: function() {
@@ -56,21 +45,6 @@ export default {
                 });
             }
             return;
-        }
-    },
-    watch: {
-        '$route' (to, from) {
-            return Post.get({
-                id: this.$route.params.id
-            }).then(response => {
-                this.post = response.data.data.result;
-                this.status = response.data.data.detail;
-                this.pre = response.data.data.pre;
-                this.next = response.data.data.next;
-                if(this.status === null || this.status.read === false) {
-                    Post.update({id: this.post._id}, {type: 'read'});
-                }
-            });
         }
     },
     components: {

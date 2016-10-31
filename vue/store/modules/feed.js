@@ -1,39 +1,39 @@
 import * as types from '../mutation-types';
-import { Feed } from '../../resource';
-import timeago from 'timeago.js';
 
 const state = {
-    data: {}
+    feed: {},
+    message: []
 }
 
-const actions = {
-    [types.SUBSCRIBE](state, { feedlink }) {
-        return Feed.save({
-            feedlink: feedlink
-        }).then(res => {
-            state.data.feed_time = undefined
-        })
+const mutations = {
+    // 订阅成功
+    [types.SUBSCRIBE_SUCCESS](state) {
+        state.feed.feed_time = Date.now()
     },
 
-    [types.UNSUBSCRIBE](state, { id }) {
-        return Feed.delete({
-            id: id
-        }).then(res => {
-            state.data.feed_time = Date.now()
-        })
-    }
-}
+    // 订阅失败
+    [types.SUBSCRIBE_FAILURE](state, { message }) {
+        state.message.push(message)
+    },
 
-const getters = {
-    feed: state => {
-        if(state.data.pubdate != null) {
-            state.data.pubdate = new timeago().format(state.data.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN')
-        }
-        return state.data
+    // 取消订阅成功
+    [types.UNSUBSCRIBE_SUCCESS](state) {
+        data.feed_time = undefined
+    },
+
+    // 取消订阅失败
+    [types.UNSUBSCRIBE_FAILURE](state, { message }) {
+        state.message.push(message)
+    },
+
+    // 获取订阅源
+    [types.RECEIVE_FEED](state, { data }) {
+        console.log(data)
+        state.feed = data
     }
 }
 
 export default {
     state,
-    actions
+    mutations
 }

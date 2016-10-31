@@ -1,7 +1,19 @@
-export const SUBSCRIBE = 'SUBSCRIBE';
-export const UNSUBSCRIBE = 'UNSUBSCRIBE';
-export const MARK = 'MARK';
-export const LOVE = 'LOVE';
-export const READ = 'READ';
-export const READ_ALL = 'READ_ALL';
-export const SEARCH = 'SEARCH';
+// Feed
+export const SUBSCRIBE_SUCCESS = 'SUBSCRIBE_SUCCESS'
+export const SUBSCRIBE_FAILURE = 'SUBSCRIBE_FAILURE'
+export const UNSCRIBE_SUCCESS = 'UNSCRIBE_SUCCESS'
+export const UNSUBSCRIBE = 'UNSUBSCRIBE'
+export const UNSCRIBE_FAILURE = 'UNSCRIBE_FAILURE'
+export const RECEIVE_FEED = 'RECEIVE_FEED'
+// Feeds
+export const RECEIVE_FEEDS = 'RECEIVE_FEEDS'
+export const getPopularFeeds = 'getPopularFeeds'
+// Post
+export const MARK_SUCCESS = 'MARK_SUCCESS'
+export const MARK_FAILURE = 'MARK_FAILURE'
+export const LOVE_SUCCESS = 'MARK_SUCCESS'
+export const LOVE_FAILURE = 'MARK_FAILURE'
+// Posts
+export const RECEIVE_POSTS = 'RECEIVE_POSTS'
+export const REAREAD_ALL_SUCCESSD_ALL = 'READ_ALL_SUCCESS'
+export const READ_ALL_FAILURE = 'READ_ALL_FAILURE'

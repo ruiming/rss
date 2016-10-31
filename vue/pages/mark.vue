@@ -25,29 +25,16 @@ import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
 import empty from '../components/empty.vue';
 import _ from 'underscore';
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    data() {
-        return {
-            posts: []
-        }
-    },
-    methods: {
-        mark: function(post) {
-            this.$set(post, 'mark', !post.mark);
-            Post.update({
-                id: post._id
-            }, {
-                type: 'mark', 
-                revert: true}
-            );
-        }
-    },
-    beforeRouteEnter: function(to, from, next) {
-        Posts.get({
-            type: 'mark'
-        }).then(response => 
-            next(vm => vm.posts = response.data.data)
-        );
+    computed: mapGetters({
+        posts: 'posts'
+    }),
+    methods: mapActions({
+        mark: 'mark'
+    }),
+    created() {
+        this.$store.dispatch('getPosts', 'mark')
     },
     components: {
         headbar, navbar, empty

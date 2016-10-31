@@ -35,10 +35,10 @@ const router = new VueRouter({
         name: 'mark',
         path: '/mark',
         component: mark
-    }, {
+    /*}, {
         name: 'post',
         path: '/post/:id',
-        component: post
+        component: post*/
     }, {
         name: 'feed',
         path: '/feed/:id',
@@ -47,10 +47,10 @@ const router = new VueRouter({
         name: 'square',
         path: '/square',
         component: square
-    }, {
+    /*}, {
         name: 'me',
         path: '/me',
-        component: me
+        component: me*/
     }]
 });
 router.beforeEach((to, from, next) => {

@@ -36,40 +36,23 @@ import msg from '../components/msg.vue';
 import _ from 'underscore';
 import tools from '../../helper/help';
 import base64 from 'base64-url';
+import { mapGetters, mapActions } from 'vuex'
 export default {
+    computed: mapGetters({
+        feeds: 'popularFeeds'
+    }),
     data() {
         return {
-            feeds: [],
             url: null,
             err: [],
             searching: false
         }
     },
-    methods: {
-        search: function(url) {
-            if(!tools.checkUrl(url)) {
-                return false;
-            } else {
-                this.searching = true;
-                this.err.length = 0;
-                Feed.search({
-                    feedlink: url
-                }).then(response => {
-                    this.searching = false;
-                    this.$router.push({name: 'feed', params: {id: response.data.data}});
-                }, err => {
-                    this.searching = false;
-                    this.err.push(err.data.message);
-                })
-            }
-        }
-    },
-    beforeRouteEnter: function(to, from, next) {
-        Feeds.popular({
-            page: 0
-        }).then(response => 
-            next(vm => vm.feeds = response.data.data)
-        );
+    methods: mapActions({
+        search: 'search'
+    }),
+    created() {
+        this.$store.dispatch('getPopularFeeds', 0)
     },
     components: {
         headbar, navbar, search, msg

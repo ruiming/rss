@@ -30,21 +30,13 @@ import navbar from '../components/navbar.vue';
 import empty from '../components/empty.vue';
 import _ from 'underscore';
 import timeago from 'timeago.js';
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    data() {
-        return {
-            posts: []
-        }
-    },
-    beforeRouteEnter: function(to, from, next) {
-        Posts.recent().then(response => next(vm => {
-            for(let post of response.data.data) {
-                if(post.pubdate !== null) {
-                    post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN');
-                }
-            }
-            vm.posts = response.data.data;
-        }));
+    computed: mapGetters({
+        posts: 'posts'
+    }),
+    created() {
+        this.$store.dispatch('getRecentPosts')
     },
     components: {
         headbar, navbar, empty

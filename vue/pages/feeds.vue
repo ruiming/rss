@@ -24,16 +24,14 @@ import { Feed } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
 import empty from '../components/empty.vue';
+import timeago from 'timeago.js';
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    data() {
-        return {
-            feeds: []
-        }
-    },
-    beforeRouteEnter: function(to, from, next) {
-        Feed.get().then(response => 
-            next(vm => vm.feeds = _.groupBy(response.data.data, 'folder'))
-        );
+    computed: mapGetters({
+        feeds: 'userFeeds'
+    }),
+    created() {
+        this.$store.dispatch('getAllFeeds')
     },
     components: {
         headbar, navbar, empty
