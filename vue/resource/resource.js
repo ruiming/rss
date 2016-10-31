@@ -24,12 +24,6 @@ const Feed = Vue.resource('/api/feed{/id}', {}, {
 const Post = Vue.resource('/api/post{/id}', {}, {
     update: {
         method: 'PUT'
-    },
-    get: {
-        method: 'GET',
-        params: {
-            type: '@type'
-        }
     }
 });
 

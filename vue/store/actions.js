@@ -55,11 +55,12 @@ export const getPost = ({ commit }, id) => {
     })
 }
 
-export const read = ({ commit, state }) => {
+export const read = ({ commit, state }, id) => {
     if (state.post.status == null || state.post.read === false) {
         return Post.update({
-            id:   id,
-            type: type
+            id: state.post.post._id,
+        }, {
+            type: 'read'
         })
     }
 }

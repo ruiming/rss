@@ -23,11 +23,17 @@ export const posts = state => {
 }
 
 export const post = state => {
-    let post = _.extend(state.post.post)
+    let post = _.extend({}, state.post.post),
+        re = /src="(\/[^\/].+?)"/g
     if(post.pubdate != null) {
         post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN')
     }
-    return post
+    if(post.description) {
+        post.description.replace(re, (match, p, offset, string) => {
+            return `src="${post.website}${p.slice(1)}"`;
+        });
+    }
+    return state.post.post
 }
 
 export const status = state => state.post.status

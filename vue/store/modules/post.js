@@ -28,9 +28,9 @@ const mutations = {
         state.message.push(message)
     },
 
-    [types.RECEIVE_POST](state, { post, pre, next, status }) {
-        state.post = post
-        state.status = status
+    [types.RECEIVE_POST](state, { result, pre, next, detail }) {
+        state.post = result
+        state.status = detail
         state.pre = pre
         state.next = next
     }

@@ -10,7 +10,7 @@
             <span v-if="post.author">由 {{post.author}} 发布</span>
         </section>
         <section>
-            <article v-html="content" class="article"></article>
+            <article v-html="post.description" class="article"></article>
         </section>
     </article>
     <postOption v-bind:post="post" v-bind:status="status" v-bind:pre="pre" v-bind:next="next"></postOption>
@@ -22,30 +22,17 @@ import { Post } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import postOption from '../components/post-option.vue';
 import timeago from 'timeago.js';
-import { post, status, pre, next } from '../store/getters';
-import { getPost } from '../store/actions'
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    vuex: {
-        getters: {
-            post,
-            status,
-            pre,
-            next
-        }
-    },
+    computed: mapGetters({
+        post: 'post',
+        status: 'status',
+        pre: 'pre',
+        next: 'next'
+    }),
     created() {
-        this.getPost(this.$route.params.id).then(() => this.read())
-    },
-    computed: {
-        content: function() {
-            let re = /src="(\/[^\/].+?)"/g;
-            if(this.post.description) {
-                return this.post.description.replace(re, (match, p, offset, string) => {
-                    return `src="${this.post.website}${p.slice(1)}"`;
-                });
-            }
-            return;
-        }
+        this.$store.dispatch('getPost', this.$route.params.id)
+            .then(() => this.$store.dispatch('read'))
     },
     components: {
         headbar, postOption
