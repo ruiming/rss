@@ -29,9 +29,6 @@ export default {
         feed: 'feed',
         expand: 'expand'
     }),
-    created: function() {
-        this.$store.commit('COLLAPSE')
-    },
     methods: mapActions({
         readall: 'readAll',
         subscribe: 'subscribe',

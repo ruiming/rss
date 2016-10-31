@@ -1,6 +1,7 @@
 import { Feed, Feeds, User, Post, Posts } from '../resource/resource.js'
 import * as types from './mutation-types'
 import tools from '../../helper/help'
+import Vue from 'vue'
 
 // Feed
 
@@ -159,5 +160,17 @@ export const updateUser = ({ commit, state }, data) => {
         commit(types.UPDATE_USER_SUCCESS)
     }, err => {
         commit(types.UPDATE_USER_FAILURE, err.data)
+    })
+}
+
+// Global
+export const authenticate = ({ commit, state }) => {
+    Vue.http.post('/auth/login', {
+        email: state.global.auth.email,
+        password: state.global.auth.password
+    }).then(res => {
+        // Redirect?
+    }, err => {
+        commit(types.ERROR, err.data.message)
     })
 }

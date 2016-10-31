@@ -60,7 +60,6 @@ export default {
     created() {
         this.$store.dispatch('getFeed', this.$route.params.id)
         this.$store.dispatch('getFeedPosts', this.$route.params.id)
-        this.$store.commit('COLLAPSE')
     },
     components: {
         headbar, feedOption

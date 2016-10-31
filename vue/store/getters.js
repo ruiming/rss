@@ -44,3 +44,9 @@ export const searching = state => state.feed.searching
 export const error = state => state.global.error
 
 export const info = state => state.global.info
+
+export const user = state => state.user.user
+
+export const loading = state => state.global.loading
+
+export const auth = state => state.global.auth

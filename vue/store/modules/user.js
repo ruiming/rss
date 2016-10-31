@@ -12,6 +12,10 @@ const mutations = {
 
     [types.UPDATE_USER_FAILURE](state, { message }) {
         state.message.push(message)
+    },
+
+    [types.RECEIVE_USER](state, { data }) {
+        state.user = data
     }
 }
 

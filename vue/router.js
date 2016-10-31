@@ -47,6 +47,10 @@ const router = new VueRouter({
         name: 'square',
         path: '/square',
         component: square
+    }, {
+        name: 'me',
+        path: '/me',
+        component: me
     }]
 });
 router.beforeEach((to, from, next) => {

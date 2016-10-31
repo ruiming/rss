@@ -8,24 +8,22 @@
 </template>
 
 <script>
-import { User } from '../resource/resource.js';
-import bus from '../bus.js';
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    data() {
-        return {
-            expand: false,
-            user: {}
-        }
-    },
-    mounted: function() {
-        User.get().then(response => {
-            this.user = response.data.data;
-        });
+    computed: mapGetters({
+        expand: 'expand',
+        user: 'user'
+    }),
+    created() {
+        this.$store.dispatch('getUser')
     },
     methods: {
         move: function() {
-            this.expand = !this.expand;
-            bus.$emit('EXPAND', this.expand);
+            if(this.expand) {
+                this.$store.commit('COLLAPSE')
+            } else {
+                this.$store.commit('EXPAND')
+            }
         }
     }
 }

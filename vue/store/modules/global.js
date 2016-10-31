@@ -2,6 +2,12 @@ import * as types from '../mutation-types';
 
 const state = {
     expand: false,
+    loading: true,
+    auth: {
+        email: null,
+        password: null
+    },
+    online: false,
     error: [],
     info: []
 }
@@ -22,6 +28,22 @@ const mutations = {
 
     [types.INFO](state, message) {
         state.info = [message]
+    },
+
+    [types.LOADING_START](state) {
+        state.loading = true
+    },
+
+    [types.LOADING_END](state) {
+        state.loading = false
+    },
+
+    [types.INPUT_EMAIL](state, value) {
+        state.auth.email = value
+    },
+
+    [types.INPUT_PASSWORD](state, value) {
+        state.auth.password = value
     }
 }
 
