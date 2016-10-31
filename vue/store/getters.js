@@ -36,3 +36,11 @@ export const pre = state => state.post.pre
 export const next = state => state.post.next
 
 export const expand = state => state.global.expand
+
+export const url = state => state.feed.url
+
+export const searching = state => state.feed.searching
+
+export const error = state => state.global.error
+
+export const info = state => state.global.info

@@ -4,8 +4,9 @@
     <div class="center">
         <div class="form-group search">
             <div class="input-group">
-                <input type="url" class="form-control" placeholder="搜索订阅源" v-model="url"@keyup.enter="search(url)" >
-                <div class="input-group-addon" @click="search(url)">
+                <input type="url" class="form-control" placeholder="搜索订阅源" 
+                    :value="url" @keyup.enter="search()" @input="updateUrl">
+                <div class="input-group-addon" @click="search()">
                     <span class="icon-search"></span>
                 </div>
             </div>
@@ -33,25 +34,22 @@ import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
 import search from '../components/search.vue';
 import msg from '../components/msg.vue';
-import _ from 'underscore';
-import tools from '../../helper/help';
-import base64 from 'base64-url';
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
-        feeds: 'popularFeeds'
+        feeds: 'popularFeeds',
+        searching: 'searching',        
+        url: 'url',        
+        err: 'error'
     }),
-    data() {
-        return {
-            url: null,
-            err: [],
-            searching: false
+    methods: {
+        ...mapActions(['search']),
+        updateUrl(e) {
+            this.$store.commit('UPDATE_URL', e.target.value)
         }
     },
-    methods: mapActions({
-        search: 'search'
-    }),
     created() {
+        // TODO: 0 page
         this.$store.dispatch('getPopularFeeds', 0)
     },
     components: {

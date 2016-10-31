@@ -1,7 +1,9 @@
 import * as types from '../mutation-types';
 
 const state = {
-    expand: false
+    expand: false,
+    error: [],
+    info: []
 }
 
 const mutations = {
@@ -12,6 +14,14 @@ const mutations = {
 
     [types.COLLAPSE](state) {
         state.expand = false
+    },
+
+    [types.ERROR](state, message) {
+        state.error = [message]
+    },
+
+    [types.INFO](state, message) {
+        state.info = [message]
     }
 }
 

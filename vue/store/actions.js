@@ -1,5 +1,6 @@
 import { Feed, Feeds, User, Post, Posts } from '../resource/resource.js'
 import * as types from './mutation-types'
+import tools from '../../helper/help'
 
 // Feed
 
@@ -29,6 +30,22 @@ export const getFeed = ({ commit }, id) => {
     }).then(res => {
         commit(types.RECEIVE_FEED, res.data)
     })
+}
+
+export const search = ({ commit }, url) => {
+    if(!tools.checkUrl(url)) {
+        commit(types.ERROR, 'URL 不合法')
+    } else {
+        commit(types.SEARCHING_START)
+        Feed.search({
+            feedlink: url
+        }).then(res => {
+            commit(types.SEARCHING_END, res.data)
+        }, err => {
+            commit(types.SEARCHING_END)
+            commit(types.ERROR, err.data.message)
+        })
+    }
 }
 
 // Feeds

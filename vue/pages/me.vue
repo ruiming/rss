@@ -23,22 +23,15 @@ import _ from 'underscore';
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
-        user: 'user'
+        user: 'user',
+        expand: 'expand',
+        message: 'error'
     }),
     methods: mapActions({
         updateUser: 'updateUser'
     }),
-    data() {
-        return {
-            message: [],
-            expand: false,
-        }
-    },
     beforeCreate: function() {
         bus.$on('USER', data => this.user = data);
-    },
-    created: function() {
-        bus.$on('EXPAND', status => this.expand = status);
     },
     components: {
         headbar, msg, navbar

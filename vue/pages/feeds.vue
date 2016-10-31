@@ -24,7 +24,6 @@ import { Feed } from '../resource/resource.js';
 import headbar from '../components/headbar.vue';
 import navbar from '../components/navbar.vue';
 import empty from '../components/empty.vue';
-import timeago from 'timeago.js';
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({

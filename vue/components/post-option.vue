@@ -31,20 +31,13 @@ export default {
         post: 'post',
         status: 'status',
         pre: 'pre',
-        next: 'next'
+        next: 'next',
+        expand: 'expand'
     }),
     methods: mapActions({
         mark: 'mark',
         love: 'love'
-    }),
-    data() {
-        return {
-            expand: false
-        }
-    },
-    created: function() {
-        bus.$on('EXPAND', status => this.expand = status);
-    },
+    })
 }
 </script>
 

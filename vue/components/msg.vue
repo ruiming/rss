@@ -9,8 +9,11 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    props: ['msgs']
+    computed: mapGetters({
+        msg: 'error'
+    })
 }
 </script>
 
