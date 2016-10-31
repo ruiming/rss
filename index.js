@@ -58,7 +58,8 @@ http.createServer(app.callback()).listen(config.PORT);
 if (config.ENV === 'production') {
     const options = {
         key: config.APP.SSL_KEY,
-        cert: config.APP.SSL_CERT
+        cert: config.APP.SSL_CERT,
+        ca: config.APP.CA
     };
     http2.createServer(options, app.callback()).listen(443);
 }

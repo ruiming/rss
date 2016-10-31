@@ -14,7 +14,8 @@ module.exports = {
     },
     APP: {
         JWT_KEY: SHA256(_.random(999999)).toString(),
-        SSL_KEY: fs.readFileSync('/etc/letsencrypt/archive/enjoyrss.com/privkey1.pem'),
-        SSL_CERT: fs.readFileSync('/etc/letsencrypt/archive/enjoyrss.com/cert1.pem'),
+        SSL_KEY: fs.readFileSync('/etc/letsencrypt/live/enjoyrss.com/privkey.pem'),
+        SSL_CERT: fs.readFileSync('/etc/letsencrypt/live/enjoyrss.com/cert.pem'),
+        CA: fs.readFileSync('/etc/letsencrypt/live/enjoyrss.com/chain.pem')
     }
 }
