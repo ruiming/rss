@@ -18,7 +18,7 @@ const mutations = {
 
     // 取消订阅成功
     [types.UNSUBSCRIBE_SUCCESS](state) {
-        data.feed_time = undefined
+        state.feed.feed_time = 0
     },
 
     // 取消订阅失败
@@ -28,8 +28,11 @@ const mutations = {
 
     // 获取订阅源
     [types.RECEIVE_FEED](state, { data }) {
-        console.log(data)
         state.feed = data
+    },
+
+    [types.READ_ALL_SUCCESS](state) {
+        state.feed.unread = 0
     }
 }
 

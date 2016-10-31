@@ -7,6 +7,7 @@ import feeds from './modules/feeds';
 import post from './modules/post';
 import posts from './modules/posts';
 import user from './modules/user';
+import global from './modules/global';
 import createLogger from 'vuex/dist/logger';
 
 const debug = process.env.NODE_ENV !== 'production';
@@ -19,7 +20,8 @@ export default new Vuex.Store({
         feeds,
         post,
         posts,
-        user
+        user,
+        global
     },
     strict: debug,
     plugins: debug ? [createLogger()] : []

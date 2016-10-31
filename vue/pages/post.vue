@@ -34,6 +34,12 @@ export default {
         this.$store.dispatch('getPost', this.$route.params.id)
             .then(() => this.$store.dispatch('read'))
     },
+    watch: {
+        '$route' (to, from) {
+            return this.$store.dispatch('getPost', this.$route.params.id)
+                .then(() => this.$store.dispatch('read'))
+        }
+    },
     components: {
         headbar, postOption
     }

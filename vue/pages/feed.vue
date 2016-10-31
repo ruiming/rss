@@ -39,7 +39,7 @@
             </template>
         </ul>
     </div>
-    <feedOption v-bind:feed="feed" v-bind:posts="posts"></feedOption>
+    <feedOption></feedOption>
 </div>
 </template>
 
@@ -54,17 +54,13 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
         feed: 'feed',
-        posts: 'posts'
+        posts: 'posts',
+        expand: 'expand',
     }),
     created() {
         this.$store.dispatch('getFeed', this.$route.params.id)
         this.$store.dispatch('getFeedPosts', this.$route.params.id)
-        bus.$on('EXPAND', status => this.expand = status);
-    },
-    data() {
-        return {
-            expand: false
-        }
+        this.$store.commit('COLLAPSE')
     },
     components: {
         headbar, feedOption

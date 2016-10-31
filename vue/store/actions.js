@@ -5,21 +5,21 @@ import * as types from './mutation-types'
 
 export const subscribe = ({ commit, state }) => {
     Feed.save({
-        feedlink: state.feedlink
+        feedlink: state.feed.feed.absurl
     }).then(res => {
         commit(types.SUBSCRIBE_SUCCESS)
-    }).then(err => {
+    }, err => {
         commit(types.SUBSCRIBE_FAILURE, err)
     })
 }
 
 export const unsubscribe = ({ commit, state }) => {
     Feed.delete({
-        id: state.feed_id || state._id
+        id: state.feed.feed.feed_id || state.feed.feed._id
     }).then(res => {
-        commit(types.UNSCRIBE_SUCCESS)
-    }).then(err => {
-        commit(types.UNSCRIBE_FAILURE, err.data)
+        commit(types.UNSUBSCRIBE_SUCCESS)
+    }, err => {
+        commit(types.UNSUBSCRIBE_FAILURE, err.data)
     })
 }
 
@@ -55,41 +55,44 @@ export const getPost = ({ commit }, id) => {
     })
 }
 
-export const read = ({ commit, state }, id) => {
-    if (state.post.status == null || state.post.read === false) {
+export const read = ({ commit, state }) => {
+    if (state.post.status.read === false) {
         return Post.update({
             id: state.post.post._id,
         }, {
             type: 'read'
+        }).then(res => {
+            commit(types.READ_POST)
         })
     }
 }
 
 export const mark = ({ commit, state }) => {
     Post.update({
-        id: state.post.id
+        id: state.post.post._id
     }, {
         type: 'mark',
         revert: true
     }).then(res => {
         commit(types.MARK_SUCCESS)
-    }).then(err => {
+    }, err => {
         commit(types.MARK_FAILURE, err.data)
     })
 }
 
 export const love = ({ commit, state }) => {
     Post.update({
-        id: state.post.id
+        id: state.post.post._id
     }, {
         type: 'love',
         revert: true
     }).then(res => {
         commit(types.LOVE_SUCCESS)
-    }).then(err => {
-        commit(types.LOVE_FAILURE)
+    }, err => {
+        commit(types.LOVE_FAILURE, err.data)
     })
 }
+
 
 // Posts
 export const getRecentPosts = ({ commit, state }) => {
@@ -117,11 +120,11 @@ export const readAll = ({ commit, state }, posts) => {
         return
     } else {
         Posts.update({
-            feed_id: state.feed_id,
+            feed_id: state.feed.feed.feed_id,
             type: 'read'
         }).then(res => {
             commit('READ_ALL_SUCCESS')
-        }).then(err => {
+        }, err => {
             commit('READ_ALL_FAILURE', err.data)
         })
     }
@@ -137,7 +140,7 @@ export const getUser = ({ commit, state }) => {
 export const updateUser = ({ commit, state }, data) => {
     User.update(data).then(res => {
         commit(types.UPDATE_USER_SUCCESS)
-    }).then(err => {
+    }, err => {
         commit(types.UPDATE_USER_FAILURE, err.data)
     })
 }

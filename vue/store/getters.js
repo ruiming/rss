@@ -13,14 +13,7 @@ export const userFeeds = state => _.groupBy(state.feeds.feeds, 'folder')
 
 export const popularFeeds = state => state.feeds.feeds
 
-export const posts = state => {
-    return _.map(state.posts.posts, post => {
-        if(post.pubdate != null) {
-            return _.extend({}, post, { pubdate:new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN') })
-        }
-        return post
-    })
-}
+export const posts = state => state.posts.posts
 
 export const post = state => {
     let post = _.extend({}, state.post.post),
@@ -41,3 +34,5 @@ export const status = state => state.post.status
 export const pre = state => state.post.pre
 
 export const next = state => state.post.next
+
+export const expand = state => state.global.expand
