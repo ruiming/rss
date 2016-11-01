@@ -94,15 +94,15 @@ exports.create = async(ctx, next) => {
             feedparser.on('meta', async function () {
                 let favicon = null
                 let hash = SHA256(this.meta.link).toString().slice(0,10)     
-                
-                await fetchFavicon(this.meta.link).then(data => {
-                    request.get(data).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'))
-                    favicon = `/favicon/${hash}.ico`
-                }).catch(e => e)
+
+                await fetchFavicon(this.meta.link).then(data => favicon = data).catch(e => e)
 
                 await new Promise(resolve => request(favicon, (err, response, body) => {
-                    if (response && response.statusCode != 200) {
-                        favicon = '/favicon/rss.png'
+                    if (response && response.statusCode != 200 && /image/.test(response.headers['content-type'])) {
+                        request.get(favicon).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'))
+                        favicon = `/favicon/${hash}.ico`
+                    } else {
+                        favicon = '/favicon/rss.png'                        
                     }
                     resolve(favicon)
                 }))
