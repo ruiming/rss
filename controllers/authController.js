@@ -16,9 +16,11 @@ import request from 'request'
  */
 exports.register = async(ctx, next) => {
     let email = /^([\w-_]+(?:\.[\w-_]+)*)@((?:[a-z0-9]+(?:-[a-zA-Z0-9]+)*)+\.[a-z]{2,6})$/i
-    if (ctx.request.body.password.length < 6 || ctx.request.body.password.length > 18) ctx.throw(401, '密码长度有误')
-    else if (!email.test(ctx.request.body.email)) ctx.throw(401, '邮箱有误')
-    else {
+    if (ctx.request.body.password.length < 6 || ctx.request.body.password.length > 18) {
+        ctx.throw(401, '密码长度有误')
+    } else if (!email.test(ctx.request.body.email)) {
+        ctx.throw(401, '邮箱有误')
+    } else {
         let user = null,
             result = null,
             req = request({
@@ -91,8 +93,11 @@ exports.login = async(ctx, next) => {
         let exist = await UserModel.findOne({
             email: ctx.request.body.email
         })
-        if (exist && exist._id) ctx.throw(401, '密码错误')
-        else ctx.throw(401, '邮箱未注册')
+        if (exist && exist._id) {
+            ctx.throw(401, '密码错误')
+        } else {
+            ctx.throw(401, '邮箱未注册')
+        }
     }
 }
 

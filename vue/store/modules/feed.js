@@ -8,12 +8,12 @@ const state = {
 }
 
 const mutations = {
-    // 订阅成功
-    [types.SUBSCRIBE_SUCCESS](state) {
+    // 订阅
+    [types.SUBSCRIBE](state) {
         state.feed.feed_time = Date.now()
     },
-    // 取消订阅成功
-    [types.UNSUBSCRIBE_SUCCESS](state) {
+    // 取消订阅
+    [types.UNSUBSCRIBE](state) {
         state.feed.feed_time = 0
     },
     // 获取订阅源

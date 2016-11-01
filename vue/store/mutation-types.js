@@ -1,8 +1,6 @@
 // Feed
-export const SUBSCRIBE_SUCCESS = 'SUBSCRIBE_SUCCESS'
-export const SUBSCRIBE_FAILURE = 'SUBSCRIBE_FAILURE'
-export const UNSUBSCRIBE_SUCCESS = 'UNSUBSCRIBE_SUCCESS'
-export const UNSUBSCRIBE_FAILURE = 'UNSUBSCRIBE_FAILURE'
+export const SUBSCRIBE = 'SUBSCRIBE'
+export const UNSUBSCRIBE = 'UNSUBSCRIBE'
 export const RECEIVE_FEED = 'RECEIVE_FEED'
 export const SEARCHING_START = 'SEARCHING_START'
 export const SEARCHING_END = 'SEARCHING_END'
@@ -11,10 +9,8 @@ export const UPDATE_URL = 'UPDATE_URL'
 export const RECEIVE_FEEDS = 'RECEIVE_FEEDS'
 export const getPopularFeeds = 'getPopularFeeds'
 // Post
-export const MARK_SUCCESS = 'MARK_SUCCESS'
-export const MARK_FAILURE = 'MARK_FAILURE'
-export const LOVE_SUCCESS = 'LOVE_SUCCESS'
-export const LOVE_FAILURE = 'LOVE_FAILURE'
+export const MARK= 'MARK'
+export const LOVE = 'LOVE'
 export const READ_POST = 'READ_POST'
 // Posts
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'

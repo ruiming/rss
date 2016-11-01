@@ -9,14 +9,14 @@ const state = {
 
 const mutations = {
     // 收藏/取消收藏成功
-    [types.MARK_SUCCESS](state, id) {
+    [types.MARK](state, id) {
         if(state.post._id === id) {
             state.post.mark = !state.post.mark
             state.status.mark = !state.status.mark            
         }
     },
     // 点赞/取消点赞成功
-    [types.LOVE_SUCCESS](state, id) {
+    [types.LOVE](state, id) {
         if(state.post._id === id) {
             state.post.love = !state.post.mark
             state.status.love = !state.status.love            
