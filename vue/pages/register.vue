@@ -2,7 +2,7 @@
 <div>
     <headbar>注册</headbar>
     <form v-on:submit.prevent="register()" class="center login">
-        <msg :msgs="error"></msg>
+        <msg></msg>
         <img src="/img/rss.png">
         <div class="form-group">
             <label for="email">邮箱</label>

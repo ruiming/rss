@@ -1,11 +1,15 @@
 <template>
 <transition name="msg">
-<div v-show="errors.length||infos.length">
-    <div v-for="error in errors">
-        <p class="bg-danger msg">{{error}}</p>
+<div>
+    <div v-show="errors.length">
+        <div v-for="error in errors">
+            <p class="bg-danger msg">{{error}}</p>
+        </div>
     </div>
-    <div v-for="info in infos">
-        <p class="bg-success msg">{{info}}</p>
+    <div v-show="infos.length && !errors.length">
+        <div v-for="info in infos">
+            <p class="bg-success msg">{{info}}</p>
+        </div>
     </div>
 </div>
 </transition>
@@ -32,7 +36,7 @@ export default {
             if(to.length) {
                 setTimeout(() => {
                     this.$store.commit('CLEAR_INFO')
-                })
+                }, 2500)
             }
         }
     }
