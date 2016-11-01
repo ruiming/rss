@@ -42,7 +42,7 @@ const mutations = {
     },
     // 全部标记已读
     [types.READ_ALL](state) {
-        for(let post of state.posts) {
+        for(let post of state.feedPosts) {
             post.read = true
         }
     },
