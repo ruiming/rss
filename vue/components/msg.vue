@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import store from '../store'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({

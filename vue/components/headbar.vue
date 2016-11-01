@@ -14,10 +14,6 @@ export default {
         expand: 'expand',
         user: 'user'
     }),
-
-    created() {
-        this.$store.dispatch('getUser')
-    },
     
     methods: {
         move: function() {
