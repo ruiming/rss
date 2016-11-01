@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-let Schema = mongoose.Schema;
+import mongoose from 'mongoose'
+let Schema = mongoose.Schema
 
 // 用户订阅源表
 
@@ -10,8 +10,8 @@ const UserFeedSchema = new Schema({
     folder:         {type: String, default: 'default'},
     own_title:      {type: String},
     feed_time:      {type: Date, default: Date.now()}
-});
+})
 
-const UserFeed = mongoose.model('UserFeed', UserFeedSchema);
+const UserFeed = mongoose.model('UserFeed', UserFeedSchema)
 
-module.exports = UserFeed;
+module.exports = UserFeed

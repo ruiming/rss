@@ -1,16 +1,40 @@
 <template>
 <transition name="msg">
-<div v-if="msgs.length">
-    <div v-for="msg in msgs">
-        <p class="bg-danger msg">{{msg}}</p>
+<div v-show="errors.length||infos.length">
+    <div v-for="error in errors">
+        <p class="bg-danger msg">{{error}}</p>
+    </div>
+    <div v-for="info in infos">
+        <p class="bg-success msg">{{info}}</p>
     </div>
 </div>
 </transition>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    props: ['msgs']
+    computed: mapGetters({
+        errors: 'error',
+        infos: 'info'
+    }),
+
+    watch: {
+        'errors' (to, from) {
+            if(to.length) {
+                setTimeout(() => {
+                    this.$store.commit('CLEAR_ERROR')
+                }, 2500)
+            }
+        },
+        'infos' (to, from) {
+            if(to.length) {
+                setTimeout(() => {
+                    this.$store.commit('CLEAR_INFO')
+                })
+            }
+        }
+    }
 }
 </script>
 

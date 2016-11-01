@@ -1,16 +1,18 @@
 <template>
 <div>
     <headbar>登录</headbar>
-    <form v-on:submit.prevent="login(user)" class="center login">
-        <msg :msgs="error"></msg>
+    <form v-on:submit.prevent="login()" class="center login">
+        <msg></msg>
         <img src="/img/rss.png">
         <div class="form-group">
             <label for="email">邮箱</label>
-            <input type="email" class="form-control" id="email" v-model="user.email" placeholder="邮箱" required>
+            <input type="email" class="form-control" id="email" 
+                :value="auth.email" placeholder="邮箱" @input="inputEmail" required>
         </div>
         <div class="form-group">
             <label for="password">密码</label>
-            <input type="password" class="form-control" id="password" v-model="user.password" placeholder="密码" required>
+            <input type="password" class="form-control" id="password" 
+                :value="auth.password" placeholder="密码" @input="inputPassword" required>
         </div>
         <input type="submit" class="btn btn-default btn-block" value="登录">        
         <router-link :to="{name: 'register'}" class="btn btn-default btn-block">没有账号? 注册</router-link>
@@ -19,31 +21,27 @@
 </template>
 
 <script>
-import { User } from '../resource/resource.js';
-import msg from '../components/msg.vue';
-import headbar from '../components/headbar.vue';
+import msg from '../components/msg.vue'
+import headbar from '../components/headbar.vue'
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    data() {
-        return {
-            user: {email: '', password: ''},
-            error: []
-        }
-    },
-    beforeRouteEnter: function(to, from, next) {
-        return User.get().then(res => next(vm =>
-            vm.$router.back()
-        ), err => next());
-    },
+    computed: mapGetters({
+        error: 'error',
+        auth: 'auth'
+    }),
+
     methods: {
-        login: function(user) {
-            this.error.length = 0;
-            this.$http.post('/auth/login', user).then(response => {
-                this.$router.replace('/');
-            }, err => {
-                this.error.push(err.data.message);
-            })
+        ...mapActions({
+            login: 'authenticate',
+        }),
+        inputEmail(e) {
+            this.$store.commit('INPUT_EMAIL', e.target.value)
+        },
+        inputPassword(e) {
+            this.$store.commit('INPUT_PASSWORD', e.target.value)
         }
     },
+    
     components: {
         msg, headbar
     }

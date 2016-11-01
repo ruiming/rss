@@ -10,16 +10,11 @@
 </template>
 
 <script>
-import bus from '../bus.js';
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    data() {
-        return {
-            expand: false
-        }
-    },
-    created: function() {
-        bus.$on('EXPAND', status => this.expand = status );
-    }
+    computed: mapGetters({
+        expand: 'expand'
+    })
 }
 </script>
 

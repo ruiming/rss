@@ -1,10 +1,10 @@
-var path = require('path');
-var webpack = require('webpack');
+var path = require('path')
+var webpack = require('webpack')
 var isProduction = function () {
-    return process.env.NODE_ENV === 'production';
+    return process.env.NODE_ENV === 'production'
 }
 var plugins = [],
-    output;
+    output
 if (isProduction()) {
     plugins.push(
         new webpack.optimize.UglifyJsPlugin({
@@ -13,7 +13,7 @@ if (isProduction()) {
                 warnings: false
             },
         })
-    );
+    )
     output = {
         path: path.resolve(__dirname, './public/js/'),
         publicPath: '/js/',

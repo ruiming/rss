@@ -24,27 +24,19 @@
 </template>
 
 <script>
-import { Posts } from '../resource/resource.js';
-import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import empty from '../components/empty.vue';
-import _ from 'underscore';
-import timeago from 'timeago.js';
+import { Posts } from '../resource/resource.js'
+import headbar from '../components/headbar.vue'
+import navbar from '../components/navbar.vue'
+import empty from '../components/empty.vue'
+import { mapGetters, mapActions } from 'vuex'
+import store from '../store'
 export default {
-    data() {
-        return {
-            posts: []
-        }
-    },
-    beforeRouteEnter: function(to, from, next) {
-        Posts.recent().then(response => next(vm => {
-            for(let post of response.data.data) {
-                if(post.pubdate !== null) {
-                    post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN');
-                }
-            }
-            vm.posts = response.data.data;
-        }));
+    computed: mapGetters({
+        posts: 'recentPosts'
+    }),
+    async beforeRouteEnter (to, from, next) {
+        await store.dispatch('getRecentPosts')
+        next()
     },
     components: {
         headbar, navbar, empty

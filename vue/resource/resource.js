@@ -1,6 +1,6 @@
-import Vue from 'vue';
-import VueResource from 'vue-resource';
-Vue.use(VueResource);
+import Vue from 'vue'
+import VueResource from 'vue-resource'
+Vue.use(VueResource)
 
 const Feeds = Vue.resource('/api/feeds', {}, {
     popular: {
@@ -10,7 +10,7 @@ const Feeds = Vue.resource('/api/feeds', {}, {
             'per_page': 50
         }
     }
-});
+})
 
 const Feed = Vue.resource('/api/feed{/id}', {}, {
     search: {
@@ -19,19 +19,13 @@ const Feed = Vue.resource('/api/feed{/id}', {}, {
             search: true
         }
     }
-});
+})
 
 const Post = Vue.resource('/api/post{/id}', {}, {
     update: {
         method: 'PUT'
-    },
-    get: {
-        method: 'GET',
-        params: {
-            type: '@type'
-        }
     }
-});
+})
 
 const Posts = Vue.resource('/api/posts', {}, {
     get: {
@@ -48,7 +42,7 @@ const Posts = Vue.resource('/api/posts', {}, {
     update: {
         method: 'PUT'
     }
-});
+})
 
 const User = Vue.resource('/api/user', {}, {
     update: {
@@ -58,7 +52,7 @@ const User = Vue.resource('/api/user', {}, {
         method: 'POST',
         url: '/auth/logout'
     }
-});
+})
 
 export {
     Feeds,

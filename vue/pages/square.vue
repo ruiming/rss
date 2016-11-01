@@ -4,8 +4,9 @@
     <div class="center">
         <div class="form-group search">
             <div class="input-group">
-                <input type="url" class="form-control" placeholder="搜索订阅源" v-model="url"@keyup.enter="search(url)" >
-                <div class="input-group-addon" @click="search(url)">
+                <input type="url" class="form-control" placeholder="搜索订阅源" 
+                    :value="url" @keyup.enter="search()" @input="updateUrl">
+                <div class="input-group-addon" @click="search()">
                     <span class="icon-search"></span>
                 </div>
             </div>
@@ -28,49 +29,33 @@
 </template>
 
 <script>
-import { Feeds, Feed } from '../resource/resource.js';
-import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import search from '../components/search.vue';
-import msg from '../components/msg.vue';
-import _ from 'underscore';
-import tools from '../../helper/help';
-import base64 from 'base64-url';
+import { Feeds, Feed } from '../resource/resource.js'
+import headbar from '../components/headbar.vue'
+import navbar from '../components/navbar.vue'
+import search from '../components/search.vue'
+import msg from '../components/msg.vue'
+import store from '../store'
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    data() {
-        return {
-            feeds: [],
-            url: null,
-            err: [],
-            searching: false
-        }
-    },
+    computed: mapGetters({
+        feeds: 'popularFeeds',
+        searching: 'searching',        
+        url: 'url',        
+        err: 'error'
+    }),
+
     methods: {
-        search: function(url) {
-            if(!tools.checkUrl(url)) {
-                return false;
-            } else {
-                this.searching = true;
-                this.err.length = 0;
-                Feed.search({
-                    feedlink: url
-                }).then(response => {
-                    this.searching = false;
-                    this.$router.push({name: 'feed', params: {id: response.data.data}});
-                }, err => {
-                    this.searching = false;
-                    this.err.push(err.data.message);
-                })
-            }
+        ...mapActions(['search']),
+        updateUrl(e) {
+            this.$store.commit('UPDATE_URL', e.target.value)
         }
     },
-    beforeRouteEnter: function(to, from, next) {
-        Feeds.popular({
-            page: 0
-        }).then(response => 
-            next(vm => vm.feeds = response.data.data)
-        );
+
+    async beforeRouteEnter (to, from, next) {
+        await store.dispatch('getPopularFeeds', 0)
+        next()
     },
+    
     components: {
         headbar, navbar, search, msg
     }

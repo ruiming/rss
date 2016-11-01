@@ -6,4 +6,4 @@
                 popular: {method: 'GET', params: {order: 'feedNum', 'per_page': 5}}
             })
         })
-}());
+}())

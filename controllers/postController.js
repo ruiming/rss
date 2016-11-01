@@ -1,9 +1,9 @@
-import FeedModel from '../models/feed';
-import PostModel from '../models/post';
+import FeedModel from '../models/feed'
+import PostModel from '../models/post'
 import UserPostModel from '../models/userPost'
-import FeedParser from 'feedparser';
-import request from 'request';
-import _ from 'underscore';
+import FeedParser from 'feedparser'
+import request from 'request'
+import _ from 'underscore'
 
 /**
  * 获取一篇文章的详细信息
@@ -13,7 +13,7 @@ import _ from 'underscore';
 exports.listOne = async(ctx, next) => {
     let id = ctx.params.id,
         user_id = ctx.state.user.id,
-        result, readresult;
+        result, readresult
     await Promise.all([
         Promise.resolve().then(async() => result = await PostModel.findOne({
             _id: id
@@ -22,7 +22,7 @@ exports.listOne = async(ctx, next) => {
             post_id: id,
             user_id: user_id
         }))
-    ]);
+    ])
     if (result && result._id) {
         let posts = await PostModel.find({
             feed_id: result.feed_id
@@ -30,10 +30,10 @@ exports.listOne = async(ctx, next) => {
             _id: 1
         }).sort({
             pubdate: -1
-        });
-        posts = _.invoke(_.flatten(_.pluck(posts, '_id'), true), 'toString');
+        })
+        posts = _.invoke(_.flatten(_.pluck(posts, '_id'), true), 'toString')
         let pre = posts[posts.indexOf(id) - 1],
-            next = posts[posts.indexOf(id) + 1];
+            next = posts[posts.indexOf(id) + 1]
         return ctx.body = {
             success: true,
             data: {
@@ -42,9 +42,9 @@ exports.listOne = async(ctx, next) => {
                 pre: pre,
                 next: next
             }
-        };
+        }
     } else {
-        ctx.throw(404, result);
+        ctx.throw(404, result)
     }
 }
 
@@ -60,41 +60,41 @@ exports.update = async(ctx, next) => {
         user_id = ctx.state.user.id,
         type = ctx.request.body.type && ctx.request.body.type.trim(),
         revert = ctx.request.body.revert === true,
-        feed = ctx.request.body.feed === true;
+        feed = ctx.request.body.feed === true
     if (!['read', 'mark', 'love', 'finish'].includes(type)) {
-        ctx.throw(404, '参数非法');
+        ctx.throw(404, '参数非法')
     } else {
         setTimeout(async() => {
-            let items = id.split(',');
+            let items = id.split(',')
             for (let item of items) {
-                let state, res;
+                let state, res
                 await Promise.all([Promise.resolve().then(async() => state = await UserPostModel.findOne({
                         user_id: user_id,
                         post_id: item
                     })),
                     Promise.resolve().then(async() => res = await PostModel.findById(item))
-                ]).catch(e => e);
-                if (!(res && res._id)) continue;
+                ]).catch(e => e)
+                if (!(res && res._id)) continue
                 let basic = {
                     user_id: user_id,
                     feed_id: res.feed_id,
                     post_id: item
-                };
+                }
                 if (state && state._id) {
-                    state[type] = revert ? !state[type] : true;
-                    if (!revert) state[type + '_date'] = Date.now();
-                    state.save();
+                    state[type] = revert ? !state[type] : true
+                    if (!revert) state[type + '_date'] = Date.now()
+                    state.save()
                 } else {
-                    basic[type] = true;
-                    basic[type + '_date'] = Date.now();
-                    basic = new UserPostModel(basic);
-                    basic.save();
+                    basic[type] = true
+                    basic[type + '_date'] = Date.now()
+                    basic = new UserPostModel(basic)
+                    basic.save()
                 }
             }
-        }, 0);
+        }, 0)
         ctx.body = {
             success: true,
             data: '操作成功'
-        };
+        }
     }
 }

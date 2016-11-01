@@ -39,54 +39,32 @@
             </template>
         </ul>
     </div>
-    <feedOption v-bind:feed="feed" v-bind:posts="posts"></feedOption>
+    <feedOption></feedOption>
 </div>
 </template>
 
 <script>
-import { Feed, Posts } from '../resource/resource.js';
-import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import feedOption from '../components/feed-option.vue';
-import timeago from 'timeago.js'
-import bus from '../bus.js';
+import { Feed, Posts } from '../resource/resource.js'
+import headbar from '../components/headbar.vue'
+import navbar from '../components/navbar.vue'
+import feedOption from '../components/feed-option.vue'
+import { mapGetters, mapActions } from 'vuex'
+import store from '../store'
 export default {
-    data() {
-        return {
-            feed: {},
-            posts: [],
-            expand: false
-        }
+    computed: mapGetters({
+        feed: 'feed',
+        posts: 'feedPosts',
+        expand: 'expand',
+    }),
+
+    async beforeRouteEnter (to, from, next) {
+        await Promise.all([
+            store.dispatch('getFeed', to.params.id),
+            store.dispatch('getFeedPosts', to.params.id)
+        ])
+        next()
     },
-    created: function() {
-        bus.$on('EXPAND', status => this.expand = status);
-    },
-    mounted: function() {
-        Feed.get({
-            id: this.$route.params.id
-        }).then(response => {
-            this.feed = response.data.data;
-            if(this.feed.pubdate !== null) {
-                this.feed.pubdate = new timeago().format(this.feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN');                
-            }
-        });
-        Posts.get({
-            feed_id: this.$route.params.id
-        }).then(response => {
-            this.posts = _.sortBy(response.data.data.posts, 'pubdate').reverse();
-            this.status = _.groupBy(response.data.data.detail, 'post_id');
-            for(let post of this.posts) {
-                if(post.pubdate !== null) {
-                    post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN');                    
-                }
-                if(this.status[post._id] && this.status[post._id][0].read) {
-                    this.$set(post, 'read', true);
-                } else {
-                    this.$set(post, 'read', false);
-                }
-            }
-        });
-    },
+    
     components: {
         headbar, feedOption
     }

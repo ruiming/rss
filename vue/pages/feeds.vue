@@ -20,21 +20,22 @@
 </template>
 
 <script>
-import { Feed } from '../resource/resource.js';
-import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import empty from '../components/empty.vue';
+import { Feed } from '../resource/resource.js'
+import headbar from '../components/headbar.vue'
+import navbar from '../components/navbar.vue'
+import empty from '../components/empty.vue'
+import { mapGetters, mapActions } from 'vuex'
+import store from '../store'
 export default {
-    data() {
-        return {
-            feeds: []
-        }
+    computed: mapGetters({
+        feeds: 'userFeeds'
+    }),
+
+    async beforeRouteEnter (to, from, next) {
+        await store.dispatch('getAllFeeds')
+        next()
     },
-    beforeRouteEnter: function(to, from, next) {
-        Feed.get().then(response => 
-            next(vm => vm.feeds = _.groupBy(response.data.data, 'folder'))
-        );
-    },
+    
     components: {
         headbar, navbar, empty
     }

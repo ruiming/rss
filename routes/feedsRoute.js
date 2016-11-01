@@ -1,8 +1,8 @@
-import Router from 'koa-router';
-import feedsController from '../controllers/feedsController';
+import Router from 'koa-router'
+import feedsController from '../controllers/feedsController'
 
-let router = new Router();
+let router = new Router()
 
-router.get('/', feedsController.list);
+router.get('/', feedsController.list)
 
-export default router;
+export default router

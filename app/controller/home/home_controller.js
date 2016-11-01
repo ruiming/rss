@@ -1,15 +1,15 @@
 (function () {
     angular
         .module('app')
-        .controller('HomeController', HomeController);
+        .controller('HomeController', HomeController)
 
     function HomeController(Feeds, feeds, posts, Post, $state, $timeout) {
-        var vm = this;
-        vm.currentPage = 0;
-        vm.posts = posts.data;
-        vm.feeds = feeds.data;
+        var vm = this
+        vm.currentPage = 0
+        vm.posts = posts.data
+        vm.feeds = feeds.data
 
-        vm.goto = goto;
+        vm.goto = goto
 
         function goto(post) {
             Post.update({
@@ -17,18 +17,18 @@
                 id: post._id
             }, {
                 type: 'read'
-            });
+            })
             $state.go('feed.post', {
                 id: post.feed_id,
                 post_id: post._id
-            });
+            })
         }
 
         function next() {
             vm.feeds = Feeds.popular({
                 page: ++vm.currentPage
-            }).$promise.data;
+            }).$promise.data
         }
     }
 
-}());
+}())

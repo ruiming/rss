@@ -1,14 +1,14 @@
-import FeedModel from '../models/feed';
-import PostModel from '../models/post';
-import UserFeedModel from '../models/userFeed';
-import UserPostModel from '../models/userPost';
-import FeedParser from 'feedparser';
-import request from 'request';
-import help from '../helper/help';
-import fetchFavicon from 'favicon-getter';
-import _ from 'underscore';
-import fs from 'fs';
-import { SHA256 } from 'crypto-js';
+import FeedModel from '../models/feed'
+import PostModel from '../models/post'
+import UserFeedModel from '../models/userFeed'
+import UserPostModel from '../models/userPost'
+import FeedParser from 'feedparser'
+import request from 'request'
+import help from '../helper/help'
+import fetchFavicon from 'favicon-getter'
+import _ from 'underscore'
+import fs from 'fs'
+import { SHA256 } from 'crypto-js'
 
 /**
  * 创建/订阅 订阅源
@@ -19,51 +19,51 @@ import { SHA256 } from 'crypto-js';
  */
 exports.create = async(ctx, next) => {
     let feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim(),
-        search = ctx.request.query.search === 'true';
+        search = ctx.request.query.search === 'true'
     if (!help.checkUrl(feedlink)) {
-        ctx.throw(404, 'URL 不合法');
+        ctx.throw(404, 'URL 不合法')
     }
     let user_id = ctx.state.user.id,
         feedparser = new FeedParser(),
         feed = new FeedModel(),
-        _id;
+        _id
     // 查找数据库是否有该订阅源
     let result = await FeedModel.findOne({
         absurl: feedlink
-    });
+    })
     // 判断数据库已存在该订阅源
     if (result && result._id) {
         if (search) {
             return ctx.body = {
                 success: true,
                 data: result._id
-            };
+            }
         } else {
             let userresult = await UserFeedModel.findOne({
                 user_id: user_id,
                 feed_id: result._id
-            });
+            })
             // 判断用户是否已经订阅该订阅源
             if (userresult && userresult._id) {
                 ctx.throw(409, `已订阅源 ${result.title}(${result.id})`)
             } else {
                 // 订阅源的订阅人数 +1
-                result.feedNum += 1;
-                result.save();
+                result.feedNum += 1
+                result.save()
                 let count = await PostModel.find({
                     feed_id: result._id
-                }).count();
+                }).count()
                 let userfeed = UserFeedModel({
                     feed_id: result._id,
                     user_id: user_id,
                     unread: count
-                });
+                })
                 // 添加到用户订阅表
-                userfeed.save();
+                userfeed.save()
                 return ctx.body = {
                     success: true,
                     data: result
-                };
+                }
             }
         }
     } else {
@@ -73,37 +73,37 @@ exports.create = async(ctx, next) => {
                 headers: {
                     'User-Agent': 'request'
                 }
-            });
+            })
             req.on('response', res => {
                 if (res.statusCode != 200) {
                     res.on("data", chunk => {
-                        reject('Error: 目的不可达, 404错误');
-                    });
+                        reject('Error: 目的不可达, 404错误')
+                    })
                 } else {
-                    res.pipe(feedparser);
+                    res.pipe(feedparser)
                     feedparser.on('error', err => {
                         if (err) {
-                            reject(err);
+                            reject(err)
                         } else {
-                            resolve();
+                            resolve()
                         }
-                    });
+                    })
                 }
-            });
-            req.on('error', err => reject(err));
+            })
+            req.on('error', err => reject(err))
             feedparser.on('meta', async function () {
-                let favicon = null;
-                let hash = SHA256(this.meta.link).toString().slice(0,10);                
+                let favicon = null
+                let hash = SHA256(this.meta.link).toString().slice(0,10)                
                 await fetchFavicon(this.meta.link).then(data => {
-                    request.get(data).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'));
-                    favicon = `/favicon/${hash}.ico`;
-                }).catch(e => e);
+                    request.get(data).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'))
+                    favicon = `/favicon/${hash}.ico`
+                }).catch(e => e)
                 await new Promise(resolve => request(favicon, (err, response, body) => {
                     if (response && response.statusCode != 200) {
-                        favicon = '/favicon/rss.png';
+                        favicon = '/favicon/rss.png'
                     }
-                    resolve(favicon);
-                }));
+                    resolve(favicon)
+                }))
                 let data = search ? {
                     absurl: feedlink,
                     favicon: favicon
@@ -111,32 +111,32 @@ exports.create = async(ctx, next) => {
                     absurl: feedlink,
                     favicon: favicon,
                     feedNum: 1
-                };
+                }
                 let feed = new FeedModel(Object.assign(this.meta, data, {
                     lastScan: Date.now()
-                }));
-                let store = await feed.save();
+                }))
+                let store = await feed.save()
                 let feedid = store._id,
                     link = store.link,
-                    count = 0;
+                    count = 0
                 if (search) {
                     feedparser.on('readable', function () {
                         while (result = this.read()) {
                             let post = new PostModel(Object.assign(result, {
                                 feed_id: feedid,
                                 website: link
-                            }));
-                            post.save();
-                            count++;
+                            }))
+                            post.save()
+                            count++
                         }
-                    });
+                    })
                     feedparser.on('end', function () {
                         ctx.body = {
                             success: true,
                             data: store._id
-                        };
-                        resolve();
-                    });
+                        }
+                        resolve()
+                    })
                 } else {
                     setTimeout(() => {
                         feedparser.on('readable', function () {
@@ -144,28 +144,28 @@ exports.create = async(ctx, next) => {
                                 let post = new PostModel(Object.assign(result, {
                                     feed_id: feedid,
                                     website: link
-                                }));
-                                post.save();
-                                count++;
+                                }))
+                                post.save()
+                                count++
                             }
-                        });
+                        })
                         feedparser.on('end', function () {
                             let userfeed = new UserFeedModel({
                                 feed_id: feedid,
                                 user_id: user_id,
                                 unread: count
-                            });
-                            userfeed.save();
+                            })
+                            userfeed.save()
                         })
-                    }, 0);
+                    }, 0)
                     ctx.body = {
                         success: true,
                         data: store
-                    };
-                    resolve();
+                    }
+                    resolve()
                 }
-            });
-        });
+            })
+        })
     }
 }
 
@@ -176,8 +176,8 @@ exports.create = async(ctx, next) => {
  */
 exports.list = async(ctx, next) => {
     let id = ctx.params.id,
-        user_id = ctx.state.user.id;
-    let unreadcount, count;
+        user_id = ctx.state.user.id
+    let unreadcount, count
     await Promise.all([
         Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
             feed_id: id,
@@ -187,29 +187,29 @@ exports.list = async(ctx, next) => {
         Promise.resolve().then(async() => count = await PostModel.count({
             feed_id: id
         }))
-    ]);
+    ])
     let result = await UserFeedModel.findOne({
         user_id: user_id,
         feed_id: id
     }, {
         user_id: 0
-    }).populate('feed_id').lean().exec((err, data) => data ? data.unread = count - unreadcount : data);
+    }).populate('feed_id').lean().exec((err, data) => data ? data.unread = count - unreadcount : data)
     if (result && result._id) {
         ctx.body = {
             success: true,
             data: result
-        };
+        }
     } else {
         result = await FeedModel.findOne({
             _id: id
-        }).lean().exec((err, data) => data ? data.unread = count - unreadcount : data);
+        }).lean().exec((err, data) => data ? data.unread = count - unreadcount : data)
         if (result && result._id) {
             ctx.body = {
                 success: true,
                 data: result
-            };
+            }
         } else {
-            ctx.throw(404, '订阅源不存在');
+            ctx.throw(404, '订阅源不存在')
         }
     }
 }
@@ -220,7 +220,7 @@ exports.list = async(ctx, next) => {
  * @link:   /api/feed
  */
 exports.listAll = async(ctx, next) => {
-    let user_id = ctx.state.user.id;
+    let user_id = ctx.state.user.id
     let items = await UserFeedModel.find({
             user_id: user_id
         }, {
@@ -229,9 +229,9 @@ exports.listAll = async(ctx, next) => {
         .populate('feed_id', {
             favicon: 1,
             title: 1
-        }).lean().exec();
+        }).lean().exec()
     await Promise.all(_.map(items, item => new Promise(async(resolve, reject) => {
-        let unreadcount, count;
+        let unreadcount, count
         await Promise.all([
             Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
                 feed_id: item.feed_id,
@@ -241,16 +241,16 @@ exports.listAll = async(ctx, next) => {
             Promise.resolve().then(async() => count = await PostModel.count({
                 feed_id: item.feed_id
             }))
-        ]);
+        ])
         resolve(Object.assign(item, {
             unread: count - unreadcount
-        }));
+        }))
     }))).then(items => {
         ctx.body = {
             success: true,
             data: items
-        };
-    });
+        }
+    })
 }
 
 /**
@@ -261,13 +261,13 @@ exports.listAll = async(ctx, next) => {
  */
 exports.remove = async(ctx, next) => {
     let user_id = ctx.state.user.id,
-        feed_id = ctx.params.id;
+        feed_id = ctx.params.id
     let result = await UserFeedModel.find({
         user_id: user_id,
         feed_id: feed_id
-    }).remove();
+    }).remove()
     if (result.result.n === 0) {
-        ctx.throw(404, '你没有订阅该订阅源');
+        ctx.throw(404, '你没有订阅该订阅源')
     } else {
         setTimeout(async() => {
             await FeedModel.update({
@@ -276,11 +276,11 @@ exports.remove = async(ctx, next) => {
                 $inc: {
                     feedNum: -1
                 }
-            });
-        }, 0);
+            })
+        }, 0)
         return ctx.body = {
             success: true,
             data: `取消订阅成功`
-        };
+        }
     }
 }

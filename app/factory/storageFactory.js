@@ -4,9 +4,9 @@
 (function () {
     angular
         .module('app')
-        .factory('storage', storage);
+        .factory('storage', storage)
 
     function storage() {
-        return {};
+        return {}
     }
-}());
+}())

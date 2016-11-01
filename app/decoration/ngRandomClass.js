@@ -1,7 +1,7 @@
 (function () {
     angular
         .module('app')
-        .directive('ngRandomClass', ngRandomClass);
+        .directive('ngRandomClass', ngRandomClass)
 
     function ngRandomClass() {
         return {
@@ -11,8 +11,8 @@
                 ngClasses: "=ngRandomClass"
             },
             link: function (scope, elem, attr) {
-                elem.addClass(scope.ngClasses[Math.floor(Math.random() * (scope.ngClasses.length))]);
+                elem.addClass(scope.ngClasses[Math.floor(Math.random() * (scope.ngClasses.length))])
             }
         }
     }
-}());
+}())

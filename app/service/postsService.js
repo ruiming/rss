@@ -6,6 +6,6 @@
                 get: {method: 'GET', params: {type: '@type', feed_id: '@feed_id'}},
                 recent: {method: 'GET', url: '/api/posts/recent'},
                 update: {method: 'PUT'}
-            });
+            })
         })
-}());
+}())

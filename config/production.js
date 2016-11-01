@@ -1,6 +1,6 @@
-import fs from 'fs';
-import { SHA256 } from 'crypto-js';
-import _ from 'underscore';
+import fs from 'fs'
+import { SHA256 } from 'crypto-js'
+import _ from 'underscore'
 
 module.exports = {
     ENV: 'production',

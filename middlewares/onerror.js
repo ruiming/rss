@@ -4,39 +4,39 @@
 module.exports = function () {
     return async(ctx, next) => {
         try {
-            await next();
+            await next()
         } catch (err) {
             if (err && 401 === err.status && !ctx.mobile) {
                 // undefined == null
-                if (err != null) err = 'Unknown';
-                ctx.clearcookies();
+                if (err != null) err = 'Unknown'
+                ctx.clearcookies()
                 if (ctx.request.body.email) {
                     if (ctx.request.body.json === 'true' || ctx.request.body.json === true) {
-                        ctx.status = 401;
+                        ctx.status = 401
                         ctx.body = {
                             success: false,
                             message: err.toString()
-                        };
+                        }
                     } else {
                         await ctx.render('login.ejs', {
                             err: err,
                             email: ctx.request.body.email
-                        });
+                        })
                     }
                 } else {
-                    ctx.status = 401;
+                    ctx.status = 401
                     ctx.body = {
                         success: false,
                         message: err.toString()
-                    };
+                    }
                 }
             } else {
-                ctx.status = (err && err.status) || 404;
-                console.log(err);
+                ctx.status = (err && err.status) || 404
+                console.log(err)
                 ctx.body = {
                     success: false,
                     message: err.toString()
-                };
+                }
             }
         }
     }

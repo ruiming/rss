@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-let Schema = mongoose.Schema;
+import mongoose from 'mongoose'
+let Schema = mongoose.Schema
 
 // 文章表
 
@@ -20,8 +20,8 @@ const PostSchema = new Schema({
     feed_id:        [{type: Schema.Types.ObjectId, ref: 'Feed'}],   // 订阅源 ID
     loveNum:        {type: Number, default: 0},                     // 点赞数量
     markNum:        {type: Number, default: 0}                      // 星标人数
-});
+})
 
-const Post = mongoose.model('Post', PostSchema);
+const Post = mongoose.model('Post', PostSchema)
 
-module.exports = Post;
+module.exports = Post

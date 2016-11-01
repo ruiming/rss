@@ -9,7 +9,7 @@
                 <img class="favicon" :src="post.favicon" onerror="this.src='/img/rss.png';">
                 <p>{{post.title}}</p>
             </router-link>
-            <div class="option" v-on:click="mark(post)">
+            <div class="option" v-on:click="mark(post._id)">
                 <span v-bind:class="{'icon-star-empty': post.mark, 'icon-star-full': !post.mark}"></span>
             </div>
         </li>
@@ -20,35 +20,27 @@
 </template>
 
 <script>
-import { Posts, Post } from '../resource/resource.js';
-import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import empty from '../components/empty.vue';
-import _ from 'underscore';
+import { Posts, Post } from '../resource/resource.js'
+import headbar from '../components/headbar.vue'
+import navbar from '../components/navbar.vue'
+import empty from '../components/empty.vue'
+import _ from 'underscore'
+import store from '../store'
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    data() {
-        return {
-            posts: []
-        }
+    computed: mapGetters({
+        posts: 'posts'
+    }),
+
+    async beforeRouteEnter (to, from, next) {
+        await store.dispatch('getPosts', 'mark')
+        next()
     },
-    methods: {
-        mark: function(post) {
-            this.$set(post, 'mark', !post.mark);
-            Post.update({
-                id: post._id
-            }, {
-                type: 'mark', 
-                revert: true}
-            );
-        }
-    },
-    beforeRouteEnter: function(to, from, next) {
-        Posts.get({
-            type: 'mark'
-        }).then(response => 
-            next(vm => vm.posts = response.data.data)
-        );
-    },
+
+    methods: mapActions({
+        mark: 'mark'
+    }),
+    
     components: {
         headbar, navbar, empty
     }

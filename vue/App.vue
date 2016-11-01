@@ -16,44 +16,38 @@
                 </ul>
             </div>
         </transition>
-        <router-view class="view" v-show="kkk" v-bind:class="{expand: expand}"></router-view>
+        <router-view class="view" v-show="!loading" v-bind:class="{expand: expand}"></router-view>
         <div class="loading">
-            <div class="cssload-loader" v-show="!kkk"></div>
+            <div class="cssload-loader" v-show="loading"></div>
             <p>加载中</p>
         </div>
     </div>
 </template>
 
 <script>
-import { User } from './resource/resource.js';
-import Cookies from 'js-cookie';
-import bus from './bus.js';
+import { User } from './resource/resource.js'
+import Cookies from 'js-cookie'
+import { mapGetters, mapActions } from 'vuex'
 export default {
-    data() {
-        return {
-            expand: false,
-            user: {},
-            kkk: true
-        }
-    },
+    computed: mapGetters({
+        expand: 'expand',
+        user: 'user',
+        loading: 'loading'
+    }),
+
     methods: {
         tome: function() {
-            let user = this.user;
-            setTimeout(() => bus.$emit('USER', user));
-            this.$router.push({name: 'me'});
+            this.$router.push({name: 'me'})
         },
         logout: function() {
-            Cookies.remove('jwt');
-            Cookies.remove('XSRF-TOKEN');
-            this.$router.push({name: 'login'});
+            Cookies.remove('jwt')
+            Cookies.remove('XSRF-TOKEN')
+            this.$router.push({name: 'login'})
         }
     },
-    mounted: function() {
-        User.get().then(response => this.user = response.data.data );
-    },
+    
     created: function() {
-        bus.$on('EXPAND', status => this.expand = status );
-        bus.$on('TRANSITION', status => this.kkk = status );
+        this.$store.dispatch('getUser')
     }
 }
 </script>

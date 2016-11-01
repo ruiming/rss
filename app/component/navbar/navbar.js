@@ -1,7 +1,7 @@
 (function () {
     angular
         .module('app')
-        .directive('navbar', navbar);
+        .directive('navbar', navbar)
 
     function navbar($state, $base64) {
         return {
@@ -14,50 +14,50 @@
             controllerAs: 'vm',
             controller: function navbarController($scope, User, $location, $rootScope, $timeout, tools) {
                 let vm = this,
-                    timeout;
+                    timeout
 
                 // Function
-                vm.blur = blur;
-                vm.search = search;
-                vm.focus = focus;
-                vm.expand = expand;
-                vm.logout = logout;
+                vm.blur = blur
+                vm.search = search
+                vm.focus = focus
+                vm.expand = expand
+                vm.logout = logout
 
                 function expand() {
-                    $rootScope.$broadcast('EXPAND');
+                    $rootScope.$broadcast('EXPAND')
                 }
 
                 function focus() {
-                    form.input.focus();
+                    form.input.focus()
                     if (timeout) {
-                        $timeout.cancel(timeout);
+                        $timeout.cancel(timeout)
                     }
-                    vm.active = true;
+                    vm.active = true
                 }
 
                 function blur() {
                     timeout = $timeout(() => {
-                        vm.active = false;
-                    }, 800);
+                        vm.active = false
+                    }, 800)
                 }
 
                 function search(feedlink) {
                     if (!tools.checkUrl(feedlink)) {
-                        return false;
+                        return false
                     } else {
                         $state.go('search', {
                             feedlink: $base64.encode(unescape(encodeURIComponent(feedlink)))
-                        });
+                        })
                     }
                 }
 
                 function logout() {
                     User.logout().$promise.then(data => {
-                        $location.path('/').replace();
-                    });
+                        $location.path('/').replace()
+                    })
                 }
             }
         }
     }
 
-}());
+}())

@@ -1,17 +1,17 @@
 (function () {
     angular
         .module('app')
-        .controller('FeedController', FeedController);
+        .controller('FeedController', FeedController)
 
     function FeedController($rootScope, feed, posts, _, storage, $scope, Post, $state, Feed, $stateParams, Posts) {
-        var vm = this;
-        vm.expand = false;
-        vm.feed = feed.data;
-        vm.feed.feeded = angular.isDefined(feed.data.feed_time);
-        vm.feed.feed_id = $stateParams.id;
-        vm.posts = posts.data.posts;
-        vm.unread = vm.feed.unread;
-        vm.detail = _.groupBy(posts.data.detail, 'post_id');
+        var vm = this
+        vm.expand = false
+        vm.feed = feed.data
+        vm.feed.feeded = angular.isDefined(feed.data.feed_time)
+        vm.feed.feed_id = $stateParams.id
+        vm.posts = posts.data.posts
+        vm.unread = vm.feed.unread
+        vm.detail = _.groupBy(posts.data.detail, 'post_id')
 
         // Graphy Start 订阅源文章更新情况
         vm.options = {
@@ -25,14 +25,14 @@
                     left: 55
                 },
                 x: function (d) {
-                    return d.label;
+                    return d.label
                 },
                 y: function (d) {
-                    return d.value;
+                    return d.value
                 },
                 showValues: true,
                 valueFormat: function (d) {
-                    return d3.format(',.0f')(d);
+                    return d3.format(',.0f')(d)
                 },
                 duration: 500,
                 xAxis: {
@@ -44,7 +44,7 @@
                 },
                 tooltip: {
                     valueFormatter: function (d, i) {
-                        return d + "篇";
+                        return d + "篇"
                     }
                 }
             }
@@ -52,33 +52,33 @@
         vm.data = [{
             key: "最近更新文章数",
             values: []
-        }];
+        }]
         _.each(_.groupBy(posts.data.posts, 'pubdate'), (value, key) => {
             let date = key.slice(0, 7),
-                exist = false;
+                exist = false
             _.each(vm.data[0].values, (value, key) => {
                 if (value.label === date) {
-                    value.value++;
-                    exist = true;
+                    value.value++
+                    exist = true
                 }
-            });
+            })
             if (!exist) vm.data[0].values.push({
                 label: date,
                 value: 1
             })
         })
-        vm.data[0].values = _.sortBy(vm.data[0].values, 'label').reverse();
+        vm.data[0].values = _.sortBy(vm.data[0].values, 'label').reverse()
         // Graphy End
 
         // Function
-        vm.read = read;
-        vm.readall = readall;
-        vm.feedit = feedit;
+        vm.read = read
+        vm.readall = readall
+        vm.feedit = feedit
 
         // get the status of each post
         for (let post of vm.posts) {
             if (vm.detail[post._id] && vm.detail[post._id][0].read) {
-                post.read = true;
+                post.read = true
             }
         }
 
@@ -86,45 +86,45 @@
             Feed.save({
                 feedlink: vm.feed.absurl
             }, res => {
-                vm.feed.feeded = true;
-                $rootScope.$broadcast('ADD_FEED', vm.feed);
-                vm.feed.feedNum++;
+                vm.feed.feeded = true
+                $rootScope.$broadcast('ADD_FEED', vm.feed)
+                vm.feed.feedNum++
             }, err => {
                 // TODO
-                console.log(err);
-            });
+                console.log(err)
+            })
         }
 
         function read(post) {
             for (let post of vm.posts) {
-                post.active = false;
+                post.active = false
             }
-            post.active = true;
+            post.active = true
             if (!post.read) {
-                vm.unread--;
-                post.read = true;
-                $rootScope.$broadcast('READ_POST', post.feed_id[0]);
+                vm.unread--
+                post.read = true
+                $rootScope.$broadcast('READ_POST', post.feed_id[0])
                 Post.update({
                     id: post._id
                 }, {
                     type: 'read'
-                });
+                })
             }
         }
 
         function readall() {
             for (let post of vm.posts) {
                 if (!post.read) {
-                    $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
+                    $rootScope.$broadcast('READ_POST', vm.feed.feed_id)
                 }
-                post.read = true;
+                post.read = true
             }
             Posts.update({
                 feed_id: $stateParams.id,
                 type: 'read'
-            });
+            })
         }
-        $scope.$on('EXPAND', () => vm.expand = !vm.expand);
-        $scope.$on('FOLD', () => vm.expand = false);
+        $scope.$on('EXPAND', () => vm.expand = !vm.expand)
+        $scope.$on('FOLD', () => vm.expand = false)
     }
-}());
+}())
