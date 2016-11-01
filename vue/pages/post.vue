@@ -13,7 +13,7 @@
             <article v-html="post.description" class="article"></article>
         </section>
     </article>
-    <postOption v-bind:post="post" v-bind:status="status" v-bind:pre="pre" v-bind:next="next"></postOption>
+    <postOption></postOption>
 </div>
 </template>
 
@@ -40,9 +40,9 @@ export default {
     },
 
     watch: {
-        '$route' (to, from) {
-            store.dispatch('getPost', to.params.id)
-                .then(() => store.dispatch('read'))
+        async '$route' (to, from) {
+            await store.dispatch('getPost', to.params.id)
+            await store.dispatch('read')
         }
     },
     

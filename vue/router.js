@@ -52,7 +52,14 @@ const router = new VueRouter({
         name: 'me',
         path: '/me',
         component: me
-    }]
+    }],
+    scrollBehavior (to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { x: 0, y: 0 }
+        }
+    }
 })
 
 router.beforeEach((to, from, next) => {
