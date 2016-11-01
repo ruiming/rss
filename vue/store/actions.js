@@ -198,24 +198,38 @@ export const updateUser = ({ commit, state }) => {
 // Global
 
 export const authenticate = ({ commit, state }) => {
-    return Vue.http.post('/auth/login', {
-        email: state.global.auth.email,
-        password: state.global.auth.password
-    }).then(res => {
-        commit(types.ONLINE)
-        router.replace('/')
-    }, err => {
-        commit(types.ERROR, err.data.message)
-    })
+    if (!tools.validateEmail(state.global.auth.email)) {
+        commit(types.ERROR, '请输入正确的邮箱')
+    } else if (!tools.validatePassword(state.global.auth.password)) {
+        commit(types.ERROR, '密码不符合要求 /\\w{6,18}/ ')
+    } else {
+        commit(types.INFO, '登录中...')
+        return Vue.http.post('/auth/login', {
+            email: state.global.auth.email,
+            password: state.global.auth.password
+        }).then(res => {
+            commit(types.CLEAR_INFO)
+            commit(types.ONLINE)
+            router.replace('/')
+        }, err => {
+            commit(types.ERROR, err.data.message)
+        })
+    }
 }
 
 export const register = ({ commit, state }) => {
-    commit(types.INFO, '注册中...')
-    return Vue.http.post('/auth/register', state.global.auth).then(res => {
-        commit(types.ONLINE)
-        commit(types.CLEAR_INFO)
-        router.replace('/')
-    }, err => {
-        commit(types.ERROR, err.data.message)
-    })
+    if (!tools.validateEmail(state.global.auth.email)) {
+        commit(types.ERROR, '请输入正确的邮箱')
+    } else if (!tools.validatePassword(state.global.auth.password)) {
+        commit(types.ERROR, '密码不符合要求 /\\w{6,18}/ ')
+    } else {
+        commit(types.INFO, '注册中...')
+        return Vue.http.post('/auth/register', state.global.auth).then(res => {
+            commit(types.ONLINE)
+            commit(types.CLEAR_INFO)
+            router.replace('/')
+        }, err => {
+            commit(types.ERROR, err.data.message)
+        })
+    }
 }

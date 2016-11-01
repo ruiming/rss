@@ -7,12 +7,12 @@
         <div class="form-group">
             <label for="email">邮箱</label>
             <input type="email" class="form-control" id="email" 
-                :value="auth.email" placeholder="邮箱" @input="inputEmail" required>
+                :value="auth.email" placeholder="邮箱" @input="inputEmail">
         </div>
         <div class="form-group">
             <label for="password">密码</label>
             <input type="password" class="form-control" id="password" 
-                :value="auth.password" placeholder="密码" @input="inputPassword" required>
+                :value="auth.password" placeholder="密码" @input="inputPassword">
         </div>
         <input type="submit" class="btn btn-default btn-block" value="登录">        
         <router-link :to="{name: 'register'}" class="btn btn-default btn-block">没有账号? 注册</router-link>

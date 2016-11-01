@@ -3,8 +3,18 @@
         // 检测 URL 是否合法
         checkUrl: function (url) {
             if (!url) return false
-            let re = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+            let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             return url.match(re) !== null
+        },
+        // 检测邮箱是否合法
+        validateEmail: function(email) {
+            let re = /\S+@\S+\.\S+/
+            return re.test(email)
+        },
+        // 检验密码是否合法
+        validatePassword: function(password) {
+            let re = /\w{6,18}/
+            return re.test(password)
         }
     }
 

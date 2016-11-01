@@ -1010,8 +1010,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // 检测 URL 是否合法
         checkUrl: function checkUrl(url) {
             if (!url) return false;
-            var re = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return url.match(re) !== null;
+        },
+        // 检测邮箱是否合法
+        validateEmail: function validateEmail(email) {
+            var re = /\S+@\S+\.\S+/;
+            return re.test(email);
+        },
+        // 检验密码是否合法
+        validatePassword: function validatePassword(password) {
+            var re = /\w{6,18}/;
+            return re.test(password);
         }
     };
 

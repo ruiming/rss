@@ -6,11 +6,11 @@
         <img src="/img/rss.png">
         <div class="form-group">
             <label for="email">邮箱</label>
-            <input type="email" class="form-control" id="email" :value="auth.email" @input="inputEmail" placeholder="邮箱" required>
+            <input type="email" class="form-control" id="email" :value="auth.email" @input="inputEmail" placeholder="邮箱">
         </div>
         <div class="form-group">
             <label for="password">密码</label>
-            <input type="password" class="form-control" id="password" :value="auth.password" @input="inputPassword" placeholder="密码" required>
+            <input type="password" class="form-control" id="password" :value="auth.password" @input="inputPassword" placeholder="密码">
         </div>
         <input type="submit" class="btn btn-default btn-block" value="注册">        
         <router-link :to="{name: 'login'}" class="btn btn-default btn-block">已有账号? 登录</router-link>

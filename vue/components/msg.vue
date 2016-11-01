@@ -25,18 +25,21 @@ export default {
     }),
 
     watch: {
+        // ERROR 2.5秒有效
         'errors' (to, from) {
             if(to.length) {
+                this.$store.commit('CLEAR_INFO')
                 setTimeout(() => {
                     this.$store.commit('CLEAR_ERROR')
                 }, 2500)
             }
         },
+        // INFO 5秒有效
         'infos' (to, from) {
             if(to.length) {
                 setTimeout(() => {
                     this.$store.commit('CLEAR_INFO')
-                }, 2500)
+                }, 5000)
             }
         }
     }
