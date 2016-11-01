@@ -98,7 +98,7 @@ exports.create = async(ctx, next) => {
                 await fetchFavicon(this.meta.link).then(data => favicon = data).catch(e => e)
 
                 await new Promise(resolve => request(favicon, (err, response, body) => {
-                    if (response && response.statusCode != 200 && /image/.test(response.headers['content-type'])) {
+                    if (response && response.statusCode === 200 && /image/.test(response.headers['content-type'])) {
                         request.get(favicon).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'))
                         favicon = `/favicon/${hash}.ico`
                     } else {
