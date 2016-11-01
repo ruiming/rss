@@ -16,12 +16,6 @@ import request from 'request'
  */
 exports.register = async(ctx, next) => {
     let email = /^([\w-_]+(?:\.[\w-_]+)*)@((?:[a-z0-9]+(?:-[a-zA-Z0-9]+)*)+\.[a-z]{2,6})$/i
-    // TODO html5 `required` no work all the time, wait add the form check.
-    if (!_.isString(ctx.request.body.password)) {
-        ctx.throw(401, '邮箱呢?')
-    } else if (!_.isString(ctx.request.body.username)) {
-        ctx.throw(401, '密码呢?')
-    }
     if (ctx.request.body.password.length < 6 || ctx.request.body.password.length > 18) {
         ctx.throw(401, '密码长度有误')
     } else if (!email.test(ctx.request.body.email)) {
@@ -82,12 +76,6 @@ exports.register = async(ctx, next) => {
  * @param:  {string} password
  */
 exports.login = async(ctx, next) => {
-    // TODO html5 `required` no work all the time, wait add the form check.
-    if (!_.isString(ctx.request.body.password)) {
-        ctx.throw(401, '邮箱呢?')
-    } else if (!_.isString(ctx.request.body.username)) {
-        ctx.throw(401, '密码呢?')
-    }
     let xsrf = SHA256(_.random(999999999)).toString(),
         result = await UserModel.findOne({
             email: ctx.request.body.email,
