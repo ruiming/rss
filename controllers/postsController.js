@@ -40,14 +40,15 @@ exports.list = async(ctx, next) => {
             let result = await UserPostModel.find(query, {
                 _id: 0,
                 post_id: 1
-            });
+            })
             let data = _.invoke(_.flatten(_.pluck(result, 'post_id'), true), 'toString');
             let items = await PostModel.find({
                 feed_id: feed.feed_id
             }, {
                 summary: 0,
                 description: 0
-            }).populate('feed_id', {
+            })
+            .populate('feed_id', {
                 _id: 1,
                 title: 1,
                 favicon: 1

@@ -29,11 +29,11 @@
 </template>
 
 <script>
-import { Feeds, Feed } from '../resource/resource.js';
-import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import search from '../components/search.vue';
-import msg from '../components/msg.vue';
+import { Feeds, Feed } from '../resource/resource.js'
+import headbar from '../components/headbar.vue'
+import navbar from '../components/navbar.vue'
+import search from '../components/search.vue'
+import msg from '../components/msg.vue'
 import store from '../store'
 import { mapGetters, mapActions } from 'vuex'
 export default {
@@ -43,16 +43,19 @@ export default {
         url: 'url',        
         err: 'error'
     }),
+
     methods: {
         ...mapActions(['search']),
         updateUrl(e) {
             this.$store.commit('UPDATE_URL', e.target.value)
         }
     },
+
     async beforeRouteEnter (to, from, next) {
         await store.dispatch('getPopularFeeds', 0)
         next()
     },
+    
     components: {
         headbar, navbar, search, msg
     }

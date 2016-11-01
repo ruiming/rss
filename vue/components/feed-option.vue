@@ -19,18 +19,19 @@
 </template>
 
 <script>
-import { Posts, Post, Feed } from '../resource/resource.js';
-import _ from 'underscore';
+import { Posts, Post, Feed } from '../resource/resource.js'
+import _ from 'underscore'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
-        posts: 'posts',
-        feed: 'feed',
+        posts:  'posts',
+        feed:   'feed',
         expand: 'expand'
     }),
+
     methods: mapActions({
-        readall: 'readAll',
-        subscribe: 'subscribe',
+        readall:     'readAll',
+        subscribe:   'subscribe',
         unsubscribe: 'unsubscribe'
     })
 }

@@ -44,10 +44,10 @@
 </template>
 
 <script>
-import { Feed, Posts } from '../resource/resource.js';
-import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import feedOption from '../components/feed-option.vue';
+import { Feed, Posts } from '../resource/resource.js'
+import headbar from '../components/headbar.vue'
+import navbar from '../components/navbar.vue'
+import feedOption from '../components/feed-option.vue'
 import { mapGetters, mapActions } from 'vuex'
 import store from '../store'
 export default {
@@ -56,6 +56,7 @@ export default {
         posts: 'feedPosts',
         expand: 'expand',
     }),
+
     async beforeRouteEnter (to, from, next) {
         await Promise.all([
             store.dispatch('getFeed', to.params.id),
@@ -63,6 +64,7 @@ export default {
         ])
         next()
     },
+    
     components: {
         headbar, feedOption
     }

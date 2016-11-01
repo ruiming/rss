@@ -19,13 +19,13 @@ const Feed = Vue.resource('/api/feed{/id}', {}, {
             search: true
         }
     }
-});
+})
 
 const Post = Vue.resource('/api/post{/id}', {}, {
     update: {
         method: 'PUT'
     }
-});
+})
 
 const Posts = Vue.resource('/api/posts', {}, {
     get: {
@@ -42,7 +42,7 @@ const Posts = Vue.resource('/api/posts', {}, {
     update: {
         method: 'PUT'
     }
-});
+})
 
 const User = Vue.resource('/api/user', {}, {
     update: {
@@ -52,7 +52,7 @@ const User = Vue.resource('/api/user', {}, {
         method: 'POST',
         url: '/auth/logout'
     }
-});
+})
 
 export {
     Feeds,

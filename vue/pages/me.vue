@@ -5,20 +5,20 @@
         <msg :msgs="message"></msg>
         <div class="form-group">
             <label for="name">昵称: </label>
-            <input type="text" v-model="user.username" class="form-control" id="name" placeholder="昵称">
+            <input type="text" :value="user.username" @input="inputUsername" class="form-control" id="name" placeholder="昵称">
         </div>
-        <button type="submit" class="btn btn-default">提交</button>
+        <button type="submit" class="btn btn-default" @submit="updateUser">提交</button>
     </form>
     <navbar></navbar>
 </div>
 </template>
 
 <script>
-import { User } from '../resource/resource.js';
-import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import msg from '../components/msg.vue';
-import _ from 'underscore';
+import { User } from '../resource/resource.js'
+import headbar from '../components/headbar.vue'
+import navbar from '../components/navbar.vue'
+import msg from '../components/msg.vue'
+import _ from 'underscore'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
@@ -26,9 +26,16 @@ export default {
         expand: 'expand',
         message: 'error'
     }),
-    methods: mapActions({
-        updateUser: 'updateUser'
-    }),
+
+    methods: {
+        ...mapActions({
+           updateUser: 'updateUser'
+        }),
+        inputUsername(e) {
+            this.$store.commit('INPUT_USERNAME', e.target.value)
+        }
+    },
+    
     components: {
         headbar, msg, navbar
     }

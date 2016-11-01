@@ -21,14 +21,15 @@
 </template>
 
 <script>
-import msg from '../components/msg.vue';
-import headbar from '../components/headbar.vue';
+import msg from '../components/msg.vue'
+import headbar from '../components/headbar.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
         error: 'error',
         auth: 'auth'
     }),
+
     methods: {
         ...mapActions({
             login: 'authenticate',
@@ -40,6 +41,7 @@ export default {
             this.$store.commit('INPUT_PASSWORD', e.target.value)
         }
     },
+    
     components: {
         msg, headbar
     }

@@ -20,24 +20,27 @@
 </template>
 
 <script>
-import { Posts, Post } from '../resource/resource.js';
-import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import empty from '../components/empty.vue';
-import _ from 'underscore';
+import { Posts, Post } from '../resource/resource.js'
+import headbar from '../components/headbar.vue'
+import navbar from '../components/navbar.vue'
+import empty from '../components/empty.vue'
+import _ from 'underscore'
 import store from '../store'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
         posts: 'posts'
     }),
+
     async beforeRouteEnter (to, from, next) {
         await store.dispatch('getPosts', 'mark')
         next()
     },
+
     methods: mapActions({
         mark: 'mark'
     }),
+    
     components: {
         headbar, navbar, empty
     }

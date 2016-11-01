@@ -36,10 +36,6 @@ const mutations = {
     // 结束搜索
     [types.SEARCHING_END](state, { data }) {
         state.SEARCHING = false
-        // 成功搜索返回 FEED_ID
-        if(data != null) {
-            state.SEARCHING = data
-        }
     },
 
     // 更新 URL 值

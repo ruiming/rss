@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import { User } from './resource/resource.js';
-import Cookies from 'js-cookie';
+import { User } from './resource/resource.js'
+import Cookies from 'js-cookie'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
@@ -34,6 +34,7 @@ export default {
         user: 'user',
         loading: 'loading'
     }),
+
     methods: {
         tome: function() {
             this.$router.push({name: 'me'});
@@ -44,6 +45,7 @@ export default {
             this.$router.push({name: 'login'});
         }
     },
+    
     created: function() {
         this.$store.dispatch('getUser')
     }

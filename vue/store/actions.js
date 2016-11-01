@@ -2,6 +2,7 @@ import { Feed, Feeds, User, Post, Posts } from '../resource/resource.js'
 import * as types from './mutation-types'
 import tools from '../../helper/help'
 import Vue from 'vue'
+import router from '../router'
 
 // Feed
 
@@ -33,15 +34,21 @@ export const getFeed = ({ commit }, id) => {
     })
 }
 
-export const search = ({ commit }, url) => {
-    if(!tools.checkUrl(url)) {
+export const search = ({ commit, state }) => {
+    if(!tools.checkUrl(state.feed.url)) {
         commit(types.ERROR, 'URL 不合法')
     } else {
         commit(types.SEARCHING_START)
         Feed.search({
-            feedlink: url
+            feedlink: state.feed.url
         }).then(res => {
             commit(types.SEARCHING_END, res.data)
+            router.push({
+                name: 'feed',
+                params: {
+                    id: res.data.data
+                }
+            })
         }, err => {
             commit(types.SEARCHING_END)
             commit(types.ERROR, err.data.message)
@@ -134,7 +141,7 @@ export const getPosts = ({ commit, state }, type) => {
 }
 
 export const readAll = ({ commit, state }, posts) => {
-    if(state.read) {
+    if(!state.feed.unread) {
         return
     } else {
         Posts.update({
@@ -156,11 +163,12 @@ export const getUser = ({ commit, state }) => {
     })
 }
 
-export const updateUser = ({ commit, state }, data) => {
-    User.update(data).then(res => {
-        commit(types.UPDATE_USER_SUCCESS)
+export const updateUser = ({ commit, state }) => {
+    User.update(state.user.user).then(res => {
+        commit(types.UPDATE_USERNAME, state.user.user.username)
     }, err => {
-        commit(types.UPDATE_USER_FAILURE, err.data)
+        commit(types.ERROR, err.data)
+        commit(type.INPUT_USERNAME, state.user.originname)
     })
 }
 
@@ -171,6 +179,16 @@ export const authenticate = ({ commit, state }) => {
         password: state.global.auth.password
     }).then(res => {
         commit(types.ONLINE)
+        router.replace('/')
+    }, err => {
+        commit(types.ERROR, err.data.message)
+    })
+}
+
+export const register = ({ commit, state }) => {
+    Vue.http.post('/auth/register', state.global.auth).then(res => {
+        commit(types.ONLINE)
+        router.replace('/')
     }, err => {
         commit(types.ERROR, err.data.message)
     })

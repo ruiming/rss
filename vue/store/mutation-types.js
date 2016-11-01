@@ -25,6 +25,8 @@ export const READ_ALL_SUCCESS = 'READ_ALL_SUCCESS'
 export const READ_ALL_FAILURE = 'READ_ALL_FAILURE'
 // User
 export const RECEIVE_USER = 'RECEIVE_USER'
+export const UPDATE_USERNAME = 'UPDATE_USERNAME'
+export const INPUT_USERNAME = 'INPUT_USERNAME'
 // Global
 export const EXPAND = 'EXPAND'
 export const COLLAPSE = 'COLLAPSE'
@@ -36,3 +38,4 @@ export const INPUT_EMAIL = 'INPUT_EMAIL'
 export const INPUT_PASSWORD = 'INPUT_PASSWORD'
 export const ONLINE = 'ONLINE'
 export const OFFLINE = 'OFFLINE'
+export const CLEAR_ERROR = 'CLEAR_ERROR'

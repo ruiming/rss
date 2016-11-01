@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { Posts, Post } from '../resource/resource.js';
+import { Posts, Post } from '../resource/resource.js'
 import _ from 'underscore';
 import { mapGetters, mapActions } from 'vuex'
 export default {
@@ -33,6 +33,7 @@ export default {
         next: 'next',
         expand: 'expand'
     }),
+    
     methods: mapActions({
         mark: 'mark',
         love: 'love'
