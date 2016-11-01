@@ -114,6 +114,7 @@
     "should": "^11.1.0",
     "style-loader": "^0.13.1",
     "uglify-js": "^2.7.3",
+    "url-loader": "^0.5.7",
     "vue-loader": "^9.5.1",
     "webpack": "2.1.0-beta.22",
     "webpack-dev-server": "^2.1.0-beta.0"

@@ -50,11 +50,8 @@ module.exports = {
             test: /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
             loader: "file"
         }, {
-            test: /\.(png|jpg|gif|svg)$/,
-            loader: 'file',
-            query: {
-                name: '[name].[ext]?[hash]'
-            }
+            test: /\.(png|jpg|gif|svg|ico)$/,
+            loader: 'url-loader?limit=8192',
         }]
     },
     plugins: plugins,
@@ -88,6 +85,9 @@ module.exports = {
                 target: 'http://127.0.0.1:3000'
             },
             '/js/*': {
+                target: 'http://127.0.0.1:3000'
+            },
+            '/favicon/*': {
                 target: 'http://127.0.0.1:3000'
             }
         },
