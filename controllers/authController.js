@@ -29,6 +29,7 @@ exports.register = async(ctx, next) => {
                     'User-Agent': 'request'
                 }
             })
+
         await new Promise(async(resolve, reject) => {
             req.on('data', async(data) => {
                 if (JSON.parse(data.toString()).entry) {
@@ -50,6 +51,7 @@ exports.register = async(ctx, next) => {
                 resolve()
             })
         })
+        
         if (result && result._id) {
             let auth = ctx.setAuthCookies(result._id)
             if (ctx.request.body.json === 'true' || ctx.request.body.json === true) {

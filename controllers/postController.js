@@ -34,7 +34,7 @@ exports.listOne = async(ctx, next) => {
         posts = _.invoke(_.flatten(_.pluck(posts, '_id'), true), 'toString')
         let pre = posts[posts.indexOf(id) - 1],
             next = posts[posts.indexOf(id) + 1]
-        return ctx.body = {
+        ctx.body = {
             success: true,
             data: {
                 result: result,
@@ -68,7 +68,8 @@ exports.update = async(ctx, next) => {
             let items = id.split(',')
             for (let item of items) {
                 let state, res
-                await Promise.all([Promise.resolve().then(async() => state = await UserPostModel.findOne({
+                await Promise.all([
+                    Promise.resolve().then(async() => state = await UserPostModel.findOne({
                         user_id: user_id,
                         post_id: item
                     })),

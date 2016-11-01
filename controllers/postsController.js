@@ -39,7 +39,8 @@ exports.list = async(ctx, next) => {
             else query['read'] = true
             let result = await UserPostModel.find(query, {
                 _id: 0,
-                post_id: 1
+                post_id: 1,
+                mark_date: 1
             })
             let data = _.invoke(_.flatten(_.pluck(result, 'post_id'), true), 'toString')
             let items = await PostModel.find({
@@ -47,14 +48,16 @@ exports.list = async(ctx, next) => {
             }, {
                 summary: 0,
                 description: 0
-            })
-            .populate('feed_id', {
+            }).populate('feed_id', {
                 _id: 1,
                 title: 1,
                 favicon: 1
             })
-            if (type === 'mark') _.each(items, item => _.contains(data, item._id.toString()) ? posts.push(item) : _.noop())
-            else _.each(items, item => !_.contains(data, item._id.toString()) ? posts.push(item) : _.noop())
+            if (type === 'mark') {
+                _.each(items, item => _.contains(data, item._id.toString()) ? posts.push(item) : _.noop())
+            } else {
+                _.each(items, item => !_.contains(data, item._id.toString()) ? posts.push(item) : _.noop())
+            }
             resolve()
         })))
         ctx.body = {
