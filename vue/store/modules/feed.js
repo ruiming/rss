@@ -32,8 +32,8 @@ const mutations = {
         state.searching = true
     },
     // 结束搜索
-    [types.SEARCHING_END](state, { data }) {
-        state.SEARCHING = false
+    [types.SEARCHING_END](state) {
+        state.searching = false
     },
     // 更新 URL 值
     [types.UPDATE_URL](state, value) {

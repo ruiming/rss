@@ -44,7 +44,7 @@ export const search = ({ commit, state }) => {
         return Feed.search({
             feedlink: state.feed.url
         }).then(res => {
-            commit(types.SEARCHING_END, res.data)
+            commit(types.SEARCHING_END)
             router.push({
                 name: 'feed',
                 params: {
