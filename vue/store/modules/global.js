@@ -24,6 +24,9 @@ const mutations = {
     },
     // 接收错误
     [types.ERROR](state, message) {
+        if(message === 'UnauthorizedError: Invalid token\n') {
+            message = '请先登录!'
+        }
         state.error = [message]
     },
     // 接收提示
@@ -59,11 +62,11 @@ const mutations = {
     },
     // 清除错误信息
     [types.CLEAR_ERROR](state) {
-        state.error.length = 0
+        state.error = []
     },
     // 清除提示信息
     [types.CLEAR_INFO](state) {
-        state.info.length = 0
+        state.info = []
     }
 }
 

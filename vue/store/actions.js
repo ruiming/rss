@@ -210,8 +210,10 @@ export const authenticate = ({ commit, state }) => {
 }
 
 export const register = ({ commit, state }) => {
+    commit(types.INFO, '注册中...')
     return Vue.http.post('/auth/register', state.global.auth).then(res => {
         commit(types.ONLINE)
+        commit(types.CLEAR_INFO)
         router.replace('/')
     }, err => {
         commit(types.ERROR, err.data.message)
