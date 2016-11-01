@@ -33,6 +33,9 @@ async function fetch() {
                 feed.favicon = `/favicon/${hash}.ico`
                 feed.save()
                 count++
+            } else {
+                feed.favicon = '/favicon/rss.png'
+                feed.save()
             }
             resolve()
         })
