@@ -35,20 +35,20 @@ const mutations = {
         state.posts = data
     },
     // 全部标记已读
-    [types.READ_ALL_SUCCESS](state) {
+    [types.READ_ALL](state) {
         for(let post of state.posts) {
             post.read = true
         }
     },
     // 收藏书籍 ID
-    [types.MARK_SUCCESS](state, id) {
+    [types.MARK](state, id) {
         state.posts = _.map(state.posts, post => {
             if(post._id === id) post.mark = !post.mark
             return post
         })
     },
     // 点赞书籍 ID
-    [types.LOVE_SUCCESS](state, id) {
+    [types.LOVE](state, id) {
         state.posts = _.map(state.posts, post => {
             if(post._id === id) post.love = !post.love
             return post

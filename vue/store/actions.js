@@ -168,9 +168,9 @@ export const readAll = ({ commit, state }, posts) => {
             feed_id: state.feed.feed.feed_id,
             type: 'read'
         }).then(res => {
-            commit('READ_ALL_SUCCESS')
+            commit('READ_ALL')
         }, err => {
-            commit('READ_ALL_FAILURE', err.data.message)
+            commit('ERROR', err.data.message)
         })
     }
 }
