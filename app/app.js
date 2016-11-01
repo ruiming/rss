@@ -15,30 +15,30 @@
         ])
         .config(config)
         // uglify break di of $transitions, seems will be fixed in the next version
-        .run(['$transitions', '$rootScope', '$location', runFn]);
+        .run(['$transitions', '$rootScope', '$location', runFn])
 
     function runFn($transitions, $rootScope, $location) {
         $transitions.onSuccess({}, () => {
-            $rootScope.$broadcast('FOLD');
-            ga('send', 'pageview', $location.path());
+            $rootScope.$broadcast('FOLD')
+            ga('send', 'pageview', $location.path())
         })
     }
 
     function config($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $transitionsProvider) {
 
-        $locationProvider.html5Mode(true);
+        $locationProvider.html5Mode(true)
 
-        $httpProvider.interceptors.push('tokenInjector');
+        $httpProvider.interceptors.push('tokenInjector')
 
         $transitionsProvider.onBefore({
             to: state => !!state.abstract
         }, ($transition, $state) => {
             if (angular.isString($transition.to().abstract)) {
-                return $state.target($transition.to().abstract);
+                return $state.target($transition.to().abstract)
             }
-        });
+        })
 
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/')
         $stateProvider
             .state('home', {
                 url: '/',
@@ -46,12 +46,12 @@
                 controller: 'HomeController as vm',
                 resolve: {
                     posts: function (Posts) {
-                        return Posts.recent().$promise;
+                        return Posts.recent().$promise
                     },
                     feeds: function (Feeds) {
                         return Feeds.popular({
                             page: 0
-                        }).$promise;
+                        }).$promise
                     }
                 }
             })
@@ -68,12 +68,12 @@
                     feed: function (Feed, $stateParams) {
                         return Feed.get({
                             id: $stateParams.id
-                        }).$promise;
+                        }).$promise
                     },
                     posts: function (Posts, $stateParams) {
                         return Posts.get({
                             feed_id: $stateParams.id
-                        }).$promise;
+                        }).$promise
                     }
                 }
             })
@@ -85,7 +85,7 @@
                     post: function (Post, $stateParams, $state) {
                         return Post.get({
                             id: $stateParams.post_id
-                        }).$promise;
+                        }).$promise
                     }
                 }
             })
@@ -96,15 +96,15 @@
                 controller: 'PostsController as vm',
                 resolve: {
                     posts: function (Posts, $stateParams, $q) {
-                        let defer = $q.defer();
+                        let defer = $q.defer()
                         if (['unread', 'mark'].indexOf($stateParams.type) !== -1) {
                             defer.resolve(Posts.get({
                                 type: $stateParams.type
-                            }).$promise);
+                            }).$promise)
                         } else {
-                            defer.reject('参数不正确');
+                            defer.reject('参数不正确')
                         }
-                        return defer.promise;
+                        return defer.promise
                     },
                 }
             })
@@ -116,7 +116,7 @@
                     post: function (Post, $stateParams, $state) {
                         return Post.get({
                             id: $stateParams.id
-                        }).$promise;
+                        }).$promise
                     }
                 }
             })
@@ -126,9 +126,9 @@
                 controller: 'MeController as vm',
                 resolve: {
                     user: function (User) {
-                        return User.get().$promise;
+                        return User.get().$promise
                     }
                 }
             })
     }
-}());
+}())

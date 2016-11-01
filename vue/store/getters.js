@@ -23,7 +23,7 @@ export const post = state => {
     }
     if(post.description) {
         post.description.replace(re, (match, p, offset, string) => {
-            return `src="${post.website}${p.slice(1)}"`;
+            return `src="${post.website}${p.slice(1)}"`
         });
     }
     return state.post.post

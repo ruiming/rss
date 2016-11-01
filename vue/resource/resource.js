@@ -1,6 +1,6 @@
-import Vue from 'vue';
-import VueResource from 'vue-resource';
-Vue.use(VueResource);
+import Vue from 'vue'
+import VueResource from 'vue-resource'
+Vue.use(VueResource)
 
 const Feeds = Vue.resource('/api/feeds', {}, {
     popular: {
@@ -10,7 +10,7 @@ const Feeds = Vue.resource('/api/feeds', {}, {
             'per_page': 50
         }
     }
-});
+})
 
 const Feed = Vue.resource('/api/feed{/id}', {}, {
     search: {

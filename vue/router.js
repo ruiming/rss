@@ -61,7 +61,7 @@ router.beforeEach((to, from, next) => {
     if(typeof ga !== "undefined") {
         ga('send', 'pageview', to.fullPath)
     }
-    next();
+    next()
 })
 
 router.afterEach((to, from, next) => {

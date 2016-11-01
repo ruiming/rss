@@ -23,7 +23,7 @@
 
 <script>
 import { Posts, Post } from '../resource/resource.js'
-import _ from 'underscore';
+import _ from 'underscore'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({

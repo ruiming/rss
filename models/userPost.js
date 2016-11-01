@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-let Schema = mongoose.Schema;
+import mongoose from 'mongoose'
+let Schema = mongoose.Schema
 
 // 用户订阅源文章表
 
@@ -14,8 +14,8 @@ const UserPostSchema = new Schema({
     read_date:      {type: Date},   // 阅读完的时间
     love_date:      {type: Date},   // 点赞时间
     mark_date:      {type: Date}    // 收藏时间
-});
+})
 
-const UserPost = mongoose.model('UserPost', UserPostSchema);
+const UserPost = mongoose.model('UserPost', UserPostSchema)
 
-module.exports = UserPost;
+module.exports = UserPost

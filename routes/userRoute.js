@@ -1,9 +1,9 @@
-import Router from 'koa-router';
-import userController from '../controllers/userController';
+import Router from 'koa-router'
+import userController from '../controllers/userController'
 
-var router = new Router();
+var router = new Router()
 
-router.get('/', userController.list);
-router.put('/', userController.update);
+router.get('/', userController.list)
+router.put('/', userController.update)
 
-export default router;
+export default router

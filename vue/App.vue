@@ -37,12 +37,12 @@ export default {
 
     methods: {
         tome: function() {
-            this.$router.push({name: 'me'});
+            this.$router.push({name: 'me'})
         },
         logout: function() {
-            Cookies.remove('jwt');
-            Cookies.remove('XSRF-TOKEN');
-            this.$router.push({name: 'login'});
+            Cookies.remove('jwt')
+            Cookies.remove('XSRF-TOKEN')
+            this.$router.push({name: 'login'})
         }
     },
     

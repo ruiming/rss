@@ -24,10 +24,10 @@
 </template>
 
 <script>
-import { Posts } from '../resource/resource.js';
-import headbar from '../components/headbar.vue';
-import navbar from '../components/navbar.vue';
-import empty from '../components/empty.vue';
+import { Posts } from '../resource/resource.js'
+import headbar from '../components/headbar.vue'
+import navbar from '../components/navbar.vue'
+import empty from '../components/empty.vue'
 import { mapGetters, mapActions } from 'vuex'
 import store from '../store'
 export default {

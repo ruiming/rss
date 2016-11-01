@@ -1,5 +1,5 @@
-import FeedModel from '../models/feed';
-import _ from 'underscore';
+import FeedModel from '../models/feed'
+import _ from 'underscore'
 
 /**
  * 获取特定订阅源
@@ -21,9 +21,9 @@ exports.list = async(ctx, next) => {
         desc = ctx.request.query.desc === 'true' ? '1' : '-1',
         result = await FeedModel.find().sort({
             [order]: desc
-        }).skip(page * per_page).limit(per_page || limit);
+        }).skip(page * per_page).limit(per_page || limit)
     ctx.body = {
         success: true,
         data: result
-    };
+    }
 }

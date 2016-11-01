@@ -24,7 +24,7 @@ export default function (response) {
                     }
                 }
                 if (void 0 !== data[i].user_id && Array.isArray(data[i].user_id)) {
-                    response.body.data[i].user_id = data[i].user_id[0];
+                    response.body.data[i].user_id = data[i].user_id[0]
                 }
             }
         } else if (typeof data === 'object') {
@@ -35,7 +35,7 @@ export default function (response) {
                     response.body.data = Object.assign(data.feed_id[0], data, {
                         feed_id: data.feed_id[0]._id,
                         feed_title: data.feed_id[0].title
-                    });
+                    })
                 }
             }
             if (void 0 !== data.user_id && Array.isArray(data.user_id)) {
