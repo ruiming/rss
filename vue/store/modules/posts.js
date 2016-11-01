@@ -34,6 +34,12 @@ const mutations = {
     [types.RECEIVE_POSTS](state, { data }) {
         state.posts = data
     },
+    // 标记已读
+    [types.READ](state, id) {
+        for(let post of state.feedPosts) {
+            if(post._id === id) post.read = true
+        }
+    },
     // 全部标记已读
     [types.READ_ALL](state) {
         for(let post of state.posts) {

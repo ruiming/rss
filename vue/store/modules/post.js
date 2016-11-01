@@ -23,8 +23,8 @@ const mutations = {
         }
     },
     // 已读
-    [types.READ_POST](state) {
-        state.status.read = true
+    [types.READ_POST](state, id) {
+        if(state.post._id === id) state.status.read = true
     },
     // 获取文章信息
     [types.RECEIVE_POST](state, { result, pre, next, detail }) {

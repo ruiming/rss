@@ -34,10 +34,12 @@ export default {
     computed: mapGetters({
         posts: 'recentPosts'
     }),
+
     async beforeRouteEnter (to, from, next) {
         await store.dispatch('getRecentPosts')
         next()
     },
+    
     components: {
         headbar, navbar, empty
     }

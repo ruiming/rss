@@ -2,7 +2,7 @@
     <div class="bottom feed-option" v-bind:class="{expand2: expand}">
     <ul class="list-group">
         <!-- id not defined when initial -->
-        <li class="list-group-item" v-on:click="readall()">
+        <li class="list-group-item" v-on:click="readall">
             <span v-bind:class="{'icon-checkmark2': feed.unread, 'icon-checkmark': !feed.unread}">
                 <small v-if="feed.unread">全部标记已读</small>
                 <small v-else>没有未读文章</small>
@@ -10,8 +10,8 @@
         </li>
         <li class="list-group-item" v-on:click="feed.feed_time ? unsubscribe() : subscribe()">
             <span v-bind:class="{'icon-eye': !feed.feed_time, 'icon-eye-blocked': feed.feed_time}">
-                <small v-if="!feed.feed_time" >订阅</small>
-                <small v-else>取消订阅</small>
+                <small v-if="feed.feed_time">取消订阅</small>
+                <small v-else>订阅</small>
             </span>
         </li>
     </ul>
@@ -26,7 +26,7 @@ export default {
     computed: mapGetters({
         posts:  'posts',
         feed:   'feed',
-        expand: 'expand'
+        expand: 'expand',
     }),
 
     methods: mapActions({

@@ -18,10 +18,13 @@ const mutations = {
     },
     // 获取订阅源
     [types.RECEIVE_FEED](state, { data }) {
+        if(!data.feed_time) {
+            data.feed_time = 0
+        }
         state.feed = data
     },
-    // 标记已读
-    [types.READ_ALL_SUCCESS](state) {
+    // 全部标记已读
+    [types.READ_ALL](state) {
         state.feed.unread = 0
     },
     // 开始搜索

@@ -32,6 +32,7 @@ export default {
         next: 'next'
     }),
 
+    // TODO
     async beforeRouteEnter (to, from, next) {
         await store.dispatch('getPost', to.params.id)
         await store.dispatch('read')
@@ -40,8 +41,8 @@ export default {
 
     watch: {
         '$route' (to, from) {
-            return this.$store.dispatch('getPost', this.$route.params.id)
-                .then(() => this.$store.dispatch('read'))
+            store.dispatch('getPost', to.params.id)
+                .then(() => store.dispatch('read'))
         }
     },
     

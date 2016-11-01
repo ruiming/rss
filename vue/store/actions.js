@@ -92,13 +92,13 @@ export const getPost = ({ commit }, id) => {
 }
 
 export const read = ({ commit, state }) => {
-    if (state.post.status.read === false) {
+    if (!state.post.status.read) {
         Post.update({
             id: state.post.post._id,
         }, {
             type: 'read'
         }).then(res => {
-            commit(types.READ_POST)
+            commit(types.READ_POST, state.post.post._id)
         }, err => {
             commit(types.ERROR, err.data.message)
         })
@@ -163,9 +163,9 @@ export const getPosts = ({ commit, state }, type) => {
 }
 
 export const readAll = ({ commit, state }, posts) => {
-    if(state.feed.unread) {
+    if(state.feed.feed.unread) {
         Posts.update({
-            feed_id: state.feed.feed.feed_id,
+            feed_id: state.feed.feed.feed_id || state.feed.feed._id,
             type: 'read'
         }).then(res => {
             commit('READ_ALL')
