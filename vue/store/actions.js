@@ -7,7 +7,7 @@ import router from '../router'
 // Feed
 
 export const subscribe = async ({ commit, state }) => {
-    Feed.save({
+    return Feed.save({
         feedlink: state.feed.feed.absurl
     }).then(res => {
         commit(types.SUBSCRIBE)
@@ -17,7 +17,7 @@ export const subscribe = async ({ commit, state }) => {
 }
 
 export const unsubscribe = ({ commit, state }) => {
-    Feed.delete({
+    return Feed.delete({
         id: state.feed.feed.feed_id || state.feed.feed._id
     }).then(res => {
         commit(types.UNSUBSCRIBE)
@@ -27,7 +27,7 @@ export const unsubscribe = ({ commit, state }) => {
 }
 
 export const getFeed = ({ commit }, id) => {
-    Feed.get({
+    return Feed.get({
         id: id
     }).then(res => {
         commit(types.RECEIVE_FEED, res.data)
@@ -41,7 +41,7 @@ export const search = ({ commit, state }) => {
         commit(types.ERROR, 'URL 不合法')
     } else {
         commit(types.SEARCHING_START)
-        Feed.search({
+        return Feed.search({
             feedlink: state.feed.url
         }).then(res => {
             commit(types.SEARCHING_END, res.data)
@@ -62,7 +62,7 @@ export const search = ({ commit, state }) => {
 
 export const getAllFeeds = ({ commit }) => {
     // TODO Feed -> Feeds
-    Feed.get().then(res => {
+    return Feed.get().then(res => {
         commit(types.RECEIVE_FEEDS, res.data)
     }, err => {
         commit(types.ERROR, err.data.message)
@@ -70,7 +70,7 @@ export const getAllFeeds = ({ commit }) => {
 }
 
 export const getPopularFeeds = ({ commit }, page) => {
-    Feeds.popular({
+    return Feeds.popular({
         page: page
     }).then(res => {
         commit(types.RECEIVE_FEEDS, res.data)
@@ -82,7 +82,7 @@ export const getPopularFeeds = ({ commit }, page) => {
 // Post
 
 export const getPost = ({ commit }, id) => {
-    Post.get({
+    return Post.get({
         id: id
     }).then(res => {
         commit(types.RECEIVE_POST, res.data.data)
@@ -93,7 +93,7 @@ export const getPost = ({ commit }, id) => {
 
 export const read = ({ commit, state }) => {
     if (!state.post.status.read) {
-        Post.update({
+        return Post.update({
             id: state.post.post._id,
         }, {
             type: 'read'
@@ -106,7 +106,7 @@ export const read = ({ commit, state }) => {
 }
 
 export const mark = ({ commit, state }, id) => {
-    Post.update({
+    return Post.update({
         id: id || state.post.post._id
     }, {
         type: 'mark',
@@ -119,7 +119,7 @@ export const mark = ({ commit, state }, id) => {
 }
 
 export const love = ({ commit, state }, id) => {
-    Post.update({
+    return Post.update({
         id: id || state.post.post._id
     }, {
         type: 'love',
@@ -135,7 +135,7 @@ export const love = ({ commit, state }, id) => {
 // Posts
 
 export const getRecentPosts = ({ commit, state }) => {
-    Posts.recent().then(res => {
+    return Posts.recent().then(res => {
         commit(types.RECEIVE_RECENT_POSTS, res.data)
     }, err => {
         commit(types.ERROR, err.data.message)
@@ -143,7 +143,7 @@ export const getRecentPosts = ({ commit, state }) => {
 }
 
 export const getFeedPosts = ({ commit, state }, id) => {
-    Posts.get({
+    return Posts.get({
         feed_id: id
     }).then(res => {
         commit(types.RECEIVE_FEED_POSTS, res.data)
@@ -153,7 +153,7 @@ export const getFeedPosts = ({ commit, state }, id) => {
 }
 
 export const getPosts = ({ commit, state }, type) => {
-    Posts.get({
+    return Posts.get({
         type: type
     }).then(res => {
         commit(types.RECEIVE_POSTS, res.data)
@@ -164,7 +164,7 @@ export const getPosts = ({ commit, state }, type) => {
 
 export const readAll = ({ commit, state }, posts) => {
     if(state.feed.feed.unread) {
-        Posts.update({
+        return Posts.update({
             feed_id: state.feed.feed.feed_id || state.feed.feed._id,
             type: 'read'
         }).then(res => {
@@ -178,7 +178,7 @@ export const readAll = ({ commit, state }, posts) => {
 // User
 
 export const getUser = ({ commit, state }) => {
-    User.get().then(res => {
+    return User.get().then(res => {
         commit(types.RECEIVE_USER, res.data)
         commit(types.ONLINE)
     }, err => {
@@ -187,7 +187,7 @@ export const getUser = ({ commit, state }) => {
 }
 
 export const updateUser = ({ commit, state }) => {
-    User.update(state.user.user).then(res => {
+    return User.update(state.user.user).then(res => {
         commit(types.UPDATE_USERNAME, state.user.user.username)
     }, err => {
         commit(types.ERROR, err.data.message)
@@ -198,7 +198,7 @@ export const updateUser = ({ commit, state }) => {
 // Global
 
 export const authenticate = ({ commit, state }) => {
-    Vue.http.post('/auth/login', {
+    return Vue.http.post('/auth/login', {
         email: state.global.auth.email,
         password: state.global.auth.password
     }).then(res => {
@@ -210,7 +210,7 @@ export const authenticate = ({ commit, state }) => {
 }
 
 export const register = ({ commit, state }) => {
-    Vue.http.post('/auth/register', state.global.auth).then(res => {
+    return Vue.http.post('/auth/register', state.global.auth).then(res => {
         commit(types.ONLINE)
         router.replace('/')
     }, err => {
