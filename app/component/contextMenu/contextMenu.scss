@@ -2,6 +2,7 @@
     width: $leftbar;
     float: left;
     height: calc(100% - 80px);
+    overflow-y: auto;
     border: {
         right: 1px solid $border-color;
         bottom: 1px solid $border-color;
