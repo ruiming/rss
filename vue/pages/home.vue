@@ -7,7 +7,8 @@
         <li class="list-group-item">
             <router-link :to="{name: 'feed', params: {id: post.feed_id}}" class="info">
                 <img class="favicon" :src="post.favicon" onerror="this.src='/img/rss.png';">
-                <p>{{post.feed_title}}<small>{{post.unread}} 篇未读</small></p>
+                <p>{{post.feed_title}}</p>
+                <small>{{post.unread}} 篇未读</small>
             </router-link>
             <router-link :to="{name: 'post', params: {id: post._id}}" class="context">
                 <div class="title">
@@ -67,6 +68,7 @@ export default {
                 width: 80px;
                 position: absolute;
                 text-align: right;
+                top: 0;
                 right: 0;
             }
         }
@@ -90,6 +92,21 @@ export default {
         padding: 12px 15px;
         border-top: 1px solid #ddd;
         border-bottom: 1px solid #ddd;
+        position: relative;
+        height: 46px;
+        small {
+            position: absolute;
+            right: 15px;
+            top: 12px;
+        }
+        p {
+            position: absolute;
+            left: 50px;
+            right: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
     .context {
         padding: 10px 15px;
