@@ -18,14 +18,7 @@ Vue.http.interceptors.push(function (request, next) {
         request.headers.set('X-XSRF-TOKEN', cookie.parse(document.cookie)['XSRF-TOKEN'])
     }
     next(response => {
-        if (response.status === 401) {
-            if (!['/auth/login', '/auth/register', '/api/user'].includes(response.url)) {
-                store.commit('OFFLINE')
-                router.push({
-                    name: 'login'
-                })
-            }
-        } else if (response.status !== 200) {
+        if (response.status !== 200) {
             if (response.data.message) {
                 store.commit('ERROR', {
                     message:   response.data.message,
@@ -44,10 +37,15 @@ Vue.http.interceptors.push(function (request, next) {
                     }, 3000)
                 })
             }
-            setTimeout(() => {
-                // TODO
-                router.back()
-            }, 1500)
+            // TODO 处理错误的页面跳转问题
+        }
+        if (response.status === 401) {
+            if (!['/auth/login', '/auth/register', '/api/user'].includes(response.url)) {
+                store.commit('OFFLINE')
+                router.push({
+                    name: 'login'
+                })
+            }
         }
     })
 })
