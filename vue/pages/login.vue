@@ -2,7 +2,6 @@
 <div>
     <headbar>登录</headbar>
     <form v-on:submit.prevent="login()" class="center login">
-        <msg></msg>
         <img src="/img/rss.png">
         <div class="form-group">
             <label for="email">邮箱</label>
@@ -21,7 +20,6 @@
 </template>
 
 <script>
-import msg from '../components/msg.vue'
 import headbar from '../components/headbar.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
@@ -43,7 +41,7 @@ export default {
     },
     
     components: {
-        msg, headbar
+        headbar
     }
 }
 </script>

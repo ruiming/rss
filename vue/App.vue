@@ -16,6 +16,7 @@
                 </ul>
             </div>
         </transition>
+        <msg></msg>
         <router-view class="view" v-show="!loading" v-bind:class="{expand: expand}"></router-view>
         <div class="loading">
             <div class="cssload-loader" v-show="loading"></div>
@@ -28,6 +29,7 @@
 import { User } from './resource/resource.js'
 import Cookies from 'js-cookie'
 import { mapGetters, mapActions } from 'vuex'
+import msg from './components/msg.vue'
 export default {
     computed: mapGetters({
         expand: 'expand',
@@ -48,6 +50,10 @@ export default {
     
     mounted: function() {
         this.$store.dispatch('getUser')
+    },
+
+    components: {
+        msg
     }
 }
 </script>

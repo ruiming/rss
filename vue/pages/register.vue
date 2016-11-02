@@ -20,7 +20,6 @@
 
 <script>
 import { User } from '../resource/resource.js'
-import msg from '../components/msg.vue'
 import headbar from '../components/headbar.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
@@ -42,7 +41,7 @@ export default {
     },
     
     components: {
-        msg, headbar
+        headbar
     }
 }
 </script>

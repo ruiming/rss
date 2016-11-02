@@ -17,7 +17,6 @@
 import { User } from '../resource/resource.js'
 import headbar from '../components/headbar.vue'
 import navbar from '../components/navbar.vue'
-import msg from '../components/msg.vue'
 import _ from 'underscore'
 import { mapGetters, mapActions } from 'vuex'
 export default {
@@ -37,7 +36,7 @@ export default {
     },
     
     components: {
-        headbar, msg, navbar
+        headbar, navbar
     }
 }
 </script>

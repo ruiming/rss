@@ -10,8 +10,8 @@ const state = {
         password: null
     },
     online: false,
-    error:  [],
-    info:   []
+    error:  null,
+    info:   null
 }
 
 const mutations = {
@@ -28,11 +28,11 @@ const mutations = {
         if (message === 'UnauthorizedError: Invalid token\n' || message === 'UnauthorizedError: No Authorization header found\n') {
             message = '请先登录!'
         }
-        state.error = [message]
+        state.error = message
     },
     // 接收提示
     [types.INFO](state, message) {
-        state.info = [message]
+        state.info = message
     },
     // 开始加载
     [types.LOADING_START](state) {
@@ -63,11 +63,11 @@ const mutations = {
     },
     // 清除错误信息
     [types.CLEAR_ERROR](state) {
-        state.error = []
+        state.error = null
     },
     // 清除提示信息
     [types.CLEAR_INFO](state) {
-        state.info = []
+        state.info = null
     }
 }
 

@@ -12,8 +12,7 @@
             </div>
         </div>
         <search v-if="searching"></search>
-        <msg v-bind:msgs="err" v-if="!searching"></msg>
-        <ul class="list-group feed-group" v-if="!searching && !err.length">
+        <ul class="list-group feed-group" v-if="!searching && !err">
             <div class="header"><span class="icon-fire"></span>热门订阅源</div>
             <template v-for="feed in feeds">
                 <router-link :to="{name: 'feed', params: {id: feed._id}}" class="list-group-item">
@@ -33,7 +32,6 @@ import { Feeds, Feed } from '../resource/resource.js'
 import headbar from '../components/headbar.vue'
 import navbar from '../components/navbar.vue'
 import search from '../components/search.vue'
-import msg from '../components/msg.vue'
 import store from '../store'
 import { mapGetters, mapActions } from 'vuex'
 export default {
@@ -57,7 +55,7 @@ export default {
     },
     
     components: {
-        headbar, navbar, search, msg
+        headbar, navbar, search
     }
 }
 </script>
