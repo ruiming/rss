@@ -1,4 +1,5 @@
 import timeago from 'timeago.js'
+import _ from 'underscore'
 
 export const feed = state => {
     let feed = _.extend(state.feed.feed)

@@ -4,6 +4,7 @@ var isProduction = function () {
     return process.env.NODE_ENV === 'production'
 }
 var plugins = [],
+    externals = {},
     output
 if (isProduction()) {
     plugins.push(
@@ -18,6 +19,13 @@ if (isProduction()) {
         path: path.resolve(__dirname, './public/js/'),
         publicPath: '/js/',
         filename: 'build.js'
+    }
+    externals = {
+        "vue": 'Vue',
+        "underscore": '_',
+        'vue-resource': 'VueResource',
+        'vue-router': 'VueRouter',
+        'vuex': 'Vuex'
     }
 } else {
     output = {
@@ -55,12 +63,7 @@ module.exports = {
         }]
     },
     plugins: plugins,
-    externals: {
-        "vue": 'Vue',
-        "underscore": '_',
-        'vue-resource': 'VueResource',
-        'vue-router': 'VueRouter'
-    },
+    externals: externals,
     devServer: {
         hot: true,
         historyApiFallback: true,
