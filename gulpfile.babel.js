@@ -92,7 +92,7 @@ gulp.task('js', () => {
             'app/*.js',
             'app/**/*.js',
             'app/**/**/*.js',
-            'helper/help.js'
+            'utils/index.js'
         ])
         .pipe(plumber())
         .pipe(ngAnnotate())
@@ -127,7 +127,7 @@ gulp.task('sass', () => {
 
 gulp.task('watch', () => {
     // Auto watch and build
-    gulp.watch(['app/*.js', 'app/**/*.js', 'app/**/**/*.js', 'helper/help.js'], ['js'])
+    gulp.watch(['app/*.js', 'app/**/*.js', 'app/**/**/*.js', 'helper/index.js'], ['js'])
     gulp.watch(['app/*.scss', 'app/**/*.scss', 'app/**/**/*.scss', 'views/*.scss'], ['sass'])
     gulp.watch(['app/controller/**/*.html', 'app/component/**/*.html'], ['template'])
 })

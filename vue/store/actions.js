@@ -1,6 +1,6 @@
 import { Feed, Feeds, User, Post, Posts } from '../resource/resource.js'
 import * as types from './mutation-types'
-import tools from '../../helper/help'
+import tools from '../../utils'
 import Vue from 'vue'
 import router from '../router'
 

@@ -118,6 +118,58 @@
 })();
 'use strict';
 
+/**
+ * 单体通信
+ */
+(function () {
+    angular.module('app').factory('storage', storage);
+
+    function storage() {
+        return {};
+    }
+})();
+"use strict";
+
+(function () {
+    tokenInjector.$inject = ["$injector", "$q", "$cookies", "$cacheFactory", "$timeout"];
+    angular.module('app').factory('tokenInjector', tokenInjector);
+
+    function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
+
+        var count = {};
+
+        return {
+
+            // 正常情况下，XSRF 不正确会触发该错误
+            // 从而触发跳转到登录页面
+            // TODO 全局提示弹框
+            responseError: function responseError(rejection) {
+                if (rejection.status === 401) {
+                    console.log(rejection.data.message);
+                    setTimeout(function () {
+                        return document.location.replace('/');
+                    }, 1000);
+                    return $q.reject(rejection);
+                } else if ((rejection.status === 404 || rejection.status === -1) && (rejection.data === null || rejection.data.success !== undefined) && count[rejection.config.url] === undefined) {
+                    count[rejection.config.url] = true;
+                    var $http = $injector.get('$http');
+                    return $http(rejection.config);
+                }
+                return $q.reject(rejection);
+            }
+        };
+    }
+})();
+'use strict';
+
+(function () {
+    var underscore = angular.module('underscore', []);
+    underscore.factory('_', ['$window', function ($window) {
+        return $window._;
+    }]);
+})();
+'use strict';
+
 (function () {
     angular.module('app').directive('ngRandomClass', ngRandomClass);
 
@@ -189,58 +241,6 @@
             }
         };
     }
-})();
-'use strict';
-
-/**
- * 单体通信
- */
-(function () {
-    angular.module('app').factory('storage', storage);
-
-    function storage() {
-        return {};
-    }
-})();
-"use strict";
-
-(function () {
-    tokenInjector.$inject = ["$injector", "$q", "$cookies", "$cacheFactory", "$timeout"];
-    angular.module('app').factory('tokenInjector', tokenInjector);
-
-    function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
-
-        var count = {};
-
-        return {
-
-            // 正常情况下，XSRF 不正确会触发该错误
-            // 从而触发跳转到登录页面
-            // TODO 全局提示弹框
-            responseError: function responseError(rejection) {
-                if (rejection.status === 401) {
-                    console.log(rejection.data.message);
-                    setTimeout(function () {
-                        return document.location.replace('/');
-                    }, 1000);
-                    return $q.reject(rejection);
-                } else if ((rejection.status === 404 || rejection.status === -1) && (rejection.data === null || rejection.data.success !== undefined) && count[rejection.config.url] === undefined) {
-                    count[rejection.config.url] = true;
-                    var $http = $injector.get('$http');
-                    return $http(rejection.config);
-                }
-                return $q.reject(rejection);
-            }
-        };
-    }
-})();
-'use strict';
-
-(function () {
-    var underscore = angular.module('underscore', []);
-    underscore.factory('_', ['$window', function ($window) {
-        return $window._;
-    }]);
 })();
 'use strict';
 

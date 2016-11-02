@@ -5,3 +5,4 @@ coverage
 logs
 npm-debug.log
 public/favicon
+.idea

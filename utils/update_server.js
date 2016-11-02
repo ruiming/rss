@@ -4,7 +4,6 @@ require("babel-core/register")({
 
 require("babel-polyfill")
 
-require("./fetch_favicon.js")
+require("./fetch_posts.js")
 
-// 更新订阅源 favicon
-// Patch
+// 更新订阅源文章
