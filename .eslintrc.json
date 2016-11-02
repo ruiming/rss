@@ -23,21 +23,76 @@
         "ga": true
     },
     "rules": {
+        // 4空格锁紧 auto
         "indent": [
             "error",
             4
         ],
+        // unix 换行风格 auto
         "linebreak-style": [
             "error",
             "unix"
         ],
+        // 强制单引号 auto
         "quotes": [
             "error",
             "single"
         ],
+        // 禁止分号 auto
         "semi": [
             "error",
             "never"
+        ],
+        // 强制 !== 和 ===, 和 null 或 undefined 比较例外
+        "eqeqeq": [
+            "error",
+            "allow-null"
+        ],
+        // 强制大括号风格
+        "curly": [
+            "error",
+            "always"
+        ],
+        // 强制单行代码块中使用空格 auto
+        "block-spacing": [
+            "error",
+            "always"
+        ],
+        // 逗号前面不能由空格, 后面要空格 auto
+        "comma-spacing": [
+            "error",
+            {
+                "before": false,
+                "after": true 
+            }
+        ],
+        // 冒号前面不能有空格, 后面必须有空格, 键值需水平对齐 auto
+        "key-spacing": [
+            "error",
+            {
+                "beforeColon": false,
+                "afterColon": true,
+                "align": "value"
+            }
+        ],
+        // 禁用行尾空格 auto
+        "no-trailing-spaces": [
+            "error", 
+            { 
+                "skipBlankLines": true 
+            }
+        ],
+        // 函数左括号左边不能有空格 auto
+        "space-before-function-paren": [
+            "error",
+            "never" 
+        ],
+        // 操作符周围有空格 auto
+        "space-infix-ops": [
+            "error", 
+            {
+                "int32Hint": false
+            }
         ],
         "babel/generator-star-spacing": 1,
         "babel/new-cap": 1,
