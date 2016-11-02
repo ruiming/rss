@@ -204,8 +204,6 @@
 })();
 "use strict";
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 (function () {
     tokenInjector.$inject = ["$injector", "$q", "$cookies", "$cacheFactory", "$timeout"];
     angular.module('app').factory('tokenInjector', tokenInjector);
@@ -215,44 +213,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var count = {};
 
         return {
-
-            response: function response(config) {
-                var data = config.data.data;
-                count[config.config.url] = undefined;
-                if (Array.isArray(data)) {
-                    for (var i = 0, len = data.length; i < len; i++) {
-                        if (void 0 !== data[i].feed_id && Array.isArray(data[i].feed_id)) {
-                            // 提取 feed_id 
-                            if (typeof data[i].feed_id[0] === 'string') {
-                                config.data.data[i].feed_id = data[i].feed_id[0];
-                            } else {
-                                config.data.data[i] = Object.assign(data[i].feed_id[0], data[i], {
-                                    feed_id: data[i].feed_id[0]._id,
-                                    feed_title: data[i].feed_id[0].title
-                                });
-                            }
-                        }
-                        if (void 0 !== data[i].user_id && Array.isArray(data[i].user_id)) {
-                            config.data.data[i].user_id = data[i].user_id[0];
-                        }
-                    }
-                } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === 'object') {
-                    if (void 0 !== data.feed_id && Array.isArray(data.feed_id)) {
-                        if (typeof data.feed_id[0] === 'string') {
-                            config.data.data.feed_id = data.feed_id[0];
-                        } else {
-                            config.data.data = Object.assign(data.feed_id[0], data, {
-                                feed_id: data.feed_id[0]._id,
-                                feed_title: data.feed_id[0].title
-                            });
-                        }
-                    }
-                    if (void 0 !== data.user_id && Array.isArray(data.user_id)) {
-                        config.data.data.user_id = data.user_id[0];
-                    }
-                }
-                return $q.when(config);
-            },
 
             // 正常情况下，XSRF 不正确会触发该错误
             // 从而触发跳转到登录页面
@@ -1010,7 +970,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // 检测 URL 是否合法
         checkUrl: function checkUrl(url) {
             if (!url) return false;
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            var re = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
             return url.match(re) !== null;
         },
         // 检测邮箱是否合法

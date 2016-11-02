@@ -200,11 +200,15 @@ exports.list = async(ctx, next) => {
     }, {
         user_id: 0
     }).populate('feed_id').lean().exec((err, data) => {
-        data = Object.assign(data.feed_id[0], data, {
-            feed_id: data._id
-        })
-        data ? data.unread = count - unreadcount : data
-        return result = data
+        if(data !== null) {
+            data = Object.assign(data.feed_id[0], data, {
+                feed_id: data._id
+            })
+            data ? data.unread = count - unreadcount : data
+            return result = data
+        } else {
+            return data
+        }
     })
     if (result && result._id) {
         ctx.body = {
