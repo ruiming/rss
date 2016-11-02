@@ -8,7 +8,7 @@ module.exports = function () {
     return async(ctx, next) => {
         let token = ctx.cookies.get('jwt'),
             xsrf = ctx.request.headers['x-xsrf-token']
-        if (ctx.reqeust.header.authorization === undefined) {
+        if (ctx.request.header.authorization !== undefined) {
             ctx.request.header.authorization = 'Bearer ' + token
         }
         if (undefined !== token && /^\/api\//.test(ctx.url)) {
