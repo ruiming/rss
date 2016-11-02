@@ -35,6 +35,7 @@ const mutations = {
         // 清除旧数据和旧计时器
         clearTimeout(state.timer.error)
         state.timer.error = null
+        state.info = null
         // 设置新值
         state.error = message
         state.timer.error = timeoutId
@@ -44,6 +45,7 @@ const mutations = {
         // 清除旧数据和旧计时器
         clearTimeout(state.timer.info)
         state.timer.info = null
+        state.error = null
         // 设置新值
         state.info = message
         state.timer.info = timeoutId
