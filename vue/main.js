@@ -25,7 +25,15 @@ Vue.http.interceptors.push(function (request, next) {
     if (cookie.parse(document.cookie)['XSRF-TOKEN']) {
         request.headers.set('X-XSRF-TOKEN', cookie.parse(document.cookie)['XSRF-TOKEN'])
     }
-    next(responseTransformer)
+    next(response => {
+        if (response.status === 401) {
+            if (!['/auth/login', '/auth/register', '/api/user'].includes(response.url)) {
+                router.push({
+                    name: 'login'
+                })
+            }
+        }
+    })
 })
 
 const app = new Vue({

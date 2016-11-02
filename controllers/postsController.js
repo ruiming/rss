@@ -42,8 +42,9 @@ exports.list = async(ctx, next) => {
                 post_id: 1,
                 mark_date: 1
             })
-            let data = _.invoke(_.flatten(_.pluck(result, 'post_id'), true), 'toString')
-            let items = await PostModel.find({
+            let data = _.invoke(_.flatten(_.pluck(result, 'post_id'), true), 'toString'),
+                items
+            await PostModel.find({
                 feed_id: feed.feed_id
             }, {
                 summary: 0,
@@ -52,6 +53,13 @@ exports.list = async(ctx, next) => {
                 _id: 1,
                 title: 1,
                 favicon: 1
+            }).lean().exec((err, data) => {
+                return items = _.map(data, item => {
+                    item.feed_title = item.feed_id[0].title
+                    item.favicon = item.feed_id[0].favicon
+                    item.feed_id = item.feed_id[0]._id
+                    return item
+                })
             })
             if (type === 'mark') {
                 _.each(items, item => _.contains(data, item._id.toString()) ? posts.push(item) : _.noop())
@@ -98,8 +106,8 @@ exports.list = async(ctx, next) => {
  * @link:   /api/posts/recent
  */
 exports.main = async(ctx, next) => {
-    let user_id = ctx.state.user.id
-    let items = await UserFeedModel.find({
+    let user_id = ctx.state.user.id, items
+    await UserFeedModel.find({
             user_id: user_id
         }, {
             user_id: 0
@@ -107,7 +115,14 @@ exports.main = async(ctx, next) => {
         .populate('feed_id', {
             favicon: 1,
             title: 1
-        }).lean().exec()
+        }).lean().exec((err, data) => {
+            return items = _.map(data, item => {
+                item.feed_title = item.feed_id[0].title
+                item.favicon = item.feed_id[0].favicon
+                item.feed_id = item.feed_id[0]._id
+                return item
+            })
+        })
     await Promise.all(_.map(items, item => new Promise(async(resolve, reject) => {
         let userposts = await UserPostModel.find({
             feed_id: item.feed_id,

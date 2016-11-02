@@ -182,8 +182,8 @@ exports.create = async(ctx, next) => {
  */
 exports.list = async(ctx, next) => {
     let id = ctx.params.id,
-        user_id = ctx.state.user.id
-    let unreadcount, count
+        user_id = ctx.state.user.id,
+        unreadcount, count, result
     await Promise.all([
         Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
             feed_id: id,
@@ -194,12 +194,18 @@ exports.list = async(ctx, next) => {
             feed_id: id
         }))
     ])
-    let result = await UserFeedModel.findOne({
+    await UserFeedModel.findOne({
         user_id: user_id,
         feed_id: id
     }, {
         user_id: 0
-    }).populate('feed_id').lean().exec((err, data) => data ? data.unread = count - unreadcount : data)
+    }).populate('feed_id').lean().exec((err, data) => {
+        data = Object.assign(data.feed_id[0], data, {
+            feed_id: data._id
+        })
+        data ? data.unread = count - unreadcount : data
+        return result = data
+    })
     if (result && result._id) {
         ctx.body = {
             success: true,
@@ -226,8 +232,8 @@ exports.list = async(ctx, next) => {
  * @link:   /api/feed
  */
 exports.listAll = async(ctx, next) => {
-    let user_id = ctx.state.user.id
-    let items = await UserFeedModel.find({
+    let user_id = ctx.state.user.id, items
+    await UserFeedModel.find({
             user_id: user_id
         }, {
             user_id: 0
@@ -235,7 +241,14 @@ exports.listAll = async(ctx, next) => {
         .populate('feed_id', {
             favicon: 1,
             title: 1
-        }).lean().exec()
+        }).lean().exec((err, data) => {
+            return  items = _.map(data, item => {
+                return Object.assign(item.feed_id[0], item, {
+                    feed_title: item.feed_id[0].title,
+                    feed_id: item.feed_id[0]._id
+                })
+            })
+        })
     await Promise.all(_.map(items, item => new Promise(async(resolve, reject) => {
         let unreadcount, count
         await Promise.all([
