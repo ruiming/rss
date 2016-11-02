@@ -2,11 +2,8 @@
     var help = {
         // 检测 URL 是否合法
         checkUrl(url) {
-            if (!url) {
-                return false
-            }
-            let re = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
-            return url.match(re) !== null
+            let re = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+            return re.test(url)
         },
         // 检测邮箱是否合法
         validateEmail(email) {

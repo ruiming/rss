@@ -12,7 +12,7 @@
             </div>
         </div>
         <search v-if="searching"></search>
-        <ul class="list-group feed-group" v-if="!searching && !err">
+        <ul class="list-group feed-group" v-if="!searching">
             <div class="header"><span class="icon-fire"></span>热门订阅源</div>
             <template v-for="feed in feeds">
                 <router-link :to="{name: 'feed', params: {id: feed._id}}" class="list-group-item">

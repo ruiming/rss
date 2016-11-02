@@ -57,3 +57,5 @@ export const online = state => state.global.online
 export const feedPosts = state => state.posts.feedPosts
 
 export const recentPosts = state => state.posts.recentPosts
+
+export const timer = state => state.global.timer

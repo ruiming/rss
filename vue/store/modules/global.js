@@ -9,9 +9,13 @@ const state = {
         email:    null,
         password: null
     },
-    online: false,
+    online: true,
     error:  null,
-    info:   null
+    info:   null,
+    timer:  {
+        error: null,
+        info:  null
+    }
 }
 
 const mutations = {
@@ -24,15 +28,35 @@ const mutations = {
         state.expand = false
     },
     // 接收错误
-    [types.ERROR](state, message) {
+    [types.ERROR](state, { message, timeoutId }) {
         if (message === 'UnauthorizedError: Invalid token\n' || message === 'UnauthorizedError: No Authorization header found\n') {
             message = '请先登录!'
         }
+        // 清除旧数据和旧计时器
+        clearTimeout(state.timer.error)
+        state.timer.error = null
+        // 设置新值
         state.error = message
+        state.timer.error = timeoutId
     },
     // 接收提示
-    [types.INFO](state, message) {
+    [types.INFO](state, { message, timeoutId }) {
+        // 清除旧数据和旧计时器
+        clearTimeout(state.timer.info)
+        state.timer.info = null
+        // 设置新值
         state.info = message
+        state.timer.info = timeoutId
+    },
+    // 清除错误计时器
+    [types.CLEAR_ERROR_TIMER](state) {
+        clearTimeout(state.timer.error)
+        state.timer.error = null
+    },
+    // 清除提示计时器
+    [types.CLEAR_INFO_TIMER](state) {
+        clearTimeout(state.timer.info)
+        state.timer.info = null
     },
     // 开始加载
     [types.LOADING_START](state) {

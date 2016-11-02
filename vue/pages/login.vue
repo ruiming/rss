@@ -1,7 +1,7 @@
 <template>
 <div>
     <headbar>登录</headbar>
-    <form v-on:submit.prevent="login()" class="center login">
+    <form v-on:submit.prevent="login()" class="center login" novalidate>
         <img src="/img/rss.png">
         <div class="form-group">
             <label for="email">邮箱</label>

@@ -66,12 +66,17 @@ exports.create = async(ctx, next) => {
         }
     } else {
         await new Promise(async(resolve, reject) => {
-            let req = request({
-                url:     feedlink,
-                headers: {
-                    'User-Agent': 'request'
-                }
-            })
+            let req
+            try {
+                req = request({
+                    url:     feedlink,
+                    headers: {
+                        'User-Agent': 'request'
+                    }
+                })
+            } catch (e) {
+                reject(e)
+            }
             req.on('response', res => {
                 if (res.statusCode !== 200) {
                     res.on('data', () => {

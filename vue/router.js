@@ -65,10 +65,16 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     store.commit('LOADING_START')
     store.commit('COLLAPSE')
-    if (typeof ga !== 'undefined') {
-        ga('send', 'pageview', to.fullPath)
+    if (/login|register/.test(to.path) && store.getters.online) {
+        next({
+            path: '/'
+        })
+    } else {
+        if (typeof ga !== 'undefined') {
+            ga('send', 'pageview', to.fullPath)
+        }
+        next()
     }
-    next()
 })
 
 router.afterEach((to, from, next) => {

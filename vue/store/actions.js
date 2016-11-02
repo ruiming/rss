@@ -45,6 +45,8 @@ export const search = ({ commit, state }) => {
                     id: res.data.data
                 }
             })
+        }, () => {
+            commit(types.SEARCHING_END)
         })
     }
 }
@@ -165,29 +167,60 @@ export const updateUser = ({ commit, state }) => {
 
 export const authenticate = ({ commit, state }) => {
     if (!tools.validateEmail(state.global.auth.email)) {
-        commit(types.ERROR, '请输入正确的邮箱')
+        commit(types.ERROR, {
+            message:   '请输入正确的邮箱',
+            timeoutId: setTimeout(() => {
+                commit(types.CLEAR_ERROR)
+                commit(types.CLEAR_ERROR_TIMER)
+            }, 3000)
+        })
     } else if (!tools.validatePassword(state.global.auth.password)) {
-        commit(types.ERROR, '密码不符合要求 /\\w{6,18}/ ')
+        commit(types.ERROR, {
+            message:   '密码不符合要求 /\\w{6,18}/ ',
+            timeoutId: setTimeout(() => {
+                commit(types.CLEAR_ERROR)
+                commit(types.CLEAR_ERROR_TIMER)
+            }, 3000)
+        })
     } else {
-        commit(types.INFO, '登录中...')
+        commit(types.INFO, {
+            message: '登录中...'
+        })
         return Vue.http.post('/auth/login', {
             email:    state.global.auth.email,
             password: state.global.auth.password
+        }).then(() => User.get().then(res => {
+            commit(types.RECEIVE_USER, res.data)
+            commit(types.ONLINE)
         }).then(() => {
             commit(types.CLEAR_INFO)
             commit(types.ONLINE)
             router.replace('/')
-        })
+        }))
     }
 }
 
 export const register = ({ commit, state }) => {
     if (!tools.validateEmail(state.global.auth.email)) {
-        commit(types.ERROR, '请输入正确的邮箱')
+        commit(types.ERROR, {
+            message:   '请输入正确的邮箱',
+            timeoutId: setTimeout(() => {
+                commit(types.CLEAR_ERROR)
+                commit(types.CLEAR_ERROR_TIMER)
+            }, 3000)
+        })
     } else if (!tools.validatePassword(state.global.auth.password)) {
-        commit(types.ERROR, '密码不符合要求 /\\w{6,18}/ ')
+        commit(types.ERROR, {
+            message:   '密码不符合要求 /\\w{6,18}/ ',
+            timeoutId: setTimeout(() => {
+                commit(types.CLEAR_ERROR)
+                commit(types.CLEAR_ERROR_TIMER)
+            }, 3000)
+        })
     } else {
-        commit(types.INFO, '注册中...')
+        commit(types.INFO, {
+            message: '注册中...'
+        })
         return Vue.http.post('/auth/register', state.global.auth).then(() => {
             commit(types.ONLINE)
             commit(types.CLEAR_INFO)

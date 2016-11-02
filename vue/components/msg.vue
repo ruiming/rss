@@ -16,27 +16,7 @@ export default {
     computed: mapGetters({
         error: 'error',
         info: 'info'
-    }),
-
-    watch: {
-        // ERROR 3秒有效
-        'error' (to, from) {
-            if(to !== null) {
-                this.$store.commit('CLEAR_INFO')
-                setTimeout(() => {
-                    this.$store.commit('CLEAR_ERROR')
-                }, 3000)
-            }
-        },
-        // INFO 5秒有效
-        'info' (to, from) {
-            if(to !== null) {
-                setTimeout(() => {
-                    this.$store.commit('CLEAR_INFO')
-                }, 5000)
-            }
-        }
-    }
+    })
 }
 </script>
 

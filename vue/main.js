@@ -19,11 +19,31 @@ Vue.http.interceptors.push(function (request, next) {
     }
     next(response => {
         if (response.status !== 200) {
-            store.commit('ERROR', response.data.message)
-            store.commit('LOADING_END')
+            if (response.data.message) {
+                store.commit('ERROR', {
+                    message:   response.data.message,
+                    timeoutId: setTimeout(() => {
+                        store.commit('CLEAR_ERROR')
+                        store.commit('CLEAR_ERROR_TIMER')
+                    }, 3000)
+                })
+            } else {
+                // 通常为 500 错误
+                store.commit('ERROR', {
+                    message:   '服务器开小差了',
+                    timeoutId: setTimeout(() => {
+                        store.commit('CLEAR_ERROR')
+                        store.commit('CLEAR_ERROR_TIMER')
+                    }, 3000)
+                })
+                setTimeout(() => {
+                    router.replace('/')
+                }, 1500)
+            }
         }
         if (response.status === 401) {
             if (!['/auth/login', '/auth/register', '/api/user'].includes(response.url)) {
+                store.commit('OFFLINE')
                 router.push({
                     name: 'login'
                 })
