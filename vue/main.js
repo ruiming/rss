@@ -18,7 +18,14 @@ Vue.http.interceptors.push(function (request, next) {
         request.headers.set('X-XSRF-TOKEN', cookie.parse(document.cookie)['XSRF-TOKEN'])
     }
     next(response => {
-        if (response.status !== 200) {
+        if (response.status === 401) {
+            if (!['/auth/login', '/auth/register', '/api/user'].includes(response.url)) {
+                store.commit('OFFLINE')
+                router.push({
+                    name: 'login'
+                })
+            }
+        } else if (response.status !== 200) {
             if (response.data.message) {
                 store.commit('ERROR', {
                     message:   response.data.message,
@@ -36,18 +43,11 @@ Vue.http.interceptors.push(function (request, next) {
                         store.commit('CLEAR_ERROR_TIMER')
                     }, 3000)
                 })
-                setTimeout(() => {
-                    router.replace('/')
-                }, 1500)
             }
-        }
-        if (response.status === 401) {
-            if (!['/auth/login', '/auth/register', '/api/user'].includes(response.url)) {
-                store.commit('OFFLINE')
-                router.push({
-                    name: 'login'
-                })
-            }
+            setTimeout(() => {
+                // TODO
+                router.back()
+            }, 1500)
         }
     })
 })
