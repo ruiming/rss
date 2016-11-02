@@ -6,8 +6,8 @@
     function ngRandomClass() {
         return {
             restrict: 'EA',
-            replace: false,
-            scope: {
+            replace:  false,
+            scope:    {
                 ngClasses: '=ngRandomClass'
             },
             link(scope, elem) {

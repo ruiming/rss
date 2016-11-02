@@ -6,13 +6,13 @@
     function navbar($state, $base64) {
         return {
             restrict: 'EA',
-            scope: {
+            scope:    {
                 title: '='
             },
-            replace: true,
-            templateUrl: 'navbar/navbar.html',
+            replace:      true,
+            templateUrl:  'navbar/navbar.html',
             controllerAs: 'vm',
-            controller: function navbarController($scope, User, $location, $rootScope, $timeout, tools) {
+            controller:   function navbarController($scope, User, $location, $rootScope, $timeout, tools) {
                 let vm = this,
                     timeout
 

@@ -16,7 +16,7 @@ global.Promise = require('bluebird')
 async function update() {
     var items = await FeedModel.find({}, {
         absurl: 1,
-        _id: 1
+        _id:    1
     })
     var starttime = Date.now(),
         updateCount = 0,
@@ -25,7 +25,7 @@ async function update() {
     let promises = items.map(item => {
         return new Promise((resolve) => {
             let req = request({
-                url: item.absurl,
+                url:     item.absurl,
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36'
                 },
@@ -38,7 +38,7 @@ async function update() {
                 recent_update: Date.now()
             })
             req.on('response', res => {
-                if (res.statusCode != 200) {
+                if (res.statusCode !== 200) {
                     console.log(`#1 ${res.statusCode} -- ${item.absurl}`)
                     resolve()
                 } else {
@@ -58,11 +58,11 @@ async function update() {
                 while (result = this.read()) {
                     // Use link to identify...
                     let origin = await PostModel.findOne({
-                        link: result.link,
+                        link:    result.link,
                         feed_id: item._id
                     })
                     if (origin && origin._id) {
-                        if (origin.link && (origin.link.toString() == result.link.toString())) {
+                        if (origin.link && (origin.link.toString() === result.link.toString())) {
                             equalCount++
                         } else {
                             Object.assign(origin, result)

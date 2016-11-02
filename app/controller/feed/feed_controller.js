@@ -16,13 +16,13 @@
         // Graphy Start 订阅源文章更新情况
         vm.options = {
             chart: {
-                type: 'discreteBarChart',
+                type:   'discreteBarChart',
                 height: 320,
                 margin: {
-                    top: 10,
-                    right: 20,
+                    top:    10,
+                    right:  20,
                     bottom: 50,
-                    left: 55
+                    left:   55
                 },
                 x(d) {
                     return d.label
@@ -35,11 +35,11 @@
                     return d3.format(',.0f')(d)
                 },
                 duration: 500,
-                xAxis: {
+                xAxis:    {
                     axisLabel: '月份'
                 },
                 yAxis: {
-                    axisLabel: '最近更新文章数',
+                    axisLabel:         '最近更新文章数',
                     axisLabelDistance: -10
                 },
                 tooltip: {
@@ -50,7 +50,7 @@
             }
         }
         vm.data = [{
-            key: '最近更新文章数',
+            key:    '最近更新文章数',
             values: []
         }]
         _.each(_.groupBy(posts.data.posts, 'pubdate'), (value, key) => {
@@ -62,10 +62,12 @@
                     exist = true
                 }
             })
-            if (!exist) vm.data[0].values.push({
-                label: date,
-                value: 1
-            })
+            if (!exist) {
+                vm.data[0].values.push({
+                    label: date,
+                    value: 1
+                })
+            }
         })
         vm.data[0].values = _.sortBy(vm.data[0].values, 'label').reverse()
         // Graphy End
@@ -121,7 +123,7 @@
             }
             Posts.update({
                 feed_id: $stateParams.id,
-                type: 'read'
+                type:    'read'
             })
         }
         $scope.$on('EXPAND', () => vm.expand = !vm.expand)

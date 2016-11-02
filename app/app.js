@@ -41,10 +41,10 @@
         $urlRouterProvider.otherwise('/')
         $stateProvider
             .state('home', {
-                url: '/',
+                url:         '/',
                 templateUrl: 'home/home_tpl.html',
-                controller: 'HomeController as vm',
-                resolve: {
+                controller:  'HomeController as vm',
+                resolve:     {
                     posts: function (Posts) {
                         return Posts.recent().$promise
                     },
@@ -56,15 +56,15 @@
                 }
             })
             .state('search', {
-                url: '/search/:feedlink',
+                url:         '/search/:feedlink',
                 templateUrl: 'search/search_tpl.html',
-                controller: 'SearchController as vm'
+                controller:  'SearchController as vm'
             })
             .state('feed', {
-                url: '/feed/:id',
+                url:         '/feed/:id',
                 templateUrl: 'feed/feed_tpl.html',
-                controller: 'FeedController as vm',
-                resolve: {
+                controller:  'FeedController as vm',
+                resolve:     {
                     feed: function (Feed, $stateParams) {
                         return Feed.get({
                             id: $stateParams.id
@@ -78,10 +78,10 @@
                 }
             })
             .state('feed.post', {
-                url: '/post/:post_id',
+                url:         '/post/:post_id',
                 templateUrl: 'post/post_tpl.html',
-                controller: 'PostController as vm',
-                resolve: {
+                controller:  'PostController as vm',
+                resolve:     {
                     post: function (Post, $stateParams) {
                         return Post.get({
                             id: $stateParams.post_id
@@ -90,11 +90,11 @@
                 }
             })
             .state('posts', {
-                url: '/posts/:type',
-                abstract: false,
+                url:         '/posts/:type',
+                abstract:    false,
                 templateUrl: 'posts/posts_tpl.html',
-                controller: 'PostsController as vm',
-                resolve: {
+                controller:  'PostsController as vm',
+                resolve:     {
                     posts: function (Posts, $stateParams, $q) {
                         let defer = $q.defer()
                         if (['unread', 'mark'].indexOf($stateParams.type) !== -1) {
@@ -109,10 +109,10 @@
                 }
             })
             .state('posts.post', {
-                url: '/post/:id',
+                url:         '/post/:id',
                 templateUrl: 'post/post_tpl.html',
-                controller: 'PostController as vm',
-                resolve: {
+                controller:  'PostController as vm',
+                resolve:     {
                     post: function (Post, $stateParams) {
                         return Post.get({
                             id: $stateParams.id
@@ -121,10 +121,10 @@
                 }
             })
             .state('me', {
-                url: '/me',
+                url:         '/me',
                 templateUrl: 'me/me_tpl.html',
-                controller: 'MeController as vm',
-                resolve: {
+                controller:  'MeController as vm',
+                resolve:     {
                     user: function (User) {
                         return User.get().$promise
                     }

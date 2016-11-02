@@ -32,11 +32,11 @@ exports.list = async(ctx, next) => {
                 feed_id: feed.feed_id[0],
                 user_id: user_id
             }
-            if (type === 'mark') query['mark'] = true
-            else query['read'] = true
+            if (type === 'mark') { query['mark'] = true }
+            else { query['read'] = true }
             let result = await UserPostModel.find(query, {
-                _id: 0,
-                post_id: 1,
+                _id:       0,
+                post_id:   1,
                 mark_date: 1
             })
             let data = _.invoke(_.flatten(_.pluck(result, 'post_id'), true), 'toString'),
@@ -44,13 +44,15 @@ exports.list = async(ctx, next) => {
             await PostModel.find({
                 feed_id: feed.feed_id
             }, {
-                summary: 0,
+                summary:     0,
                 description: 0
             }).populate('feed_id', {
-                _id: 1,
-                title: 1,
+                _id:     1,
+                title:   1,
                 favicon: 1
-            }).lean().exec((err, data) => {
+            })
+            .lean()
+            .exec((err, data) => {
                 return items = _.map(data, item => {
                     item.feed_title = item.feed_id[0].title
                     item.favicon = item.feed_id[0].favicon
@@ -67,7 +69,7 @@ exports.list = async(ctx, next) => {
         })))
         ctx.body = {
             success: true,
-            data: posts
+            data:    posts
         }
     } else if (feed_id !== undefined) {
         await Promise.all([
@@ -75,7 +77,7 @@ exports.list = async(ctx, next) => {
                 feed_id: feed_id
             }, {
                 description: 0,
-                summary: 0
+                summary:     0
             })),
             Promise.resolve().then(async() => detail = await UserPostModel.find({
                 feed_id: feed_id,
@@ -87,8 +89,8 @@ exports.list = async(ctx, next) => {
         ])
         ctx.body = {
             success: true,
-            data: {
-                posts: result,
+            data:    {
+                posts:  result,
                 detail: detail
             }
         }
@@ -111,7 +113,7 @@ exports.main = async(ctx, next) => {
     })
     .populate('feed_id', {
         favicon: 1,
-        title: 1
+        title:   1
     }).lean().exec((err, data) => {
         return items = _.map(data, item => {
             item.feed_title = item.feed_id[0].title
@@ -124,7 +126,7 @@ exports.main = async(ctx, next) => {
         let userposts = await UserPostModel.find({
             feed_id: item.feed_id,
             user_id: user_id,
-            read: true
+            read:    true
         })
         await PostModel.find({
             feed_id: item.feed_id
@@ -145,7 +147,7 @@ exports.main = async(ctx, next) => {
                         post.description = '/img/noimg.png'
                     }
                     resolve(Object.assign(post, item, {
-                        _id: post._id,
+                        _id:    post._id,
                         unread: count
                     }))
                     break
@@ -156,7 +158,7 @@ exports.main = async(ctx, next) => {
     }))).then(items => {
         ctx.body = {
             success: true,
-            data: _.filter(items, item => item.length !== 0)
+            data:    _.filter(items, item => item.length !== 0)
         }
     }).catch(e => e)
 }
@@ -168,7 +170,7 @@ exports.main = async(ctx, next) => {
  * @param:  {string} feed_id
  */
 exports.update = async(ctx, next) => {
-    if(ctx.request.body.feed_id === undefined || ctx.request.body.feed_id === null) {
+    if (ctx.request.body.feed_id === undefined || ctx.request.body.feed_id === null) {
         ctx.throw(404, '出错了')
     }
     // 电脑版有全部未读文章标记已读的接口，所以需要进行 split
@@ -185,17 +187,19 @@ exports.update = async(ctx, next) => {
                 post_id: post
             })
             if (state && state._id) {
-                if (state.read) return
+                if (state.read) {
+                    return
+                }
                 else {
                     state.read = true
                     state.save()
                 }
             } else {
                 state = new UserPostModel({
-                    user_id: user_id,
-                    feed_id: id,
-                    post_id: post,
-                    read: true,
+                    user_id:   user_id,
+                    feed_id:   id,
+                    post_id:   post,
+                    read:      true,
                     read_date: Date.now()
                 })
                 state.save()
@@ -204,6 +208,6 @@ exports.update = async(ctx, next) => {
     })
     ctx.body = {
         success: true,
-        data: '操作成功'
+        data:    '操作成功'
     }
 }

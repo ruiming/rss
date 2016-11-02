@@ -14,46 +14,46 @@ import store from './store'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-    mode: 'history',
-    base: '/',
+    mode:   'history',
+    base:   '/',
     routes: [{
-        name: 'login',
-        path: '/login',
+        name:      'login',
+        path:      '/login',
         component: login
     }, {
-        name: 'register',
-        path: '/register',
+        name:      'register',
+        path:      '/register',
         component: register
     }, {
-        name: 'home',
-        path: '/',
+        name:      'home',
+        path:      '/',
         component: home
     }, {
-        name: 'feeds',
-        path: '/feeds',
+        name:      'feeds',
+        path:      '/feeds',
         component: feeds
     }, {
-        name: 'mark',
-        path: '/mark',
+        name:      'mark',
+        path:      '/mark',
         component: mark
     }, {
-        name: 'post',
-        path: '/post/:id',
+        name:      'post',
+        path:      '/post/:id',
         component: post
     }, {
-        name: 'feed',
-        path: '/feed/:id',
+        name:      'feed',
+        path:      '/feed/:id',
         component: feed
     }, {
-        name: 'square',
-        path: '/square',
+        name:      'square',
+        path:      '/square',
         component: square
     }, {
-        name: 'me',
-        path: '/me',
+        name:      'me',
+        path:      '/me',
         component: me
     }],
-    scrollBehavior (to, from, savedPosition) {
+    scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {
             return savedPosition
         } else {
@@ -61,11 +61,11 @@ const router = new VueRouter({
         }
     }
 })
-
+ 
 router.beforeEach((to, from, next) => {
     store.commit('LOADING_START')
     store.commit('COLLAPSE')
-    if(typeof ga !== 'undefined') {
+    if (typeof ga !== 'undefined') {
         ga('send', 'pageview', to.fullPath)
     }
     next()

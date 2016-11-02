@@ -33,11 +33,11 @@ exports.listOne = async(ctx, next) => {
             next = posts[posts.indexOf(id) + 1]
         ctx.body = {
             success: true,
-            data: {
+            data:    {
                 result: result,
                 detail: readresult,
-                pre: pre,
-                next: next
+                pre:    pre,
+                next:   next
             }
         }
     } else {
@@ -71,7 +71,9 @@ exports.update = async(ctx, next) => {
                     })),
                     Promise.resolve().then(async() => res = await PostModel.findById(item))
                 ]).catch(e => e)
-                if (!(res && res._id)) continue
+                if (!(res && res._id)) {
+                    continue
+                }
                 let basic = {
                     user_id: user_id,
                     feed_id: res.feed_id,
@@ -79,7 +81,7 @@ exports.update = async(ctx, next) => {
                 }
                 if (state && state._id) {
                     state[type] = revert ? !state[type] : true
-                    if (!revert) state[type + '_date'] = Date.now()
+                    if (!revert) { state[type + '_date'] = Date.now() }
                     state.save()
                 } else {
                     basic[type] = true
@@ -91,7 +93,7 @@ exports.update = async(ctx, next) => {
         }, 0)
         ctx.body = {
             success: true,
-            data: '操作成功'
+            data:    '操作成功'
         }
     }
 }

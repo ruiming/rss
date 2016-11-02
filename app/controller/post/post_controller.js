@@ -3,7 +3,7 @@
         .module('app')
         .controller('PostController', PostController)
 
-    function PostController($state, post, Post, storage, $scope, _, $rootScope, $timeout, $cacheFactory) {
+    function PostController($state, post, Post, storage, $scope) {
         var vm = this
         vm.post = post
         vm.currentPost = post.data.result
@@ -36,7 +36,7 @@
             Post.update({
                 id: vm.currentPost._id
             }, {
-                type: 'love',
+                type:   'love',
                 revert: true
             })
         }
@@ -46,7 +46,7 @@
             Post.update({
                 id: vm.currentPost._id
             }, {
-                type: 'mark',
+                type:   'mark',
                 revert: true
             })
         }

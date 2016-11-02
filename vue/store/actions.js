@@ -46,7 +46,7 @@ export const search = ({ commit, state }) => {
         }).then(res => {
             commit(types.SEARCHING_END)
             router.push({
-                name: 'feed',
+                name:   'feed',
                 params: {
                     id: res.data.data
                 }
@@ -109,7 +109,7 @@ export const mark = ({ commit, state }, id) => {
     return Post.update({
         id: id || state.post.post._id
     }, {
-        type: 'mark',
+        type:   'mark',
         revert: true
     }).then(() => {
         commit(types.MARK, id || state.post.post._id)
@@ -122,7 +122,7 @@ export const love = ({ commit, state }, id) => {
     return Post.update({
         id: id || state.post.post._id
     }, {
-        type: 'love',
+        type:   'love',
         revert: true
     }).then(() => {
         commit(types.LOVE, id || state.post.post._id)
@@ -163,10 +163,10 @@ export const getPosts = ({ commit, state }, type) => {
 }
 
 export const readAll = ({ commit, state }) => {
-    if(state.feed.feed.unread) {
+    if (state.feed.feed.unread) {
         return Posts.update({
             feed_id: state.feed.feed.feed_id || state.feed.feed._id,
-            type: 'read'
+            type:    'read'
         }).then(() => {
             commit('READ_ALL')
         }, err => {
@@ -205,7 +205,7 @@ export const authenticate = ({ commit, state }) => {
     } else {
         commit(types.INFO, '登录中...')
         return Vue.http.post('/auth/login', {
-            email: state.global.auth.email,
+            email:    state.global.auth.email,
             password: state.global.auth.password
         }).then(() => {
             commit(types.CLEAR_INFO)

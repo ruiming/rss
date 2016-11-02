@@ -1,9 +1,9 @@
 import * as types from '../mutation-types'
 
 const state = {
-    user: {},
+    user:       {},
     originname: null,
-    message: []
+    message:    []
 }
 
 const mutations = {

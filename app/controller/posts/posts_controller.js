@@ -22,7 +22,9 @@
                 if (item._id === id) {
                     item.active = true
                     post = item
-                } else item.active = false
+                } else {
+                    item.active = false
+                }
             }
             if (!post.read && vm.type === '未读') {
                 vm.unread--
@@ -52,7 +54,7 @@
             let ids = _.uniq(_.pluck(vm.posts, 'feed_id')).toString()
             Posts.update({
                 feed_id: ids,
-                type: 'read'
+                type:    'read'
             })
         }
 

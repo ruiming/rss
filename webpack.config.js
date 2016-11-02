@@ -9,66 +9,66 @@ var plugins = [],
 if (isProduction()) {
     plugins.push(
         new webpack.optimize.UglifyJsPlugin({
-            test: /(\.vue|\.js)$/,
+            test:     /(\.vue|\.js)$/,
             compress: {
                 warnings: false
             },
         })
     )
     output = {
-        path: path.resolve(__dirname, './public/js/'),
+        path:       path.resolve(__dirname, './public/js/'),
         publicPath: '/js/',
-        filename: 'build.js'
+        filename:   'build.js'
     }
     externals = {
-        'vue': 'Vue',
-        'underscore': '_',
+        'vue':          'Vue',
+        'underscore':   '_',
         'vue-resource': 'VueResource',
-        'vue-router': 'VueRouter',
-        'vuex': 'Vuex'
+        'vue-router':   'VueRouter',
+        'vuex':         'Vuex'
     }
 } else {
     output = {
-        path: path.resolve(__dirname, './dist'),
+        path:       path.resolve(__dirname, './dist'),
         publicPath: '/dist/',
-        filename: 'build.js'
+        filename:   'build.js'
     }
 }
 module.exports = {
-    entry: './vue/main.js',
-    output: output,
+    entry:         './vue/main.js',
+    output:        output,
     resolveLoader: {
         root: path.join(__dirname, 'node_modules')
     },
     module: {
         loaders: [{
-            test: /\.vue$/,
+            test:   /\.vue$/,
             loader: 'vue'
         }, {
-            test: /\.js$/,
-            loader: 'babel',
+            test:    /\.js$/,
+            loader:  'babel',
             exclude: /node_modules/
         }, {
-            test: /\.css$/,
+            test:   /\.css$/,
             loader: 'style!css'
         }, {
-            test: /\.scss$/,
+            test:   /\.scss$/,
             loader: ['style', 'css', 'sass']
         }, {
-            test: /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
+            test:   /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
             loader: 'file'
         }, {
-            test: /\.(png|jpg|gif|svg|ico)$/,
+            test:   /\.(png|jpg|gif|svg|ico)$/,
             loader: 'url-loader?limit=8192',
         }]
     },
-    plugins: plugins,
+    plugins:   plugins,
     externals: externals,
     devServer: {
-        hot: true,
+        hot:                true,
         historyApiFallback: true,
-        port: 7000,
-        proxy: {
+        port:               7000,
+        proxy:              {
             '/api/*': {
                 target: 'http://127.0.0.1:3000'
             },

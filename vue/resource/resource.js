@@ -6,7 +6,7 @@ const Feeds = Vue.resource('/api/feeds', {}, {
     popular: {
         method: 'GET',
         params: {
-            order: 'feedNum',
+            order:      'feedNum',
             'per_page': 50
         }
     }
@@ -31,13 +31,13 @@ const Posts = Vue.resource('/api/posts', {}, {
     get: {
         method: 'GET',
         params: {
-            type: '@type',
+            type:    '@type',
             feed_id: '@feed_id'
         }
     },
     recent: {
         method: 'GET',
-        url: '/api/posts/recent'
+        url:    '/api/posts/recent'
     },
     update: {
         method: 'PUT'
@@ -50,7 +50,7 @@ const User = Vue.resource('/api/user', {}, {
     },
     logout: {
         method: 'POST',
-        url: '/auth/logout'
+        url:    '/auth/logout'
     }
 })
 

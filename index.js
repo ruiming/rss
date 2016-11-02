@@ -39,7 +39,7 @@ app.use(handel.routes())
 
 // Below needs JWT verfiy
 app.use(jwt({
-    secret: config.APP.JWT_KEY,
+    secret:    config.APP.JWT_KEY,
     algorithm: 'RS256'
 }).unless({
     path: [/^\/css|js|img|fonts|favicon/]
@@ -54,9 +54,9 @@ http.createServer(app.callback()).listen(config.PORT)
 // Production Only
 if (config.ENV === 'production') {
     const options = {
-        key: config.APP.SSL_KEY,
+        key:  config.APP.SSL_KEY,
         cert: config.APP.SSL_CERT,
-        ca: config.APP.CA
+        ca:   config.APP.CA
     }
     http2.createServer(options, app.callback()).listen(443)
 }

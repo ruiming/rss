@@ -71,12 +71,12 @@ gulp.task('template', () => {
     ])
         .pipe(htmlify())
         .pipe(minifyHtml({
-            empty: true,
+            empty:  true,
             quotes: true
         }))
         .pipe(ngTemplate({
             moduleName: 'app',
-            filePath: 'templates.js'
+            filePath:   'templates.js'
         }))
         .pipe(uglify())
         .pipe(gulp.dest('public/js'))

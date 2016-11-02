@@ -6,8 +6,8 @@
     function scrollListen(_) {
         return {
             restrict: 'EA',
-            scope: true,
-            link: (scope, elem) => {
+            scope:    true,
+            link:     (scope, elem) => {
                 var first = true
                 var func = _.throttle(e => {
                     if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail) {

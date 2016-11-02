@@ -6,13 +6,13 @@
     function feedPanel() {
         return {
             restrict: 'EA',
-            scope: {
+            scope:    {
                 feed: '='
             },
-            replace: true,
-            templateUrl: 'feedPanel/feedPanel.html',
+            replace:      true,
+            templateUrl:  'feedPanel/feedPanel.html',
             controllerAs: 'vm',
-            controller: function navbarController($scope, $rootScope, Feed) {
+            controller:   function navbarController($scope, $rootScope, Feed) {
                 let vm = this
 
                 // Function
@@ -47,5 +47,4 @@
             }
         }
     }
-
 }())

@@ -11,9 +11,9 @@ import favicon from 'koa-favicon'
 
 const normal = () => compose([
     compress({
-        filter: content_type => /text|application/i.test(content_type),
+        filter:    content_type => /text|application/i.test(content_type),
         threshold: 2048,
-        flush: require('zlib').Z_SYNC_FLUSH
+        flush:     require('zlib').Z_SYNC_FLUSH
     }),
     json(),
     convert(bodyparser()),

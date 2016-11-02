@@ -9,7 +9,7 @@ export const UPDATE_URL = 'UPDATE_URL'
 export const RECEIVE_FEEDS = 'RECEIVE_FEEDS'
 export const getPopularFeeds = 'getPopularFeeds'
 // Post
-export const MARK= 'MARK'
+export const MARK = 'MARK'
 export const LOVE = 'LOVE'
 export const READ_POST = 'READ_POST'
 // Posts

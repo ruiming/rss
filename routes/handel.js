@@ -14,32 +14,48 @@ router.get(['/', '/login'], async(ctx, next) => {
         if (token.id) {
             let result = await UserModel.findById(token.id)
             if (result && result._id) {
-                if (ctx.mobile) await send(ctx, './public/index.html')
-                else await send(ctx, './public/pc.html')
+                if (ctx.mobile) {
+                    await send(ctx, './public/index.html')
+                } else {
+                    await send(ctx, './public/pc.html')
+                }
             }
         } else {
             ctx.cookies.set('jwt', null, {
                 overwrite: true,
-                expires: new Date()
+                expires:   new Date()
             })
-            if (ctx.mobile) await send(ctx, './public/index.html')
-            else await ctx.render('login.ejs', {
-                err: 'JWT 验证失败'
-            })
+            if (ctx.mobile) {
+                await send(ctx, './public/index.html')
+            }
+            else {
+                await ctx.render('login.ejs', {
+                    err: 'JWT 验证失败'
+                })
+            }
         }
     } else {
-        if (ctx.mobile) await send(ctx, './public/index.html')
-        else await ctx.render('login.ejs')
+        if (ctx.mobile) {
+            await send(ctx, './public/index.html')
+        } else {
+            await ctx.render('login.ejs')
+        }
     }
 })
 
 router.get('/register', async(ctx, next) => {
     if (ctx.cookies.get('jwt') && jwt.verify(ctx.cookies.get('jwt'), config.APP.JWT_KEY)) {
-        if (ctx.mobile) await send(ctx, './public/index.html')
-        else await send(ctx, './public/pc.html')
+        if (ctx.mobile) {
+            await send(ctx, './public/index.html')
+        } else {
+            await send(ctx, './public/pc.html')
+        }
     } else {
-        if (ctx.mobile) await send(ctx, './public/index.html')
-        else await ctx.render('register.ejs')
+        if (ctx.mobile) {
+            await send(ctx, './public/index.html')
+        } else {
+            await ctx.render('register.ejs')
+        }
     }
 })
 

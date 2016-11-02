@@ -34,7 +34,7 @@ exports.create = async(ctx, next) => {
         if (search) {
             return ctx.body = {
                 success: true,
-                data: result._id
+                data:    result._id
             }
         } else {
             let userresult = await UserFeedModel.findOne({
@@ -54,26 +54,26 @@ exports.create = async(ctx, next) => {
                 let userfeed = UserFeedModel({
                     feed_id: result._id,
                     user_id: user_id,
-                    unread: count
+                    unread:  count
                 })
                 // 添加到用户订阅表
                 userfeed.save()
                 return ctx.body = {
                     success: true,
-                    data: result
+                    data:    result
                 }
             }
         }
     } else {
         await new Promise(async(resolve, reject) => {
             let req = request({
-                url: feedlink,
+                url:     feedlink,
                 headers: {
                     'User-Agent': 'request'
                 }
             })
             req.on('response', res => {
-                if (res.statusCode != 200) {
+                if (res.statusCode !== 200) {
                     res.on('data', () => {
                         reject('Error: 目的不可达, 404错误')
                     })
@@ -91,7 +91,7 @@ exports.create = async(ctx, next) => {
             req.on('error', err => reject(err))
             feedparser.on('meta', async function () {
                 let favicon = null
-                let hash = SHA256(this.meta.link).toString().slice(0,10)     
+                let hash = SHA256(this.meta.link).toString().slice(0, 10)
 
                 await fetchFavicon(this.meta.link).then(data => favicon = data).catch(e => e)
 
@@ -100,16 +100,16 @@ exports.create = async(ctx, next) => {
                         request.get(favicon).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'))
                         favicon = `/favicon/${hash}.ico`
                     } else {
-                        favicon = '/favicon/rss.png'                        
+                        favicon = '/favicon/rss.png'
                     }
                     resolve(favicon)
                 }))
 
                 let data = search ? {
-                    absurl: feedlink,
+                    absurl:  feedlink,
                     favicon: favicon
                 } : {
-                    absurl: feedlink,
+                    absurl:  feedlink,
                     favicon: favicon,
                     feedNum: 1
                 }
@@ -137,7 +137,7 @@ exports.create = async(ctx, next) => {
                     feedparser.on('end', function () {
                         ctx.body = {
                             success: true,
-                            data: store._id
+                            data:    store._id
                         }
                         resolve()
                     })
@@ -157,14 +157,14 @@ exports.create = async(ctx, next) => {
                             let userfeed = new UserFeedModel({
                                 feed_id: feedid,
                                 user_id: user_id,
-                                unread: count
+                                unread:  count
                             })
                             userfeed.save()
                         })
                     }, 0)
                     ctx.body = {
                         success: true,
-                        data: store
+                        data:    store
                     }
                     resolve()
                 }
@@ -186,7 +186,7 @@ exports.list = async(ctx, next) => {
         Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
             feed_id: id,
             user_id: user_id,
-            read: true
+            read:    true
         })),
         Promise.resolve().then(async() => count = await PostModel.count({
             feed_id: id
@@ -198,7 +198,7 @@ exports.list = async(ctx, next) => {
     }, {
         user_id: 0
     }).populate('feed_id').lean().exec((err, data) => {
-        if(data !== null) {
+        if (data !== null) {
             data = Object.assign(data.feed_id[0], data, {
                 feed_id: data._id
             })
@@ -211,7 +211,7 @@ exports.list = async(ctx, next) => {
     if (result && result._id) {
         ctx.body = {
             success: true,
-            data: result
+            data:    result
         }
     } else {
         result = await FeedModel.findOne({
@@ -220,7 +220,7 @@ exports.list = async(ctx, next) => {
         if (result && result._id) {
             ctx.body = {
                 success: true,
-                data: result
+                data:    result
             }
         } else {
             ctx.throw(404, '订阅源不存在')
@@ -242,12 +242,12 @@ exports.listAll = async(ctx, next) => {
     })
     .populate('feed_id', {
         favicon: 1,
-        title: 1
+        title:   1
     }).lean().exec((err, data) => {
         return  items = _.map(data, item => {
             return Object.assign(item.feed_id[0], item, {
                 feed_title: item.feed_id[0].title,
-                feed_id: item.feed_id[0]._id
+                feed_id:    item.feed_id[0]._id
             })
         })
     })
@@ -257,7 +257,7 @@ exports.listAll = async(ctx, next) => {
             Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
                 feed_id: item.feed_id,
                 user_id: user_id,
-                read: true
+                read:    true
             })),
             Promise.resolve().then(async() => count = await PostModel.count({
                 feed_id: item.feed_id
@@ -269,7 +269,7 @@ exports.listAll = async(ctx, next) => {
     }))).then(items => {
         ctx.body = {
             success: true,
-            data: items
+            data:    items
         }
     })
 }
@@ -301,7 +301,7 @@ exports.remove = async(ctx, next) => {
         }, 0)
         return ctx.body = {
             success: true,
-            data: '取消订阅成功'
+            data:    '取消订阅成功'
         }
     }
 }

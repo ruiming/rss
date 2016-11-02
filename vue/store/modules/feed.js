@@ -1,10 +1,10 @@
 import * as types from '../mutation-types'
 
 const state = {
-    feed: {},
-    url: null,
+    feed:      {},
+    url:       null,
     searching: false,
-    message: []
+    message:   []
 }
 
 const mutations = {
@@ -18,7 +18,7 @@ const mutations = {
     },
     // 获取订阅源
     [types.RECEIVE_FEED](state, { data }) {
-        if(!data.feed_time) {
+        if (!data.feed_time) {
             data.feed_time = 0
         }
         state.feed = data

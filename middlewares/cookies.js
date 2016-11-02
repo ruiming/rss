@@ -9,11 +9,11 @@ module.exports = function () {
         ctx.clearcookies = () => {
             ctx.cookies.set('XSRF-TOKEN', null, {
                 overwrite: true,
-                expires: new Date()
+                expires:   new Date()
             })
             ctx.cookies.set('jwt', null, {
                 overwrite: true,
-                expires: new Date()
+                expires:   new Date()
             })
         }
         ctx.setAuthCookies = (_id) => {
@@ -21,26 +21,26 @@ module.exports = function () {
                 secure = config.ENV === 'production',
                 date = new Date().getTime() + 5184000000,
                 token = jwt.sign({
-                    id: _id,
+                    id:   _id,
                     xsrf: xsrf,
-                    exp: date / 1000,
+                    exp:  date / 1000,
                 }, config.APP.JWT_KEY)
             ctx.cookies.set('XSRF-TOKEN', xsrf, {
-                httpOnly: false,
-                secure: secure,
+                httpOnly:  false,
+                secure:    secure,
                 overwrite: true,
-                expires: new Date(date)
+                expires:   new Date(date)
             })
             ctx.cookies.set('jwt', token, {
-                httpOnly: true,
-                secure: secure,
+                httpOnly:  true,
+                secure:    secure,
                 overwrite: true,
-                expires: new Date(date)
+                expires:   new Date(date)
             })
             return {
-                jwt: token,
+                jwt:  token,
                 xsrf: xsrf,
-                exp: date / 1000
+                exp:  date / 1000
             }
         }
         await next()

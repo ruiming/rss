@@ -14,12 +14,12 @@
         function goto(post) {
             Post.update({
                 feed_id: post.feed_id,
-                id: post._id
+                id:      post._id
             }, {
                 type: 'read'
             })
             $state.go('feed.post', {
-                id: post.feed_id,
+                id:      post.feed_id,
                 post_id: post._id
             })
         }

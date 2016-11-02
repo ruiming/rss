@@ -3,8 +3,8 @@ import _ from 'underscore'
 
 export const feed = state => {
     let feed = _.extend(state.feed.feed)
-    if(feed.pubdate != null) {
-        return _.extend({}, feed, { pubdate:new timeago().format(feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN') })
+    if (feed.pubdate != null) {
+        return _.extend({}, feed, { pubdate: new timeago().format(feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN') })
     }
     return feed
 }
@@ -19,10 +19,10 @@ export const posts = state => state.posts.posts
 export const post = state => {
     let post = _.extend({}, state.post.post),
         re = /src="(\/[^\/].+?)"/g
-    if(post.pubdate != null) {
+    if (post.pubdate != null) {
         post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN')
     }
-    if(post.description) {
+    if (post.description) {
         post.description.replace(re, (match, p) => {
             return `src="${post.website}${p.slice(1)}"`
         })

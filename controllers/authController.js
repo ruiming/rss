@@ -1,4 +1,3 @@
-import _ from 'underscore'
 import UserModel from '../models/user'
 import { MD5, SHA256 } from 'crypto-js'
 import request from 'request'
@@ -21,7 +20,7 @@ exports.register = async (ctx, next) => {
         let user = null,
             result = null,
             req = request({
-                url: `https://www.gravatar.com/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`,
+                url:     `https://www.gravatar.com/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -35,14 +34,14 @@ exports.register = async (ctx, next) => {
                 } else {
                     data = {
                         preferredUsername: ctx.request.body.email.split('@')[0],
-                        thumbnailUrl: '/img/avatar.png'
+                        thumbnailUrl:      '/img/avatar.png'
                     }
                 }
                 user = new UserModel({
-                    email: ctx.request.body.email.trim(),
+                    email:    ctx.request.body.email.trim(),
                     password: SHA256(ctx.request.body.password),
                     username: data.preferredUsername || data.displayName || (ctx.request.body.email && ctx.request.body.email.split('@')[0]),
-                    avatar: data.thumbnailUrl
+                    avatar:   data.thumbnailUrl
                 })
                 result = await user.save().catch(e => e)
                 resolve()
@@ -54,7 +53,7 @@ exports.register = async (ctx, next) => {
             if (ctx.request.body.json === 'true' || ctx.request.body.json === true) {
                 ctx.body = {
                     success: true,
-                    body: auth
+                    body:    auth
                 }
             } else {
                 await ctx.redirect('/')
@@ -74,7 +73,7 @@ exports.register = async (ctx, next) => {
  */
 exports.login = async(ctx, next) => {
     let result = await UserModel.findOne({
-        email: ctx.request.body.email,
+        email:    ctx.request.body.email,
         password: SHA256(ctx.request.body.password).toString()
     })
     if (result && result._id) {
@@ -82,7 +81,7 @@ exports.login = async(ctx, next) => {
         if (ctx.request.body.json === 'true' || ctx.request.body.json === true) {
             ctx.body = {
                 success: true,
-                body: auth
+                body:    auth
             }
         } else {
             await ctx.redirect('/')

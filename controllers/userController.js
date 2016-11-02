@@ -2,7 +2,7 @@ import UserModel from '../models/user'
 
 /**
  * 获取用户信息
- * @method: get 
+ * @method: get
  * @link:   /user
  */
 exports.list = async(ctx, next) => {
@@ -11,12 +11,12 @@ exports.list = async(ctx, next) => {
         _id: user_id
     }, {
         password: 0,
-        _id: 0
+        _id:      0
     })
     if (result && result.email) {
         ctx.body = {
             success: true,
-            data: result
+            data:    result
         }
     } else {
         ctx.throw(404, '资源不存在')
@@ -37,12 +37,12 @@ exports.update = async(ctx, next) => {
     if (result.ok) {
         ctx.body = {
             success: true,
-            data: result
+            data:    result
         }
     } else {
         ctx.body = {
             success: false,
-            data: '出错了'
+            data:    '出错了'
         }
     }
 }

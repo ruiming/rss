@@ -3,15 +3,15 @@ import router from '../../router'
 import Cookies from 'js-cookie'
 
 const state = {
-    expand: false,
+    expand:  false,
     loading: true,
-    auth: {
-        email: null,
+    auth:    {
+        email:    null,
         password: null
     },
     online: false,
-    error: [],
-    info: []
+    error:  [],
+    info:   []
 }
 
 const mutations = {
@@ -25,7 +25,7 @@ const mutations = {
     },
     // 接收错误
     [types.ERROR](state, message) {
-        if(message === 'UnauthorizedError: Invalid token\n') {
+        if (message === 'UnauthorizedError: Invalid token\n') {
             message = '请先登录!'
         }
         state.error = [message]
@@ -56,7 +56,7 @@ const mutations = {
     },
     // 下线操作
     [types.OFFLINE](state) {
-        state.online = false        
+        state.online = false
         Cookies.remove('jwt')
         Cookies.remove('XSRF-TOKEN')
         router.push({name: 'login'})

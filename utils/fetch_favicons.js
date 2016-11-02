@@ -15,14 +15,14 @@ global.Promise = require('bluebird')
 
 async function fetch() {
     let feeds = await FeedModel.find({}, {
-        absurl: 1,
+        absurl:  1,
         favicon: 1,
-        link: 1
+        link:    1
     })
     let count = 0, number = feeds.length
     await Promise.all(_.map(feeds, feed => new Promise(async (resolve) => {
         let url = null,
-            hash = SHA256(feed.link).toString().slice(0,10)  
+            hash = SHA256(feed.link).toString().slice(0, 10)
         await fetchFavicon(feed.absurl).then(data => url = data)
         request(url, (err, response) => {
             if (response && response.statusCode === 200 && /image/.test(response.headers['content-type'])) {

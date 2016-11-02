@@ -12,12 +12,12 @@ import FeedModel from '../models/feed'
  */
 
 exports.list = async(ctx, next) => {
-    let { 
-        order, 
-        limit, 
-        page, 
-        per_page, 
-        desc 
+    let {
+        order,
+        limit,
+        page,
+        per_page,
+        desc
     } = ctx.request.query
     
     let result = await FeedModel.find()
@@ -29,6 +29,6 @@ exports.list = async(ctx, next) => {
 
     ctx.body = {
         success: true,
-        data: result
+        data:    result
     }
 }
