@@ -82,7 +82,7 @@
                 templateUrl: 'post/post_tpl.html',
                 controller: 'PostController as vm',
                 resolve: {
-                    post: function (Post, $stateParams, $state) {
+                    post: function (Post, $stateParams) {
                         return Post.get({
                             id: $stateParams.post_id
                         }).$promise
@@ -113,7 +113,7 @@
                 templateUrl: 'post/post_tpl.html',
                 controller: 'PostController as vm',
                 resolve: {
-                    post: function (Post, $stateParams, $state) {
+                    post: function (Post, $stateParams) {
                         return Post.get({
                             id: $stateParams.id
                         }).$promise

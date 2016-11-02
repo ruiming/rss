@@ -14,7 +14,7 @@ import request from 'request'
  * @param:  {string} password
  * @params: {boolean} json
  */
-exports.register = async(ctx, next) => {
+exports.register = async (ctx, next) => {
     let email = /^([\w-_]+(?:\.[\w-_]+)*)@((?:[a-z0-9]+(?:-[a-zA-Z0-9]+)*)+\.[a-z]{2,6})$/i
     if (ctx.request.body.password.length < 6 || ctx.request.body.password.length > 18) {
         ctx.throw(401, '密码长度有误')

@@ -28,7 +28,9 @@
                 }
 
                 function focus() {
+                    /* eslint-disable */
                     form.input.focus()
+                    /* eslint-enable */
                     if (timeout) {
                         $timeout.cancel(timeout)
                     }
@@ -52,7 +54,7 @@
                 }
 
                 function logout() {
-                    User.logout().$promise.then(data => {
+                    User.logout().$promise.then(() => {
                         $location.path('/').replace()
                     })
                 }

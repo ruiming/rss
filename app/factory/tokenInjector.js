@@ -3,7 +3,7 @@
         .module('app')
         .factory('tokenInjector', tokenInjector)
 
-    function tokenInjector($injector, $q, $cookies, $cacheFactory, $timeout) {
+    function tokenInjector($injector, $q) {
 
         var count = {}
 

@@ -8,9 +8,9 @@
             restrict: 'EA',
             replace: false,
             scope: {
-                ngClasses: "=ngRandomClass"
+                ngClasses: '=ngRandomClass'
             },
-            link: function (scope, elem, attr) {
+            link: function (scope, elem) {
                 elem.addClass(scope.ngClasses[Math.floor(Math.random() * (scope.ngClasses.length))])
             }
         }

@@ -23,7 +23,7 @@
                     if ($scope.feed.feeded) {
                         Feed.save({
                             feedlink: $scope.feed.absurl
-                        }, res => {
+                        }, () => {
                             $rootScope.$broadcast('ADD_FEED', $scope.feed)
                             $scope.feed.feeded = true
                             $scope.feed.feedNum++
@@ -34,7 +34,7 @@
                     } else {
                         Feed.delete({
                             id: $scope.feed.feed_id
-                        }, res => {
+                        }, () => {
                             $rootScope.$broadcast('DELETE_FEED', $scope.feed)
                             $scope.feed.feeded = false
                             $scope.feed.feedNum--

@@ -43,20 +43,20 @@
                     axisLabelDistance: -10
                 },
                 tooltip: {
-                    valueFormatter: function (d, i) {
-                        return d + "篇"
+                    valueFormatter: function (d) {
+                        return d + '篇'
                     }
                 }
             }
         }
         vm.data = [{
-            key: "最近更新文章数",
+            key: '最近更新文章数',
             values: []
         }]
         _.each(_.groupBy(posts.data.posts, 'pubdate'), (value, key) => {
             let date = key.slice(0, 7),
                 exist = false
-            _.each(vm.data[0].values, (value, key) => {
+            _.each(vm.data[0].values, (value) => {
                 if (value.label === date) {
                     value.value++
                     exist = true
@@ -85,7 +85,7 @@
         function feedit() {
             Feed.save({
                 feedlink: vm.feed.absurl
-            }, res => {
+            }, () => {
                 vm.feed.feeded = true
                 $rootScope.$broadcast('ADD_FEED', vm.feed)
                 vm.feed.feedNum++

@@ -9,7 +9,7 @@
         vm.expand = false
         vm.readall = readall
         vm.randomcolor = randomcolor
-        vm.type = $stateParams.type === 'unread' ? "未读" : "星标"
+        vm.type = $stateParams.type === 'unread' ? '未读' : '星标'
         vm.unread = vm.posts.length
         vm.postsByFeed = _.toArray(_.groupBy(posts.data, 'feed_id'))
 

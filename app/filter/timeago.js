@@ -9,7 +9,7 @@
                 let output = null
                 // TODO: if I want to make it change in real time.
                 if (ago < 10 * 60) {
-                    output = `刚刚`
+                    output = '刚刚'
                 } else if (ago < 60 * 60) {
                     output = `${Math.round(ago / 60)} 分钟前`
                 } else if (ago < 60 * 60 * 24) {

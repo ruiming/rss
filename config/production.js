@@ -7,10 +7,10 @@ module.exports = {
     PORT: 80,
     MONGODB: {
         PORT: 27017,
-        HOST: "localhost",
-        USER: "root",
-        PASSWORD: "root",
-        NAME: "rss"
+        HOST: 'localhost',
+        USER: 'root',
+        PASSWORD: 'root',
+        NAME: 'rss'
     },
     APP: {
         JWT_KEY: SHA256(_.random(999999)).toString(),

@@ -3,11 +3,11 @@
         .module('app')
         .directive('scrollListen', scrollListen)
 
-    function scrollListen(_, Post, storage) {
+    function scrollListen(_) {
         return {
             restrict: 'EA',
             scope: true,
-            link: (scope, elem, attrs) => {
+            link: (scope, elem) => {
                 var first = true
                 var func = _.throttle(e => {
                     if (void 0 !== scope.vm.currentPostDetail && null !== scope.vm.currentPostDetail) {

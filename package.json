@@ -89,10 +89,13 @@
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
+    "babel-eslint": "^7.1.0",
     "babel-istanbul": "^0.11.0",
     "babel-loader": "^6.0.0",
     "chai": "^3.5.0",
     "css-loader": "^0.25.0",
+    "eslint-plugin-async-await": "0.0.0",
+    "eslint-plugin-babel": "^3.3.0",
     "file-loader": "^0.9.0",
     "gulp": "^3.9.1",
     "gulp-angular-htmlify": "^2.3.0",

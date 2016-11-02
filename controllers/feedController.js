@@ -225,7 +225,7 @@ exports.list = async(ctx, next) => {
                 data: result
             }
         } else {
-            ctx.throw(404, '订阅源不存在')
+            ctx.throw(404, "订阅源不存在")
         }
     }
 }
