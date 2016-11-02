@@ -6,10 +6,10 @@ import router from '../router'
 
 // Feed
 
-export const subscribe = async ({ commit, state }) => {
+export const subscribe = ({ commit, state }) => {
     return Feed.save({
         feedlink: state.feed.feed.absurl
-    }).then(res => {
+    }).then(() => {
         commit(types.SUBSCRIBE)
     }, err => {
         commit(types.ERROR, err.data.message)
@@ -19,7 +19,7 @@ export const subscribe = async ({ commit, state }) => {
 export const unsubscribe = ({ commit, state }) => {
     return Feed.delete({
         id: state.feed.feed.feed_id || state.feed.feed._id
-    }).then(res => {
+    }).then(() => {
         commit(types.UNSUBSCRIBE)
     }, err => {
         commit(types.ERROR, err.data.message)
@@ -97,7 +97,7 @@ export const read = ({ commit, state }) => {
             id: state.post.post._id,
         }, {
             type: 'read'
-        }).then(res => {
+        }).then(() => {
             commit(types.READ_POST, state.post.post._id)
         }, err => {
             commit(types.ERROR, err.data.message)
@@ -111,7 +111,7 @@ export const mark = ({ commit, state }, id) => {
     }, {
         type: 'mark',
         revert: true
-    }).then(res => {
+    }).then(() => {
         commit(types.MARK, id || state.post.post._id)
     }, err => {
         commit(types.ERROR, err.data.message)
@@ -124,7 +124,7 @@ export const love = ({ commit, state }, id) => {
     }, {
         type: 'love',
         revert: true
-    }).then(res => {
+    }).then(() => {
         commit(types.LOVE, id || state.post.post._id)
     }, err => {
         commit(types.ERROR, err.data.message)
@@ -134,7 +134,7 @@ export const love = ({ commit, state }, id) => {
 
 // Posts
 
-export const getRecentPosts = ({ commit, state }) => {
+export const getRecentPosts = ({ commit }) => {
     return Posts.recent().then(res => {
         commit(types.RECEIVE_RECENT_POSTS, res.data)
     }, err => {
@@ -162,12 +162,12 @@ export const getPosts = ({ commit, state }, type) => {
     })
 }
 
-export const readAll = ({ commit, state }, posts) => {
+export const readAll = ({ commit, state }) => {
     if(state.feed.feed.unread) {
         return Posts.update({
             feed_id: state.feed.feed.feed_id || state.feed.feed._id,
             type: 'read'
-        }).then(res => {
+        }).then(() => {
             commit('READ_ALL')
         }, err => {
             commit('ERROR', err.data.message)
@@ -177,7 +177,7 @@ export const readAll = ({ commit, state }, posts) => {
 
 // User
 
-export const getUser = ({ commit, state }) => {
+export const getUser = ({ commit }) => {
     return User.get().then(res => {
         commit(types.RECEIVE_USER, res.data)
         commit(types.ONLINE)
@@ -187,11 +187,11 @@ export const getUser = ({ commit, state }) => {
 }
 
 export const updateUser = ({ commit, state }) => {
-    return User.update(state.user.user).then(res => {
+    return User.update(state.user.user).then(() => {
         commit(types.UPDATE_USERNAME, state.user.user.username)
     }, err => {
         commit(types.ERROR, err.data.message)
-        commit(type.INPUT_USERNAME, state.user.originname)
+        commit(types.INPUT_USERNAME, state.user.originname)
     })
 }
 
@@ -207,7 +207,7 @@ export const authenticate = ({ commit, state }) => {
         return Vue.http.post('/auth/login', {
             email: state.global.auth.email,
             password: state.global.auth.password
-        }).then(res => {
+        }).then(() => {
             commit(types.CLEAR_INFO)
             commit(types.ONLINE)
             router.replace('/')
@@ -224,7 +224,7 @@ export const register = ({ commit, state }) => {
         commit(types.ERROR, '密码不符合要求 /\\w{6,18}/ ')
     } else {
         commit(types.INFO, '注册中...')
-        return Vue.http.post('/auth/register', state.global.auth).then(res => {
+        return Vue.http.post('/auth/register', state.global.auth).then(() => {
             commit(types.ONLINE)
             commit(types.CLEAR_INFO)
             router.replace('/')
