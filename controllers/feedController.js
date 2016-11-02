@@ -24,9 +24,7 @@ exports.create = async(ctx, next) => {
         ctx.throw(404, 'URL 不合法')
     }
     let user_id = ctx.state.user.id,
-        feedparser = new FeedParser(),
-        feed = new FeedModel(),
-        _id
+        feedparser = new FeedParser()
     // 查找数据库是否有该订阅源
     let result = await FeedModel.findOne({
         absurl: feedlink
@@ -76,7 +74,7 @@ exports.create = async(ctx, next) => {
             })
             req.on('response', res => {
                 if (res.statusCode != 200) {
-                    res.on("data", chunk => {
+                    res.on('data', () => {
                         reject('Error: 目的不可达, 404错误')
                     })
                 } else {
@@ -97,7 +95,7 @@ exports.create = async(ctx, next) => {
 
                 await fetchFavicon(this.meta.link).then(data => favicon = data).catch(e => e)
 
-                await new Promise(resolve => request(favicon, (err, response, body) => {
+                await new Promise(resolve => request(favicon, (err, response) => {
                     if (response && response.statusCode === 200 && /image/.test(response.headers['content-type'])) {
                         request.get(favicon).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'))
                         favicon = `/favicon/${hash}.ico`
@@ -225,7 +223,7 @@ exports.list = async(ctx, next) => {
                 data: result
             }
         } else {
-            ctx.throw(404, "订阅源不存在")
+            ctx.throw(404, '订阅源不存在')
         }
     }
 }
@@ -238,22 +236,22 @@ exports.list = async(ctx, next) => {
 exports.listAll = async(ctx, next) => {
     let user_id = ctx.state.user.id, items
     await UserFeedModel.find({
-            user_id: user_id
-        }, {
-            user_id: 0
-        })
-        .populate('feed_id', {
-            favicon: 1,
-            title: 1
-        }).lean().exec((err, data) => {
-            return  items = _.map(data, item => {
-                return Object.assign(item.feed_id[0], item, {
-                    feed_title: item.feed_id[0].title,
-                    feed_id: item.feed_id[0]._id
-                })
+        user_id: user_id
+    }, {
+        user_id: 0
+    })
+    .populate('feed_id', {
+        favicon: 1,
+        title: 1
+    }).lean().exec((err, data) => {
+        return  items = _.map(data, item => {
+            return Object.assign(item.feed_id[0], item, {
+                feed_title: item.feed_id[0].title,
+                feed_id: item.feed_id[0]._id
             })
         })
-    await Promise.all(_.map(items, item => new Promise(async(resolve, reject) => {
+    })
+    await Promise.all(_.map(items, item => new Promise(async(resolve) => {
         let unreadcount, count
         await Promise.all([
             Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
@@ -303,7 +301,7 @@ exports.remove = async(ctx, next) => {
         }, 0)
         return ctx.body = {
             success: true,
-            data: `取消订阅成功`
+            data: '取消订阅成功'
         }
     }
 }

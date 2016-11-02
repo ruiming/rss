@@ -3,8 +3,6 @@ import PostModel from '../models/post'
 import UserFeedModel from '../models/userFeed'
 import FeedParser from 'feedparser'
 import request from 'request'
-import help from '../helper/help'
-import fetchFavicon from 'favicon-getter'
 import config from '../config/config'
 import mongoose from 'mongoose'
 import process from 'process'
@@ -25,7 +23,7 @@ async function update() {
         newCount = 0,
         equalCount = 0
     let promises = items.map(item => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             let req = request({
                 url: item.absurl,
                 headers: {
@@ -92,7 +90,7 @@ async function update() {
             })
         })
     })
-    Promise.all(promises).then(data => {
+    Promise.all(promises).then(() => {
         setTimeout(() => {
             console.log('\r\n************* OK *************')
             console.log(Date().toLocaleString())

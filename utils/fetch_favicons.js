@@ -1,7 +1,6 @@
 import FeedModel from '../models/feed'
-import FeedParser from 'feedparser'
 import request from 'request'
-import help from '../helper/help'
+import help from '../utils/'
 import fetchFavicon from 'favicon-getter'
 import config from '../config/config'
 import mongoose from 'mongoose'
@@ -21,11 +20,11 @@ async function fetch() {
         link: 1
     })
     let count = 0, number = feeds.length
-    await Promise.all(_.map(feeds, feed => new Promise(async (resolve, reject) => {
+    await Promise.all(_.map(feeds, feed => new Promise(async (resolve) => {
         let url = null,
             hash = SHA256(feed.link).toString().slice(0,10)  
         await fetchFavicon(feed.absurl).then(data => url = data)
-        request(url, (err, response, body) => {
+        request(url, (err, response) => {
             if (response && response.statusCode === 200 && /image/.test(response.headers['content-type'])) {
                 // New Favicon
                 request.get(url).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'))

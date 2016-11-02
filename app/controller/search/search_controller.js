@@ -5,9 +5,8 @@
 
     function SearchController($stateParams, $base64, $state, Feed) {
         var vm = this
-        let feedlink = decodeURIComponent(escape($base64.decode($stateParams.feedlink)))
         Feed.search({
-            feedlink: feedlink
+            feedlink: decodeURIComponent(escape($base64.decode($stateParams.feedlink)))
         }).$promise.then(res => {
             console.log(res)
             $state.go('feed', {

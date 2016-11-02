@@ -1,9 +1,6 @@
-import jwt from 'jsonwebtoken'
 import _ from 'underscore'
 import UserModel from '../models/user'
-import send from 'koa-send'
-import config from '../config/config'
-import { MD5, SHA256, AES } from 'crypto-js'
+import { MD5, SHA256 } from 'crypto-js'
 import request from 'request'
 
 /**
@@ -30,7 +27,7 @@ exports.register = async (ctx, next) => {
                 }
             })
 
-        await new Promise(async(resolve, reject) => {
+        await new Promise(async (resolve) => {
             req.on('data', async(data) => {
                 if (JSON.parse(data.toString()).entry) {
                     data = JSON.parse(data.toString()).entry[0]
@@ -76,11 +73,10 @@ exports.register = async (ctx, next) => {
  * @param:  {string} password
  */
 exports.login = async(ctx, next) => {
-    let xsrf = SHA256(_.random(999999999)).toString(),
-        result = await UserModel.findOne({
-            email: ctx.request.body.email,
-            password: SHA256(ctx.request.body.password).toString()
-        })
+    let result = await UserModel.findOne({
+        email: ctx.request.body.email,
+        password: SHA256(ctx.request.body.password).toString()
+    })
     if (result && result._id) {
         let auth = ctx.setAuthCookies(result._id)
         if (ctx.request.body.json === 'true' || ctx.request.body.json === true) {

@@ -1,7 +1,5 @@
 import gulp from 'gulp'
-import gulpUtil from 'gulp-util'
 import babel from 'gulp-babel'
-import uglifyes6 from 'uglify-js'
 import uglify from 'gulp-uglify'
 import ngAnnotate from 'gulp-ng-annotate'
 import concat from 'gulp-concat'
@@ -10,9 +8,7 @@ import minifyHtml from 'gulp-minify-html'
 import ngTemplate from 'gulp-ng-template'
 import plumber from 'gulp-plumber'
 import sass from 'gulp-sass'
-import usemin from 'gulp-usemin'
 import htmlify from 'gulp-angular-htmlify'
-import minifier from 'gulp-uglify/minifier'
 
 // Packaging JS dependence
 gulp.task('angular', () => {

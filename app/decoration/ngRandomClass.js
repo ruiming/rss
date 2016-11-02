@@ -10,7 +10,7 @@
             scope: {
                 ngClasses: '=ngRandomClass'
             },
-            link: function (scope, elem) {
+            link(scope, elem) {
                 elem.addClass(scope.ngClasses[Math.floor(Math.random() * (scope.ngClasses.length))])
             }
         }

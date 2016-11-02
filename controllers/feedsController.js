@@ -1,5 +1,4 @@
 import FeedModel from '../models/feed'
-import _ from 'underscore'
 
 /**
  * 获取特定订阅源
@@ -13,7 +12,7 @@ import _ from 'underscore'
  */
 
 exports.list = async(ctx, next) => {
-    let user_id = ctx.state.user.id, { 
+    let { 
         order, 
         limit, 
         page, 

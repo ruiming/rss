@@ -24,14 +24,14 @@
                     bottom: 50,
                     left: 55
                 },
-                x: function (d) {
+                x(d) {
                     return d.label
                 },
-                y: function (d) {
+                y(d) {
                     return d.value
                 },
                 showValues: true,
-                valueFormat: function (d) {
+                valueFormat(d) {
                     return d3.format(',.0f')(d)
                 },
                 duration: 500,
@@ -43,7 +43,7 @@
                     axisLabelDistance: -10
                 },
                 tooltip: {
-                    valueFormatter: function (d) {
+                    valueFormatter(d) {
                         return d + '篇'
                     }
                 }

@@ -6,9 +6,14 @@ module.exports = function () {
         try {
             await next()
         } catch (err) {
+            if (err == null) {
+                ctx.status = 500
+                ctx.body = {
+                    success: false,
+                    message: '服务器开小差了~'
+                }
+            }
             if (err && 401 === err.status && !ctx.mobile) {
-                // undefined == null
-                if (err != null) err = 'Unknown'
                 ctx.clearcookies()
                 if (ctx.request.body.email) {
                     if (ctx.request.body.json === 'true' || ctx.request.body.json === true) {

@@ -1,9 +1,6 @@
-import FeedModel from '../models/feed'
 import PostModel from '../models/post'
 import UserPostModel from '../models/userPost'
 import UserFeedModel from '../models/userFeed'
-import FeedParser from 'feedparser'
-import request from 'request'
 import _ from 'underscore'
 
 /**
@@ -30,7 +27,7 @@ exports.list = async(ctx, next) => {
             }, {
                 feed_id: 1
             })
-        await Promise.all(feeds.map(feed => new Promise(async(resolve, reject) => {
+        await Promise.all(feeds.map(feed => new Promise(async(resolve) => {
             let query = {
                 feed_id: feed.feed_id[0],
                 user_id: user_id
@@ -108,22 +105,22 @@ exports.list = async(ctx, next) => {
 exports.main = async(ctx, next) => {
     let user_id = ctx.state.user.id, items
     await UserFeedModel.find({
-            user_id: user_id
-        }, {
-            user_id: 0
+        user_id: user_id
+    }, {
+        user_id: 0
+    })
+    .populate('feed_id', {
+        favicon: 1,
+        title: 1
+    }).lean().exec((err, data) => {
+        return items = _.map(data, item => {
+            item.feed_title = item.feed_id[0].title
+            item.favicon = item.feed_id[0].favicon
+            item.feed_id = item.feed_id[0]._id
+            return item
         })
-        .populate('feed_id', {
-            favicon: 1,
-            title: 1
-        }).lean().exec((err, data) => {
-            return items = _.map(data, item => {
-                item.feed_title = item.feed_id[0].title
-                item.favicon = item.feed_id[0].favicon
-                item.feed_id = item.feed_id[0]._id
-                return item
-            })
-        })
-    await Promise.all(_.map(items, item => new Promise(async(resolve, reject) => {
+    })
+    await Promise.all(_.map(items, item => new Promise(async(resolve) => {
         let userposts = await UserPostModel.find({
             feed_id: item.feed_id,
             user_id: user_id,
@@ -136,7 +133,7 @@ exports.main = async(ctx, next) => {
                 read_ids = _.invoke(_.pluck(userposts, 'post_id'), 'toString')
             for (let post of posts.reverse()) {
                 if (!read_ids.includes(post._id.toString())) {
-                    post.summary = post.description.replace(/<[^>]+>/g, "").slice(0, 550)
+                    post.summary = post.description.replace(/<[^>]+>/g, '').slice(0, 550)
                     post.description = post.description.match(/<img\s+src="(.*?)"/)
                     if (post.description) {
                         if (post.description[1].slice(0, 2) !== '//' && post.description[1].slice(0, 2) !== 'ht') {

@@ -1,5 +1,4 @@
 import Router from 'koa-router'
-import send from 'koa-send'
 import feedRoute from './feedRoute'
 import feedsRoute from './feedsRoute'
 import postRoute from './postRoute'

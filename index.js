@@ -1,12 +1,9 @@
 import Koa from 'koa'
-import path from 'path'
 import api from './routes/index'
 import handel from './routes/handel'
 import config from './config/config'
 import mongoose from 'mongoose'
-import convert from 'koa-convert'
 import jwt from 'koa-jwt'
-import render from 'koa-ejs'
 import http from 'http'
 import http2 from 'http2'
 import enforceHttps from 'koa-sslify'
@@ -61,5 +58,5 @@ if (config.ENV === 'production') {
         cert: config.APP.SSL_CERT,
         ca: config.APP.CA
     }
-    http2.createServer(options, app.callback()).listen(443);
+    http2.createServer(options, app.callback()).listen(443)
 }

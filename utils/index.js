@@ -1,18 +1,18 @@
 (function () {
     var help = {
         // 检测 URL 是否合法
-        checkUrl: function (url) {
+        checkUrl(url) {
             if (!url) return false
             let re = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
             return url.match(re) !== null
         },
         // 检测邮箱是否合法
-        validateEmail: function(email) {
+        validateEmail(email) {
             let re = /\S+@\S+\.\S+/
             return re.test(email)
         },
         // 检验密码是否合法
-        validatePassword: function(password) {
+        validatePassword(password) {
             let re = /\w{6,18}/
             return re.test(password)
         }

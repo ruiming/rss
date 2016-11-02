@@ -22,7 +22,7 @@ module.exports = function () {
                 } else {
                     await next()
                 }
-            }, err => {
+            }, () => {
                 ctx.clearcookies()
                 ctx.status = 401
                 ctx.body = {

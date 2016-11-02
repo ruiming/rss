@@ -21,8 +21,8 @@ if (isProduction()) {
         filename: 'build.js'
     }
     externals = {
-        "vue": 'Vue',
-        "underscore": '_',
+        'vue': 'Vue',
+        'underscore': '_',
         'vue-resource': 'VueResource',
         'vue-router': 'VueRouter',
         'vuex': 'Vuex'
@@ -50,13 +50,13 @@ module.exports = {
             exclude: /node_modules/
         }, {
             test: /\.css$/,
-            loader: "style!css"
+            loader: 'style!css'
         }, {
             test: /\.scss$/,
-            loader: ["style", "css", "sass"]
+            loader: ['style', 'css', 'sass']
         }, {
             test: /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
-            loader: "file"
+            loader: 'file'
         }, {
             test: /\.(png|jpg|gif|svg|ico)$/,
             loader: 'url-loader?limit=8192',

@@ -1,8 +1,5 @@
-import FeedModel from '../models/feed'
 import PostModel from '../models/post'
 import UserPostModel from '../models/userPost'
-import FeedParser from 'feedparser'
-import request from 'request'
 import _ from 'underscore'
 
 /**
@@ -59,8 +56,7 @@ exports.update = async(ctx, next) => {
     let id = ctx.params.id,
         user_id = ctx.state.user.id,
         type = ctx.request.body.type && ctx.request.body.type.trim(),
-        revert = ctx.request.body.revert === true,
-        feed = ctx.request.body.feed === true
+        revert = ctx.request.body.revert === true
     if (!['read', 'mark', 'love', 'finish'].includes(type)) {
         ctx.throw(404, '参数非法')
     } else {

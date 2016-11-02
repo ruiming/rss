@@ -1,5 +1,6 @@
 import * as types from '../mutation-types'
 import router from '../../router'
+import Cookies from 'js-cookie'
 
 const state = {
     expand: false,

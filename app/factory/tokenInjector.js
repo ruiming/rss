@@ -12,7 +12,7 @@
             // 正常情况下，XSRF 不正确会触发该错误
             // 从而触发跳转到登录页面
             // TODO 全局提示弹框
-            responseError: function (rejection) {
+            responseError(rejection) {
                 if (rejection.status === 401) {
                     console.log(rejection.data.message)
                     setTimeout(() => document.location.replace('/'), 1000)

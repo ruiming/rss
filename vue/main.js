@@ -1,12 +1,8 @@
 import 'babel-polyfill'
 import Vue from 'vue'
-import Vuex from 'vuex'
 import App from './App.vue'
-import VueRouter from 'vue-router'
-import VueResource from 'vue-resource'
 import router from './router.js'
 import cookie from 'cookie'
-import _ from 'underscore'
 import store from './store'
 import 'timeago.js'
 import 'normalize.css'
@@ -32,7 +28,7 @@ Vue.http.interceptors.push(function (request, next) {
     })
 })
 
-const app = new Vue({
+new Vue({
     router: router,
     store,
     render: h => h(App)

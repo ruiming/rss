@@ -118,6 +118,58 @@
 })();
 'use strict';
 
+/**
+ * 单体通信
+ */
+(function () {
+    angular.module('app').factory('storage', storage);
+
+    function storage() {
+        return {};
+    }
+})();
+"use strict";
+
+(function () {
+    tokenInjector.$inject = ["$injector", "$q"];
+    angular.module('app').factory('tokenInjector', tokenInjector);
+
+    function tokenInjector($injector, $q) {
+
+        var count = {};
+
+        return {
+
+            // 正常情况下，XSRF 不正确会触发该错误
+            // 从而触发跳转到登录页面
+            // TODO 全局提示弹框
+            responseError: function responseError(rejection) {
+                if (rejection.status === 401) {
+                    console.log(rejection.data.message);
+                    setTimeout(function () {
+                        return document.location.replace('/');
+                    }, 1000);
+                    return $q.reject(rejection);
+                } else if ((rejection.status === 404 || rejection.status === -1) && (rejection.data === null || rejection.data.success !== undefined) && count[rejection.config.url] === undefined) {
+                    count[rejection.config.url] = true;
+                    var $http = $injector.get('$http');
+                    return $http(rejection.config);
+                }
+                return $q.reject(rejection);
+            }
+        };
+    }
+})();
+'use strict';
+
+(function () {
+    var underscore = angular.module('underscore', []);
+    underscore.factory('_', ['$window', function ($window) {
+        return $window._;
+    }]);
+})();
+'use strict';
+
 (function () {
     angular.module('app').directive('ngRandomClass', ngRandomClass);
 
@@ -189,58 +241,6 @@
             }
         };
     }
-})();
-'use strict';
-
-/**
- * 单体通信
- */
-(function () {
-    angular.module('app').factory('storage', storage);
-
-    function storage() {
-        return {};
-    }
-})();
-"use strict";
-
-(function () {
-    tokenInjector.$inject = ["$injector", "$q"];
-    angular.module('app').factory('tokenInjector', tokenInjector);
-
-    function tokenInjector($injector, $q) {
-
-        var count = {};
-
-        return {
-
-            // 正常情况下，XSRF 不正确会触发该错误
-            // 从而触发跳转到登录页面
-            // TODO 全局提示弹框
-            responseError: function responseError(rejection) {
-                if (rejection.status === 401) {
-                    console.log(rejection.data.message);
-                    setTimeout(function () {
-                        return document.location.replace('/');
-                    }, 1000);
-                    return $q.reject(rejection);
-                } else if ((rejection.status === 404 || rejection.status === -1) && (rejection.data === null || rejection.data.success !== undefined) && count[rejection.config.url] === undefined) {
-                    count[rejection.config.url] = true;
-                    var $http = $injector.get('$http');
-                    return $http(rejection.config);
-                }
-                return $q.reject(rejection);
-            }
-        };
-    }
-})();
-'use strict';
-
-(function () {
-    var underscore = angular.module('underscore', []);
-    underscore.factory('_', ['$window', function ($window) {
-        return $window._;
-    }]);
 })();
 'use strict';
 
@@ -342,182 +342,6 @@
         });
     });
 })();
-'use strict';
-
-(function () {
-    angular.module('app').directive('contextMenu', contextMenu);
-
-    function contextMenu() {
-        return {
-            restrict: 'EA',
-            scope: true,
-            replace: true,
-            templateUrl: 'contextMenu/contextMenu.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "Feed", "_", "User", function contextMenuController($scope, Feed, _, User) {
-                var vm = this;
-                vm.time = Date.now();
-                vm.expand = false;
-                vm.feeds = [];
-
-                Feed.get(function (res) {
-                    return vm.feeds = _.groupBy(res.data, 'folder');
-                });
-                User.get(function (res) {
-                    return vm.user = res.data;
-                });
-
-                setInterval(function () {
-                    vm.time = Date.now();
-                    $scope.$digest();
-                }, 1000);
-
-                $scope.$on('EXPAND', function () {
-                    return vm.expand = !vm.expand;
-                });
-                $scope.$on('FOLD', function () {
-                    return vm.expand = false;
-                });
-                $scope.$on('ADD_FEED', function (event, data) {
-                    if (vm.feeds.default) {
-                        vm.feeds.default.push(data);
-                    } else {
-                        vm.feeds['default'] = [data];
-                    }
-                });
-                $scope.$on('DELETE_FEED', function (event, data) {
-                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
-                        return feeds = _.filter(feeds, function (feed) {
-                            return feed.feed_id !== data.feed_id;
-                        });
-                    });
-                });
-                $scope.$on('READ_POST', function (event, data) {
-                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
-                        return _.each(feeds, function (feed) {
-                            return feed.feed_id === data ? feed.unread-- : '';
-                        });
-                    });
-                });
-            }]
-        };
-    }
-})();
-'use strict';
-
-(function () {
-    angular.module('app').directive('feedPanel', feedPanel);
-
-    function feedPanel() {
-        return {
-            restrict: 'EA',
-            scope: {
-                feed: '='
-            },
-            replace: true,
-            templateUrl: 'feedPanel/feedPanel.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
-                var vm = this;
-
-                // Function
-                vm.feedit = feedit;
-
-                function feedit() {
-                    $scope.feed.feeded = !$scope.feed.feeded;
-                    if ($scope.feed.feeded) {
-                        Feed.save({
-                            feedlink: $scope.feed.absurl
-                        }, function () {
-                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
-                            $scope.feed.feeded = true;
-                            $scope.feed.feedNum++;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    } else {
-                        Feed.delete({
-                            id: $scope.feed.feed_id
-                        }, function () {
-                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
-                            $scope.feed.feeded = false;
-                            $scope.feed.feedNum--;
-                        }, function (err) {
-                            // TODO
-                            console.log(err);
-                        });
-                    }
-                }
-            }]
-        };
-    }
-})();
-"use strict";
-
-(function () {
-    navbar.$inject = ["$state", "$base64"];
-    angular.module('app').directive('navbar', navbar);
-
-    function navbar($state, $base64) {
-        return {
-            restrict: 'EA',
-            scope: {
-                title: '='
-            },
-            replace: true,
-            templateUrl: 'navbar/navbar.html',
-            controllerAs: 'vm',
-            controller: ["$scope", "User", "$location", "$rootScope", "$timeout", "tools", function navbarController($scope, User, $location, $rootScope, $timeout, tools) {
-                var vm = this,
-                    timeout = void 0;
-
-                // Function
-                vm.blur = blur;
-                vm.search = search;
-                vm.focus = focus;
-                vm.expand = expand;
-                vm.logout = logout;
-
-                function expand() {
-                    $rootScope.$broadcast('EXPAND');
-                }
-
-                function focus() {
-                    /* eslint-disable */
-                    form.input.focus();
-                    /* eslint-enable */
-                    if (timeout) {
-                        $timeout.cancel(timeout);
-                    }
-                    vm.active = true;
-                }
-
-                function blur() {
-                    timeout = $timeout(function () {
-                        vm.active = false;
-                    }, 800);
-                }
-
-                function search(feedlink) {
-                    if (!tools.checkUrl(feedlink)) {
-                        return false;
-                    } else {
-                        $state.go('search', {
-                            feedlink: $base64.encode(unescape(encodeURIComponent(feedlink)))
-                        });
-                    }
-                }
-
-                function logout() {
-                    User.logout().$promise.then(function () {
-                        $location.path('/').replace();
-                    });
-                }
-            }]
-        };
-    }
-})();
 "use strict";
 
 (function () {
@@ -551,10 +375,12 @@
                 y: function y(d) {
                     return d.value;
                 },
+
                 showValues: true,
                 valueFormat: function valueFormat(d) {
                     return d3.format(',.0f')(d);
                 },
+
                 duration: 500,
                 xAxis: {
                     axisLabel: '月份'
@@ -952,9 +778,8 @@
 
     function SearchController($stateParams, $base64, $state, Feed) {
         var vm = this;
-        var feedlink = decodeURIComponent(escape($base64.decode($stateParams.feedlink)));
         Feed.search({
-            feedlink: feedlink
+            feedlink: decodeURIComponent(escape($base64.decode($stateParams.feedlink)))
         }).$promise.then(function (res) {
             console.log(res);
             $state.go('feed', {
@@ -968,6 +793,182 @@
 'use strict';
 
 (function () {
+    angular.module('app').directive('contextMenu', contextMenu);
+
+    function contextMenu() {
+        return {
+            restrict: 'EA',
+            scope: true,
+            replace: true,
+            templateUrl: 'contextMenu/contextMenu.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "Feed", "_", "User", function contextMenuController($scope, Feed, _, User) {
+                var vm = this;
+                vm.time = Date.now();
+                vm.expand = false;
+                vm.feeds = [];
+
+                Feed.get(function (res) {
+                    return vm.feeds = _.groupBy(res.data, 'folder');
+                });
+                User.get(function (res) {
+                    return vm.user = res.data;
+                });
+
+                setInterval(function () {
+                    vm.time = Date.now();
+                    $scope.$digest();
+                }, 1000);
+
+                $scope.$on('EXPAND', function () {
+                    return vm.expand = !vm.expand;
+                });
+                $scope.$on('FOLD', function () {
+                    return vm.expand = false;
+                });
+                $scope.$on('ADD_FEED', function (event, data) {
+                    if (vm.feeds.default) {
+                        vm.feeds.default.push(data);
+                    } else {
+                        vm.feeds['default'] = [data];
+                    }
+                });
+                $scope.$on('DELETE_FEED', function (event, data) {
+                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
+                        return feeds = _.filter(feeds, function (feed) {
+                            return feed.feed_id !== data.feed_id;
+                        });
+                    });
+                });
+                $scope.$on('READ_POST', function (event, data) {
+                    vm.feeds = _.mapObject(vm.feeds, function (feeds) {
+                        return _.each(feeds, function (feed) {
+                            return feed.feed_id === data ? feed.unread-- : '';
+                        });
+                    });
+                });
+            }]
+        };
+    }
+})();
+'use strict';
+
+(function () {
+    angular.module('app').directive('feedPanel', feedPanel);
+
+    function feedPanel() {
+        return {
+            restrict: 'EA',
+            scope: {
+                feed: '='
+            },
+            replace: true,
+            templateUrl: 'feedPanel/feedPanel.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "$rootScope", "Feed", function navbarController($scope, $rootScope, Feed) {
+                var vm = this;
+
+                // Function
+                vm.feedit = feedit;
+
+                function feedit() {
+                    $scope.feed.feeded = !$scope.feed.feeded;
+                    if ($scope.feed.feeded) {
+                        Feed.save({
+                            feedlink: $scope.feed.absurl
+                        }, function () {
+                            $rootScope.$broadcast('ADD_FEED', $scope.feed);
+                            $scope.feed.feeded = true;
+                            $scope.feed.feedNum++;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    } else {
+                        Feed.delete({
+                            id: $scope.feed.feed_id
+                        }, function () {
+                            $rootScope.$broadcast('DELETE_FEED', $scope.feed);
+                            $scope.feed.feeded = false;
+                            $scope.feed.feedNum--;
+                        }, function (err) {
+                            // TODO
+                            console.log(err);
+                        });
+                    }
+                }
+            }]
+        };
+    }
+})();
+"use strict";
+
+(function () {
+    navbar.$inject = ["$state", "$base64"];
+    angular.module('app').directive('navbar', navbar);
+
+    function navbar($state, $base64) {
+        return {
+            restrict: 'EA',
+            scope: {
+                title: '='
+            },
+            replace: true,
+            templateUrl: 'navbar/navbar.html',
+            controllerAs: 'vm',
+            controller: ["$scope", "User", "$location", "$rootScope", "$timeout", "tools", function navbarController($scope, User, $location, $rootScope, $timeout, tools) {
+                var vm = this,
+                    timeout = void 0;
+
+                // Function
+                vm.blur = blur;
+                vm.search = search;
+                vm.focus = focus;
+                vm.expand = expand;
+                vm.logout = logout;
+
+                function expand() {
+                    $rootScope.$broadcast('EXPAND');
+                }
+
+                function focus() {
+                    /* eslint-disable */
+                    form.input.focus();
+                    /* eslint-enable */
+                    if (timeout) {
+                        $timeout.cancel(timeout);
+                    }
+                    vm.active = true;
+                }
+
+                function blur() {
+                    timeout = $timeout(function () {
+                        vm.active = false;
+                    }, 800);
+                }
+
+                function search(feedlink) {
+                    if (!tools.checkUrl(feedlink)) {
+                        return false;
+                    } else {
+                        $state.go('search', {
+                            feedlink: $base64.encode(unescape(encodeURIComponent(feedlink)))
+                        });
+                    }
+                }
+
+                function logout() {
+                    User.logout().$promise.then(function () {
+                        $location.path('/').replace();
+                    });
+                }
+            }]
+        };
+    }
+})();
+'use strict';
+
+(function () {
     var help = {
         // 检测 URL 是否合法
         checkUrl: function checkUrl(url) {
@@ -975,11 +976,13 @@
             var re = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
             return url.match(re) !== null;
         },
+
         // 检测邮箱是否合法
         validateEmail: function validateEmail(email) {
             var re = /\S+@\S+\.\S+/;
             return re.test(email);
         },
+
         // 检验密码是否合法
         validatePassword: function validatePassword(password) {
             var re = /\w{6,18}/;
