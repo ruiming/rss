@@ -25,7 +25,7 @@ const mutations = {
     },
     // 接收错误
     [types.ERROR](state, message) {
-        if (message === 'UnauthorizedError: Invalid token\n') {
+        if (message === 'UnauthorizedError: Invalid token\n' || message === 'UnauthorizedError: No Authorization header found\n') {
             message = '请先登录!'
         }
         state.error = [message]

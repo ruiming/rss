@@ -11,8 +11,6 @@ export const subscribe = ({ commit, state }) => {
         feedlink: state.feed.feed.absurl
     }).then(() => {
         commit(types.SUBSCRIBE)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -21,8 +19,6 @@ export const unsubscribe = ({ commit, state }) => {
         id: state.feed.feed.feed_id || state.feed.feed._id
     }).then(() => {
         commit(types.UNSUBSCRIBE)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -31,8 +27,6 @@ export const getFeed = ({ commit }, id) => {
         id: id
     }).then(res => {
         commit(types.RECEIVE_FEED, res.data)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -51,9 +45,6 @@ export const search = ({ commit, state }) => {
                     id: res.data.data
                 }
             })
-        }, err => {
-            commit(types.SEARCHING_END)
-            commit(types.ERROR, err.data.message)
         })
     }
 }
@@ -64,8 +55,6 @@ export const getAllFeeds = ({ commit }) => {
     // TODO Feed -> Feeds
     return Feed.get().then(res => {
         commit(types.RECEIVE_FEEDS, res.data)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -74,8 +63,6 @@ export const getPopularFeeds = ({ commit }, page) => {
         page: page
     }).then(res => {
         commit(types.RECEIVE_FEEDS, res.data)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -86,8 +73,6 @@ export const getPost = ({ commit }, id) => {
         id: id
     }).then(res => {
         commit(types.RECEIVE_POST, res.data.data)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -99,8 +84,6 @@ export const read = ({ commit, state }) => {
             type: 'read'
         }).then(() => {
             commit(types.READ_POST, state.post.post._id)
-        }, err => {
-            commit(types.ERROR, err.data.message)
         })
     }
 }
@@ -113,8 +96,6 @@ export const mark = ({ commit, state }, id) => {
         revert: true
     }).then(() => {
         commit(types.MARK, id || state.post.post._id)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -126,8 +107,6 @@ export const love = ({ commit, state }, id) => {
         revert: true
     }).then(() => {
         commit(types.LOVE, id || state.post.post._id)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -137,8 +116,6 @@ export const love = ({ commit, state }, id) => {
 export const getRecentPosts = ({ commit }) => {
     return Posts.recent().then(res => {
         commit(types.RECEIVE_RECENT_POSTS, res.data)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -147,8 +124,6 @@ export const getFeedPosts = ({ commit, state }, id) => {
         feed_id: id
     }).then(res => {
         commit(types.RECEIVE_FEED_POSTS, res.data)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -157,8 +132,6 @@ export const getPosts = ({ commit, state }, type) => {
         type: type
     }).then(res => {
         commit(types.RECEIVE_POSTS, res.data)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
@@ -169,8 +142,6 @@ export const readAll = ({ commit, state }) => {
             type:    'read'
         }).then(() => {
             commit('READ_ALL')
-        }, err => {
-            commit('ERROR', err.data.message)
         })
     }
 }
@@ -181,17 +152,12 @@ export const getUser = ({ commit }) => {
     return User.get().then(res => {
         commit(types.RECEIVE_USER, res.data)
         commit(types.ONLINE)
-    }, err => {
-        commit(types.ERROR, err.data.message)
     })
 }
 
 export const updateUser = ({ commit, state }) => {
     return User.update(state.user.user).then(() => {
         commit(types.UPDATE_USERNAME, state.user.user.username)
-    }, err => {
-        commit(types.ERROR, err.data.message)
-        commit(types.INPUT_USERNAME, state.user.originname)
     })
 }
 
@@ -211,8 +177,6 @@ export const authenticate = ({ commit, state }) => {
             commit(types.CLEAR_INFO)
             commit(types.ONLINE)
             router.replace('/')
-        }, err => {
-            commit(types.ERROR, err.data.message)
         })
     }
 }
@@ -228,8 +192,6 @@ export const register = ({ commit, state }) => {
             commit(types.ONLINE)
             commit(types.CLEAR_INFO)
             router.replace('/')
-        }, err => {
-            commit(types.ERROR, err.data.message)
         })
     }
 }

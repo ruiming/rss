@@ -18,6 +18,10 @@ Vue.http.interceptors.push(function (request, next) {
         request.headers.set('X-XSRF-TOKEN', cookie.parse(document.cookie)['XSRF-TOKEN'])
     }
     next(response => {
+        if (response.status !== 200) {
+            store.commit('ERROR', response.data.message)
+            store.commit('LOADING_END')
+        }
         if (response.status === 401) {
             if (!['/auth/login', '/auth/register', '/api/user'].includes(response.url)) {
                 router.push({
