@@ -200,7 +200,7 @@ exports.list = async(ctx, next) => {
     }).populate('feed_id').lean().exec((err, data) => {
         if (data !== null) {
             data = Object.assign(data.feed_id[0], data, {
-                feed_id: data._id
+                feed_id: data.feed_id[0]._id
             })
             data ? data.unread = count - unreadcount : data
             return result = data
@@ -214,9 +214,11 @@ exports.list = async(ctx, next) => {
             data:    result
         }
     } else {
-        result = await FeedModel.findOne({
+        await FeedModel.findOne({
             _id: id
-        }).lean().exec((err, data) => data ? data.unread = count - unreadcount : data)
+        }).lean().exec((err, data) => {
+            return result = data ? data.unread = count - unreadcount : data
+        })
         if (result && result._id) {
             ctx.body = {
                 success: true,
