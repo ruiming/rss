@@ -187,6 +187,7 @@ exports.list = async(ctx, next) => {
     let id = ctx.params.id,
         user_id = ctx.state.user.id,
         unreadcount, count, result
+    // 计算订阅源未读数
     await Promise.all([
         Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
             feed_id: id,
@@ -197,6 +198,7 @@ exports.list = async(ctx, next) => {
             feed_id: id
         }))
     ])
+    // 查看用户是否已订阅
     await UserFeedModel.findOne({
         user_id: user_id,
         feed_id: id
@@ -204,14 +206,17 @@ exports.list = async(ctx, next) => {
         user_id: 0
     }).populate('feed_id').lean().exec((err, data) => {
         if (data !== null) {
-            data = Object.assign(data.feed_id[0], data, {
-                feed_id: data.feed_id[0]._id
-            })
-            data ? data.unread = count - unreadcount : data
-            return result = data
-        } else {
-            return data
+            console.log(data)
+            data = {
+                ...data.feed_id[0],
+                ...data,
+                _id:     data.feed_id[0]._id,
+                feed_id: data.feed_id[0]._id,
+                unread:  count - unreadcount
+            }
+            console.log(data)
         }
+        return result = data
     })
     if (result && result._id) {
         ctx.body = {
@@ -222,8 +227,10 @@ exports.list = async(ctx, next) => {
         await FeedModel.findOne({
             _id: id
         }).lean().exec((err, data) => {
-            data ? data.unread = count - unreadcount : data
-            return result = data
+            return result = {
+                ...data,
+                unread: count - unreadcount
+            }
         })
         if (result && result._id) {
             ctx.body = {
@@ -255,7 +262,8 @@ exports.listAll = async(ctx, next) => {
         return  items = _.map(data, item => {
             return Object.assign(item.feed_id[0], item, {
                 feed_title: item.feed_id[0].title,
-                feed_id:    item.feed_id[0]._id
+                feed_id:    item.feed_id[0]._id,
+                _id:        item.feed_id[0]._id
             })
         })
     })
