@@ -1,6 +1,6 @@
 ## RSS 订阅器
 
-基于 Angular1, Vue2, Koa2, D3, Mongoose, Bootstrap, Underscore 的 RSS 订阅器.
+基于 Angular1, Vue2, Vuex, Koa2, D3, Mongoose, Bootstrap, Underscore 的 RSS 订阅器.
 
 Web 桌面版基于 Angular1 开发
 
@@ -29,14 +29,6 @@ Web 手机版基于 Vue2 开发
 - 点赞订阅源文章
 - 查看星标订阅源文章和全部未读文章
 - 热门订阅文章
-
-
-
-### TODO
-
-- 文件夹
-- 订阅源推荐
-
 
 
 ### 使用
