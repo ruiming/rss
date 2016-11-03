@@ -2,9 +2,8 @@ import fs from 'fs'
 import { SHA256 } from 'crypto-js'
 import _ from 'underscore'
 
-// TODO Docker Test
 module.exports = {
-    ENV:     'development',
+    ENV:     'production',
     PORT:    80,
     MONGODB: {
         PORT:     process.env.MONGODB_PORT || 27017,
@@ -15,8 +14,8 @@ module.exports = {
     },
     APP: {
         JWT_KEY:  SHA256(_.random(999999)).toString(),
-        SSL_KEY:  null,
-        SSL_CERT: null,
-        CA:       null
+        SSL_KEY:  fs.readFileSync('/etc/letsencrypt/live/enjoyrss.com/privkey.pem'),
+        SSL_CERT: fs.readFileSync('/etc/letsencrypt/live/enjoyrss.com/cert.pem'),
+        CA:       fs.readFileSync('/etc/letsencrypt/live/enjoyrss.com/chain.pem')
     }
 }
