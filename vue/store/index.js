@@ -16,7 +16,7 @@ Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
 const msg = store => {
     store.subscribe(mutation => {
-        // 默认3秒后清除错误信息, 3秒后清除提示信息
+        // 默认3秒后清除错误信息, 1.5秒后清除提示信息
         if (mutation.type === 'ERROR') {
             store.commit(types.SET_ERROR_TIMEOUT,
                 setTimeout(() => {
@@ -27,7 +27,7 @@ const msg = store => {
             store.commit(types.SET_INFO_TIMEOUT,
                 setTimeout(() => {
                     store.commit(types.SET_INFO_TIMEOUT, null)
-                }, mutation.payload.timeout || 3000)
+                }, mutation.payload.timeout || 1500)
             )
         }
     })

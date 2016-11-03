@@ -11,6 +11,9 @@ export const subscribe = ({ commit, state }) => {
         feedlink: state.feed.feed.absurl
     }).then(() => {
         commit(types.SUBSCRIBE)
+        commit(types.INFO, {
+            message: '成功订阅'
+        })
     })
 }
 
@@ -19,6 +22,9 @@ export const unsubscribe = ({ commit, state }) => {
         id: state.feed.feed.feed_id || state.feed.feed._id
     }).then(() => {
         commit(types.UNSUBSCRIBE)
+        commit(types.INFO, {
+            message: '已取消订阅'
+        })
     })
 }
 
@@ -144,6 +150,9 @@ export const readAll = ({ commit, state }) => {
             type:    'read'
         }).then(() => {
             commit('READ_ALL')
+            commit(types.INFO, {
+                message: '操作成功'
+            })
         })
     }
 }
@@ -154,12 +163,18 @@ export const getUser = ({ commit }) => {
     return User.get().then(res => {
         commit(types.RECEIVE_USER, res.data)
         commit(types.ONLINE)
+        commit(types.INFO, {
+            message: '欢迎回来'
+        })
     })
 }
 
 export const updateUser = ({ commit, state }) => {
     return User.update(state.user.user).then(() => {
         commit(types.UPDATE_USERNAME, state.user.user.username)
+        commit(types.INFO, {
+            message: '修改成功'
+        })
     })
 }
 
