@@ -206,7 +206,6 @@ exports.list = async(ctx, next) => {
         user_id: 0
     }).populate('feed_id').lean().exec((err, data) => {
         if (data !== null) {
-            console.log(data)
             data = {
                 ...data.feed_id[0],
                 ...data,
@@ -214,7 +213,6 @@ exports.list = async(ctx, next) => {
                 feed_id: data.feed_id[0]._id,
                 unread:  count - unreadcount
             }
-            console.log(data)
         }
         return result = data
     })

@@ -5,7 +5,7 @@
     <div class="list-group feed-group center">
         <template v-for="feed in feeds">
         <router-link :to="{name: 'feed', params: {id: feed._id}}" class="list-group-item" :key=feed._id>
-            <img class="favicon" :src="feed.favicon" >
+            <img class="favicon" :src="feed.favicon" onerror="this.src='/img/rss.png';">
             <p>{{feed.title}}</p>
             <small v-if="feed.unread">{{feed.unread}} 篇未读</small>
         </router-link>
