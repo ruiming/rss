@@ -9,10 +9,29 @@ import posts from './modules/posts'
 import user from './modules/user'
 import global from './modules/global'
 import createLogger from 'vuex/dist/logger'
+import * as types from './mutation-types'
 
 Vue.use(Vuex)
 
 const debug = process.env.NODE_ENV !== 'production'
+const msg = store => {
+    store.subscribe(mutation => {
+        // 默认3秒后清除错误信息, 3秒后清除提示信息
+        if (mutation.type === 'ERROR') {
+            store.commit(types.SET_ERROR_TIMEOUT,
+                setTimeout(() => {
+                    store.commit(types.SET_ERROR_TIMEOUT, null)
+                }, mutation.payload.timeout || 3000)
+            )
+        } else if (mutation.type === 'INFO') {
+            store.commit(types.SET_INFO_TIMEOUT,
+                setTimeout(() => {
+                    store.commit(types.SET_INFO_TIMEOUT, null)
+                }, mutation.payload.timeout || 3000)
+            )
+        }
+    })
+}
 
 export default new Vuex.Store({
     actions,
@@ -26,5 +45,5 @@ export default new Vuex.Store({
         global
     },
     strict:  debug,
-    plugins: debug ? [createLogger()] : []
+    plugins: debug ? [createLogger(), msg] : [msg]
 })

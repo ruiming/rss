@@ -28,37 +28,35 @@ const mutations = {
         state.expand = false
     },
     // 接收错误
-    [types.ERROR](state, { message, timeoutId }) {
+    [types.ERROR](state, { message }) {
         if (message === 'UnauthorizedError: Invalid token\n' || message === 'UnauthorizedError: No Authorization header found\n') {
             message = '请先登录!'
         }
-        // 清除旧数据和旧计时器
-        clearTimeout(state.timer.error)
-        state.timer.error = null
         state.info = null
-        // 设置新值
         state.error = message
-        state.timer.error = timeoutId
     },
     // 接收提示
-    [types.INFO](state, { message, timeoutId }) {
-        // 清除旧数据和旧计时器
-        clearTimeout(state.timer.info)
-        state.timer.info = null
+    [types.INFO](state, { message }) {
         state.error = null
-        // 设置新值
         state.info = message
+    },
+    // 设置错误计时器
+    [types.SET_ERROR_TIMEOUT](state, timeoutId) {
+        if (timeoutId === null) {
+            state.error = null
+        } else {
+            clearTimeout(state.timer.error)
+        }
+        state.timer.error = timeoutId
+    },
+    // 设置提示计时器
+    [types.SET_INFO_TIMEOUT](state, timeoutId) {
+        if (timeoutId === null) {
+            state.info = null
+        } else {
+            clearTimeout(state.timer.info)
+        }
         state.timer.info = timeoutId
-    },
-    // 清除错误计时器
-    [types.CLEAR_ERROR_TIMER](state) {
-        clearTimeout(state.timer.error)
-        state.timer.error = null
-    },
-    // 清除提示计时器
-    [types.CLEAR_INFO_TIMER](state) {
-        clearTimeout(state.timer.info)
-        state.timer.info = null
     },
     // 开始加载
     [types.LOADING_START](state) {
@@ -86,14 +84,6 @@ const mutations = {
         Cookies.remove('jwt')
         Cookies.remove('XSRF-TOKEN')
         router.push({name: 'login'})
-    },
-    // 清除错误信息
-    [types.CLEAR_ERROR](state) {
-        state.error = null
-    },
-    // 清除提示信息
-    [types.CLEAR_INFO](state) {
-        state.info = null
     }
 }
 

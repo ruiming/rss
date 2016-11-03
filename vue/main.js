@@ -21,20 +21,12 @@ Vue.http.interceptors.push(function (request, next) {
         if (response.status !== 200) {
             if (response.data !== null && response.data.message) {
                 store.commit('ERROR', {
-                    message:   response.data.message,
-                    timeoutId: setTimeout(() => {
-                        store.commit('CLEAR_ERROR')
-                        store.commit('CLEAR_ERROR_TIMER')
-                    }, 3000)
+                    message: response.data.message
                 })
             } else {
                 // 通常为 500 错误
                 store.commit('ERROR', {
-                    message:   '服务器开小差了',
-                    timeoutId: setTimeout(() => {
-                        store.commit('CLEAR_ERROR')
-                        store.commit('CLEAR_ERROR_TIMER')
-                    }, 3000)
+                    message: '服务器开小差了'
                 })
             }
             // TODO 处理错误的页面跳转问题
