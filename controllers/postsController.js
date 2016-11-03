@@ -17,67 +17,35 @@ import _ from 'underscore'
  */
 exports.list = async(ctx, next) => {
     let user_id = ctx.state.user.id,
-        type = ctx.request.query.type,
-        feed_id = ctx.request.query.feed_id,
+        { type, feed_id } = ctx.request.query,
         result, detail
     if (['mark', 'unread'].includes(type)) {
-        let posts = [],
-            feeds = await UserFeedModel.find({
-                user_id: user_id
-            }, {
-                feed_id: 1
+        await UserPostModel.find({
+            [type]: true
+        }).populate('feed_id')
+        .populate('post_id')
+        .lean().exec((err, items) => {
+            result = _.map(items, item => {
+                return {
+                    mark:       item.mark,
+                    love:       item.love,
+                    _id:        item.post_id[0]._id,
+                    title:      item.post_id[0].title,
+                    feed_id:    item.feed_id[0]._id,
+                    feed_title: item.feed_id[0].title,
+                    favicon:    item.feed_id[0].favicon,
+                    pubdate:    item.post_id[0].pubdate
+                }
             })
-        await Promise.all(feeds.map(feed => new Promise(async(resolve) => {
-            let query = {
-                feed_id: feed.feed_id[0],
-                user_id: user_id
-            }
-            if (type === 'mark') { query['mark'] = true }
-            else { query['read'] = true }
-            let result = await UserPostModel.find(query, {
-                _id:       0,
-                post_id:   1,
-                mark_date: 1
-            })
-            let data = _.invoke(_.flatten(_.pluck(result, 'post_id'), true), 'toString'),
-                items
-            await PostModel.find({
-                feed_id: feed.feed_id
-            }, {
-                summary:     0,
-                description: 0
-            }).populate('feed_id', {
-                _id:     1,
-                title:   1,
-                favicon: 1
-            })
-            .lean()
-            .exec((err, data) => {
-                return items = _.map(data, item => {
-                    item.feed_title = item.feed_id[0].title
-                    item.favicon = item.feed_id[0].favicon
-                    item.feed_id = item.feed_id[0]._id
-                    return item
-                })
-            })
-            if (type === 'mark') {
-                _.each(items, item => _.contains(data, item._id.toString()) ? posts.push(item) : _.noop())
-            } else {
-                _.each(items, item => !_.contains(data, item._id.toString()) ? posts.push(item) : _.noop())
-            }
-            resolve()
-        })))
+        })
         ctx.body = {
             success: true,
-            data:    posts
+            data:    result
         }
     } else if (feed_id !== undefined) {
         await Promise.all([
             Promise.resolve().then(async() => await PostModel.find({
                 feed_id: feed_id
-            }, {
-                description: 0,
-                summary:     0
             }).lean().exec((err, data) => {
                 data = _.map(data, item => {
                     item.feed_id = item.feed_id[0]
