@@ -8,7 +8,7 @@
             <img class="favicon" src="img/folder.png" onerror="this.src='/img/rss.png';">
             <span class="title">{{folder}}</span>
         </div>
-        <router-link :to="{name: 'feed', params: {id: fee.feed_id}}" class="list-group-item" v-for="fee in feed">
+        <router-link :to="{name: 'feed', params: {id: fee.feed_id || 0}}" class="list-group-item" v-for="fee in feed" :key=feed.fee_feed_id>
             <img class="favicon" :src="fee.favicon" onerror="this.src='/img/rss.png';">
             <p>{{fee.title}}</p>
             <small v-if="fee.unread">{{fee.unread}} 篇未读</small>
@@ -31,10 +31,7 @@ export default {
         feeds: 'userFeeds'
     }),
 
-    async beforeRouteEnter (to, from, next) {
-        await store.dispatch('getAllFeeds')
-        next()
-    },
+
     
     components: {
         headbar, navbar, empty

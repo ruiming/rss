@@ -41,9 +41,11 @@ export default {
         next()
     },
 
-    // prefetch
-    mount: function() {
-        store.dispatch('getAllFeeds')
+    mounted: function() {
+        // prefetch userfeeds
+        if(store.getters.userFeeds.default === undefined) {
+            store.dispatch('getAllFeeds')
+        }
     },
     
     components: {

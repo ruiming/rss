@@ -3,7 +3,7 @@ import _ from 'underscore'
 
 const state = {
     feeds:     {},
-    userfeeds: {}
+    userfeeds: []
 }
 
 const mutations = {
@@ -23,8 +23,15 @@ const mutations = {
             }
             return feed
         })
-    }
+    },
     // 增加订阅
+    [types.SUBSCRIBE](state, feed) {
+        state.userfeeds = [...state.userfeeds, {...feed, folder: 'default'}]
+    },
+    // 取消订阅
+    [types.UNSUBSCRIBE](state, { feed_id }) {
+        state.userfeeds = _.filter(state.userfeeds, feed => feed.feed_id !== feed_id)
+    }
 }
 
 export default {

@@ -10,7 +10,7 @@ export const subscribe = ({ commit, state }) => {
     return Feed.save({
         feedlink: state.feed.feed.absurl
     }).then(() => {
-        commit(types.SUBSCRIBE)
+        commit(types.SUBSCRIBE, state.feed.feed)
         commit(types.INFO, {
             message: '成功订阅'
         })
@@ -21,7 +21,7 @@ export const unsubscribe = ({ commit, state }) => {
     return Feed.delete({
         id: state.feed.feed.feed_id || state.feed.feed._id
     }).then(() => {
-        commit(types.UNSUBSCRIBE)
+        commit(types.UNSUBSCRIBE, state.feed.feed)
         commit(types.INFO, {
             message: '已取消订阅'
         })
