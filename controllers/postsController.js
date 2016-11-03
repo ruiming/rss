@@ -73,11 +73,17 @@ exports.list = async(ctx, next) => {
         }
     } else if (feed_id !== undefined) {
         await Promise.all([
-            Promise.resolve().then(async() => result = await PostModel.find({
+            Promise.resolve().then(async() => await PostModel.find({
                 feed_id: feed_id
             }, {
                 description: 0,
                 summary:     0
+            }).lean().exec((err, data) => {
+                data = _.map(data, item => {
+                    item.feed_id = item.feed_id[0]
+                    return item
+                })
+                return result = data
             })),
             Promise.resolve().then(async() => detail = await UserPostModel.find({
                 feed_id: feed_id,
