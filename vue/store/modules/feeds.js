@@ -18,7 +18,7 @@ const mutations = {
     // 标记已读
     [types.READ_POST](state, { feed_id }) {
         state.userfeeds = _.map(state.userfeeds, feed => {
-            if (feed.feed_id === feed_id) {
+            if (feed._id === feed_id) {
                 feed.unread --
             }
             return feed
@@ -26,11 +26,23 @@ const mutations = {
     },
     // 增加订阅
     [types.SUBSCRIBE](state, feed) {
-        state.userfeeds = [...state.userfeeds, {...feed, folder: 'default'}]
+        state.userfeeds = [...state.userfeeds, feed]
+        state.feeds = _.map(state.feeds, item => {
+            if (item._id === feed._id) {
+                item.feedNum++
+            }
+            return item
+        })
     },
     // 取消订阅
-    [types.UNSUBSCRIBE](state, { feed_id }) {
-        state.userfeeds = _.filter(state.userfeeds, feed => feed.feed_id !== feed_id)
+    [types.UNSUBSCRIBE](state, { _id }) {
+        state.userfeeds = _.filter(state.userfeeds, feed => feed._id !== _id)
+        state.feeds = _.map(state.feeds, item => {
+            if (item._id === _id) {
+                item.feedNum--
+            }
+            return item
+        })
     }
 }
 
