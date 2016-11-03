@@ -12,17 +12,30 @@ exports.listOne = async(ctx, next) => {
         user_id = ctx.state.user.id,
         result, readresult
     await Promise.all([
-        Promise.resolve().then(async() => await PostModel.findOne({
+        Promise.resolve().then(async() => result = await PostModel.findOne({
             _id: id
-        }).lean().exec((err, data) => {
-            data.feed_id = data.feed_id[0]
-            return result = data
-        })),
+        }, {
+            summary: 0,
+            guid:    0
+        }).populate('feed_id', {
+            favicon: 1,
+            _id:     1
+        }).lean().exec()),
         Promise.resolve().then(async() => readresult = await UserPostModel.findOne({
             post_id: id,
             user_id: user_id
-        }))
-    ])
+        }).lean().exec())
+    ]).then(() => {
+        console.log(!!readresult)
+        result = {
+            ...result,
+            feed_id: result.feed_id[0]._id,
+            favicon: result.feed_id[0].favicon,
+            read:    !!readresult && readresult.read === true,
+            love:    !!readresult && readresult.love === true,
+            mark:    !!readresult && readresult.mark === true
+        }
+    })
     if (result && result._id) {
         let posts = await PostModel.find({
             feed_id: result.feed_id
@@ -36,12 +49,11 @@ exports.listOne = async(ctx, next) => {
             next = posts[posts.indexOf(id) + 1]
         ctx.body = {
             success: true,
-            data:    {
-                result: result,
-                detail: readresult,
-                pre:    pre,
-                next:   next
-            }
+            data:    Object.assign({
+                ...result,
+                pre:  pre,
+                next: next
+            })
         }
     } else {
         ctx.throw(404, result)
