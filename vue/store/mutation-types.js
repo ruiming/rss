@@ -7,7 +7,7 @@ export const SEARCHING_END = 'SEARCHING_END'
 export const UPDATE_URL = 'UPDATE_URL'
 // Feeds
 export const RECEIVE_FEEDS = 'RECEIVE_FEEDS'
-export const getPopularFeeds = 'getPopularFeeds'
+export const RECEIVE_USER_FEEDS = 'RECEIVE_USER_FEEDS'
 // Post
 export const MARK = 'MARK'
 export const LOVE = 'LOVE'

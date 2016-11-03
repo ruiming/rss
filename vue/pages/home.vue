@@ -40,6 +40,11 @@ export default {
         await store.dispatch('getRecentPosts')
         next()
     },
+
+    // prefetch
+    mount: function() {
+        store.dispatch('getAllFeeds')
+    },
     
     components: {
         headbar, navbar, empty

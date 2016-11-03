@@ -10,7 +10,7 @@ export const feed = state => {
 }
 
 // User's feeds and popular feeds
-export const userFeeds = state => _.groupBy(state.feeds.feeds, 'folder')
+export const userFeeds = state => _.groupBy(state.feeds.userfeeds, 'folder')
 
 export const popularFeeds = state => state.feeds.feeds
 

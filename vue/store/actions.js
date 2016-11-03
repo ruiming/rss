@@ -60,9 +60,8 @@ export const search = ({ commit, state }) => {
 // Feeds
 
 export const getAllFeeds = ({ commit }) => {
-    // TODO Feed -> Feeds
-    return Feed.get().then(res => {
-        commit(types.RECEIVE_FEEDS, res.data)
+    Feed.get().then(res => {
+        commit(types.RECEIVE_USER_FEEDS, res.data)
     })
 }
 
@@ -91,7 +90,7 @@ export const read = ({ commit, state }) => {
         }, {
             type: 'read'
         }).then(() => {
-            commit(types.READ_POST, state.post.post._id)
+            commit(types.READ_POST, state.post.post)
         })
     }
 }
