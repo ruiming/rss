@@ -1,37 +1,37 @@
 <article class="markdown-body">
     <header>
-        <h1>{{::vm.currentPost.title}}</h1>
+        <h1>{{::vm.post.title}}</h1>
     </header>
     <section>
         <small>
             <span class="glyphicon glyphicon-send"></span>
-            <span ng-if="vm.currentPost.pubdate">更新于 {{::vm.currentPost.pubdate | timeago}} </span>
-            <span ng-if="vm.currentPost.author">由 {{::vm.currentPost.author}} 发布</span>
+            <span ng-if="vm.post.pubdate">更新于 {{::vm.post.pubdate | timeago}} </span>
+            <span ng-if="vm.post.author">由 {{::vm.post.author}} 发布</span>
         </small>
-        <small ng-show="vm.currentPost.categories.length">
+        <small ng-show="vm.post.categories.length">
             <span class="glyphicon glyphicon-tags"></span>
-        {{::vm.currentPost.categories.toString()}}
+        {{::vm.post.categories.toString()}}
         </small>
     </section>
     <section>
-        <article ng-bind-html="::vm.currentPost.description | linkFix: vm.currentPost.website">
+        <article ng-bind-html="::vm.post.description | linkFix: vm.post.website">
         </article>
     </section>
     <footer class="status-bar post-bar">
         <button class="home btn btn-primary" ng-click="vm.home()">
             <span class="glyphicon glyphicon-home"></span> 
         </button>
-        <p class="title">{{ ::vm.currentPost.title }}</p>
+        <p class="title">{{ ::vm.post.title }}</p>
         <p class="readtime" ng-if="vm.begintime">
             <span class="glyphicon glyphicon-time"></span> {{ vm.currenttime - vm.begintime | date: 'mm:ss' }}
         </p>
         <button class="mark btn btn-primary" ng-click="vm.mark()">
-            <span ng-if="!vm.currentPostDetail.mark">收藏</span>
-            <span ng-if="vm.currentPostDetail.mark">已收藏</span>
+            <span ng-if="!vm.post.mark">收藏</span>
+            <span ng-if="vm.post.mark">已收藏</span>
         </button>
         <button class="love btn btn-primary" ng-click="vm.love()">
-            <span ng-if="!vm.currentPostDetail.love">点赞</span>
-            <span ng-if="vm.currentPostDetail.love">已点赞</span>
+            <span ng-if="!vm.post.love">点赞</span>
+            <span ng-if="vm.post.love">已点赞</span>
         </button>
         <p ng-if="vm.status" class="status">
             {{ ::vm.status }}

@@ -5,12 +5,8 @@
 
     function PostController($state, post, Post, storage, $scope) {
         var vm = this
-        vm.post = post
-        vm.currentPost = post.data.result
-        vm.currentPostDetail = post.data.detail || {
-            mark: false,
-            love: false
-        }
+        vm.post = post.data
+
         vm.begintime = Date.now()
         vm.currenttime = Date.now()
         vm.status = ''
@@ -27,14 +23,14 @@
         }, 1000)
 
         // Check if the post has been read yet
-        if (vm.currentPostDetail !== null && vm.currentPostDetail.finish) {
+        if (vm.post !== null && vm.post.finish) {
             vm.status = '已经读过啦~\(≧▽≦)/~'
         }
 
         function love() {
-            vm.currentPostDetail.love = !vm.currentPostDetail.love
+            vm.post.love = !vm.post.love
             Post.update({
-                id: vm.currentPost._id
+                id: vm.post._id
             }, {
                 type:   'love',
                 revert: true
@@ -42,9 +38,9 @@
         }
 
         function mark() {
-            vm.currentPostDetail.mark = !vm.currentPostDetail.mark
+            vm.post.mark = !vm.post.mark
             Post.update({
-                id: vm.currentPost._id
+                id: vm.post._id
             }, {
                 type:   'mark',
                 revert: true
@@ -53,7 +49,7 @@
 
         function home() {
             $state.go('feed', {
-                id: vm.currentPost.feed_id[0]
+                id: vm.post.feed_id
             })
         }
     }
