@@ -42,9 +42,14 @@ export default {
     },
 
     mounted: function() {
+        // TODO 优化 prefetch
         // prefetch userfeeds
         if(store.getters.userFeeds.default === undefined) {
             store.dispatch('getAllFeeds')
+        }
+        // prefetch markposts
+        if(!store.getters.posts.length) {
+            store.dispatch('getPosts', 'mark')
         }
     },
     

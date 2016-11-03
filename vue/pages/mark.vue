@@ -10,7 +10,7 @@
                 <p>{{post.title}}</p>
             </router-link>
             <div class="option" v-on:click="mark(post._id)">
-                <span v-bind:class="{'icon-star-empty': post.mark, 'icon-star-full': !post.mark}"></span>
+                <span v-bind:class="{'icon-star-empty': !post.mark, 'icon-star-full': post.mark}"></span>
             </div>
         </li>
         </template>
@@ -31,11 +31,6 @@ export default {
     computed: mapGetters({
         posts: 'posts'
     }),
-
-    async beforeRouteEnter (to, from, next) {
-        await store.dispatch('getPosts', 'mark')
-        next()
-    },
 
     methods: mapActions({
         mark: 'mark'

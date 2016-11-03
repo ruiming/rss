@@ -84,7 +84,7 @@ export const getPost = ({ commit }, id) => {
 }
 
 export const read = ({ commit, state }) => {
-    if (!state.post.status.read) {
+    if (!state.post.read) {
         return Post.update({
             id: state.post.post._id,
         }, {
@@ -95,25 +95,25 @@ export const read = ({ commit, state }) => {
     }
 }
 
-export const mark = ({ commit, state }, id) => {
+export const mark = ({ commit, state }) => {
     return Post.update({
-        id: id || state.post.post._id
+        id: state.post.post._id
     }, {
         type:   'mark',
         revert: true
     }).then(() => {
-        commit(types.MARK, id || state.post.post._id)
+        commit(types.MARK, state.post.post)
     })
 }
 
-export const love = ({ commit, state }, id) => {
+export const love = ({ commit, state }) => {
     return Post.update({
-        id: id || state.post.post._id
+        id: state.post.post._id
     }, {
         type:   'love',
         revert: true
     }).then(() => {
-        commit(types.LOVE, id || state.post.post._id)
+        commit(types.LOVE, state.post.post)
     })
 }
 

@@ -37,7 +37,9 @@ const mutations = {
     // 标记已读
     [types.READ](state, id) {
         for (let post of state.feedPosts) {
-            if (post._id === id) { post.read = true }
+            if (post._id === id) {
+                post.read = true
+            }
         }
     },
     // 全部标记已读
@@ -46,12 +48,21 @@ const mutations = {
             post.read = true
         }
     },
-    // 收藏书籍 ID
-    [types.MARK](state, id) {
-        state.posts = _.map(state.posts, post => {
-            if (post._id === id) { post.mark = !post.mark }
-            return post
-        })
+    // 收藏/取消收藏书籍 ID
+    [types.MARK](state, post) {
+        let newItems = [], exist = false
+        for (let item of state.posts) {
+            if (item._id !== post._id) {
+                newItems.push(item)
+            } else {
+                // 取消收藏
+                exist = true
+            }
+        }
+        if (!exist) {
+            newItems.push(post)
+        }
+        state.posts = newItems
     },
     // 点赞书籍 ID
     [types.LOVE](state, id) {

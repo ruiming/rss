@@ -30,12 +30,6 @@ export const post = state => {
     return state.post.post
 }
 
-export const status = state => state.post.status
-
-export const pre = state => state.post.pre
-
-export const next = state => state.post.next
-
 export const expand = state => state.global.expand
 
 export const url = state => state.feed.url
