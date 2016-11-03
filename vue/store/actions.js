@@ -192,9 +192,7 @@ export const authenticate = ({ commit, state }) => {
         }).then(() => User.get().then(res => {
             commit(types.RECEIVE_USER, res.data)
             commit(types.ONLINE)
-        }).then(() => {
             commit(types.CLEAR_INFO)
-            commit(types.ONLINE)
             router.replace('/')
         }))
     }
@@ -221,10 +219,14 @@ export const register = ({ commit, state }) => {
         commit(types.INFO, {
             message: '注册中...'
         })
-        return Vue.http.post('/auth/register', state.global.auth).then(() => {
+        return Vue.http.post('/auth/register', {
+            email:    state.global.auth.email,
+            password: state.global.auth.password
+        }).then(() => User.get().then(res => {
+            commit(types.RECEIVE_USER, res.data)
             commit(types.ONLINE)
             commit(types.CLEAR_INFO)
             router.replace('/')
-        })
+        }))
     }
 }
