@@ -145,10 +145,10 @@ export const getPosts = ({ commit, state }, type) => {
 export const readAll = ({ commit, state }) => {
     if (state.feed.feed.unread) {
         return Posts.update({
-            feed_id: state.feed.feed.feed_id || state.feed.feed._id,
+            feed_id: state.feed.feed._id,
             type:    'read'
         }).then(() => {
-            commit('READ_ALL')
+            commit('READ_ALL', state.feed.feed._id)
             commit(types.INFO, {
                 message: '操作成功'
             })

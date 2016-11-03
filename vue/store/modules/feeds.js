@@ -24,6 +24,15 @@ const mutations = {
             return feed
         })
     },
+    // 全部标记已读
+    [types.READ_ALL](state, feed_id) {
+        state.userfeeds = _.map(state.userfeeds, feed => {
+            if (feed._id === feed_id) {
+                feed.unread = 0
+            }
+            return feed
+        })
+    },
     // 增加订阅
     [types.SUBSCRIBE](state, feed) {
         state.userfeeds = [...state.userfeeds, feed]
