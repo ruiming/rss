@@ -39,9 +39,8 @@ Vue.http.interceptors.push(function (request, next) {
             }
             // TODO 处理错误的页面跳转问题
         }
-        // TODO 手机无限重定向问题
         if (response.status === 401) {
-            if (!['/auth/login', '/auth/register', '/posts/recent'].includes(response.url)) {
+            if (!['/auth/login', '/auth/register'].includes(response.url)) {
                 store.commit('OFFLINE')
             }
         }
