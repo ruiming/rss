@@ -12,8 +12,11 @@ exports.listOne = async(ctx, next) => {
         user_id = ctx.state.user.id,
         result, readresult
     await Promise.all([
-        Promise.resolve().then(async() => result = await PostModel.findOne({
+        Promise.resolve().then(async() => await PostModel.findOne({
             _id: id
+        }).lean().exec((err, data) => {
+            data.feed_id = data.feed_id[0]
+            return result = data
         })),
         Promise.resolve().then(async() => readresult = await UserPostModel.findOne({
             post_id: id,
