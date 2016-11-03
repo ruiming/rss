@@ -222,7 +222,8 @@ exports.list = async(ctx, next) => {
         await FeedModel.findOne({
             _id: id
         }).lean().exec((err, data) => {
-            return result = data ? data.unread = count - unreadcount : data
+            data ? data.unread = count - unreadcount : data
+            return result = data
         })
         if (result && result._id) {
             ctx.body = {
