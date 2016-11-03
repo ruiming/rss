@@ -49,11 +49,6 @@ export default {
         }
     },
 
-    async beforeRouteEnter (to, from, next) {
-        await store.dispatch('getPopularFeeds', 0)
-        next()
-    },
-    
     components: {
         headbar, navbar, search
     }

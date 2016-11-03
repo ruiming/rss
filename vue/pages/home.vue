@@ -51,6 +51,10 @@ export default {
         if(!store.getters.posts.length) {
             store.dispatch('getPosts', 'mark')
         }
+        // prefetch popular feeds
+        if(!store.getters.popularFeeds.length) {
+            store.dispatch('getPopularFeeds', 0)
+        }
     },
     
     components: {

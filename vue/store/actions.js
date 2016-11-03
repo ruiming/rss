@@ -19,7 +19,7 @@ export const subscribe = ({ commit, state }) => {
 
 export const unsubscribe = ({ commit, state }) => {
     return Feed.delete({
-        id: state.feed.feed.feed_id || state.feed.feed._id
+        id: state.feed.feed._id
     }).then(() => {
         commit(types.UNSUBSCRIBE, state.feed.feed)
         commit(types.INFO, {
