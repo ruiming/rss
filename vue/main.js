@@ -40,11 +40,8 @@ Vue.http.interceptors.push(function (request, next) {
             // TODO 处理错误的页面跳转问题
         }
         if (response.status === 401) {
-            if (!['/auth/login', '/auth/register', '/api/user'].includes(response.url)) {
+            if (!['/auth/login', '/auth/register'].includes(response.url)) {
                 store.commit('OFFLINE')
-                router.push({
-                    name: 'login'
-                })
             }
         }
     })

@@ -44,7 +44,6 @@ export default {
         },
         logout: function() {
             store.commit('OFFLINE')
-            this.$router.push({name: 'login'})
         }
     },
     
