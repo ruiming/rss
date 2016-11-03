@@ -19,7 +19,7 @@ Vue.http.interceptors.push(function (request, next) {
     }
     next(response => {
         if (response.status !== 200) {
-            if (response.data.message) {
+            if (response.data !== null && response.data.message) {
                 store.commit('ERROR', {
                     message:   response.data.message,
                     timeoutId: setTimeout(() => {
