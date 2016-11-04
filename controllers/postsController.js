@@ -18,7 +18,7 @@ import _ from 'underscore'
 exports.list = async(ctx, next) => {
     let user_id = ctx.state.user.id,
         { type, feed_id } = ctx.request.query,
-        result, detail
+        result
     if (['mark', 'unread'].includes(type)) {
         await UserPostModel.find({
             [type]: true
@@ -47,27 +47,33 @@ exports.list = async(ctx, next) => {
             Promise.resolve().then(async() => await PostModel.find({
                 feed_id: feed_id
             }).lean().exec((err, data) => {
-                data = _.map(data, item => {
+                return data = _.map(data, item => {
                     item.feed_id = item.feed_id[0]
                     return item
                 })
-                return result = data
             })),
-            Promise.resolve().then(async() => detail = await UserPostModel.find({
+            Promise.resolve().then(async() => await UserPostModel.find({
                 feed_id: feed_id,
                 user_id: user_id
             }, {
                 user_id: 0,
                 feed_id: 0
-            }))
-        ])
-        ctx.body = {
-            success: true,
-            data:    {
-                posts:  result,
-                detail: detail
+            }).lean().exec()
+        )]).then(items => {
+            result = _.map(items[0], item => {
+                return item = {
+                    ..._.filter(items[1], userpost => {
+                        return userpost.post_id[0].toString() === item._id.toString()
+                    })[0],
+                    ...item,
+                    post_id: item._id
+                }
+            })
+            ctx.body = {
+                success: true,
+                data:    result
             }
-        }
+        })
     } else {
         ctx.throw(404, '不支持的查询')
     }
