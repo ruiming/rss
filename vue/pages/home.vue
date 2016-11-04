@@ -37,10 +37,17 @@ export default {
     }),
 
     async beforeRouteEnter (to, from, next) {
-        await store.dispatch('getRecentPosts')
+        if(!store.getters.prefetch.recentposts) {
+            await store.dispatch('getRecentPosts')
+            store.commit('PREFETCH', {
+                type: 'recentposts',
+                status: true
+            })
+        }
         next()
     },
 
+    // Prefetch all main data in the home page
     mounted: function() {
         let { userfeeds, markposts, popularfeeds } = store.getters.prefetch
         if (!userfeeds) {

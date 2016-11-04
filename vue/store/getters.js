@@ -27,7 +27,7 @@ export const post = state => {
             return `src="${post.website}${p.slice(1)}"`
         })
     }
-    return state.post.post
+    return post
 }
 
 export const prefetch = state => state.global.prefetch

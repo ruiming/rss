@@ -26,10 +26,7 @@ import store from '../store'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
-        post: 'post',
-        status: 'status',
-        pre: 'pre',
-        next: 'next'
+        post: 'post'
     }),
 
     // TODO
@@ -41,6 +38,7 @@ export default {
 
     watch: {
         async '$route' (to, from) {
+            if(store.getters.post)
             await store.dispatch('getPost', to.params.id)
             await store.dispatch('read')
         }

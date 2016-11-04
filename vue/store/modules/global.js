@@ -17,6 +17,7 @@ const state = {
         info:  null
     },
     prefetch: {
+        recentposts:  false,
         userfeeds:    false,
         markposts:    false,
         popularfeeds: false
