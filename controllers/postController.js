@@ -24,9 +24,8 @@ exports.listOne = async(ctx, next) => {
         Promise.resolve().then(async() => readresult = await UserPostModel.findOne({
             post_id: id,
             user_id: user_id
-        }).lean().exec())
+        }).lean().exec()),
     ]).then(() => {
-        console.log(!!readresult)
         result = {
             ...result,
             feed_id: result.feed_id[0]._id,
@@ -37,23 +36,41 @@ exports.listOne = async(ctx, next) => {
         }
     })
     if (result && result._id) {
-        let posts = await PostModel.find({
-            feed_id: result.feed_id
-        }, {
-            _id: 1
-        }).sort({
-            pubdate: -1
-        })
-        posts = _.invoke(_.flatten(_.pluck(posts, '_id'), true), 'toString')
-        let pre = posts[posts.indexOf(id) - 1],
-            next = posts[posts.indexOf(id) + 1]
+        let posts = [], readposts = [], pre, next, nextunread
+        await Promise.all([
+            Promise.resolve().then(async () => await PostModel.find({
+                feed_id: result.feed_id
+            }, {
+                _id: 1
+            }).sort({
+                pubdate: -1
+            }).lean().exec((err, data) => {
+                posts = _.invoke(_.pluck(data, '_id'), 'toString')
+            })),
+            Promise.resolve().then(async () => await UserPostModel.find({
+                feed_id: result.feed_id,
+                read:    true
+            }, {
+                _id:     0,
+                post_id: 1
+            }).sort({
+                pubdate: -1
+            }).lean().exec((err, data) => {
+                readposts = _.invoke(_.flatten(_.pluck(data, 'post_id')), 'toString')
+            }))
+        ])
+        pre = posts[posts.indexOf(id) - 1]
+        next = posts[posts.indexOf(id) + 1]
+        // 全部文章 ID 中遍历找出一个不等于所要查找 ID 且不在 readposts 中的第一个 ID
+        nextunread = _.find(posts, post => post !== id && !readposts.includes(post))
         ctx.body = {
             success: true,
-            data:    Object.assign({
+            data:    {
                 ...result,
-                pre:  pre,
-                next: next
-            })
+                pre,
+                next,
+                nextunread
+            }
         }
     } else {
         ctx.throw(404, result)
