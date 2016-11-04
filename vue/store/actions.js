@@ -30,7 +30,7 @@ export const unsubscribe = ({ commit, state }) => {
 
 export const getFeed = ({ commit }, id) => {
     return Feed.get({
-        id: id
+        id
     }).then(res => {
         commit(types.RECEIVE_FEED, res.data)
     })
@@ -77,7 +77,7 @@ export const getPopularFeeds = ({ commit }, page) => {
 
 export const getPost = ({ commit }, id) => {
     return Post.get({
-        id: id
+        id
     }).then(res => {
         commit(types.RECEIVE_POST, res.data.data)
     })
@@ -137,7 +137,7 @@ export const getFeedPosts = ({ commit, state }, id) => {
 
 export const getPosts = ({ commit, state }, type) => {
     return Posts.get({
-        type: type
+        type
     }).then(res => {
         commit(types.RECEIVE_POSTS, res.data)
     })

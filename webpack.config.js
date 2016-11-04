@@ -36,7 +36,7 @@ if (isProduction()) {
 }
 module.exports = {
     entry:         './vue/main.js',
-    output:        output,
+    output,
     resolveLoader: {
         root: path.join(__dirname, 'node_modules')
     },
@@ -62,8 +62,8 @@ module.exports = {
             loader: 'url-loader?limit=8192',
         }]
     },
-    plugins:   plugins,
-    externals: externals,
+    plugins,
+    externals,
     devServer: {
         hot:                true,
         historyApiFallback: true,
