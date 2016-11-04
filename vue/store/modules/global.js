@@ -15,10 +15,19 @@ const state = {
     timer:  {
         error: null,
         info:  null
+    },
+    prefetch: {
+        userfeeds:    false,
+        markposts:    false,
+        popularfeeds: false
     }
 }
 
 const mutations = {
+    // prefetch 状态修改
+    [types.PREFETCH](state, { type, status }) {
+        state.prefetch[type] = status
+    },
     // 收藏/取消收藏成功
     [types.EXPAND](state) {
         state.expand = true

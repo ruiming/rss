@@ -27,7 +27,16 @@ export default {
         feeds: 'userFeeds'
     }),
 
-
+    async beforeRouteEnter(to, from, next) {
+        if (!store.getters.prefetch.userfeeds) {
+            await store.dispatch('getAllFeeds')
+            store.commit('PREFETCH', {
+                type: 'userfeeds', 
+                status: true
+            })
+        }
+        next()
+    },
     
     components: {
         headbar, navbar, empty

@@ -32,6 +32,17 @@ export default {
         posts: 'posts'
     }),
 
+    async beforeRouteEnter(to, from, next) {
+        if (!store.getters.prefetch.markposts) {
+            await store.dispatch('getPosts', 'mark')
+            store.commit('PREFETCH', {
+                type: 'markposts', 
+                status: true
+            })
+        }
+        next()
+    },
+
     methods: mapActions({
         mark: 'mark'
     }),

@@ -42,6 +42,17 @@ export default {
         err: 'error'
     }),
 
+    async beforeRouteEnter(to, from, next) {
+        if (!store.getters.prefetch.popularfeeds) {
+            await store.dispatch('getPopularFeeds', 0)
+            store.commit('PREFETCH', {
+                type: 'popularfeeds', 
+                status: true
+            })
+        }
+        next()
+    },
+
     methods: {
         ...mapActions(['search']),
         updateUrl(e) {

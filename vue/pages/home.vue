@@ -42,18 +42,27 @@ export default {
     },
 
     mounted: function() {
-        // TODO 优化 prefetch
-        // prefetch userfeeds
-        if(store.getters.userFeeds.default === undefined) {
+        let { userfeeds, markposts, popularfeeds } = store.getters.prefetch
+        if (!userfeeds) {
             store.dispatch('getAllFeeds')
+            store.commit('PREFETCH', {
+                type: 'userfeeds',
+                status: true
+            })
         }
-        // prefetch markposts
-        if(!store.getters.posts.length) {
+        if (!markposts) {
             store.dispatch('getPosts', 'mark')
+            store.commit('PREFETCH', {
+                type: 'markposts', 
+                status: true
+            })
         }
-        // prefetch popular feeds
-        if(!store.getters.popularFeeds.length) {
+        if (!popularfeeds) {
             store.dispatch('getPopularFeeds', 0)
+            store.commit('PREFETCH', {
+                type: 'popularfeeds', 
+                status: true
+            })
         }
     },
     

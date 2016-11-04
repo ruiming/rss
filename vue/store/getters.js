@@ -30,6 +30,8 @@ export const post = state => {
     return state.post.post
 }
 
+export const prefetch = state => state.global.prefetch
+
 export const expand = state => state.global.expand
 
 export const url = state => state.feed.url
