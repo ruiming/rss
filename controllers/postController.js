@@ -7,12 +7,12 @@ import _ from 'underscore'
  * @method: get
  * @link:   /api/post/{id}
  */
-exports.listOne = async(ctx, next) => {
+exports.listOne = async (ctx, next) => {
     let id = ctx.params.id,
         user_id = ctx.state.user.id,
         result, readresult
     await Promise.all([
-        Promise.resolve().then(async() => result = await PostModel.findOne({
+        Promise.resolve().then(async () => result = await PostModel.findOne({
             _id: id
         }, {
             summary: 0,
@@ -21,7 +21,7 @@ exports.listOne = async(ctx, next) => {
             favicon: 1,
             _id:     1
         }).lean().exec()),
-        Promise.resolve().then(async() => readresult = await UserPostModel.findOne({
+        Promise.resolve().then(async () => readresult = await UserPostModel.findOne({
             post_id: id,
             user_id: user_id
         }).lean().exec()),
@@ -94,7 +94,7 @@ exports.listOne = async(ctx, next) => {
  * @param:  {string} type [read|mark|love|finish]
  * @param:  {boolean} revert [true|false]
  */
-exports.update = async(ctx, next) => {
+exports.update = async (ctx, next) => {
     let id = ctx.params.id,
         user_id = ctx.state.user.id,
         type = ctx.request.body.type && ctx.request.body.type.trim(),
@@ -102,16 +102,16 @@ exports.update = async(ctx, next) => {
     if (!['read', 'mark', 'love', 'finish'].includes(type)) {
         ctx.throw(404, '参数非法')
     } else {
-        setTimeout(async() => {
+        setTimeout(async () => {
             let items = id.split(',')
             for (let item of items) {
                 let state, res
                 await Promise.all([
-                    Promise.resolve().then(async() => state = await UserPostModel.findOne({
+                    Promise.resolve().then(async () => state = await UserPostModel.findOne({
                         user_id: user_id,
                         post_id: item
                     })),
-                    Promise.resolve().then(async() => res = await PostModel.findById(item))
+                    Promise.resolve().then(async () => res = await PostModel.findById(item))
                 ]).catch(e => e)
                 if (!(res && res._id)) {
                     continue

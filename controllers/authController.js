@@ -27,7 +27,7 @@ exports.register = async (ctx, next) => {
             })
 
         await new Promise(async (resolve) => {
-            req.on('data', async(data) => {
+            req.on('data', async (data) => {
                 if (JSON.parse(data.toString()).entry) {
                     data = JSON.parse(data.toString()).entry[0]
                     data.thumbnailUrl = data.thumbnailUrl.replace(/^(http)/, 'https')
@@ -71,7 +71,7 @@ exports.register = async (ctx, next) => {
  * @param:  {string} email
  * @param:  {string} password
  */
-exports.login = async(ctx, next) => {
+exports.login = async (ctx, next) => {
     let result = await UserModel.findOne({
         email:    ctx.request.body.email,
         password: SHA256(ctx.request.body.password).toString()

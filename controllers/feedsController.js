@@ -11,7 +11,7 @@ import FeedModel from '../models/feed'
  * @param:  per_page
  */
 
-exports.list = async(ctx, next) => {
+exports.list = async (ctx, next) => {
     let {
         order,
         limit,

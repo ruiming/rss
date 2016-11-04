@@ -17,7 +17,7 @@ import { SHA256 } from 'crypto-js'
  * @param:  feedlink
  * @param:  search
  */
-exports.create = async(ctx, next) => {
+exports.create = async (ctx, next) => {
     let feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim(),
         search = ctx.request.query.search === 'true'
     if (!help.checkUrl(feedlink)) {
@@ -65,7 +65,7 @@ exports.create = async(ctx, next) => {
             }
         }
     } else {
-        await new Promise(async(resolve, reject) => {
+        await new Promise(async (resolve, reject) => {
             let req
             try {
                 req = request({
@@ -109,14 +109,12 @@ exports.create = async(ctx, next) => {
                     }
                     resolve(favicon)
                 }))
-
-                let data = search ? {
-                    absurl:  feedlink,
-                    favicon: favicon
-                } : {
-                    absurl:  feedlink,
-                    favicon: favicon,
-                    feedNum: 1
+                let data = {
+                    absurl: feedlink,
+                    favicon
+                }
+                if (search) {
+                    data.feedNum = 1
                 }
                 
                 let feed = new FeedModel(Object.assign(this.meta, data, {
@@ -183,18 +181,18 @@ exports.create = async(ctx, next) => {
  * @method: get
  * @link:   /api/feed/{id}
  */
-exports.list = async(ctx, next) => {
+exports.list = async (ctx, next) => {
     let id = ctx.params.id,
         user_id = ctx.state.user.id,
         unreadcount, count, result
     // 计算订阅源未读数
     await Promise.all([
-        Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
+        Promise.resolve().then(async () => unreadcount = await UserPostModel.count({
             feed_id: id,
             user_id: user_id,
             read:    true
         })),
-        Promise.resolve().then(async() => count = await PostModel.count({
+        Promise.resolve().then(async () => count = await PostModel.count({
             feed_id: id
         }))
     ])
@@ -246,7 +244,7 @@ exports.list = async(ctx, next) => {
  * @method: get
  * @link:   /api/feed
  */
-exports.listAll = async(ctx, next) => {
+exports.listAll = async (ctx, next) => {
     let user_id = ctx.state.user.id, items
     await UserFeedModel.find({
         user_id: user_id
@@ -265,15 +263,15 @@ exports.listAll = async(ctx, next) => {
             })
         })
     })
-    await Promise.all(_.map(items, item => new Promise(async(resolve) => {
+    await Promise.all(_.map(items, item => new Promise(async (resolve) => {
         let unreadcount, count
         await Promise.all([
-            Promise.resolve().then(async() => unreadcount = await UserPostModel.count({
+            Promise.resolve().then(async () => unreadcount = await UserPostModel.count({
                 feed_id: item.feed_id,
                 user_id: user_id,
                 read:    true
             })),
-            Promise.resolve().then(async() => count = await PostModel.count({
+            Promise.resolve().then(async () => count = await PostModel.count({
                 feed_id: item.feed_id
             }))
         ])
@@ -294,7 +292,7 @@ exports.listAll = async(ctx, next) => {
  * @link:   /api/feed/{id}
  * @param:  {string} feed_id
  */
-exports.remove = async(ctx, next) => {
+exports.remove = async (ctx, next) => {
     let user_id = ctx.state.user.id,
         feed_id = ctx.params.id
     let result = await UserFeedModel.find({
@@ -304,7 +302,7 @@ exports.remove = async(ctx, next) => {
     if (result.result.n === 0) {
         ctx.throw(404, '你没有订阅该订阅源')
     } else {
-        setTimeout(async() => {
+        setTimeout(async () => {
             await FeedModel.update({
                 _id: feed_id
             }, {

@@ -15,7 +15,7 @@ import _ from 'underscore'
  * @param:  type [mark|unread]
  * @param:  feed_id
  */
-exports.list = async(ctx, next) => {
+exports.list = async (ctx, next) => {
     let user_id = ctx.state.user.id,
         { type, feed_id } = ctx.request.query,
         result
@@ -44,7 +44,7 @@ exports.list = async(ctx, next) => {
         }
     } else if (feed_id !== undefined) {
         await Promise.all([
-            Promise.resolve().then(async() => await PostModel.find({
+            Promise.resolve().then(async () => await PostModel.find({
                 feed_id: feed_id
             }).lean().exec((err, data) => {
                 return data = _.map(data, item => {
@@ -52,7 +52,7 @@ exports.list = async(ctx, next) => {
                     return item
                 })
             })),
-            Promise.resolve().then(async() => await UserPostModel.find({
+            Promise.resolve().then(async () => await UserPostModel.find({
                 feed_id: feed_id,
                 user_id: user_id
             }, {
@@ -84,7 +84,7 @@ exports.list = async(ctx, next) => {
  * @method: get
  * @link:   /api/posts/recent
  */
-exports.main = async(ctx, next) => {
+exports.main = async (ctx, next) => {
     let user_id = ctx.state.user.id, items
     await UserFeedModel.find({
         user_id: user_id
@@ -102,7 +102,7 @@ exports.main = async(ctx, next) => {
             return item
         })
     })
-    await Promise.all(_.map(items, item => new Promise(async(resolve) => {
+    await Promise.all(_.map(items, item => new Promise(async (resolve) => {
         let userposts = await UserPostModel.find({
             feed_id: item.feed_id,
             user_id: user_id,
@@ -149,19 +149,19 @@ exports.main = async(ctx, next) => {
  * @link:   /api/posts
  * @param:  {string} feed_id
  */
-exports.update = async(ctx, next) => {
+exports.update = async (ctx, next) => {
     if (ctx.request.body.feed_id === undefined || ctx.request.body.feed_id === null) {
         ctx.throw(404, '出错了')
     }
     // 电脑版有全部未读文章标记已读的接口，所以需要进行 split
     let ids = ctx.request.body.feed_id.split(','),
         user_id = ctx.state.user.id
-    _.each(ids, async(id) => {
+    _.each(ids, async (id) => {
         let posts = await PostModel.find({
             feed_id: id
         }).sort('date')
         posts = _.pluck(posts, '_id')
-        _.each(posts, async(post) => {
+        _.each(posts, async (post) => {
             let state = await UserPostModel.findOne({
                 user_id: user_id,
                 post_id: post

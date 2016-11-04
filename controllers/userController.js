@@ -5,7 +5,7 @@ import UserModel from '../models/user'
  * @method: get
  * @link:   /user
  */
-exports.list = async(ctx, next) => {
+exports.list = async (ctx, next) => {
     let user_id = ctx.state.user.id
     let result = await UserModel.findOne({
         _id: user_id
@@ -28,7 +28,7 @@ exports.list = async(ctx, next) => {
  * @method: put
  * @link:   /user
  */
-exports.update = async(ctx, next) => {
+exports.update = async (ctx, next) => {
     let user = ctx.request.body,
         user_id = ctx.state.user.id
     let result = await UserModel.update({
