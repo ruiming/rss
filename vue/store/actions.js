@@ -95,25 +95,26 @@ export const read = ({ commit, state }) => {
     }
 }
 
-export const mark = ({ commit, state }) => {
+export const mark = ({ commit, state }, post) => {
+    // post_id used only by the mark page
     return Post.update({
-        id: state.post.post._id
+        id: (post && post._id) || state.post.post._id
     }, {
         type:   'mark',
         revert: true
     }).then(() => {
-        commit(types.MARK, state.post.post)
+        commit(types.MARK, post || state.post.post)
     })
 }
 
-export const love = ({ commit, state }) => {
+export const love = ({ commit, state }, post) => {
     return Post.update({
-        id: state.post.post._id
+        id: (post && post._id) || state.post.post._id
     }, {
         type:   'love',
         revert: true
     }).then(() => {
-        commit(types.LOVE, state.post.post)
+        commit(types.LOVE, post || state.post.post)
     })
 }
 

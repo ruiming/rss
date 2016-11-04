@@ -9,7 +9,7 @@
                 <img class="favicon" :src="post.favicon" onerror="this.src='/img/rss.png';">
                 <p>{{post.title}}</p>
             </router-link>
-            <div class="option" v-on:click="mark(post._id)">
+            <div class="option" v-on:click="mark(post)">
                 <span v-bind:class="{'icon-star-empty': !post.mark, 'icon-star-full': post.mark}"></span>
             </div>
         </li>
