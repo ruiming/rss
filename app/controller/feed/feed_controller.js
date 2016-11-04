@@ -9,9 +9,8 @@
         vm.feed = feed.data
         vm.feed.feeded = angular.isDefined(feed.data.feed_time)
         vm.feed.feed_id = $stateParams.id
-        vm.posts = posts.data.posts
+        vm.posts = posts.data
         vm.unread = vm.feed.unread
-        vm.detail = _.groupBy(posts.data.detail, 'post_id')
 
         // Graphy Start 订阅源文章更新情况
         vm.options = {
@@ -53,7 +52,7 @@
             key:    '最近更新文章数',
             values: []
         }]
-        _.each(_.groupBy(posts.data.posts, 'pubdate'), (value, key) => {
+        _.each(_.groupBy(posts.data, 'pubdate'), (value, key) => {
             let date = key.slice(0, 7),
                 exist = false
             _.each(vm.data[0].values, (value) => {
@@ -76,13 +75,6 @@
         vm.read = read
         vm.readall = readall
         vm.feedit = feedit
-
-        // get the status of each post
-        for (let post of vm.posts) {
-            if (vm.detail[post._id] && vm.detail[post._id][0].read) {
-                post.read = true
-            }
-        }
 
         function feedit() {
             Feed.save({

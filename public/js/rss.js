@@ -530,9 +530,8 @@
         vm.feed = feed.data;
         vm.feed.feeded = angular.isDefined(feed.data.feed_time);
         vm.feed.feed_id = $stateParams.id;
-        vm.posts = posts.data.posts;
+        vm.posts = posts.data;
         vm.unread = vm.feed.unread;
-        vm.detail = _.groupBy(posts.data.detail, 'post_id');
 
         // Graphy Start 订阅源文章更新情况
         vm.options = {
@@ -576,7 +575,7 @@
             key: '最近更新文章数',
             values: []
         }];
-        _.each(_.groupBy(posts.data.posts, 'pubdate'), function (value, key) {
+        _.each(_.groupBy(posts.data, 'pubdate'), function (value, key) {
             var date = key.slice(0, 7),
                 exist = false;
             _.each(vm.data[0].values, function (value) {
@@ -600,34 +599,6 @@
         vm.readall = readall;
         vm.feedit = feedit;
 
-        // get the status of each post
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = vm.posts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var post = _step.value;
-
-                if (vm.detail[post._id] && vm.detail[post._id][0].read) {
-                    post.read = true;
-                }
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
-        }
-
         function feedit() {
             Feed.save({
                 feedlink: vm.feed.absurl
@@ -642,27 +613,27 @@
         }
 
         function read(post) {
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
 
             try {
-                for (var _iterator2 = vm.posts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _post = _step2.value;
+                for (var _iterator = vm.posts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var _post = _step.value;
 
                     _post.active = false;
                 }
             } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
+                _didIteratorError = true;
+                _iteratorError = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
                     }
                 } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
+                    if (_didIteratorError) {
+                        throw _iteratorError;
                     }
                 }
             }
@@ -681,13 +652,13 @@
         }
 
         function readall() {
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
             try {
-                for (var _iterator3 = vm.posts[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var post = _step3.value;
+                for (var _iterator2 = vm.posts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var post = _step2.value;
 
                     if (!post.read) {
                         $rootScope.$broadcast('READ_POST', vm.feed.feed_id);
@@ -695,16 +666,16 @@
                     post.read = true;
                 }
             } catch (err) {
-                _didIteratorError3 = true;
-                _iteratorError3 = err;
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                        _iterator3.return();
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
                     }
                 } finally {
-                    if (_didIteratorError3) {
-                        throw _iteratorError3;
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
                     }
                 }
             }
