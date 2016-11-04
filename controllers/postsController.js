@@ -126,10 +126,12 @@ exports.main = async (ctx, next) => {
                     } else {
                         post.description = '/img/noimg.png'
                     }
-                    resolve(Object.assign(post, item, {
+                    resolve({
+                        ...post,
+                        ...item,
                         _id:    post._id,
                         unread: count
-                    }))
+                    })
                     break
                 }
             }

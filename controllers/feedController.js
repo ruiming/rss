@@ -117,9 +117,11 @@ exports.create = async (ctx, next) => {
                     data.feedNum = 1
                 }
                 
-                let feed = new FeedModel(Object.assign(this.meta, data, {
+                let feed = new FeedModel({
+                    ...this.meta,
+                    ...data,
                     lastScan: Date.now()
-                }))
+                })
 
                 let store = await feed.save()
                 let feedid = store._id,
@@ -129,10 +131,11 @@ exports.create = async (ctx, next) => {
                 if (search) {
                     feedparser.on('readable', function () {
                         while (result = this.read()) {
-                            let post = new PostModel(Object.assign(result, {
+                            let post = new PostModel({
+                                ...result,
                                 feed_id: feedid,
                                 website: link
-                            }))
+                            })
                             post.save()
                             count++
                         }
@@ -148,10 +151,11 @@ exports.create = async (ctx, next) => {
                     setTimeout(() => {
                         feedparser.on('readable', function () {
                             while (result = this.read()) {
-                                let post = new PostModel(Object.assign(result, {
+                                let post = new PostModel({
+                                    ...result,
                                     feed_id: feedid,
                                     website: link
-                                }))
+                                })
                                 post.save()
                                 count++
                             }
@@ -256,11 +260,13 @@ exports.listAll = async (ctx, next) => {
         title:   1
     }).lean().exec((err, data) => {
         return  items = _.map(data, item => {
-            return Object.assign(item.feed_id[0], item, {
+            return {
+                ...item.feed_id[0],
+                ...item,
                 feed_title: item.feed_id[0].title,
                 feed_id:    item.feed_id[0]._id,
                 _id:        item.feed_id[0]._id
-            })
+            }
         })
     })
     await Promise.all(_.map(items, item => new Promise(async (resolve) => {
@@ -275,9 +281,10 @@ exports.listAll = async (ctx, next) => {
                 feed_id: item.feed_id
             }))
         ])
-        resolve(Object.assign(item, {
+        resolve({
+            ...item,
             unread: count - unreadcount
-        }))
+        })
     }))).then(items => {
         ctx.body = {
             success: true,
