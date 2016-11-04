@@ -40,12 +40,13 @@ exports.listOne = async(ctx, next) => {
         await Promise.all([
             Promise.resolve().then(async () => await PostModel.find({
                 feed_id: result.feed_id
-            }, {
-                _id: 1
             }).sort({
                 pubdate: -1
             }).lean().exec((err, data) => {
-                posts = _.invoke(_.pluck(data, '_id'), 'toString')
+                return posts = _.map(data, item => {
+                    item._id = item._id.toString()
+                    return item
+                })
             })),
             Promise.resolve().then(async () => await UserPostModel.find({
                 feed_id: result.feed_id,
@@ -59,17 +60,26 @@ exports.listOne = async(ctx, next) => {
                 readposts = _.invoke(_.flatten(_.pluck(data, 'post_id')), 'toString')
             }))
         ])
-        pre = posts[posts.indexOf(id) - 1]
-        next = posts[posts.indexOf(id) + 1]
+        pre = posts[_.pluck(posts, '_id').indexOf(id) - 1] && posts[_.pluck(posts, '_id').indexOf(id) - 1]._id
+        next = posts[_.pluck(posts, '_id').indexOf(id) + 1] && posts[_.pluck(posts, '_id').indexOf(id) + 1]._id
         // 全部文章 ID 中遍历找出一个不等于所要查找 ID 且不在 readposts 中的第一个 ID
-        nextunread = _.find(posts, post => post !== id && !readposts.includes(post))
+        nextunread = _.findWhere(posts, {
+            _id: _.find(_.pluck(posts, '_id'), post => post !== id && !readposts.includes(post))
+        })
         ctx.body = {
             success: true,
             data:    {
                 ...result,
                 pre,
                 next,
-                nextunread
+                // 下一篇未读信息, 主要是首页未读文章缓存更新用
+                nextunread: nextunread && {
+                    feed_id:     nextunread.feed_id && nextunread.feed_id[0],
+                    _id:         nextunread._id,
+                    title:       nextunread.title,
+                    description: nextunread.description && nextunread.description.replace(/<[^>]+>/g, '').slice(0, 400),
+                    pubdate:     nextunread.pubdate
+                }
             }
         }
     } else {

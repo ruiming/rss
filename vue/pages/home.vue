@@ -4,7 +4,7 @@
     <empty v-if="!posts.length">没有未读文章</empty>
     <ul class="list-group center">
         <template v-for="post in posts">
-        <li class="list-group-item">
+        <li class="list-group-item" v-if="post.unread">
             <router-link :to="{name: 'feed', params: {id: post.feed_id}}" class="info">
                 <img class="favicon" :src="post.favicon" onerror="this.src='/img/rss.png';">
                 <p>{{post.feed_title}}</p>

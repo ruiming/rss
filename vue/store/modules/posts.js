@@ -32,18 +32,36 @@ const mutations = {
         state.posts = data
     },
     // 标记已读
-    [types.READ](state, id) {
-        for (let post of state.feedPosts) {
-            if (post._id === id) {
-                post.read = true
+    [types.READ_POST](state, post) {
+        for (let feedpost of state.feedPosts) {
+            if (feedpost._id === post._id) {
+                feedpost.read = true
             }
+        }
+        // 替换首页显示的该订阅源的最新未读内容
+        if (post.nextunread) {
+            state.recentPosts = _.map(state.recentPosts, recentpost => {
+                if (recentpost.feed_id === post.nextunread.feed_id) {
+                    recentpost = {
+                        ...recentpost,
+                        ...post.nextunread,
+                        pubdate: new timeago().format(post.nextunread.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN'),
+                        unread:  recentpost.unread - 1
+                        
+                    }
+                }
+                return recentpost
+            })
+        } else {
+            state.recentPosts = _.filter(state.recentPosts, recentpost => recentpost.feed_id !== post.feed_id)
         }
     },
     // 全部标记已读
-    [types.READ_ALL](state) {
+    [types.READ_ALL](state, feed_id) {
         for (let post of state.feedPosts) {
             post.read = true
         }
+        state.recentPosts = _.filter(state.recentPosts, recentpost => recentpost.feed_id !== feed_id)
     },
     // 收藏/取消收藏书籍 ID
     [types.MARK](state, post) {
