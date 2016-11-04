@@ -67,7 +67,7 @@ export const getAllFeeds = ({ commit }) => {
 
 export const getPopularFeeds = ({ commit }, page) => {
     return Feeds.popular({
-        page: page
+        page: page || 0
     }).then(res => {
         commit(types.RECEIVE_FEEDS, res.data)
     })
