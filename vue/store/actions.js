@@ -84,7 +84,7 @@ export const getPost = ({ commit }, id) => {
 }
 
 export const read = ({ commit, state }) => {
-    if (!state.post.read) {
+    if (!state.post.post.read) {
         return Post.update({
             id: state.post.post._id,
         }, {
