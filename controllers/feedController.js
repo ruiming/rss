@@ -259,7 +259,7 @@ exports.listAll = async (ctx, next) => {
         favicon: 1,
         title:   1
     }).lean().exec((err, data) => {
-        return  items = _.map(data, item => {
+        return  items = data.map(item => {
             return {
                 ...item.feed_id[0],
                 ...item,
@@ -269,7 +269,7 @@ exports.listAll = async (ctx, next) => {
             }
         })
     })
-    await Promise.all(_.map(items, item => new Promise(async (resolve) => {
+    await Promise.all(items.map(item => new Promise(async (resolve) => {
         let unreadcount, count
         await Promise.all([
             Promise.resolve().then(async () => unreadcount = await UserPostModel.count({

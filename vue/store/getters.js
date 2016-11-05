@@ -2,9 +2,14 @@ import timeago from 'timeago.js'
 import _ from 'underscore'
 
 export const feed = state => {
-    let feed = _.extend(state.feed.feed)
+    let feed = {
+        ...state.feed.feed
+    }
     if (feed.pubdate != null) {
-        return _.extend({}, feed, { pubdate: new timeago().format(feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN') })
+        return {
+            ...feed,
+            pubdate: new timeago().format(feed.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN')
+        }
     }
     return feed
 }
@@ -17,7 +22,9 @@ export const popularFeeds = state => state.feeds.feeds
 export const posts = state => state.posts.posts
 
 export const post = state => {
-    let post = _.extend({}, state.post.post),
+    let post = {
+            ...state.post.post
+        },
         re = /src="(\/[^\/].+?)"/g
     if (post.pubdate != null) {
         post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN')

@@ -25,7 +25,7 @@ exports.list = async (ctx, next) => {
         }).populate('feed_id')
         .populate('post_id')
         .lean().exec((err, items) => {
-            result = _.map(items, item => {
+            result = items.map(item => {
                 return {
                     mark:       item.mark,
                     love:       item.love,
@@ -47,7 +47,7 @@ exports.list = async (ctx, next) => {
             Promise.resolve().then(async () => await PostModel.find({
                 feed_id: feed_id
             }).lean().exec((err, data) => {
-                return data = _.map(data, item => {
+                return data = data.map(item => {
                     item.feed_id = item.feed_id[0]
                     return item
                 })
@@ -60,9 +60,9 @@ exports.list = async (ctx, next) => {
                 feed_id: 0
             }).lean().exec()
         )]).then(items => {
-            result = _.map(items[0], item => {
+            result = items[0].map(item => {
                 return item = {
-                    ..._.filter(items[1], userpost => {
+                    ...items[1].filter(userpost => {
                         return userpost.post_id[0].toString() === item._id.toString()
                     })[0],
                     ...item,
@@ -95,14 +95,14 @@ exports.main = async (ctx, next) => {
         favicon: 1,
         title:   1
     }).lean().exec((err, data) => {
-        return items = _.map(data, item => {
+        return items = data.map(item => {
             item.feed_title = item.feed_id[0].title
             item.favicon = item.feed_id[0].favicon
             item.feed_id = item.feed_id[0]._id
             return item
         })
     })
-    await Promise.all(_.map(items, item => new Promise(async (resolve) => {
+    await Promise.all(items.map(item => new Promise(async (resolve) => {
         let userposts = await UserPostModel.find({
             feed_id: item.feed_id,
             user_id: user_id,
@@ -140,7 +140,7 @@ exports.main = async (ctx, next) => {
     }))).then(items => {
         ctx.body = {
             success: true,
-            data:    _.filter(items, item => item.length !== 0)
+            data:    items.filter(item => item.length !== 0)
         }
     }).catch(e => e)
 }
@@ -158,12 +158,12 @@ exports.update = async (ctx, next) => {
     // 电脑版有全部未读文章标记已读的接口，所以需要进行 split
     let ids = ctx.request.body.feed_id.split(','),
         user_id = ctx.state.user.id
-    _.each(ids, async (id) => {
+    ids.forEach(async (id) => {
         let posts = await PostModel.find({
             feed_id: id
         }).sort('date')
-        posts = _.pluck(posts, '_id')
-        _.each(posts, async (post) => {
+        posts = posts.map(value => value['_id'])
+        posts.each(async (post) => {
             let state = await UserPostModel.findOne({
                 user_id: user_id,
                 post_id: post

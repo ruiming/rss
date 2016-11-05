@@ -43,7 +43,7 @@ exports.listOne = async (ctx, next) => {
             }).sort({
                 pubdate: -1
             }).lean().exec((err, data) => {
-                return posts = _.map(data, item => {
+                return posts = data.map(item => {
                     item._id = item._id.toString()
                     return item
                 })
