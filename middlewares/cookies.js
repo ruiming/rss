@@ -21,26 +21,26 @@ module.exports = function () {
                 secure = config.ENV === 'production',
                 date = new Date().getTime() + 5184000000,
                 token = jwt.sign({
-                    id:   _id,
-                    xsrf: xsrf,
-                    exp:  date / 1000,
+                    id:  _id,
+                    xsrf,
+                    exp: date / 1000,
                 }, config.APP.JWT_KEY)
             ctx.cookies.set('XSRF-TOKEN', xsrf, {
                 httpOnly:  false,
-                secure:    secure,
                 overwrite: true,
-                expires:   new Date(date)
+                expires:   new Date(date),
+                secure
             })
             ctx.cookies.set('jwt', token, {
                 httpOnly:  true,
-                secure:    secure,
                 overwrite: true,
-                expires:   new Date(date)
+                expires:   new Date(date),
+                secure
             })
             return {
-                jwt:  token,
-                xsrf: xsrf,
-                exp:  date / 1000
+                jwt: token,
+                xsrf,
+                exp: date / 1000
             }
         }
         await next()

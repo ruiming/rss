@@ -45,7 +45,7 @@ exports.list = async (ctx, next) => {
     } else if (feed_id !== undefined) {
         await Promise.all([
             Promise.resolve().then(async () => await PostModel.find({
-                feed_id: feed_id
+                feed_id
             }).lean().exec((err, data) => {
                 return data = data.map(item => {
                     item.feed_id = item.feed_id[0]
@@ -53,8 +53,8 @@ exports.list = async (ctx, next) => {
                 })
             })),
             Promise.resolve().then(async () => await UserPostModel.find({
-                feed_id: feed_id,
-                user_id: user_id
+                feed_id,
+                user_id
             }, {
                 user_id: 0,
                 feed_id: 0
@@ -87,7 +87,7 @@ exports.list = async (ctx, next) => {
 exports.main = async (ctx, next) => {
     let user_id = ctx.state.user.id, items
     await UserFeedModel.find({
-        user_id: user_id
+        user_id
     }, {
         user_id: 0
     })
@@ -105,8 +105,8 @@ exports.main = async (ctx, next) => {
     await Promise.all(items.map(item => new Promise(async (resolve) => {
         let userposts = await UserPostModel.find({
             feed_id: item.feed_id,
-            user_id: user_id,
-            read:    true
+            read:    true,
+            user_id
         })
         await PostModel.find({
             feed_id: item.feed_id
@@ -165,7 +165,7 @@ exports.update = async (ctx, next) => {
         posts = posts.map(value => value['_id'])
         posts.each(async (post) => {
             let state = await UserPostModel.findOne({
-                user_id: user_id,
+                user_id,
                 post_id: post
             })
             if (state && state._id) {
@@ -178,7 +178,7 @@ exports.update = async (ctx, next) => {
                 }
             } else {
                 state = new UserPostModel({
-                    user_id:   user_id,
+                    user_id,
                     feed_id:   id,
                     post_id:   post,
                     read:      true,

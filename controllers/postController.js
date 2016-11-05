@@ -23,7 +23,7 @@ exports.listOne = async (ctx, next) => {
         }).lean().exec()),
         Promise.resolve().then(async () => readresult = await UserPostModel.findOne({
             post_id: id,
-            user_id: user_id
+            user_id
         }).lean().exec()),
     ]).then(() => {
         result = {
@@ -108,7 +108,7 @@ exports.update = async (ctx, next) => {
                 let state, res
                 await Promise.all([
                     Promise.resolve().then(async () => state = await UserPostModel.findOne({
-                        user_id: user_id,
+                        user_id,
                         post_id: item
                     })),
                     Promise.resolve().then(async () => res = await PostModel.findById(item))
@@ -117,7 +117,7 @@ exports.update = async (ctx, next) => {
                     continue
                 }
                 let basic = {
-                    user_id: user_id,
+                    user_id,
                     feed_id: res.feed_id,
                     post_id: item
                 }

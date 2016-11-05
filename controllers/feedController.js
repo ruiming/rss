@@ -6,7 +6,6 @@ import FeedParser from 'feedparser'
 import request from 'request'
 import help from '../utils'
 import fetchFavicon from 'favicon-getter'
-import _ from 'underscore'
 import fs from 'fs'
 import { SHA256 } from 'crypto-js'
 
@@ -38,7 +37,7 @@ exports.create = async (ctx, next) => {
             }
         } else {
             let userresult = await UserFeedModel.findOne({
-                user_id: user_id,
+                user_id,
                 feed_id: result._id
             })
             // 判断用户是否已经订阅该订阅源
@@ -51,10 +50,10 @@ exports.create = async (ctx, next) => {
                 let count = await PostModel.find({
                     feed_id: result._id
                 }).count()
-                let userfeed = UserFeedModel({
+                let userfeed = new UserFeedModel({
                     feed_id: result._id,
-                    user_id: user_id,
-                    unread:  count
+                    unread:  count,
+                    user_id
                 })
                 // 添加到用户订阅表
                 userfeed.save()
@@ -163,8 +162,8 @@ exports.create = async (ctx, next) => {
                         feedparser.on('end', function () {
                             let userfeed = new UserFeedModel({
                                 feed_id: feedid,
-                                user_id: user_id,
-                                unread:  count
+                                unread:  count,
+                                user_id
                             })
                             userfeed.save()
                         })
@@ -193,8 +192,8 @@ exports.list = async (ctx, next) => {
     await Promise.all([
         Promise.resolve().then(async () => unreadcount = await UserPostModel.count({
             feed_id: id,
-            user_id: user_id,
-            read:    true
+            read:    true,
+            user_id
         })),
         Promise.resolve().then(async () => count = await PostModel.count({
             feed_id: id
@@ -202,7 +201,7 @@ exports.list = async (ctx, next) => {
     ])
     // 查看用户是否已订阅
     await UserFeedModel.findOne({
-        user_id: user_id,
+        user_id,
         feed_id: id
     }, {
         user_id: 0
@@ -251,7 +250,7 @@ exports.list = async (ctx, next) => {
 exports.listAll = async (ctx, next) => {
     let user_id = ctx.state.user.id, items
     await UserFeedModel.find({
-        user_id: user_id
+        user_id
     }, {
         user_id: 0
     })
@@ -274,8 +273,8 @@ exports.listAll = async (ctx, next) => {
         await Promise.all([
             Promise.resolve().then(async () => unreadcount = await UserPostModel.count({
                 feed_id: item.feed_id,
-                user_id: user_id,
-                read:    true
+                read:    true,
+                user_id
             })),
             Promise.resolve().then(async () => count = await PostModel.count({
                 feed_id: item.feed_id
@@ -303,8 +302,8 @@ exports.remove = async (ctx, next) => {
     let user_id = ctx.state.user.id,
         feed_id = ctx.params.id
     let result = await UserFeedModel.find({
-        user_id: user_id,
-        feed_id: feed_id
+        user_id,
+        feed_id
     }).remove()
     if (result.result.n === 0) {
         ctx.throw(404, '你没有订阅该订阅源')

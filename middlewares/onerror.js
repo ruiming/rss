@@ -24,7 +24,7 @@ module.exports = function () {
                         }
                     } else {
                         await ctx.render('login.ejs', {
-                            err:   err,
+                            err,
                             email: ctx.request.body.email
                         })
                     }
