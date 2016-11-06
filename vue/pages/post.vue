@@ -21,7 +21,6 @@
 import { Post } from '../resource/resource.js'
 import headbar from '../components/headbar.vue'
 import postOption from '../components/post-option.vue'
-import timeago from 'timeago.js'
 import store from '../store'
 import { mapGetters, mapActions } from 'vuex'
 export default {
@@ -38,7 +37,6 @@ export default {
 
     watch: {
         async '$route' (to, from) {
-            if(store.getters.post)
             await store.dispatch('getPost', to.params.id)
             await store.dispatch('read')
         }

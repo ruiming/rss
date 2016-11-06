@@ -1,11 +1,22 @@
-(function() {
+(function () {
     angular
         .module('app')
-        .factory('Posts', $resource => { 
+        .factory('Posts', $resource => {
             return $resource('/api/posts', null, {
-                get: {method: 'GET', params: {type: '@type', feed_id: '@feed_id'}},
-                recent: {method: 'GET', url: '/api/posts/recent'},
-                update: {method: 'PUT'}
+                get: {
+                    method: 'GET',
+                    params: {
+                        type:    '@type',
+                        feed_id: '@feed_id'
+                    }
+                },
+                recent: {
+                    method: 'GET',
+                    url:    '/api/posts/recent'
+                },
+                update: {
+                    method: 'PUT'
+                }
             })
         })
 }())
