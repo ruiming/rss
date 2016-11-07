@@ -46,6 +46,9 @@ exports.list = async (ctx, next) => {
         await Promise.all([
             Promise.resolve().then(async () => await PostModel.find({
                 feed_id
+            }, {
+                description: 0,
+                summary:     0
             }).lean().exec((err, data) => {
                 return data = data.map(item => {
                     item.feed_id = item.feed_id[0]
