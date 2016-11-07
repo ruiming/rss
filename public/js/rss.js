@@ -192,57 +192,6 @@
 })();
 'use strict';
 
-(function () {
-    angular.module('app').filter('linkFix', function () {
-        return function (input, origin) {
-            var re = /src="(\/[^\/].+?)"/g;
-            var result = input.replace(re, function (match, p) {
-                return 'src="' + origin + p.slice(1) + '"';
-            });
-            return result;
-        };
-    });
-})();
-'use strict';
-
-(function () {
-    angular.module('app').filter('timeago', function () {
-        return function (input) {
-            // TODO: 会被执行两次，并且如果input被watch时会多次执行
-            var now = Date.now();
-            var ago = (now - Date.parse(input)) / 1000;
-            var output = null;
-            // TODO: if I want to make it change in real time.
-            if (ago < 10 * 60) {
-                output = '刚刚';
-            } else if (ago < 60 * 60) {
-                output = Math.round(ago / 60) + ' 分钟前';
-            } else if (ago < 60 * 60 * 24) {
-                output = Math.round(ago / 60 / 60) + ' 小时前';
-            } else if (ago < 60 * 60 * 24 * 30) {
-                output = Math.round(ago / 60 / 60 / 24) + ' 天前';
-            } else if (ago < 60 * 60 * 24 * 365) {
-                output = Math.round(ago / 60 / 60 / 24 / 30) + ' 个月前';
-            } else if (ago < 60 * 60 * 24 * 365 * 3) {
-                output = Math.round(ago / 60 / 60 / 24 / 365) + ' 年前';
-            } else {
-                output = '很久很久以前';
-            }
-            return output;
-        };
-    });
-})();
-'use strict';
-
-(function () {
-    angular.module('app').filter('toLocalString', ["$filter", function ($filter) {
-        return function (input, format) {
-            return $filter('date')(Date.parse(input), format);
-        };
-    }]);
-})();
-'use strict';
-
 /**
  * 单体通信
  */
@@ -296,9 +245,65 @@
 'use strict';
 
 (function () {
+    angular.module('app').filter('linkFix', function () {
+        return function (input, origin) {
+            var re = /src="(\/[^\/].+?)"/g;
+            var result = input.replace(re, function (match, p) {
+                return 'src="' + origin + p.slice(1) + '"';
+            });
+            return result;
+        };
+    });
+})();
+'use strict';
+
+(function () {
+    angular.module('app').filter('timeago', function () {
+        return function (input) {
+            // TODO: 会被执行两次，并且如果input被watch时会多次执行
+            var now = Date.now();
+            var ago = (now - Date.parse(input)) / 1000;
+            var output = null;
+            // TODO: if I want to make it change in real time.
+            if (ago < 10 * 60) {
+                output = '刚刚';
+            } else if (ago < 60 * 60) {
+                output = Math.round(ago / 60) + ' 分钟前';
+            } else if (ago < 60 * 60 * 24) {
+                output = Math.round(ago / 60 / 60) + ' 小时前';
+            } else if (ago < 60 * 60 * 24 * 30) {
+                output = Math.round(ago / 60 / 60 / 24) + ' 天前';
+            } else if (ago < 60 * 60 * 24 * 365) {
+                output = Math.round(ago / 60 / 60 / 24 / 30) + ' 个月前';
+            } else if (ago < 60 * 60 * 24 * 365 * 3) {
+                output = Math.round(ago / 60 / 60 / 24 / 365) + ' 年前';
+            } else {
+                output = '很久很久以前';
+            }
+            return output;
+        };
+    });
+})();
+'use strict';
+
+(function () {
+    angular.module('app').filter('toLocalString', ["$filter", function ($filter) {
+        return function (input, format) {
+            return $filter('date')(Date.parse(input), format);
+        };
+    }]);
+})();
+'use strict';
+
+(function () {
     angular.module('app').factory('Feed', function ($resource) {
         return $resource('/api/feed/:id', { id: '@_id' }, {
-            search: { method: 'POST', params: { search: true } }
+            search: {
+                method: 'POST',
+                params: {
+                    search: true
+                }
+            }
         });
     });
 })();
@@ -307,7 +312,13 @@
 (function () {
     angular.module('app').factory('Feeds', function ($resource) {
         return $resource('/api/feeds', {}, {
-            popular: { method: 'GET', params: { order: 'feedNum', 'per_page': 5 } }
+            popular: {
+                method: 'GET',
+                params: {
+                    order: 'feedNum',
+                    'per_page': 5
+                }
+            }
         });
     });
 })();
@@ -316,8 +327,15 @@
 (function () {
     angular.module('app').factory('Post', function ($cacheFactory, $resource) {
         return $resource('/api/post/:id', { id: '@_id' }, {
-            update: { method: 'PUT' },
-            get: { method: 'GET', params: { type: '@type' } }
+            update: {
+                method: 'PUT'
+            },
+            get: {
+                method: 'GET',
+                params: {
+                    type: '@type'
+                }
+            }
         });
     });
 })();
@@ -326,9 +344,20 @@
 (function () {
     angular.module('app').factory('Posts', function ($resource) {
         return $resource('/api/posts', null, {
-            get: { method: 'GET', params: { type: '@type', feed_id: '@feed_id' } },
-            recent: { method: 'GET', url: '/api/posts/recent' },
-            update: { method: 'PUT' }
+            get: {
+                method: 'GET',
+                params: {
+                    type: '@type',
+                    feed_id: '@feed_id'
+                }
+            },
+            recent: {
+                method: 'GET',
+                url: '/api/posts/recent'
+            },
+            update: {
+                method: 'PUT'
+            }
         });
     });
 })();
@@ -337,10 +366,49 @@
 (function () {
     angular.module('app').factory('User', function ($resource) {
         return $resource('/api/user', {}, {
-            update: { method: 'PUT' },
-            logout: { method: 'POST', url: '/auth/logout' }
+            update: {
+                method: 'PUT'
+            },
+            logout: {
+                method: 'POST',
+                url: '/auth/logout'
+            }
         });
     });
+})();
+"use strict";
+
+(function () {
+    HomeController.$inject = ["Feeds", "feeds", "posts", "Post", "$state"];
+    angular.module('app').controller('HomeController', HomeController);
+
+    function HomeController(Feeds, feeds, posts, Post, $state) {
+        var vm = this;
+        vm.currentPage = 0;
+        vm.posts = posts.data;
+        vm.feeds = feeds.data;
+
+        vm.goto = goto;
+
+        function goto(post) {
+            Post.update({
+                feed_id: post.feed_id,
+                id: post._id
+            }, {
+                type: 'read'
+            });
+            $state.go('feed.post', {
+                id: post.feed_id,
+                post_id: post._id
+            });
+        }
+        /*
+        function next() {
+            vm.feeds = Feeds.popular({
+                page: ++vm.currentPage
+            }).$promise.data
+        }*/
+    }
 })();
 "use strict";
 
@@ -515,40 +583,6 @@
         $scope.$on('FOLD', function () {
             return vm.expand = false;
         });
-    }
-})();
-"use strict";
-
-(function () {
-    HomeController.$inject = ["Feeds", "feeds", "posts", "Post", "$state"];
-    angular.module('app').controller('HomeController', HomeController);
-
-    function HomeController(Feeds, feeds, posts, Post, $state) {
-        var vm = this;
-        vm.currentPage = 0;
-        vm.posts = posts.data;
-        vm.feeds = feeds.data;
-
-        vm.goto = goto;
-
-        function goto(post) {
-            Post.update({
-                feed_id: post.feed_id,
-                id: post._id
-            }, {
-                type: 'read'
-            });
-            $state.go('feed.post', {
-                id: post.feed_id,
-                post_id: post._id
-            });
-        }
-        /*
-        function next() {
-            vm.feeds = Feeds.popular({
-                page: ++vm.currentPage
-            }).$promise.data
-        }*/
     }
 })();
 "use strict";

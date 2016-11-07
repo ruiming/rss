@@ -19,7 +19,8 @@ exports.listOne = async (ctx, next) => {
             guid:    0
         }).populate('feed_id', {
             favicon: 1,
-            _id:     1
+            _id:     1,
+            link:    1
         }).lean().exec()),
         Promise.resolve().then(async () => readresult = await UserPostModel.findOne({
             post_id: id,
@@ -30,6 +31,7 @@ exports.listOne = async (ctx, next) => {
             ...result,
             feed_id: result.feed_id[0]._id,
             favicon: result.feed_id[0].favicon,
+            website: result.feed_id[0].link,
             read:    !!readresult && readresult.read === true,
             love:    !!readresult && readresult.love === true,
             mark:    !!readresult && readresult.mark === true

@@ -30,7 +30,7 @@ export const post = state => {
         post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN')
     }
     if (post.description) {
-        post.description.replace(re, (match, p) => {
+        post.description = post.description.replace(re, (match, p) => {
             return `src="${post.website}${p.slice(1)}"`
         })
     }
