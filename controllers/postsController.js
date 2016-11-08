@@ -166,7 +166,7 @@ exports.update = async (ctx, next) => {
             feed_id: id
         }).sort('date')
         posts = posts.map(value => value['_id'])
-        posts.each(async (post) => {
+        posts.forEach(async (post) => {
             let state = await UserPostModel.findOne({
                 user_id,
                 post_id: post
