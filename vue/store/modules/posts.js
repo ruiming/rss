@@ -11,11 +11,17 @@ const state = {
 const mutations = {
     // 获取订阅源的文章
     [types.RECEIVE_FEED_POSTS](state, { data }) {
-        state.feedPosts = _.sortBy(data, 'pubdate').reverse()
-        for (let post of state.feedPosts) {
+        for (let post of data) {
             if (post.pubdate != null) {
                 post.pubdate = new timeago().format(post.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN')
             }
+        }
+        if (data.length === 0) {
+            return
+        } else if (state.feedPosts.length > 0 && data[0].feed_id === state.feedPosts[0].feed_id) {
+            state.feedPosts = [...state.feedPosts, ...data]
+        } else {
+            state.feedPosts = data
         }
     },
     // 获取最近未读文章

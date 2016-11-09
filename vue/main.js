@@ -5,6 +5,7 @@ import router from './router.js'
 import cookie from 'cookie'
 import store from './store'
 import 'timeago.js'
+import infiniteScroll from 'vue-infinite-scroll'
 import 'normalize.css'
 import '../public/css/bootstrap.vue.min.css'
 import '../public/css/icomoon.css'
@@ -12,6 +13,8 @@ import 'github-markdown-css'
 import './app.scss'
 
 Vue.config.debug = true
+
+Vue.use(infiniteScroll)
 
 Vue.http.interceptors.push(function (request, next) {
     if (cookie.parse(document.cookie)['XSRF-TOKEN']) {

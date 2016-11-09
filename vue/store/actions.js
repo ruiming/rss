@@ -127,9 +127,11 @@ export const getRecentPosts = ({ commit }) => {
     })
 }
 
-export const getFeedPosts = ({ commit, state }, id) => {
+export const getFeedPosts = ({ commit, state }, { id, page, per_page }) => {
     return Posts.get({
-        feed_id: id
+        feed_id:  id,
+        page,
+        per_page: per_page || 15
     }).then(res => {
         commit(types.RECEIVE_FEED_POSTS, res.data)
     })

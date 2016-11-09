@@ -28,7 +28,8 @@
                 <p class="col-xs-8">{{feed.link}}</p>
             </div>
         </div>
-        <ul class="list-group">
+        <ul class="list-group" v-infinite-scroll="loadMore" 
+            infinite-scroll-distance="10">
             <template v-for="post in posts">
             <li class="list-group-item" :key="post._id">
                 <router-link :to="{name: 'post', params: {id: post._id}}" class="info">
@@ -54,13 +55,35 @@ export default {
     computed: mapGetters({
         feed: 'feed',
         posts: 'feedPosts',
-        expand: 'expand',
+        expand: 'expand'
     }),
+
+    data: function() {
+        return {
+            busy: false,
+            page: 0
+        }
+    },
+
+    methods: {
+        // FIXME: 乱序和重复加载问题
+        loadMore: async function() {
+            this.busy = true
+            await store.dispatch('getFeedPosts', {
+                id: this.$route.params.id,
+                page: ++this.page
+            })
+            this.busy = false
+        }
+    },
 
     async beforeRouteEnter (to, from, next) {
         await Promise.all([
             store.dispatch('getFeed', to.params.id),
-            store.dispatch('getFeedPosts', to.params.id)
+            store.dispatch('getFeedPosts', {
+                id: to.params.id,
+                page: 0
+            })
         ])
         next()
     },

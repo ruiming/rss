@@ -17,7 +17,7 @@ import _ from 'underscore'
  */
 exports.list = async (ctx, next) => {
     let user_id = ctx.state.user.id,
-        { type, feed_id } = ctx.request.query,
+        { type, feed_id, page, per_page } = ctx.request.query,
         result
     if (['mark', 'unread'].includes(type)) {
         await UserPostModel.find({
@@ -43,13 +43,20 @@ exports.list = async (ctx, next) => {
             data:    result
         }
     } else if (feed_id !== undefined) {
+        // TODO 乱序
         await Promise.all([
             Promise.resolve().then(async () => await PostModel.find({
                 feed_id
             }, {
                 description: 0,
                 summary:     0
-            }).lean().exec((err, data) => {
+            })
+            .sort({
+                'pub_date': -1
+            })
+            .skip(+page * + per_page)
+            .limit(+per_page).
+            lean().exec((err, data) => {
                 return data = data.map(item => {
                     item.feed_id = item.feed_id[0]
                     return item

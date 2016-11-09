@@ -83,6 +83,7 @@
     "timeago.js": "^2.0.3",
     "underscore": "^1.8.3",
     "vue": "^2.0.3",
+    "vue-infinite-scroll": "^2.0.0",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.0.1",
     "vuex": "^2.0.0"

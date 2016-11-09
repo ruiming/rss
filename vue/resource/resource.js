@@ -31,8 +31,10 @@ const Posts = Vue.resource('/api/posts', {}, {
     get: {
         method: 'GET',
         params: {
-            type:    '@type',
-            feed_id: '@feed_id'
+            type:     '@type',
+            feed_id:  '@feed_id',
+            page:     0,
+            per_page: 10
         }
     },
     recent: {
