@@ -37,6 +37,8 @@ export const post = state => {
     return post
 }
 
+export const end = state => state.posts.end
+
 export const prefetch = state => state.global.prefetch
 
 export const expand = state => state.global.expand

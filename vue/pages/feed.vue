@@ -55,7 +55,8 @@ export default {
     computed: mapGetters({
         feed: 'feed',
         posts: 'feedPosts',
-        expand: 'expand'
+        expand: 'expand',
+        end: 'end'
     }),
 
     data: function() {
@@ -68,12 +69,16 @@ export default {
     methods: {
         // FIXME: 乱序和重复加载问题
         loadMore: async function() {
-            this.busy = true
-            await store.dispatch('getFeedPosts', {
-                id: this.$route.params.id,
-                page: ++this.page
-            })
-            this.busy = false
+            if(this.end) {
+                return
+            } else {
+                this.busy = true
+                await store.dispatch('getFeedPosts', {
+                    id: this.$route.params.id,
+                    page: ++this.page
+                })
+                this.busy = false
+            }
         }
     },
 

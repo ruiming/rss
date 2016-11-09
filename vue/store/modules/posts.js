@@ -5,7 +5,8 @@ import timeago from 'timeago.js'
 const state = {
     feedPosts:   [],
     recentPosts: [],
-    posts:       []
+    posts:       [],
+    end:         false
 }
  
 const mutations = {
@@ -17,10 +18,12 @@ const mutations = {
             }
         }
         if (data.length === 0) {
+            state.end = true
             return
         } else if (state.feedPosts.length > 0 && data[0].feed_id === state.feedPosts[0].feed_id) {
             state.feedPosts = [...state.feedPosts, ...data]
         } else {
+            state.end = false
             state.feedPosts = data
         }
     },
