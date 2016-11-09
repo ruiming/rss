@@ -43,7 +43,6 @@ exports.list = async (ctx, next) => {
             data:    result
         }
     } else if (feed_id !== undefined) {
-        // TODO 乱序
         await Promise.all([
             Promise.resolve().then(async () => await PostModel.find({
                 feed_id
@@ -52,7 +51,7 @@ exports.list = async (ctx, next) => {
                 summary:     0
             })
             .sort({
-                'pub_date': -1
+                'pubdate': -1
             })
             .skip(+page * + per_page)
             .limit(+per_page).
