@@ -67,7 +67,6 @@ export default {
     },
 
     methods: {
-        // FIXME: 乱序和重复加载问题
         loadMore: async function() {
             if(this.end) {
                 return

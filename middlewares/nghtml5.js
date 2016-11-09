@@ -1,7 +1,7 @@
 import send from 'koa-send'
 
 /**
- * 配合 Angular 的 html5mode
+ * Html5mode Support
  */
 module.exports = function () {
     return async(ctx, next) => {
