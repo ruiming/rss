@@ -29,8 +29,8 @@ if (config.ENV === 'production') {
     mongoose.connect(`mongodb://${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`)
 }
 
-app.use(ua())
 app.use(cache())
+app.use(ua())
 app.use(cookies())
 app.use(normal())
 app.use(xsrf())

@@ -54,7 +54,7 @@ const mutations = {
                     recentpost = {
                         ...recentpost,
                         ...post.nextunread,
-                        pubdate: new timeago().format(post.nextunread.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN'),
+                        pubdate: post.nextunread.pubdate && new timeago().format(post.nextunread.pubdate.split('').splice(0, 19).join('').replace('T', ' '), 'zh_CN'),
                         unread:  recentpost.unread - 1
                         
                     }
