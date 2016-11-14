@@ -12,6 +12,7 @@ import onerror from './middlewares/onerror'
 import xsrf from './middlewares/xsrf'
 import cookies from './middlewares/cookies'
 import nghtml5 from './middlewares/nghtml5'
+import cache from './middlewares/cache'
 import ua from './middlewares/ua'
 import normal from './middlewares/normal'
 
@@ -44,6 +45,7 @@ app.use(jwt({
 }).unless({
     path: [/^\/css|js|img|fonts|favicon/]
 }))
+app.use(cache())
 
 // API (Protected)
 app.use(api.routes())

@@ -8,6 +8,7 @@ import serve from 'koa-static'
 import views from 'koa-views'
 import path from 'path'
 import favicon from 'koa-favicon'
+import cacheControl from 'koa-cache-control'
 
 const normal = () => compose([
     compress({
@@ -16,6 +17,9 @@ const normal = () => compose([
         flush:     require('zlib').Z_SYNC_FLUSH
     }),
     json(),
+    convert(cacheControl({
+        maxAge: 2
+    })),
     convert(bodyparser()),
     convert(logger()),
     convert(serve(path.resolve(__dirname, '../public'), {
