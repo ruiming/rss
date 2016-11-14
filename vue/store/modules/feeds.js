@@ -35,24 +35,29 @@ const mutations = {
     },
     // 增加订阅
     [types.SUBSCRIBE](state, feed) {
+        let exist = true
         state.userfeeds = [...state.userfeeds, feed]
-        state.feeds = _.map(state.feeds, item => {
+        state.feeds = state.feeds.map(item => {
             if (item._id === feed._id) {
                 item.feedNum++
+                exist = false
             }
             return item
         })
+        if (exist) {
+            state.feeds = [...state.feeds, feed]
+        }
     },
     // 取消订阅
     [types.UNSUBSCRIBE](state, { _id }) {
-        state.userfeeds = _.filter(state.userfeeds, feed => feed._id !== _id)
-        state.feeds = _.map(state.feeds, item => {
+        state.userfeeds = state.userfeeds.filter(feed => feed._id !== _id)
+        state.feeds = state.feeds.map(state.feeds, item => {
             if (item._id === _id) {
                 item.feedNum--
             }
             return item
         })
-    }
+    },
 }
 
 export default {
