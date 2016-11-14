@@ -51,7 +51,8 @@ exports.list = async (ctx, next) => {
                 summary:     0
             })
             .sort({
-                'pubdate': -1
+                'pubdate': -1,
+                '_id':     -1
             })
             .skip(+page * + per_page)
             .limit(+per_page).
