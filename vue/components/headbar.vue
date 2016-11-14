@@ -1,7 +1,7 @@
 <template>
     <div id="head" v-bind:class="{expand2: expand}">
     <header>
-        <span class="icon-paragraph-left" v-on:click="move()" ></span>
+        <span class="icon-paragraph-left" v-on:click="move()" v-if="online"></span>
         <h2><slot>主页</slot></h2>
     </header>
 </div>
@@ -12,7 +12,8 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: mapGetters({
         expand: 'expand',
-        user: 'user'
+        user: 'user',
+        online: 'online'
     }),
     
     methods: {
