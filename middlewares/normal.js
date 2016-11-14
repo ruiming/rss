@@ -17,6 +17,7 @@ const normal = () => compose([
         flush:     require('zlib').Z_SYNC_FLUSH
     }),
     json(),
+    // 两秒缓存
     convert(cacheControl({
         maxAge: 2
     })),

@@ -30,6 +30,7 @@ if (config.ENV === 'production') {
 }
 
 app.use(ua())
+app.use(cache())
 app.use(cookies())
 app.use(normal())
 app.use(xsrf())
@@ -45,7 +46,6 @@ app.use(jwt({
 }).unless({
     path: [/^\/css|js|img|fonts|favicon/]
 }))
-app.use(cache())
 
 // API (Protected)
 app.use(api.routes())
