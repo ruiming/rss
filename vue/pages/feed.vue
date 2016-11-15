@@ -4,7 +4,8 @@
     <div class="center" id="feed">
         <div class="feed-header" v-bind:class="{expand2: expand}">
             <img :src="feed.favicon" onerror="this.src='/img/rss.png';">
-            <h1>{{feed.title}}<small v-if="feed.unread">{{feed.unread}}</small></h1>
+            <h1>{{feed.title}}</h1>
+            <small v-if="feed.unread">{{feed.unread}}</small>
         </div>
         <div class="panel">
             <div class="row">
@@ -117,11 +118,15 @@ export default {
     overflow: hidden;
     border-bottom: 1px solid #ddd;
     h1 {
-        margin: 15px 0 15px 50px;
-        small {
-            float: right;
-            padding: 4px 10px;
-        }
+        margin: 15px 30px 15px 50px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    small {
+        position: absolute;
+        top: 18px;
+        right: 10px;
     }
     img {
         position: absolute;
