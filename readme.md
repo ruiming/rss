@@ -36,7 +36,8 @@ Web 手机版基于 Vue2 开发
 - 安装依赖
 
   ```
-  npm install --production
+  npm install
+  npm run build
   ```
 
 - 运行数据库（根据情况修改 package.json 中的数据库路径）
