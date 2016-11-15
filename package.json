@@ -1,6 +1,6 @@
 {
   "name": "rss",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A rss feeder based on Angular1, Vue2, Koa2, D3, Mongoose, Bootstrap, Underscore",
   "main": "server.js",
   "scripts": {
