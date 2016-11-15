@@ -268,15 +268,15 @@
             if (ago < 10 * 60) {
                 output = '刚刚';
             } else if (ago < 60 * 60) {
-                output = Math.round(ago / 60) + ' 分钟前';
+                output = Math.round(ago / 60) + ' \u5206\u949F\u524D';
             } else if (ago < 60 * 60 * 24) {
-                output = Math.round(ago / 60 / 60) + ' 小时前';
+                output = Math.round(ago / 60 / 60) + ' \u5C0F\u65F6\u524D';
             } else if (ago < 60 * 60 * 24 * 30) {
-                output = Math.round(ago / 60 / 60 / 24) + ' 天前';
+                output = Math.round(ago / 60 / 60 / 24) + ' \u5929\u524D';
             } else if (ago < 60 * 60 * 24 * 365) {
-                output = Math.round(ago / 60 / 60 / 24 / 30) + ' 个月前';
+                output = Math.round(ago / 60 / 60 / 24 / 30) + ' \u4E2A\u6708\u524D';
             } else if (ago < 60 * 60 * 24 * 365 * 3) {
-                output = Math.round(ago / 60 / 60 / 24 / 365) + ' 年前';
+                output = Math.round(ago / 60 / 60 / 24 / 365) + ' \u5E74\u524D';
             } else {
                 output = '很久很久以前';
             }
