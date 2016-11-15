@@ -20,7 +20,7 @@ const mutations = {
         if (data.length === 0) {
             state.end = true
             return
-        } else if (state.feedPosts.length > 0 && data[0].feed_id === state.feedPosts[0].feed_id) {
+        } else if (state.feedPosts.length > 0 && data[0].feed_id === state.feedPosts[0].feed_id && !state.end) {
             state.feedPosts = [...state.feedPosts, ...data]
         } else {
             state.end = false
