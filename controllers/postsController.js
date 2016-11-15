@@ -21,7 +21,8 @@ exports.list = async (ctx, next) => {
         result
     if (['mark', 'unread'].includes(type)) {
         await UserPostModel.find({
-            [type]: true
+            [type]: true,
+            user_id
         }).populate('feed_id')
         .populate('post_id')
         .lean().exec((err, items) => {
