@@ -2036,7 +2036,7 @@ esutils@^2.0.2:
   version "2.0.2"
   resolved "http://registry.npm.taobao.org/esutils/download/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
 
-etag@~1.7.0:
+etag@^1.3.0, etag@~1.7.0:
   version "1.7.0"
   resolved "http://registry.npm.taobao.org/etag/download/etag-1.7.0.tgz#03d30b5f67dd6e632d2945d30d6652731a34d5d8"
 
@@ -3376,6 +3376,10 @@ koa-compress@^2.0.0:
     koa-is-json "^1.0.0"
     statuses "^1.0.0"
 
+koa-conditional-get@next:
+  version "2.0.0"
+  resolved "http://registry.npm.taobao.org/koa-conditional-get/download/koa-conditional-get-2.0.0.tgz#a43f3723c1d014b730a34ece8adf30b93c8233f2"
+
 koa-convert@^1.2.0:
   version "1.2.0"
   resolved "http://registry.npm.taobao.org/koa-convert/download/koa-convert-1.2.0.tgz#da40875df49de0539098d1700b50820cebcd21d0"
@@ -3390,6 +3394,13 @@ koa-ejs@^3.0.0:
     co-fs "~1.2.0"
     copy-to "~2.0.1"
     ejs "^2.3.4"
+
+koa-etag@next:
+  version "3.0.0"
+  resolved "http://registry.npm.taobao.org/koa-etag/download/koa-etag-3.0.0.tgz#9ef7382ddd5a82ab0deb153415c915836f771d3f"
+  dependencies:
+    etag "^1.3.0"
+    mz "^2.1.0"
 
 koa-favicon@^2.0.0:
   version "2.0.0"
@@ -4225,7 +4236,7 @@ muri@1.1.1:
   version "1.1.1"
   resolved "http://registry.npm.taobao.org/muri/download/muri-1.1.1.tgz#64bd904eaf8ff89600c994441fad3c5195905ac2"
 
-mz@^2.0.0, mz@^2.3.1, mz@^2.4.0:
+mz@^2.0.0, mz@^2.1.0, mz@^2.3.1, mz@^2.4.0:
   version "2.5.0"
   resolved "http://registry.npm.taobao.org/mz/download/mz-2.5.0.tgz#2859025df03d46b57bb317174b196477ce64cec1"
   dependencies:

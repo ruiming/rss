@@ -9,6 +9,8 @@ import views from 'koa-views'
 import path from 'path'
 import favicon from 'koa-favicon'
 import cacheControl from 'koa-cache-control'
+import conditional from 'koa-conditional-get'
+import etag from 'koa-etag'
 
 const normal = () => compose([
     compress({
@@ -16,6 +18,8 @@ const normal = () => compose([
         threshold: 2048,
         flush:     require('zlib').Z_SYNC_FLUSH
     }),
+    conditional(),
+    etag(),
     json(),
     // 两秒缓存
     convert(cacheControl({
