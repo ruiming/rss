@@ -1,5 +1,5 @@
 <template>
-    <div style="height:calc(100% + 83px); overflow-x:hidden">
+    <div>
         <transition name="sidebar">
             <div class="sidebar" v-show="expand">
                 <div class="user">
@@ -76,7 +76,6 @@ h1 {
 }
 
 .view {
-    min-height: calc(100% - 83px);
     position: relative;
     z-index: 100;
     background-color: white;
@@ -89,7 +88,7 @@ h1 {
     left: 0;
     bottom: 0;
     color: black;
-    background-color: #fafafa;
+    background-color: #fff;
     z-index: 50;
     width: 200px;
     ul {
