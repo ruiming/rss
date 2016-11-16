@@ -66,7 +66,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 #square {
     .search {
         margin-bottom: 0;

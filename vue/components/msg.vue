@@ -20,7 +20,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .msgbox {
     position: fixed;
     top: 0;

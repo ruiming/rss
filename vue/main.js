@@ -1,4 +1,8 @@
 import 'babel-polyfill'
+import '../public/css/bootstrap.vue.min.css'
+import 'github-markdown-css'
+import '../public/css/icomoon.css'  // TODO @import in css caused the problem of relative path resolved error.
+import './app.css'
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router.js'
@@ -6,11 +10,7 @@ import cookie from 'cookie'
 import store from './store'
 import 'timeago.js'
 import infiniteScroll from 'vue-infinite-scroll'
-import 'normalize.css'
-import '../public/css/bootstrap.vue.min.css'
-import '../public/css/icomoon.css'
-import 'github-markdown-css'
-import './app.scss'
+
 
 Vue.config.debug = true
 

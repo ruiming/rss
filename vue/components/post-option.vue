@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .post-option {
     li, a {
         width: 20% !important;

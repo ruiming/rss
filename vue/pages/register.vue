@@ -45,7 +45,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .register {
     padding: 10px 20px;
     img {

@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .feed-group {
     font-size: 14px;
     font-weight: 500;

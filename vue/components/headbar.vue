@@ -28,7 +28,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 #head {
     transition: 0.3s linear all;
     position: fixed;

@@ -7,6 +7,19 @@ var isProduction = function () {
 }
 var plugins = [
         // TODO
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                context: './public/css',
+                postcss: [
+                    require('postcss-import')({
+                        addDependencyTo: webpack
+                    }),
+                    require('postcss-nested')({
+                    }),
+                    require('postcss-cssnext')({
+                    })
+                ]
+            }}),
         new ExtractTextPlugin({
             filename:  'style.css',
             allChunks: true,
@@ -24,8 +37,8 @@ if (isProduction()) {
         })
     )
     output = {
-        path:       path.resolve(__dirname, './public/js/'),
-        publicPath: '/js/',
+        path:       path.resolve(__dirname, './public/static/'),
+        publicPath: '/static/',
         filename:   'build.js'
     }
     externals = {
@@ -47,18 +60,13 @@ module.exports = {
     entry:  './vue/main.js',
     output,
     module: {
-        loaders: [{
+        rules: [{
             test:    /\.vue$/,
             loader:  'vue-loader',
-            // TODO
             options: {
                 loaders: {
                     css: ExtractTextPlugin.extract({
-                        loader:         ['css-loader', 'postcss-loader'],
-                        fallbackLoader: 'vue-style-loader'
-                    }),
-                    sass: ExtractTextPlugin.extract({
-                        loader:         ['css-loader', 'postcss-loader', 'sass-loader'],
+                        loader:         ['css-loader?minimize', 'postcss-loader'],
                         fallbackLoader: 'vue-style-loader'
                     })
                 }
@@ -70,12 +78,7 @@ module.exports = {
         }, {
             test:   /\.css$/,
             loader: ExtractTextPlugin.extract({
-                loader: ['css-loader', 'postcss-loader']
-            })
-        }, {
-            test:   /\.scss$/,
-            loader: ExtractTextPlugin.extract({
-                loader: ['css-loader', 'postcss-loader', 'sass-loader']
+                loader: ['css-loader?minimize', 'postcss-loader']
             })
         }, {
             test:   /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
@@ -121,5 +124,5 @@ module.exports = {
             }
         },
     },
-    devtool: isProduction() ? null : '#eval-source-map'
+    devtool: isProduction() ? false : '#eval-source-map'
 }

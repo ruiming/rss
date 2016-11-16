@@ -79,7 +79,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 #home {
     font-size: 14px;
     a {

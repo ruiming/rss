@@ -11,7 +11,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .searching {
     margin: 50% auto;
     p {

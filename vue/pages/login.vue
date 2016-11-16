@@ -46,7 +46,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .login {
     padding: 10px 20px;
     img {

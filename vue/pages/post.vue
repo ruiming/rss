@@ -48,7 +48,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 #post {
     p {
         font-size: 14px;

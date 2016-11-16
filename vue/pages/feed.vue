@@ -99,7 +99,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .panel {
     padding: 10px;
     border-bottom: 1px solid #ddd;

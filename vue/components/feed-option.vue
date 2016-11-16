@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .feed-option a,
 .feed-option li {
     width: 50% !important;

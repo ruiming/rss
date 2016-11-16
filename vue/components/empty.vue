@@ -13,7 +13,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .empty {
     padding: 50% 0;
     span {

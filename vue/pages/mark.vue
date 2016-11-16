@@ -53,7 +53,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 #mark {
     font-size: 14px;
     ul {
