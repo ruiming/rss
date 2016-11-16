@@ -1,6 +1,7 @@
 var path = require('path')
 var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var fs = require('fs')
 
 var isProduction = function () {
     return process.env.NODE_ENV === 'production'
@@ -23,9 +24,31 @@ var plugins = [
             }}),
         // CSS 处理
         new ExtractTextPlugin({
-            filename:  'style.css',
+            filename:  'style.[contenthash:4].css',
             allChunks: true,
-        })
+        }),
+        // index.html 哈希值替换处理
+        function () {
+            this.plugin('done', function (statsData) {
+                var stats = statsData.toJson()
+                if (!stats.errors.length) {
+                    var html = fs.readFileSync('./public/index.html', 'utf8')
+                    var htmlOutput = html.replace(
+                        /static\/(.+?)">/g,
+                        function (word) {
+                            let filename = word.split('/')[1].split('.')[0]
+                            for (let i = 0; i < stats.assetsByChunkName.main.length; i++) {
+                                if (stats.assetsByChunkName.main[i].indexOf(filename) !== -1) {
+                                    return 'static/' + stats.assetsByChunkName.main[i] + '">'
+                                }
+                            }
+                        })
+                    fs.writeFileSync(
+                        './public/index.html',
+                        htmlOutput)
+                }
+            })
+        }
     ],
     externals = {},
     output
@@ -43,7 +66,7 @@ if (isProduction()) {
     output = {
         path:       path.resolve(__dirname, './public/static/'),
         publicPath: '/static/',
-        filename:   'build.js'
+        filename:   'build.[chunkhash:4].js'
     }
     // 生产环境使用 CDN
     externals = {

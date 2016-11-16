@@ -32,7 +32,6 @@ Vue.http.interceptors.push(function (request, next) {
                     message: '服务器开小差了'
                 })
             }
-            // TODO 处理错误的页面跳转问题
         }
         if (response.status === 401) {
             if (!['/auth/login', '/auth/register'].includes(response.url)) {
