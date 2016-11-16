@@ -1,9 +1,17 @@
 var path = require('path')
 var webpack = require('webpack')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+
 var isProduction = function () {
     return process.env.NODE_ENV === 'production'
 }
-var plugins = [],
+var plugins = [
+        // TODO
+        new ExtractTextPlugin({
+            filename:  'style.css',
+            allChunks: true,
+        })
+    ],
     externals = {},
     output
 if (isProduction()) {
@@ -35,34 +43,52 @@ if (isProduction()) {
     }
 }
 module.exports = {
-    entry:         './vue/main.js',
+    target: 'web',
+    entry:  './vue/main.js',
     output,
-    resolveLoader: {
-        root: path.join(__dirname, 'node_modules')
-    },
     module: {
         loaders: [{
-            test:   /\.vue$/,
-            loader: 'vue'
+            test:    /\.vue$/,
+            loader:  'vue-loader',
+            // TODO
+            options: {
+                loaders: {
+                    css: ExtractTextPlugin.extract({
+                        loader:         ['css-loader', 'postcss-loader'],
+                        fallbackLoader: 'vue-style-loader'
+                    }),
+                    sass: ExtractTextPlugin.extract({
+                        loader:         ['css-loader', 'postcss-loader', 'sass-loader'],
+                        fallbackLoader: 'vue-style-loader'
+                    })
+                }
+            }
         }, {
             test:    /\.js$/,
-            loader:  'babel',
+            loader:  'babel-loader',
             exclude: /node_modules/
         }, {
             test:   /\.css$/,
-            loader: 'style!css'
+            loader: ExtractTextPlugin.extract({
+                loader: ['css-loader', 'postcss-loader']
+            })
         }, {
             test:   /\.scss$/,
-            loader: ['style', 'css', 'sass']
+            loader: ExtractTextPlugin.extract({
+                loader: ['css-loader', 'postcss-loader', 'sass-loader']
+            })
         }, {
             test:   /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
-            loader: 'file'
+            loader: 'file-loader'
         }, {
             test:   /\.(png|jpg|gif|svg|ico)$/,
             loader: 'url-loader?limit=8192',
         }]
     },
     plugins,
+    resolve: {
+        modules: [path.join(__dirname, 'node_modules'), 'node_modules']
+    },
     externals,
     devServer: {
         hot:                true,

@@ -266,39 +266,3 @@ h3 {
         transform: rotateZ(360deg);
     }
 }
-
-@-o-keyframes cssload-roto {
-    0% {
-        -o-transform: rotateZ(0deg);
-    }
-    100% {
-        -o-transform: rotateZ(360deg);
-    }
-}
-
-@-ms-keyframes cssload-roto {
-    0% {
-        -ms-transform: rotateZ(0deg);
-    }
-    100% {
-        -ms-transform: rotateZ(360deg);
-    }
-}
-
-@-webkit-keyframes cssload-roto {
-    0% {
-        -webkit-transform: rotateZ(0deg);
-    }
-    100% {
-        -webkit-transform: rotateZ(360deg);
-    }
-}
-
-@-moz-keyframes cssload-roto {
-    0% {
-        -moz-transform: rotateZ(0deg);
-    }
-    100% {
-        -moz-transform: rotateZ(360deg);
-    }
-}
