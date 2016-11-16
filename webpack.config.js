@@ -13,21 +13,28 @@ var plugins = [
             options: {
                 context: './public/css',
                 postcss: [
-                    require('postcss-import')({
-                        addDependencyTo: webpack
-                    }),
-                    require('postcss-nested')({
-                    }),
-                    require('postcss-cssnext')({
-                    })
+                    require('postcss-nested'),
+                    require('postcss-cssnext')
                 ]
             }}),
         // CSS 处理
         new ExtractTextPlugin({
-            filename:  'style.[contenthash:4].css',
+            filename:  isProduction() ? 'style.[contenthash:4].css' : 'style.css',
             allChunks: true,
+        })
+    ],
+    externals = {},
+    output
+if (isProduction()) {
+    plugins.push(
+        // 生产环境压缩 JavaScript 代码
+        new webpack.optimize.UglifyJsPlugin({
+            test:     /(\.vue|\.js)$/,
+            compress: {
+                warnings: false
+            },
         }),
-        // index.html 哈希值替换处理
+        // 生产环境进行哈希值替换处理
         function () {
             this.plugin('done', function (statsData) {
                 var stats = statsData.toJson()
@@ -49,18 +56,6 @@ var plugins = [
                 }
             })
         }
-    ],
-    externals = {},
-    output
-if (isProduction()) {
-    // 生产环境压缩 JavaScript 代码
-    plugins.push(
-        new webpack.optimize.UglifyJsPlugin({
-            test:     /(\.vue|\.js)$/,
-            compress: {
-                warnings: false
-            },
-        })
     )
     // 生产环境输出目录
     output = {
