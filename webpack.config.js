@@ -6,7 +6,8 @@ var isProduction = function () {
     return process.env.NODE_ENV === 'production'
 }
 var plugins = [
-        // TODO
+        // 添加 postcss 插件
+        // postcss.config.js 在 webpack 新版本无效
         new webpack.LoaderOptionsPlugin({
             options: {
                 context: './public/css',
@@ -20,6 +21,7 @@ var plugins = [
                     })
                 ]
             }}),
+        // CSS 处理
         new ExtractTextPlugin({
             filename:  'style.css',
             allChunks: true,
@@ -28,6 +30,7 @@ var plugins = [
     externals = {},
     output
 if (isProduction()) {
+    // 生产环境压缩 JavaScript 代码
     plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             test:     /(\.vue|\.js)$/,
@@ -36,11 +39,13 @@ if (isProduction()) {
             },
         })
     )
+    // 生产环境输出目录
     output = {
         path:       path.resolve(__dirname, './public/static/'),
         publicPath: '/static/',
         filename:   'build.js'
     }
+    // 生产环境使用 CDN
     externals = {
         'vue':          'Vue',
         'underscore':   '_',
@@ -49,12 +54,14 @@ if (isProduction()) {
         'vuex':         'Vuex'
     }
 } else {
+    // 开发环境输出目录
     output = {
         path:       path.resolve(__dirname, './dist'),
         publicPath: '/dist/',
         filename:   'build.js'
     }
 }
+// 导出
 module.exports = {
     target: 'web',
     entry:  './vue/main.js',
