@@ -71,7 +71,8 @@ exports.create = async (ctx, next) => {
                     url:     feedlink,
                     headers: {
                         'User-Agent': 'request'
-                    }
+                    },
+                    timeout: 5000
                 })
             } catch (e) {
                 reject(e)
