@@ -51,7 +51,7 @@ const mutations = {
     // 取消订阅
     [types.UNSUBSCRIBE](state, { _id }) {
         state.userfeeds = state.userfeeds.filter(feed => feed._id !== _id)
-        state.feeds = state.feeds.map(state.feeds, item => {
+        state.feeds = state.feeds.map(item => {
             if (item._id === _id) {
                 item.feedNum--
             }
