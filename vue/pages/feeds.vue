@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .feed-group {
     font-size: 14px;
     font-weight: 500;

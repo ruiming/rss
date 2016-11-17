@@ -79,78 +79,75 @@ export default {
 }
 </script>
 
-<style>
-#home {
-    font-size: 14px;
-    a {
-        display: block;
+<style scoped>
+a {
+    display: block;
+    position: relative;
+    .title {
         position: relative;
-        .title {
-            position: relative;
-            height: 20px;
-            p {
-                position: absolute;
-                right: 80px;
-                left: 0;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            small {
-                width: 80px;
-                position: absolute;
-                text-align: right;
-                top: 0;
-                right: 0;
-            }
-        }
-    }
-    ul {
-        p {
-            overflow: hidden;
-            margin-bottom: 0;
-        }
-        small {
-            line-height: 1.7;
-            float: right;
-        }
-    }
-    li {
-        padding: 0;
-        border: 0 none;
-        &:last-child {
-            border-bottom: 1px solid #ddd;
-        }
-    }
-    .info {
-        font-weight: 500;
-        padding: 12px 15px;
-        border-top: 1px solid #ddd;
-        border-bottom: 1px solid #ddd;
-        position: relative;
-        height: 46px;
-        small {
-            position: absolute;
-            right: 15px;
-            top: 12px;
-        }
+        height: 20px;
         p {
             position: absolute;
-            left: 50px;
-            right: 70px;
+            right: 80px;
+            left: 0;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
+        }
+        small {
+            width: 80px;
+            position: absolute;
+            text-align: right;
+            top: 0;
+            right: 0;
         }
     }
-    .context {
-        padding: 10px 15px;
+}
+ul {
+    p {
+        overflow: hidden;
+        margin-bottom: 0;
     }
-    .summary {
-        max-height: 140px;
-        word-break: break-all;
+    small {
+        line-height: 1.7;
+        float: right;
+    }
+}
+li {
+    padding: 0;
+    border: 0 none;
+    &:last-child {
+        border-bottom: 1px solid #ddd;
+    }
+}
+.info {
+    font-weight: 500;
+    padding: 12px 15px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    height: 46px;
+    small {
+        position: absolute;
+        right: 15px;
+        top: 12px;
+    }
+    p {
+        position: absolute;
+        left: 50px;
+        right: 70px;
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
     }
+}
+.context {
+    padding: 10px 15px;
+}
+.summary {
+    max-height: 140px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

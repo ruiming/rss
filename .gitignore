@@ -4,5 +4,6 @@ coverage
 *.swp
 logs
 npm-debug.log
-public/favicon
+/public/favicon
+/public/static
 .idea

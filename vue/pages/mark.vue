@@ -53,52 +53,49 @@ export default {
 }
 </script>
 
-<style>
-#mark {
-    font-size: 14px;
-    ul {
-        p {
-            margin-bottom: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        small {
-            line-height: 1.7;
-            float: right;
-        }
+<style scoped>
+ul {
+    p {
+        margin-bottom: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
-    li {
-        padding: 0;   
-        border: 0 none;
-        border-radius: 0;
-        position: relative;
-        height: 46px;
-        border-top: 1px solid #ddd;
-        border-bottom: 1px solid #ddd;     
+    small {
+        line-height: 1.7;
+        float: right;
     }
-    a {
-        display: block;
-    }
-    .info {
-        font-weight: 500;
-        padding: 12px 15px;
-        right: 50px;
-        left: 0;
-        position: absolute;
-    }
-    .option {
-        width: 50px;
-        height: 46px;
-        position: absolute;
-        right: 0;
-        display: table;
-        color: #3f51b5;
-        span {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-        }
+}
+li {
+    padding: 0;   
+    border: 0 none;
+    border-radius: 0;
+    position: relative;
+    height: 46px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;     
+}
+a {
+    display: block;
+}
+.info {
+    font-weight: 500;
+    padding: 12px 15px;
+    right: 50px;
+    left: 0;
+    position: absolute;
+}
+.option {
+    width: 50px;
+    height: 46px;
+    position: absolute;
+    right: 0;
+    display: table;
+    color: #3f51b5;
+    span {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
     }
 }
 </style>

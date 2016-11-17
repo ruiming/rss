@@ -1,7 +1,7 @@
 <template>
 <div>
     <headbar>注册</headbar>
-    <form v-on:submit.prevent="register()" class="center login" novalidate>
+    <form v-on:submit.prevent="register()" class="center register" novalidate>
         <img src="/img/rss.png">
         <div class="form-group">
             <label for="email">邮箱</label>
@@ -45,7 +45,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .register {
     padding: 10px 20px;
     img {

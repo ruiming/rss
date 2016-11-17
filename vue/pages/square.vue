@@ -66,26 +66,49 @@ export default {
 }
 </script>
 
-<style>
-#square {
-    .search {
-        margin-bottom: 0;
-        padding: 5px 10px;
-        background-color: #e8eaf6;
-        .input-group-addon {
-            background-color: white;
-        }
+<style scoped>
+.search {
+    margin-bottom: 0;
+    padding: 5px 10px;
+    background-color: #e8eaf6;
+    .input-group-addon {
+        background-color: white;
     }
-    .header {
-        font-size: 16px;
-        padding: 10px 15px;
-        span {
-            color: #d81b60;
-            margin-right: 10px;
-        }
+}
+.header {
+    font-size: 16px;
+    padding: 10px 15px;
+    span {
+        color: #d81b60;
+        margin-right: 10px;
     }
-    .feed-group {
+}
+.feed-group {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0;
+    p {
         margin-bottom: 0;
+        position: absolute;
+        left: 50px;
+        right: 80px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    small {
+        line-height: 1.7;
+        float: right;
+        right: 0;
+    }
+    .list-group-item {
+        height: 46px;
+        position: relative;
+        color: #333;
+        padding: 12px 10px 12px 15px;
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
     }
 }
 </style>

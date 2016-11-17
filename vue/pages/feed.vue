@@ -99,7 +99,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .panel {
     padding: 10px;
     border-bottom: 1px solid #ddd;
@@ -136,68 +136,65 @@ export default {
         height: 30px;
     }
 }
-#feed {
-    font-size: 14px;
-    ul {
+ul {
+    margin-bottom: 0;
+    p {
         margin-bottom: 0;
-        p {
-            margin-bottom: 0;
-            overflow: hidden;
-            white-space: pre;
-            text-overflow: ellipsis;
-        }
-        small {
-            line-height: 1.7;
-            float: right;
-        }
-    }
-    li {
-        padding: 0;
-        border: 0 none;
-        border-top: 1px solid #ddd;
-        border-bottom: 1px solid #ddd;
-        &:first-child {
-            border-top: 0;
-        }
-    }
-    .row:last-child p {
-        margin-bottom: 0;
-    }
-    .info {
-        display: block;
-        position: relative;
-        font-weight: 500;
-        padding: 12px 15px;
         overflow: hidden;
-        height: 45px;
-        p {
-            display: block;
-            position: absolute;
-            left: 5px;
-            right: 90px;
-            color: #9e9e9e;
-            &:before {
-                content: '    ';
-            }
+        white-space: pre;
+        text-overflow: ellipsis;
+    }
+    small {
+        line-height: 1.7;
+        float: right;
+    }
+}
+li {
+    padding: 0;
+    border: 0 none;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    &:first-child {
+        border-top: 0;
+    }
+}
+.row:last-child p {
+    margin-bottom: 0;
+}
+.info {
+    display: block;
+    position: relative;
+    font-weight: 500;
+    padding: 12px 15px;
+    overflow: hidden;
+    height: 45px;
+    p {
+        display: block;
+        position: absolute;
+        left: 5px;
+        right: 90px;
+        color: #9e9e9e;
+        &:before {
+            content: '    ';
         }
-        .unread {
-            color: #333;
-        }
-        .unread:before {
-            content: ' \B7 ';
-            color: #3f51b5;
-            font-weight: 900;
-        }
-        p+small {
-            color: #9e9e9e;
-            position: absolute;
-            text-align: right;
-            right: 10px;
-            width: 85px;
-        }
-        .unread+small {
-            color: #333;
-        }
+    }
+    .unread {
+        color: #333;
+    }
+    .unread:before {
+        content: ' \B7 ';
+        color: #3f51b5;
+        font-weight: 900;
+    }
+    p+small {
+        color: #9e9e9e;
+        position: absolute;
+        text-align: right;
+        right: 10px;
+        width: 85px;
+    }
+    .unread+small {
+        color: #333;
     }
 }
 </style>

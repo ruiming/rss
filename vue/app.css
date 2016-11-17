@@ -156,6 +156,15 @@ h3 {
             border: 0;
         }
     }
+    h1 {
+        margin-top: 18px;
+        word-break: break-all;
+        padding-bottom: 5px;
+        border-bottom: 0;
+    }
+    p {
+        font-size: 14px;
+    }
     article {
         padding: 20px 0;
     }

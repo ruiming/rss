@@ -1,5 +1,5 @@
 <template>
-<div id="post">
+<div>
     <headbar>文章</headbar>
     <article class="markdown-body center">
         <header>
@@ -48,26 +48,15 @@ export default {
 }
 </script>
 
-<style>
-#post {
-    p {
-        font-size: 14px;
+<style scoped>
+.detail {
+    padding: 5px 0 10px 0;
+    font-size: 12px;
+    span {
+        display: block;
     }
-    h1 {
-        margin-top: 18px;
-        word-break: break-all;
-        padding-bottom: 5px;
-        border-bottom: 0;
-    }
-    .detail {
-        span {
-            display: block;
-        }
-        padding: 5px 0 10px 0;
-        font-size: 12px;
-    }
-    .article {
-        padding-top: 10px;
-    }
+}
+.article {
+    padding-top: 10px;
 }
 </style>
