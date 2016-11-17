@@ -118,6 +118,9 @@ export default {
     li {
         padding: 0;
         border: 0 none;
+        &:last-child {
+            border-bottom: 1px solid #ddd;
+        }
     }
     .info {
         font-weight: 500;
@@ -142,7 +145,6 @@ export default {
     }
     .context {
         padding: 10px 15px;
-        border-bottom: 1px solid #ddd;
     }
     .summary {
         max-height: 140px;
