@@ -84,5 +84,8 @@ export default {
             margin-right: 10px;
         }
     }
+    .feed-group {
+        margin-bottom: 0;
+    }
 }
 </style>

@@ -28,12 +28,14 @@ a {
     margin-top: 40px !important;
     margin-bottom: 42px !important;
     overflow: hidden;
+    min-height: 200px;
 }
 
 .expand {
     transition: 0.3s linear all !important;
     margin-left: 200px !important;
     margin-right: -200px !important;
+    min-height: 200px;
 }
 
 .expand2 {
