@@ -1,16 +1,16 @@
 ## RSS 订阅器
 
-Web 桌面版基于 Angular1, Bootstrap, D3, Sass, Gulp 等开发
+- Web 桌面版基于 Angular1, Bootstrap, D3, Sass, Gulp 等开发
 
 ![image](https://raw.githubusercontent.com/ruiming/rss/master/public/img/preview.png)
 
 
-Web 手机版基于 Vue2, Vuex, Vue-router, Underscore, PostCSS, Webpack2 等开发
+- Web 手机版基于 Vue2, Vuex, Vue-router, Underscore, PostCSS, Webpack2 等开发
 
 ![image](https://raw.githubusercontent.com/ruiming/rss/master/public/img/preview2.png)
 
 
-后端为基于 Koa2 的 RESTful API. 数据库使用了 MongoDB, 使用 JWT 进行鉴权. 使用 PM2 进行线上部署
+- 后端为基于 Koa2 的 RESTful API. 数据库使用了 MongoDB. 使用 JWT 进行鉴权. 使用 PM2 进行线上部署
 
 
 ### 演示
