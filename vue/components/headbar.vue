@@ -1,5 +1,5 @@
 <template>
-    <div id="head" v-bind:class="{expand2: expand}">
+    <div class="head" v-bind:class="{expand2: expand}">
     <header>
         <span class="icon-paragraph-left" v-on:click="move()" v-if="online"></span>
         <h2><slot>主页</slot></h2>
@@ -28,9 +28,10 @@ export default {
 }
 </script>
 
-<style>
-#head {
+<style scoped>
+.head {
     transition: 0.3s linear all;
+    text-align: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -47,7 +48,6 @@ export default {
         margin: 0;        
         font-size: 16px;
     }
-    text-align: center;
     header {
         position: relative;
     }

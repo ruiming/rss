@@ -1,5 +1,5 @@
 <template>
-<div id="mark">
+<div>
     <headbar>收藏</headbar>
     <empty v-if="!posts.length">还没有收藏</empty>
     <ul class="list-group center">

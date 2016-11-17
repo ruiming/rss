@@ -2,7 +2,7 @@
 <div>
     <headbar>订阅源</headbar>
     <div class="center" id="feed">
-        <div class="feed-header" v-bind:class="{expand2: expand}">
+        <div class="header" v-bind:class="{expand2: expand}">
             <img :src="feed.favicon" onerror="this.src='/img/rss.png';">
             <h1>{{feed.title}}</h1>
             <small v-if="feed.unread">{{feed.unread}}</small>
@@ -106,7 +106,7 @@ export default {
     margin-bottom: 0;
     margin-top: 53px;
 }
-.feed-header {
+.header {
     transition: 0.3s linear all;
     position: fixed;
     top: 40px;
@@ -118,7 +118,7 @@ export default {
     overflow: hidden;
     border-bottom: 1px solid #ddd;
     h1 {
-        margin: 15px 30px 15px 50px;
+        margin: 18px 30px 15px 50px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

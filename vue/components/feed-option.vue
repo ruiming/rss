@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .feed-option a,
 .feed-option li {
     width: 50% !important;

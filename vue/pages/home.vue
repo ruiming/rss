@@ -1,5 +1,5 @@
 <template>
-<div id="home">
+<div>
     <headbar>未读</headbar>
     <empty v-if="!posts.length">没有未读文章</empty>
     <ul class="list-group center">
@@ -129,7 +129,7 @@ li {
     height: 46px;
     small {
         position: absolute;
-        right: 15px;
+        right: 10px;
         top: 12px;
     }
     p {

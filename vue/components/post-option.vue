@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .post-option {
     li, a {
         width: 20% !important;
