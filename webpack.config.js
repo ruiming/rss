@@ -16,11 +16,16 @@ var plugins = [
                     require('postcss-nested'),
                     require('postcss-cssnext')
                 ]
-            }}),
-        // CSS 处理
-        new ExtractTextPlugin({
-            filename:  isProduction() ? 'style.[contenthash:4].css' : 'style.css',
-            allChunks: true,
+            }
+        }),
+        new webpack.LoaderOptionsPlugin({
+            vue: {
+                // use custom postcss plugins
+                postcss: [
+                    require('postcss-nested')(),
+                    require('postcss-cssnext')()
+                ]
+            }
         })
     ],
     externals = {},
@@ -33,6 +38,11 @@ if (isProduction()) {
             compress: {
                 warnings: false
             },
+        }),
+        // CSS 处理
+        new ExtractTextPlugin({
+            filename:  'style.[contenthash:4].css',
+            allChunks: true,
         }),
         // 生产环境进行哈希值替换处理
         function () {
@@ -88,23 +98,23 @@ module.exports = {
         rules: [{
             test:    /\.vue$/,
             loader:  'vue-loader',
-            options: {
+            options: isProduction() ? {
                 loaders: {
                     css: ExtractTextPlugin.extract({
                         loader:         ['css-loader?minimize', 'postcss-loader'],
                         fallbackLoader: 'vue-style-loader'
                     })
                 }
-            }
+            } : {}
         }, {
             test:    /\.js$/,
             loader:  'babel-loader',
             exclude: /node_modules/
         }, {
             test:   /\.css$/,
-            loader: ExtractTextPlugin.extract({
+            loader: isProduction() ? ExtractTextPlugin.extract({
                 loader: ['css-loader?minimize', 'postcss-loader']
-            })
+            }) : ['style-loader', 'css-loader', 'postcss-loader']
         }, {
             test:   /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
             loader: 'file-loader'
