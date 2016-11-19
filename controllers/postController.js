@@ -51,6 +51,7 @@ exports.listOne = async (ctx, next) => {
                 })
             })),
             Promise.resolve().then(async () => await UserPostModel.find({
+                user_id,
                 feed_id: result.feed_id,
                 read:    true
             }, {
