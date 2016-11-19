@@ -11,6 +11,9 @@ export const subscribe = ({ commit, state }) => {
         feedlink: state.feed.feed.absurl
     }).then(() => {
         commit(types.SUBSCRIBE, state.feed.feed)
+        Posts.recent().then(res => {
+            commit(types.RECEIVE_RECENT_POSTS, res.data)
+        })
         commit(types.INFO, {
             message: '成功订阅'
         })
@@ -22,6 +25,9 @@ export const unsubscribe = ({ commit, state }) => {
         id: state.feed.feed._id
     }).then(() => {
         commit(types.UNSUBSCRIBE, state.feed.feed)
+        Posts.recent().then(res => {
+            commit(types.RECEIVE_RECENT_POSTS, res.data)
+        })
         commit(types.INFO, {
             message: '已取消订阅'
         })
