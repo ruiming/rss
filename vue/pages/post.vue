@@ -38,10 +38,11 @@ export default {
     watch: {
         async '$route' (to, from) {
             await store.dispatch('getPost', to.params.id)
+            window.scrollTo(0, 0)
             await store.dispatch('read')
         }
     },
-    
+
     components: {
         headbar, postOption
     }
