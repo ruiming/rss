@@ -4,7 +4,7 @@
     <div class="center">
         <div class="form-group search">
             <div class="input-group">
-                <input type="url" class="form-control" placeholder="搜索订阅源" 
+                <input type="text" class="form-control" placeholder="订阅源链接" 
                     :value="url" @keyup.enter="search()" @input="updateUrl">
                 <div class="input-group-addon" @click="search()">
                     <span class="icon-search"></span>
@@ -85,7 +85,6 @@ export default {
 }
 .feed-group {
     font-size: 14px;
-    font-weight: 500;
     margin-bottom: 0;
     p {
         margin-bottom: 0;

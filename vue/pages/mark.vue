@@ -79,7 +79,6 @@ a {
     display: block;
 }
 .info {
-    font-weight: 500;
     padding: 12px 15px;
     right: 50px;
     left: 0;

@@ -44,7 +44,9 @@ export const getFeed = ({ commit }, id) => {
 
 export const search = ({ commit, state }) => {
     if (!tools.checkUrl(state.feed.url)) {
-        commit(types.ERROR, 'URL 不合法')
+        commit(types.ERROR, {
+            message: 'URL 不合法, 请输入正确的 URL'
+        })
     } else {
         commit(types.SEARCHING_START)
         return Feed.search({
