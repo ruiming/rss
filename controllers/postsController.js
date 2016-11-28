@@ -38,7 +38,7 @@ exports.list = async (ctx, next) => {
                     pubdate:    item.post_id[0].pubdate
                 }
             })
-        })
+        }).catch(e => e)
         ctx.body = {
             success: true,
             data:    result

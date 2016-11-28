@@ -20,7 +20,7 @@ exports.register = async (ctx, next) => {
         let user = null,
             result = null,
             req = request({
-                url:     `https://www.gravatar.com/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`,
+                url:     `https://cn.gravatar.com/${MD5(ctx.request.body.email.trim().toLowerCase())}.json`,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -30,7 +30,7 @@ exports.register = async (ctx, next) => {
             req.on('data', async (data) => {
                 if (JSON.parse(data.toString()).entry) {
                     data = JSON.parse(data.toString()).entry[0]
-                    data.thumbnailUrl = data.thumbnailUrl.replace(/^(http)/, 'https')
+                    data.thumbnailUrl = data.thumbnailUrl.replace(/^(http:)/, 'https:')
                 } else {
                     data = {
                         preferredUsername: ctx.request.body.email.split('@')[0],
