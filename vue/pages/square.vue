@@ -1,6 +1,8 @@
 <template>
 <div id="square">
-    <headbar>广场</headbar>
+    <keep-alive>
+        <headbar>广场</headbar>
+    </keep-alive>
     <div class="center">
         <div class="form-group search">
             <div class="input-group">

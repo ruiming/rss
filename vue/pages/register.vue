@@ -1,6 +1,8 @@
 <template>
 <div>
-    <headbar>注册</headbar>
+    <keep-alive>
+        <headbar>注册</headbar>
+    </keep-alive>
     <form v-on:submit.prevent="register()" class="center register" novalidate>
         <img src="/img/rss.png">
         <div class="form-group">

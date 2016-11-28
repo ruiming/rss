@@ -1,10 +1,10 @@
 <template>
     <div class="head" v-bind:class="{expand2: expand}">
-    <header>
-        <span class="icon-paragraph-left" v-on:click="move()" v-if="online"></span>
-        <h2><slot>主页</slot></h2>
-    </header>
-</div>
+        <header>
+            <span class="icon-paragraph-left" v-on:click="move()" v-if="online"></span>
+            <h2><slot>主页</slot></h2>
+        </header>
+    </div>
 </template>
 
 <script>

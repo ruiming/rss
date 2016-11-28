@@ -1,6 +1,8 @@
 <template>
 <div>
-    <headbar>未读</headbar>
+    <keep-alive>
+        <headbar>未读</headbar>
+    </keep-alive>
     <empty v-if="!posts.length">没有未读文章</empty>
     <ul class="list-group center">
         <template v-for="post in posts">

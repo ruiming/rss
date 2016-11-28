@@ -1,6 +1,8 @@
 <template>
 <div>
-    <headbar>收藏</headbar>
+    <keep-alive>
+        <headbar>收藏</headbar>
+    </keep-alive>
     <empty v-if="!posts.length">还没有收藏</empty>
     <ul class="list-group center">
         <template v-for="post in posts">

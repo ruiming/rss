@@ -1,6 +1,8 @@
 <template>
 <div>
-    <headbar>订阅源</headbar>
+    <keep-alive>
+        <headbar>订阅源</headbar>
+    </keep-alive>
     <div class="center" id="feed">
         <div class="header" v-bind:class="{expand2: expand}">
             <img :src="feed.favicon" onerror="this.src='/img/rss.png';">

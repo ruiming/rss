@@ -1,6 +1,8 @@
 <template>
 <div>
-    <headbar>登录</headbar>
+    <keep-alive>
+        <headbar>登录</headbar>
+    </keep-alive>
     <form v-on:submit.prevent="login()" class="center login" novalidate>
         <img src="/img/rss.png">
         <div class="form-group">

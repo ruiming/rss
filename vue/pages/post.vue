@@ -1,6 +1,8 @@
 <template>
 <div>
-    <headbar>文章</headbar>
+    <keep-alive>
+        <headbar>文章</headbar>
+    </keep-alive>
     <article class="markdown-body center">
         <header>
             <h1>{{post.title}}</h1>

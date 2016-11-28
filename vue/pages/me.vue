@@ -1,6 +1,8 @@
 <template>
 <div class="me">
-    <headbar>个人信息</headbar>
+    <keep-alive>
+        <headbar>个人信息</headbar>
+    </keep-alive>
     <form @submit.prevent="updateUser()" class="center container-fluid">
         <msg :msgs="message"></msg>
         <div class="form-group">

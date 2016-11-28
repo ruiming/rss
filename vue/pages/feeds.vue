@@ -1,6 +1,8 @@
 <template>
 <div>
-    <headbar>订阅源</headbar>
+    <keep-alive>
+        <headbar>订阅源</headbar>
+    </keep-alive>
     <empty v-if="!feeds.length">还没有订阅源</empty>
     <div class="list-group center">
         <template v-for="feed in feeds">
