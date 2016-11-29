@@ -56,9 +56,9 @@ async function update() {
             feedparser.on('readable', async function () {
                 let result
                 while (result = this.read()) {
-                    // Use link to identify...
+                    // Use guid to identify...
                     let origin = await PostModel.findOne({
-                        link:    result.link,
+                        guid:    result.guid,
                         feed_id: item._id
                     })
                     if (origin && origin._id) {
