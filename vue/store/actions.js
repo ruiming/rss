@@ -7,9 +7,10 @@ import router from '../router'
 // Feed
 
 export const subscribe = ({ commit, state }) => {
-    return Feed.save({
-        feedlink: state.feed.feed.absurl
-    }).then(() => {
+    console.log(state.feed.feed._id)
+    return Feed.update({
+        id: state.feed.feed._id
+    }, {}).then(() => {
         commit(types.SUBSCRIBE, state.feed.feed)
         Posts.recent().then(res => {
             commit(types.RECEIVE_RECENT_POSTS, res.data)
@@ -49,7 +50,7 @@ export const search = ({ commit, state }) => {
         })
     } else {
         commit(types.SEARCHING_START)
-        return Feed.search({
+        return Feed.save({
             feedlink: state.feed.url
         }).then(res => {
             commit(types.SEARCHING_END)

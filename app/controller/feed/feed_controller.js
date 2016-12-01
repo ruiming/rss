@@ -77,9 +77,9 @@
         vm.feedit = feedit
 
         function feedit() {
-            Feed.save({
-                feedlink: vm.feed.absurl
-            }, () => {
+            Feed.update({
+                id: vm.feed._id
+            }, vm.feed, () => {
                 vm.feed.feeded = true
                 $rootScope.$broadcast('ADD_FEED', vm.feed)
                 vm.feed.feedNum++

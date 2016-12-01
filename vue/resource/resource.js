@@ -13,12 +13,6 @@ const Feeds = Vue.resource('/api/feeds', {}, {
 })
 
 const Feed = Vue.resource('/api/feed{/id}', {}, {
-    search: {
-        method: 'POST',
-        params: {
-            search: true
-        }
-    }
 })
 
 const Post = Vue.resource('/api/post{/id}', {}, {

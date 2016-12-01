@@ -17,7 +17,7 @@ const mutations = {
     },
     // 标记已读
     [types.READ_POST](state, { feed_id }) {
-        state.userfeeds = _.map(state.userfeeds, feed => {
+        state.userfeeds = state.userfeeds.map(feed => {
             if (feed._id === feed_id) {
                 feed.unread --
             }
@@ -26,7 +26,7 @@ const mutations = {
     },
     // 全部标记已读
     [types.READ_ALL](state, feed_id) {
-        state.userfeeds = _.map(state.userfeeds, feed => {
+        state.userfeeds = state.userfeeds.map(feed => {
             if (feed._id === feed_id) {
                 feed.unread = 0
             }

@@ -21,9 +21,9 @@
                 function feedit() {
                     $scope.feed.feeded = !$scope.feed.feeded
                     if ($scope.feed.feeded) {
-                        Feed.save({
-                            feedlink: $scope.feed.absurl
-                        }, () => {
+                        Feed.update({
+                            id: $scope.feed._id
+                        }, vm.feed, () => {
                             $rootScope.$broadcast('ADD_FEED', $scope.feed)
                             $scope.feed.feeded = true
                             $scope.feed.feedNum++

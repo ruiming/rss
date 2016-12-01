@@ -297,12 +297,9 @@
 
 (function () {
     angular.module('app').factory('Feed', function ($resource) {
-        return $resource('/api/feed/:id', { id: '@_id' }, {
-            search: {
-                method: 'POST',
-                params: {
-                    search: true
-                }
+        return $resource('/api/feed/:id', null, {
+            'update': {
+                method: 'PUT'
             }
         });
     });
@@ -458,9 +455,9 @@
         vm.feedit = feedit;
 
         function feedit() {
-            Feed.save({
-                feedlink: vm.feed.absurl
-            }, function () {
+            Feed.update({
+                id: vm.feed._id
+            }, vm.feed, function () {
                 vm.feed.feeded = true;
                 $rootScope.$broadcast('ADD_FEED', vm.feed);
                 vm.feed.feedNum++;
@@ -783,7 +780,7 @@
 
     function SearchController($stateParams, $base64, $state, Feed) {
         var vm = this;
-        Feed.search({
+        Feed.save({
             feedlink: decodeURIComponent(escape($base64.decode($stateParams.feedlink)))
         }).$promise.then(function (res) {
             console.log(res);
@@ -879,9 +876,9 @@
                 function feedit() {
                     $scope.feed.feeded = !$scope.feed.feeded;
                     if ($scope.feed.feeded) {
-                        Feed.save({
-                            feedlink: $scope.feed.absurl
-                        }, function () {
+                        Feed.update({
+                            id: $scope.feed._id
+                        }, vm.feed, function () {
                             $rootScope.$broadcast('ADD_FEED', $scope.feed);
                             $scope.feed.feeded = true;
                             $scope.feed.feedNum++;

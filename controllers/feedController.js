@@ -4,131 +4,99 @@ import UserFeedModel from '../models/userFeed'
 import UserPostModel from '../models/userPost'
 import FeedParser from 'feedparser'
 import request from 'request'
-import help from '../utils'
+import utils from '../utils'
 import fetchFavicon from 'favicon-getter'
 import fs from 'fs'
 import { SHA256 } from 'crypto-js'
 
 /**
- * 创建/订阅 订阅源
- * @method: post
- * @link:   /api/feed
- * @param:  feedlink
- * @param:  search
+ * 搜索订阅源
+ * @method:post
+ * @link:  /api/feed
+ * @param: feedlink
  */
 exports.create = async (ctx, next) => {
-    let feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim(),
-        search = ctx.request.query.search === 'true'
-    if (!help.checkUrl(feedlink)) {
-        ctx.throw(404, 'URL 不合法')
-    }
-    let user_id = ctx.state.user.id,
-        feedparser = new FeedParser()
-    // 查找数据库是否有该订阅源
-    let result = await FeedModel.findOne({
-        absurl: feedlink
-    })
-    // 判断数据库已存在该订阅源
-    if (result && result._id) {
-        if (search) {
+    let feedlink = ctx.request.body.feedlink && ctx.request.body.feedlink.trim()
+    if (!utils.checkUrl(feedlink)) {
+        ctx.throw(400, 'URL 不合法')
+    } else {
+        let user_id = ctx.state.user.id,
+            feedparser = new FeedParser()
+        // 查询数据库是否存在该订阅源
+        let result = await FeedModel.findOne({
+            absurl: feedlink
+        })
+        if (result && result._id) {
             return ctx.body = {
                 success: true,
                 data:    result._id
             }
         } else {
-            let userresult = await UserFeedModel.findOne({
-                user_id,
-                feed_id: result._id
-            })
-            // 判断用户是否已经订阅该订阅源
-            if (userresult && userresult._id) {
-                ctx.throw(409, `已订阅源 ${result.title}(${result.id})`)
-            } else {
-                // 订阅源的订阅人数 +1
-                result.feedNum += 1
-                result.save()
-                let count = await PostModel.find({
-                    feed_id: result._id
-                }).count()
-                let userfeed = new UserFeedModel({
-                    feed_id: result._id,
-                    unread:  count,
-                    user_id
-                })
-                // 添加到用户订阅表
-                userfeed.save()
-                return ctx.body = {
-                    success: true,
-                    data:    result
-                }
-            }
-        }
-    } else {
-        await new Promise(async (resolve, reject) => {
-            let req
-            try {
-                req = request({
-                    url:     feedlink,
-                    headers: {
-                        'User-Agent': 'request'
-                    },
-                    timeout: 5000
-                })
-            } catch (e) {
-                reject(e)
-            }
-            req.on('response', res => {
-                if (res.statusCode !== 200) {
-                    res.on('data', () => {
-                        reject('Error: 目的不可达, 404错误')
+            await new Promise(async (resolve, reject) => {
+                let req
+                // request
+                try {
+                    req = request({
+                        url:     feedlink,
+                        headers: {
+                            'User-Agent': 'request'
+                        },
+                        timeout: 5000
                     })
-                } else {
-                    res.pipe(feedparser)
-                    feedparser.on('error', err => {
-                        if (err) {
-                            reject(err)
-                        } else {
-                            resolve()
-                        }
-                    })
+                } catch (e) {
+                    // request 出错
+                    reject(e)
                 }
-            })
-            req.on('error', err => reject(err))
-            feedparser.on('meta', async function () {
-                let favicon = null
-                let hash = SHA256(this.meta.link).toString().slice(0, 10)
-
-                await fetchFavicon(this.meta.link).then(data => favicon = data).catch(e => e)
-
-                await new Promise(resolve => request(favicon, (err, response) => {
-                    if (response && response.statusCode === 200 && /image/.test(response.headers['content-type'])) {
-                        request.get(favicon).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'))
-                        favicon = `/favicon/${hash}.ico`
+                req.on('response', res => {
+                    if (res.statusCode !== 200) {
+                        // 非 200 response
+                        res.on('data', () => {
+                            reject(`Error: 错误状态码 ${res.statusCode}`)
+                        })
                     } else {
-                        favicon = '/favicon/rss.png'
+                        res.pipe(feedparser)
+                        // feedparser 错误
+                        feedparser.on('error', err => {
+                            if (err) {
+                                reject(err)
+                            } else {
+                                resolve()
+                            }
+                        })
                     }
-                    resolve(favicon)
-                }))
-                let data = {
-                    absurl: feedlink,
-                    favicon
-                }
-                if (search) {
-                    data.feedNum = 1
-                }
-                
-                let feed = new FeedModel({
-                    ...this.meta,
-                    ...data,
-                    lastScan: Date.now()
                 })
-
-                let store = await feed.save()
-                let feedid = store._id,
-                    link = store.link,
-                    count = 0
-
-                if (search) {
+                // req 错误
+                req.on('error', err => reject(err))
+                // feedparser 获取 feed meta
+                feedparser.on('meta', async function () {
+                    let favicon = null,
+                        hash = SHA256(this.meta.link).toString().slice(0, 10)
+                    // 获取 favicon
+                    await fetchFavicon(this.meta.link).then(data => favicon = data).catch(e => e)
+                    await new Promise(resolve => request(favicon, (err, response) => {
+                        if (response && response.statusCode === 200 && /image/.test(response.headers['content-type'])) {
+                            request.get(favicon).pipe(fs.createWriteStream(__dirname + '/../public/favicon/' + hash + '.ico'))
+                            favicon = `/favicon/${hash}.ico`
+                        } else {
+                            favicon = '/favicon/rss.png'
+                        }
+                        resolve(favicon)
+                    }))
+                    let data = {
+                        absurl: feedlink,
+                        favicon
+                    }
+                    // 存储 Feed
+                    let feed = new FeedModel({
+                        ...this.meta,
+                        ...data,
+                        lastScan: Date.now()
+                    })
+                    let store = await feed.save()
+                    let feedid = store._id,
+                        link = store.link,
+                        count = 0
+                    // 获取 Feed posts
                     feedparser.on('readable', function () {
                         while (result = this.read()) {
                             let post = new PostModel({
@@ -140,6 +108,7 @@ exports.create = async (ctx, next) => {
                             count++
                         }
                     })
+                    // 大功告成
                     feedparser.on('end', function () {
                         ctx.body = {
                             success: true,
@@ -147,36 +116,56 @@ exports.create = async (ctx, next) => {
                         }
                         resolve()
                     })
-                } else {
-                    setTimeout(() => {
-                        feedparser.on('readable', function () {
-                            while (result = this.read()) {
-                                let post = new PostModel({
-                                    ...result,
-                                    feed_id: feedid,
-                                    website: link
-                                })
-                                post.save()
-                                count++
-                            }
-                        })
-                        feedparser.on('end', function () {
-                            let userfeed = new UserFeedModel({
-                                feed_id: feedid,
-                                unread:  count,
-                                user_id
-                            })
-                            userfeed.save()
-                        })
-                    }, 0)
-                    ctx.body = {
-                        success: true,
-                        data:    store
-                    }
-                    resolve()
-                }
+                })
             })
+        }
+    }
+}
+
+
+/**
+ * 订阅订阅源
+ * @method: put
+ * @link:   /api/feed/{id}
+ */
+exports.subscribe = async (ctx, next) => {
+    let feed_id = ctx.params.id,
+        user_id = ctx.state.user.id
+    // 查找数据库是否有该订阅源
+    let result = await FeedModel.findOne({
+        _id: feed_id
+    })
+    if (result && result._id) {
+        let userresult = await UserFeedModel.findOne({
+            user_id,
+            feed_id: result._id
         })
+        // 查看用户是否已经订阅该订阅源
+        if (userresult && userresult._id) {
+            ctx.throw(409, `已订阅源 ${result.title}(${result.id})`)
+        } else {
+            result.feedNum += 1
+            result.save()
+            // 获取订阅源的用户未读数量
+            let count = await PostModel.find({
+                feed_id
+            }).count()
+            let readcount = await UserPostModel.find({
+                feed_id
+            }).count()
+            let userfeed = new UserFeedModel({
+                feed_id,
+                unread: count - readcount,
+                user_id
+            })
+            userfeed.save()
+            return ctx.body = {
+                success: true,
+                data:    result
+            }
+        }
+    } else {
+        ctx.throw(404, '不存在该订阅源，　请尝试使用搜索')
     }
 }
 
@@ -299,7 +288,7 @@ exports.listAll = async (ctx, next) => {
  * @link:   /api/feed/{id}
  * @param:  {string} feed_id
  */
-exports.remove = async (ctx, next) => {
+exports.unsubscribe = async (ctx, next) => {
     let user_id = ctx.state.user.id,
         feed_id = ctx.params.id
     let result = await UserFeedModel.find({

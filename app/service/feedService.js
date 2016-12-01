@@ -2,12 +2,9 @@
     angular
         .module('app')
         .factory('Feed', $resource => {
-            return $resource('/api/feed/:id', {id: '@_id'}, {
-                search: {
-                    method: 'POST',
-                    params: {
-                        search: true
-                    }
+            return $resource('/api/feed/:id', null, {
+                'update': {
+                    method: 'PUT',
                 }
             })
         })
