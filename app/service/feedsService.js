@@ -7,7 +7,7 @@
                     method: 'GET',
                     params: {
                         order:      'feedNum',
-                        'per_page': 5
+                        'per_page': 10
                     }
                 }
             })
