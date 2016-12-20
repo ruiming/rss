@@ -126,8 +126,8 @@ exports.main = async (ctx, next) => {
                 read_ids = _.invoke(_.pluck(userposts, 'post_id'), 'toString')
             for (let post of posts.reverse()) {
                 if (!read_ids.includes(post._id.toString())) {
-                    post.summary = post.description.replace(/<[^>]+>/g, '').slice(0, 550)
-                    post.description = post.description.match(/<img\s+src="(.*?)"/)
+                    post.summary = post.description && post.description.replace(/<[^>]+>/g, '').slice(0, 550)
+                    post.description = post.description && post.description.match(/<img\s+src="(.*?)"/)
                     if (post.description) {
                         if (post.description[1].slice(0, 2) !== '//' && post.description[1].slice(0, 2) !== 'ht') {
                             post.description = post.website + post.description[1]
