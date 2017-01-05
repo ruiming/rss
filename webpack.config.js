@@ -49,7 +49,6 @@ if (isProduction()) {
         new HtmlWebpackPlugin({
             template: 'vue/index.html',
             filename: '../index.html',
-            inject: 'head'
         })
     )
     // 生产环境输出目录
