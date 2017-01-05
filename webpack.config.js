@@ -47,7 +47,7 @@ if (isProduction()) {
         }),
         // 输出 HTML
         new HtmlWebpackPlugin({
-            template: 'public/index.html',
+            template: 'vue/index.html',
             filename: '../index.html',
             inject: 'head'
         })
