@@ -1,6 +1,7 @@
 var path = require('path')
 var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 var fs = require('fs')
 
 var isProduction = function () {
@@ -44,28 +45,11 @@ if (isProduction()) {
             filename:  'style.[contenthash:4].css',
             allChunks: true,
         }),
-        // 生产环境进行哈希值替换处理
-        function () {
-            this.plugin('done', function (statsData) {
-                var stats = statsData.toJson()
-                if (!stats.errors.length) {
-                    var html = fs.readFileSync('./public/index.html', 'utf8')
-                    var htmlOutput = html.replace(
-                        /static\/(.+?)">/g,
-                        function (word) {
-                            let filename = word.split('/')[1].split('.')[0]
-                            for (let i = 0; i < stats.assetsByChunkName.main.length; i++) {
-                                if (stats.assetsByChunkName.main[i].indexOf(filename) !== -1) {
-                                    return 'static/' + stats.assetsByChunkName.main[i] + '">'
-                                }
-                            }
-                        })
-                    fs.writeFileSync(
-                        './public/index.html',
-                        htmlOutput)
-                }
-            })
-        }
+        new HtmlWebpackPlugin({
+            template: 'public/index.html',
+            filename: '../index.html',
+            inject: 'head'
+        })
     )
     // 生产环境输出目录
     output = {
