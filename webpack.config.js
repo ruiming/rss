@@ -45,6 +45,7 @@ if (isProduction()) {
             filename:  'style.[contenthash:4].css',
             allChunks: true,
         }),
+        // 输出 HTML
         new HtmlWebpackPlugin({
             template: 'public/index.html',
             filename: '../index.html',

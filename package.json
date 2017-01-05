@@ -120,7 +120,7 @@
     "html-webpack-plugin": "^2.26.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
-    "node-sass": "^3.10.1",
+    "node-sass": "^4.1.1",
     "postcss": "^5.2.5",
     "postcss-cssnext": "^2.8.0",
     "postcss-import": "^8.1.0",
