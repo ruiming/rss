@@ -45,7 +45,7 @@ app.use(jwt({
     secret:    config.APP.JWT_KEY,
     algorithm: 'RS256'
 }).unless({
-    path: [/^\/static|css|js|img|fonts|favicon/]
+    path: [/^\/static|css|js|img|fonts|favicon|manifest/]
 }))
 
 // API (Protected)
