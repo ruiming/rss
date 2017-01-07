@@ -11,7 +11,7 @@
     "angular-dist": "gulp build",
     "vue-dist": "NODE_ENV=production webpack --progress",
     "build": "npm run angular-dist & npm run vue-dist",
-    "db": "mongod --dbpath='/root/db' --rest",
+    "db": "mongod --dbpath='/home/ubuntu/db' --rest",
     "devdb": "mongod --dbpath='/home/ruiming/data/db' --rest",
     "test": "./node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha -- --compilers js:babel-core/register --timeout 2500",
     "generatessl": "./certbot-auto certonly --webroot -w /root/rss -d enjoyrss.com -d www.enjoyrss.com",
