@@ -5,15 +5,11 @@
   "icons": [{
       "src": "favicon/rss.png",
       "type": "image/png",
-      "sizes": "72x72"
-    }, {
-      "src": "favicon/rss.png",
-      "type": "image/png",
-      "sizes": "144x144 256x256" 
+      "sizes": "16x16 32x32 48x48 72x72 144x144 256x256"
     }],
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#fff",
   "theme_color": "#fff",
-  "orientation": "portrait"
+  "orientation": "minimal-ui"
 }
