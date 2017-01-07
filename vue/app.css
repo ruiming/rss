@@ -1,8 +1,10 @@
 html {
     overflow-x: hidden;
+    height: 100%;
 }
 
 body {
+    height: 100%;
     color: #333;
     overflow-x: hidden;
     font-size: 14px;
@@ -25,9 +27,10 @@ a {
 }
 
 .center {
-    margin-top: 40px !important;
-    margin-bottom: 42px !important;
+    padding-top: 40px !important;
+    padding-bottom: 42px !important;
     overflow: hidden;
+    margin-bottom: 0;
     min-height: 200px;
 }
 

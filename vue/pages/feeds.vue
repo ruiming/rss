@@ -4,7 +4,7 @@
         <headbar>订阅源</headbar>
     </keep-alive>
     <empty v-if="!feeds.length">还没有订阅源</empty>
-    <div class="list-group center">
+    <div v-if="feeds.length" class="list-group center">
         <template v-for="feed in feeds">
         <router-link :to="{name: 'feed', params: {id: feed._id}}" class="list-group-item" :key=feed._id>
             <img class="favicon" :src="feed.favicon" onerror="this.src='/img/rss.png';">

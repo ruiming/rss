@@ -4,7 +4,7 @@
         <headbar>未读</headbar>
     </keep-alive>
     <empty v-if="!posts.length">没有未读文章</empty>
-    <ul class="list-group center">
+    <ul v-if="posts.length" class="list-group center">
         <template v-for="post in posts">
         <li class="list-group-item" v-if="post.unread">
             <router-link :to="{name: 'feed', params: {id: post.feed_id}}" class="info">

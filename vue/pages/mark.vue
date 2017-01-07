@@ -4,7 +4,7 @@
         <headbar>收藏</headbar>
     </keep-alive>
     <empty v-if="!posts.length">还没有收藏</empty>
-    <ul class="list-group center">
+    <ul v-if="posts.length" class="list-group center">
         <template v-for="post in posts">
         <li class="list-group-item">
             <router-link :to="{name: 'post', params: {id: post._id}}" class="info">

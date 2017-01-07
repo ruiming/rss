@@ -14,8 +14,8 @@
             </div>
         </div>
         <search v-if="searching"></search>
-        <ul class="list-group feed-group" v-if="!searching">
-            <div class="header"><span class="icon-fire"></span>热门订阅源</div>
+        <ul class="list-group feed-group" v-if="!searching || !feeds.length">
+            <div class="header" v-if="!searching"><span class="icon-fire"></span>热门订阅源</div>
             <template v-for="feed in feeds">
                 <router-link :to="{name: 'feed', params: {id: feed._id}}" class="list-group-item">
                     <img class="favicon" :src="feed.favicon" onerror="this.src='/img/rss.png';">

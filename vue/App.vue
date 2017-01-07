@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="min-height:100%">
         <transition name="sidebar">
             <div class="sidebar" v-show="expand">
                 <div class="user">
@@ -80,6 +80,7 @@ h1 {
     z-index: 100;
     background-color: white;
     transition: 0.3s linear all;
+    min-height: 300px;
 }
 .sidebar {
     transition: 0.3s linear all;
