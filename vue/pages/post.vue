@@ -40,7 +40,7 @@ export default {
     watch: {
         async '$route' (to, from) {
             await store.dispatch('getPost', to.params.id)
-            window.scrollTo(0, 0)
+            document.getElementsByClassName('markdown-body')[0].scrollIntoView(true)
             await store.dispatch('read')
         }
     },
