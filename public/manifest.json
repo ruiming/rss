@@ -11,5 +11,5 @@
   "display": "standalone",
   "background_color": "#fff",
   "theme_color": "#fff",
-  "orientation": "minimal-ui"
+  "orientation": "portrait"
 }
