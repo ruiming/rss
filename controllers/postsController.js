@@ -118,6 +118,7 @@ exports.main = async (ctx, next) => {
   await UserPostModel.find({
     feed_id: { $in: _.pluck(items, 'feed_id') },
     read:    true,
+    user_id,
   }, {
     feed_id: 1,
     post_id: 1,
@@ -172,43 +173,6 @@ exports.main = async (ctx, next) => {
     resolve(posts)
   }))
 }
-/*
-  await Promise.all(items.map(item => new Promise(resolve => PostModel.find({
-    feed_id: item.feed_id,
-  })
-  .sort('pubdate')
-  .lean()
-  .exec((err, posts) => {
-    const count = posts.length - userposts[item.feed_id].length
-    const read_ids = _.pluck(userposts[item.feed_id], 'post_id')
-    const post = posts.reverse().find(p => read_ids.indexOf(p._id.toString()) === -1)
-    if (post) {
-      post.summary = post.description && post.description.replace(/<[^>]+>/g, '').slice(0, 550)
-      post.description = post.description && post.description.match(/<img\s+src="(.*?)"/)
-      if (post.description) {
-        if (post.description[1].slice(0, 2) !== '//' && post.description[1].slice(0, 2) !== 'ht') {
-          post.description = post.website + post.description[1]
-        } else {
-          post.description = post.description[1]
-        }
-      } else {
-        post.description = '/img/noimg.png'
-      }
-      resolve({
-        ...post,
-        ...item,
-        _id:    post._id,
-        unread: count,
-      })
-    }
-    resolve({})
-  })))).then(feeds => {
-    ctx.body = {
-      success: true,
-      data:    feeds.filter(feed => feed.unread),
-    }
-  }).catch(e => e)
-}*/
 
 /**
  * 更新全部未读文章
