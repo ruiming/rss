@@ -2,11 +2,11 @@
  * 单体通信
  */
 (function () {
-    angular
+  angular
         .module('app')
         .factory('storage', storage)
 
-    function storage() {
-        return {}
-    }
+  function storage() {
+    return {}
+  }
 }())

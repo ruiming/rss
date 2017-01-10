@@ -1,53 +1,54 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
+
 Vue.use(VueResource)
 
 const Feeds = Vue.resource('/api/feeds', {}, {
-    popular: {
-        method: 'GET',
-        params: {
-            order:      'feedNum',
-            'per_page': 50
-        }
-    }
+  popular: {
+    method: 'GET',
+    params: {
+      order:    'feedNum',
+      per_page: 50,
+    },
+  },
 })
 
 const Feed = Vue.resource('/api/feed{/id}', {}, {
 })
 
 const Post = Vue.resource('/api/post{/id}', {}, {
-    update: {
-        method: 'PUT'
-    }
+  update: {
+    method: 'PUT',
+  },
 })
 
 const Posts = Vue.resource('/api/posts', {}, {
-    get: {
-        method: 'GET',
-        params: {
-            type:     '@type',
-            feed_id:  '@feed_id',
-            page:     0,
-            per_page: 10
-        }
+  get: {
+    method: 'GET',
+    params: {
+      type:     '@type',
+      feed_id:  '@feed_id',
+      page:     0,
+      per_page: 10,
     },
-    recent: {
-        method: 'GET',
-        url:    '/api/posts/recent'
-    },
-    update: {
-        method: 'PUT'
-    }
+  },
+  recent: {
+    method: 'GET',
+    url:    '/api/posts/recent',
+  },
+  update: {
+    method: 'PUT',
+  },
 })
 
 const User = Vue.resource('/api/user', {}, {
-    update: {
-        method: 'PUT'
-    },
-    logout: {
-        method: 'POST',
-        url:    '/auth/logout'
-    }
+  update: {
+    method: 'PUT',
+  },
+  logout: {
+    method: 'POST',
+    url:    '/auth/logout',
+  },
 })
 
 export {
@@ -55,5 +56,5 @@ export {
     Feed,
     Post,
     Posts,
-    User
+    User,
 }

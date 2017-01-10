@@ -1,34 +1,27 @@
 (function () {
-    angular
+  angular
         .module('app')
         .controller('HomeController', HomeController)
 
-    function HomeController(Feeds, feeds, posts, Post, $state) {
-        var vm = this
-        vm.currentPage = 0
-        vm.posts = posts.data
-        vm.feeds = feeds.data
+  function HomeController(Feeds, feeds, posts, Post, $state) {
+    const vm = this
+    vm.currentPage = 0
+    vm.posts = posts.data
+    vm.feeds = feeds.data
 
-        vm.goto = goto
+    vm.goto = goto
 
-        function goto(post) {
-            Post.update({
-                feed_id: post.feed_id,
-                id:      post._id
-            }, {
-                type: 'read'
-            })
-            $state.go('feed.post', {
-                id:      post.feed_id,
-                post_id: post._id
-            })
-        }
-        /*
-        function next() {
-            vm.feeds = Feeds.popular({
-                page: ++vm.currentPage
-            }).$promise.data
-        }*/
+    function goto(post) {
+      Post.update({
+        feed_id: post.feed_id,
+        id:      post._id,
+      }, {
+        type: 'read',
+      })
+      $state.go('feed.post', {
+        id:      post.feed_id,
+        post_id: post._id,
+      })
     }
-
+  }
 }())

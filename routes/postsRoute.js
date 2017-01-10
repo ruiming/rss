@@ -1,7 +1,7 @@
 import Router from 'koa-router'
 import postsController from '../controllers/postsController'
 
-var router = new Router()
+const router = new Router()
 
 router.get('/', postsController.list)
 router.put('/', postsController.update)

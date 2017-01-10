@@ -26,8 +26,8 @@ exports.register = async (ctx, next) => {
         'User-Agent': 'request',
       },
     })
-    await new Promise(async (resolve) => {
-      req.on('data', async (data) => {
+    await new Promise(async resolve => {
+      req.on('data', async data => {
         if (JSON.parse(data.toString()).entry) {
           data = JSON.parse(data.toString()).entry[0]
           data.thumbnailUrl = data.thumbnailUrl.replace(/^(http:)/, 'https:')

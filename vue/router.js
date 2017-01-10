@@ -14,71 +14,70 @@ import store from './store'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-    mode:   'history',
-    base:   '/',
-    routes: [{
-        name:      'login',
-        path:      '/login',
-        component: login
-    }, {
-        name:      'register',
-        path:      '/register',
-        component: register
-    }, {
-        name:      'home',
-        path:      '/',
-        component: home
-    }, {
-        name:      'feeds',
-        path:      '/feeds',
-        component: feeds
-    }, {
-        name:      'mark',
-        path:      '/mark',
-        component: mark
-    }, {
-        name:      'post',
-        path:      '/post/:id',
-        component: post
-    }, {
-        name:      'feed',
-        path:      '/feed/:id',
-        component: feed
-    }, {
-        name:      'square',
-        path:      '/square',
-        component: square
-    }, {
-        name:      'me',
-        path:      '/me',
-        component: me
-    }],
-    scrollBehavior (to, from, savedPosition) {
-        if (savedPosition) {
-            return savedPosition
-        } else {
-            return { x: 0, y: 0 }
-        }
+  mode:   'history',
+  base:   '/',
+  routes: [{
+    name:      'login',
+    path:      '/login',
+    component: login,
+  }, {
+    name:      'register',
+    path:      '/register',
+    component: register,
+  }, {
+    name:      'home',
+    path:      '/',
+    component: home,
+  }, {
+    name:      'feeds',
+    path:      '/feeds',
+    component: feeds,
+  }, {
+    name:      'mark',
+    path:      '/mark',
+    component: mark,
+  }, {
+    name:      'post',
+    path:      '/post/:id',
+    component: post,
+  }, {
+    name:      'feed',
+    path:      '/feed/:id',
+    component: feed,
+  }, {
+    name:      'square',
+    path:      '/square',
+    component: square,
+  }, {
+    name:      'me',
+    path:      '/me',
+    component: me,
+  }],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
     }
+    return { x: 0, y: 0 }
+  },
 })
- 
+
 router.beforeEach((to, from, next) => {
-    store.commit('LOADING_START')
-    store.commit('COLLAPSE')
-    if (/login|register/.test(to.path) && store.getters.online) {
-        next({
-            path: '/'
-        })
-    } else {
-        if (typeof ga !== 'undefined') {
-            ga('send', 'pageview', to.fullPath)
-        }
-        next()
+  store.commit('LOADING_START')
+  store.commit('COLLAPSE')
+  if (/login|register/.test(to.path) && store.getters.online) {
+    next({
+      path: '/',
+    })
+  } else {
+    if (typeof ga !== 'undefined') {
+      ga('send', 'pageview', to.fullPath)
     }
+    next()
+  }
 })
 
 router.afterEach((to, from, next) => {
-    store.commit('LOADING_END')
+  store.commit('LOADING_END')
 })
 
 export default router

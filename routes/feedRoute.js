@@ -1,7 +1,7 @@
 import Router from 'koa-router'
 import feedController from '../controllers/feedController'
 
-var router = new Router()
+const router = new Router()
 
 router.post('/', feedController.create)
 router.get('/', feedController.listAll)

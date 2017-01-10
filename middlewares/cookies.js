@@ -15,7 +15,7 @@ module.exports = () => async (ctx, next) => {
       expires:   new Date(),
     })
   }
-  ctx.setAuthCookies = (_id) => {
+  ctx.setAuthCookies = _id => {
     const xsrf = SHA256(_.random(999999999)).toString()
     const secure = config.ENV === 'production'
     const date = new Date().getTime() + 5184000000

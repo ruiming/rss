@@ -93,12 +93,10 @@ h1 {
     ul {
         li, a {
             border-radius: 0;
-            border- {
-                bottom: 1px solid #eee;
-                top: 1px solid #eee;
-                left: 0;
-                right: 0;
-            }
+            border-bottom: 1px solid #eee;
+            border-top: 1px solid #eee;
+            border-left: 0;
+            border-right: 0;
         }
         span:before {
             margin-right: 15px;

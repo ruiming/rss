@@ -44,6 +44,12 @@
             "warn",
             "as-needed"
         ],
+        "no-void": "off",
+        "new-cap": "off",
+        "max-len": "off", 
+        "no-plusplus": "off",
+        "no-confusing-arrow": "warn",
+        "no-use-before-define": "warn",
         "func-names": "off",
         "consistent-return": "off",
         "no-console": "off",

@@ -9,7 +9,7 @@ module.exports = () => async (ctx, next) => {
   }
   if (undefined !== token && /^\/api\//.test(ctx.url)) {
     const verify = Promise.promisify(jwt.verify)
-    await verify(token, config.APP.JWT_KEY).then(async (data) => {
+    await verify(token, config.APP.JWT_KEY).then(async data => {
       if (xsrf !== data.xsrf) {
         ctx.clearcookies()
         ctx.status = 401

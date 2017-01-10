@@ -5,8 +5,8 @@ import postRoute from './postRoute'
 import userRoute from './userRoute'
 import postsRoute from './postsRoute'
 
-var api = new Router({
-    prefix: '/api'
+const api = new Router({
+  prefix: '/api',
 })
 
 api.use('/feeds', feedsRoute.routes(), feedsRoute.allowedMethods())
