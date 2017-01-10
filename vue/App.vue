@@ -57,7 +57,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .loading {
     position: fixed;
     left: 0;
@@ -70,11 +70,9 @@ export default {
         padding-top: 40px;
     }
 }
-
 h1 {
     font-size: 18px;
 }
-
 .view {
     position: relative;
     z-index: 100;
@@ -93,15 +91,14 @@ h1 {
     z-index: 50;
     width: 200px;
     ul {
-        li,
-        a {
-            border: {
-                top: 1px solid #eee;
+        li, a {
+            border-radius: 0;
+            border- {
                 bottom: 1px solid #eee;
+                top: 1px solid #eee;
                 left: 0;
                 right: 0;
             }
-            border-radius: 0;
         }
         span:before {
             margin-right: 15px;

@@ -9,26 +9,18 @@ import FeedModel from '../models/feed'
  * @param:  limit
  * @param:  page
  * @param:  per_page
+ * @date: 2017.1.10
  */
 
 exports.list = async (ctx, next) => {
-    let {
-        order,
-        limit,
-        page,
-        per_page,
-        desc
-    } = ctx.request.query
-    
-    let result = await FeedModel.find()
-        .sort({
-            [order]: desc === 'true' ? '1' : '-1'
-        })
-        .skip(+page * +per_page)
-        .limit(+per_page || +limit)
-
-    ctx.body = {
-        success: true,
-        data:    result
-    }
+  const { order, limit, page, per_page, desc } = ctx.request.query
+  const result = await FeedModel.find().sort({
+    [order]: desc === 'true' ? '1' : '-1',
+  })
+  .skip(+page * +per_page)
+  .limit(+per_page || +limit)
+  ctx.body = {
+    success: true,
+    data:    result,
+  }
 }
