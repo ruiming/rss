@@ -97,6 +97,7 @@ exports.main = async (ctx, next) => {
   const user_id = ctx.state.user.id
   let items
   let userposts
+  let readlist
   // 查询用户订阅源
   await UserFeedModel.find({
     user_id,
@@ -126,8 +127,52 @@ exports.main = async (ctx, next) => {
       row.post_id = row.post_id.toString()
       return row
     })
+    readlist = _.pluck(userposts, 'post_id')
     userposts = _.groupBy(userposts, 'feed_id')
   })
+  // Fixed
+  await new Promise(resolve => PostModel.find({
+    feed_id: { $in: Object.keys(userposts) },
+    post_id: { $nin: readlist },
+  }).lean().exec((err, posts) => {
+    posts.forEach(post => post.feed_id = post.feed_id.toString())
+    posts = _.groupBy(posts, 'feed_id')
+    // currentFeedId 用户订阅源 ID
+    // currentFeedPosts 该订阅源 ID 下的用户未读文章
+    posts = _.mapObject(posts, (currentFeedPosts, currentFeedId) => {
+      const count = currentFeedPosts.length - userposts[currentFeedId].length
+      const read_ids = _.pluck(userposts[currentFeedId], 'post_id')
+      const post = currentFeedPosts.reverse().find(p => read_ids.indexOf(p._id.toString()) === -1)
+      if (post) {
+        post.summary = post.description && post.description.replace(/<[^>]+>/g, '').slice(0, 550)
+        post.description = post.description && post.description.match(/<img\s+src="(.*?)"/)
+        if (post.description) {
+          if (post.description[1].slice(0, 2) !== '//' && post.description[1].slice(0, 2) !== 'ht') {
+            post.description = post.website + post.description[1]
+          } else {
+            post.description = post.description[1]
+          }
+        } else {
+          post.description = '/img/noimg.png'
+        }
+        console.log(items, currentFeedId)
+        return {
+          ...post,
+          ...items.find(item => item.feed_id.toString() === currentFeedId),
+          _id:    post._id,
+          unread: count,
+        }
+      }
+      return {}
+    })
+    ctx.body = {
+      success: true,
+      data:    Object.values(posts).filter(o => o._id),
+    }
+    resolve(posts)
+  }))
+}
+/*
   await Promise.all(items.map(item => new Promise(resolve => PostModel.find({
     feed_id: item.feed_id,
   })
@@ -163,7 +208,7 @@ exports.main = async (ctx, next) => {
       data:    feeds.filter(feed => feed.unread),
     }
   }).catch(e => e)
-}
+}*/
 
 /**
  * 更新全部未读文章
