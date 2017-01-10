@@ -131,15 +131,12 @@ exports.main = async (ctx, next) => {
     readlist = _.pluck(userposts, 'post_id')
     userposts = _.groupBy(userposts, 'feed_id')
   })
-  // Fixed
   await new Promise(resolve => PostModel.find({
     feed_id: { $in: Object.keys(userposts) },
     post_id: { $nin: readlist },
   }).lean().exec((err, posts) => {
     posts.forEach(post => post.feed_id = post.feed_id.toString())
     posts = _.groupBy(posts, 'feed_id')
-    // currentFeedId 用户订阅源 ID
-    // currentFeedPosts 该订阅源 ID 下的用户未读文章
     posts = _.mapObject(posts, (currentFeedPosts, currentFeedId) => {
       const count = currentFeedPosts.length - userposts[currentFeedId].length
       const read_ids = _.pluck(userposts[currentFeedId], 'post_id')
@@ -184,9 +181,9 @@ exports.update = async (ctx, next) => {
   if (ctx.request.body.feed_id === undefined || ctx.request.body.feed_id === null) {
     ctx.throw(404, '出错了')
   }
-    // 电脑版有全部未读文章标记已读的接口，所以需要进行 split
-  let ids = ctx.request.body.feed_id.split(','),
-    user_id = ctx.state.user.id
+  // 电脑版有全部未读文章标记已读的接口，所以需要进行 split
+  const ids = ctx.request.body.feed_id.split(',')
+  const user_id = ctx.state.user.id
   ids.forEach(async id => {
     let posts = await PostModel.find({
       feed_id: id,
@@ -198,9 +195,7 @@ exports.update = async (ctx, next) => {
         post_id: post,
       })
       if (state && state._id) {
-        if (state.read) {
-
-        } else {
+        if (!state.read) {
           state.read = true
           state.save()
         }
