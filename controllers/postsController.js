@@ -98,6 +98,8 @@ exports.main = async (ctx, next) => {
   let items
   let userposts
   let readlist
+  const unreadposts = []
+  const counts = []
   // 查询用户订阅源
   await UserFeedModel.find({
     user_id,
@@ -115,6 +117,7 @@ exports.main = async (ctx, next) => {
       return item
     })
   })
+
   await UserPostModel.find({
     feed_id: { $in: _.pluck(items, 'feed_id') },
     read:    true,
@@ -136,17 +139,33 @@ exports.main = async (ctx, next) => {
       }
     })
   })
+
+  // fixed
   await new Promise(resolve => PostModel.find({
     feed_id: { $in: Object.keys(userposts) },
     post_id: { $nin: readlist },
+  }, {
+    feed_id: 1,
+    _id:     1,
   }).lean().exec((err, posts) => {
     posts.forEach(post => post.feed_id = post.feed_id.toString())
     posts = _.groupBy(posts, 'feed_id')
-    console.log(Object.keys(posts))
     posts = _.mapObject(posts, (currentFeedPosts, currentFeedId) => {
-      const count = currentFeedPosts.length - userposts[currentFeedId].length
+      counts[currentFeedId] = currentFeedPosts.length - userposts[currentFeedId].length
       const read_ids = userposts[currentFeedId].length === 0 ? [] : _.pluck(userposts[currentFeedId], 'post_id')
-      const post = currentFeedPosts.reverse().find(p => read_ids.indexOf(p._id.toString()) === -1)
+      // 获取第一篇未读文章{post_id, feed_id}
+      const post = currentFeedPosts.find(p => read_ids.indexOf(p._id.toString()) === -1)
+      if (post) unreadposts.push(post._id.toString())
+      resolve()
+    })
+  }))
+
+  const data = []
+  // 获取未读文章详细
+  await new Promise(resolve => PostModel.find({
+    _id: { $in: unreadposts },
+  }).lean().exec((err, posts) => {
+    for (const post of posts) {
       if (post) {
         post.summary = post.description && post.description.replace(/<[^>]+>/g, '').slice(0, 550)
         post.description = post.description && post.description.match(/<img\s+src="(.*?)"/)
@@ -159,21 +178,20 @@ exports.main = async (ctx, next) => {
         } else {
           post.description = '/img/noimg.png'
         }
-        return {
+        data.push({
           ...post,
-          ...items.find(item => item.feed_id.toString() === currentFeedId),
+          ...items.find(item => item.feed_id.toString() === post.feed_id.toString()),
           _id:    post._id,
-          unread: count,
-        }
+          unread: counts[post.feed_id.toString()],
+        })
       }
-      return {}
-    })
-    ctx.body = {
-      success: true,
-      data:    Object.values(posts).filter(o => o._id),
     }
-    resolve(posts)
+    resolve(data)
   }))
+  ctx.body = {
+    success: true,
+    data,
+  }
 }
 
 /**
