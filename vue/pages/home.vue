@@ -106,6 +106,7 @@ a {
     }
 }
 ul {
+    background-color: #f5f5f5;
     p {
         overflow: hidden;
         margin-bottom: 0;
@@ -116,6 +117,7 @@ ul {
     }
 }
 li {
+    margin-bottom: 10px;
     padding: 0;
     border: 0 none;
     &:last-child {
