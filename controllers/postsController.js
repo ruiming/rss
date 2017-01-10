@@ -130,6 +130,11 @@ exports.main = async (ctx, next) => {
     })
     readlist = _.pluck(userposts, 'post_id')
     userposts = _.groupBy(userposts, 'feed_id')
+    items.forEach(item => {
+      if (userposts[item.feed_id.toString()] === undefined) {
+        userposts[item.feed_id.toString()] = []
+      }
+    })
   })
   await new Promise(resolve => PostModel.find({
     feed_id: { $in: Object.keys(userposts) },
@@ -137,9 +142,10 @@ exports.main = async (ctx, next) => {
   }).lean().exec((err, posts) => {
     posts.forEach(post => post.feed_id = post.feed_id.toString())
     posts = _.groupBy(posts, 'feed_id')
+    console.log(Object.keys(posts))
     posts = _.mapObject(posts, (currentFeedPosts, currentFeedId) => {
       const count = currentFeedPosts.length - userposts[currentFeedId].length
-      const read_ids = _.pluck(userposts[currentFeedId], 'post_id')
+      const read_ids = userposts[currentFeedId].length === 0 ? [] : _.pluck(userposts[currentFeedId], 'post_id')
       const post = currentFeedPosts.reverse().find(p => read_ids.indexOf(p._id.toString()) === -1)
       if (post) {
         post.summary = post.description && post.description.replace(/<[^>]+>/g, '').slice(0, 550)
@@ -153,7 +159,6 @@ exports.main = async (ctx, next) => {
         } else {
           post.description = '/img/noimg.png'
         }
-        console.log(items, currentFeedId)
         return {
           ...post,
           ...items.find(item => item.feed_id.toString() === currentFeedId),
