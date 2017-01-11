@@ -7,7 +7,7 @@ import FeedModel from '../models/feed'
 import PostModel from '../models/post'
 import UserFeedModel from '../models/userFeed'
 
-mongoose.connect(`mongodb://${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`)
+mongoose.connect(`mongodb://${config.MONGODB.USER}:${config.MONGODB.PASSWORD}@${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`)
 mongoose.Promise = require('bluebird')
 global.Promise = require('bluebird')
 /**
@@ -70,6 +70,13 @@ async function update() {
             updateCount++
           }
         } else {
+          // TODO: Invalid Date Cast failed
+          if (Object.prototype.toString.call(result.pubdate) !== '[object Date]') {
+            result.pubdate = null
+          }
+          if (Object.prototype.toString.call(result.date) !== '[object Date]') {
+            result.date = null
+          }
           const post = new PostModel(Object.assign(result, {
             feed_id: item._id,
           }))
