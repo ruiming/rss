@@ -57,6 +57,10 @@ const router = new VueRouter({
     if (savedPosition) {
       return savedPosition
     }
+    // 避免 post 下先上滚再切换的问题
+    if (to.name !== 'post') {
+      document.getElementsByClassName('center')[0].scrollIntoView(true)
+    }
     return { x: 0, y: 0 }
   },
 })
