@@ -156,9 +156,6 @@ export const readAll = ({ commit, state }) => {
 export const getUser = ({ commit }) => User.get().then(res => {
   commit(types.RECEIVE_USER, res.data)
   commit(types.ONLINE)
-  commit(types.INFO, {
-    message: '欢迎回来',
-  })
 })
 
 export const updateUser = ({ commit, state }) => User.update(state.user.user).then(() => {
