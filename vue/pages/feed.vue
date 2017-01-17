@@ -31,6 +31,7 @@
                 <p class="col-xs-8">{{feed.link}}</p>
             </div>
         </div>
+        <!-- TODO: Not work! -->
         <ul class="list-group" v-infinite-scroll="loadMore" infinite-scroll-distance="5">
             <template v-for="post in posts">
             <li class="list-group-item" :key="post._id">
