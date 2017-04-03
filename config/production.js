@@ -1,4 +1,3 @@
-import fs from 'fs'
 import { SHA256 } from 'crypto-js'
 import _ from 'underscore'
 
@@ -13,9 +12,6 @@ module.exports = {
     NAME: process.env.MONGODB_DB || 'rss'
   },
   APP: {
-    JWT_KEY: SHA256(_.random(999999)).toString(),
-    SSL_KEY: fs.readFileSync('/etc/letsencrypt/live/enjoyrss.com/privkey.pem'),
-    SSL_CERT: fs.readFileSync('/etc/letsencrypt/live/enjoyrss.com/cert.pem'),
-    CA: fs.readFileSync('/etc/letsencrypt/live/enjoyrss.com/chain.pem')
+    JWT_KEY: SHA256(_.random(999999)).toString()
   }
 }
