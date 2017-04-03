@@ -6,6 +6,11 @@ import config from '../config/config'
 import FeedModel from '../models/feed'
 import PostModel from '../models/post'
 import UserFeedModel from '../models/userFeed'
+import schedule from 'node-schedule'
+
+schedule.scheduleJob('30 7-11,13-17,19-23 * * *', function(){
+  update()  
+});
 
 mongoose.connect(`mongodb://${config.MONGODB.USER}:${config.MONGODB.PASSWORD}@${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`)
 mongoose.Promise = require('bluebird')
@@ -112,4 +117,3 @@ async function update() {
     console.log(err)
   })
 }
-update()

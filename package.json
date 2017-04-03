@@ -82,6 +82,7 @@
     "koa-static": "^2.0.0",
     "koa-views": "^5.0.2",
     "mongoose": "^4.6.0",
+    "node-schedule": "^1.2.1",
     "normalize.css": "^4.2.0",
     "nvd3": "^1.8.4",
     "pm2": "^2.0.18",

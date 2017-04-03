@@ -10,6 +10,7 @@ import cookies from './middlewares/cookies'
 import nghtml5 from './middlewares/nghtml5'
 import ua from './middlewares/ua'
 import normal from './middlewares/normal'
+import './utils/fetch_posts'
 
 mongoose.Promise = require('bluebird')
 global.Promise = require('bluebird')

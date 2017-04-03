@@ -1638,6 +1638,10 @@ create-hmac@^1.1.0, create-hmac@^1.1.2:
     create-hash "^1.1.0"
     inherits "^2.0.1"
 
+cron-parser@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/cron-parser/-/cron-parser-1.1.0.tgz#075b84c459c155e8c482ab4d56aff99dae58352e"
+
 cron@1.1.1:
   version "1.1.1"
   resolved "http://registry.npm.taobao.org/cron/download/cron-1.1.1.tgz#02719d4ef480dfc8ee24d81a3603460ba39013ce"
@@ -2872,11 +2876,7 @@ global-prefix@^0.1.4:
     osenv "^0.1.3"
     which "^1.2.10"
 
-globals@^9.0.0:
-  version "9.13.0"
-  resolved "http://registry.npm.taobao.org/globals/download/globals-9.13.0.tgz#d97706b61600d8dbe94708c367d3fdcf48470b8f"
-
-globals@^9.14.0:
+globals@^9.0.0, globals@^9.14.0:
   version "9.14.0"
   resolved "http://registry.npm.taobao.org/globals/download/globals-9.14.0.tgz#8859936af0038741263053b39d0e76ca241e4034"
 
@@ -4395,13 +4395,13 @@ lodash@^3.10.1, lodash@^3.2.0:
   version "3.10.1"
   resolved "http://registry.npm.taobao.org/lodash/download/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.16.2, lodash@^4.17.3, lodash@^4.3.0:
-  version "4.17.4"
-  resolved "http://registry.npm.taobao.org/lodash/download/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
-
-lodash@^4.13.1, lodash@^4.2.0:
+lodash@^4.0.0, lodash@^4.13.1, lodash@^4.2.0:
   version "4.17.1"
   resolved "http://registry.npm.taobao.org/lodash/download/lodash-4.17.1.tgz#e75eaf17a34730c6491d9956f4d81f3a044f01bf"
+
+lodash@^4.14.0, lodash@^4.16.2, lodash@^4.17.3, lodash@^4.3.0:
+  version "4.17.4"
+  resolved "http://registry.npm.taobao.org/lodash/download/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
 lodash@~1.0.1:
   version "1.0.2"
@@ -4416,6 +4416,10 @@ log-symbols@^1.0.2:
   resolved "http://registry.npm.taobao.org/log-symbols/download/log-symbols-1.0.2.tgz#376ff7b58ea3086a0f09facc74617eca501e1a18"
   dependencies:
     chalk "^1.0.0"
+
+long-timeout@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/long-timeout/-/long-timeout-0.1.1.tgz#9721d788b47e0bcb5a24c2e2bee1a0da55dab514"
 
 longest@^1.0.1:
   version "1.0.1"
@@ -4900,6 +4904,14 @@ node-sass@^4.1.1:
     request "^2.61.0"
     sass-graph "^2.1.1"
     stdout-stream "^1.4.0"
+
+node-schedule@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/node-schedule/-/node-schedule-1.2.1.tgz#8800b34d0cceb0ff0318432ef9f20b2499630e36"
+  dependencies:
+    cron-parser "1.1.0"
+    long-timeout "0.1.1"
+    sorted-array-functions "^1.0.0"
 
 node-uuid@~1.4.7:
   version "1.4.7"
@@ -6185,32 +6197,7 @@ replace-ext@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/replace-ext/download/replace-ext-1.0.0.tgz#de63128373fcbf7c3ccfa4de5a480c45a67958eb"
 
-request@2, request@^2.61.0, request@^2.74.0, request@^2.75.0:
-  version "2.78.0"
-  resolved "http://registry.npm.taobao.org/request/download/request-2.78.0.tgz#e1c8dec346e1c81923b24acdb337f11decabe9cc"
-  dependencies:
-    aws-sign2 "~0.6.0"
-    aws4 "^1.2.1"
-    caseless "~0.11.0"
-    combined-stream "~1.0.5"
-    extend "~3.0.0"
-    forever-agent "~0.6.1"
-    form-data "~2.1.1"
-    har-validator "~2.0.6"
-    hawk "~3.1.3"
-    http-signature "~1.1.0"
-    is-typedarray "~1.0.0"
-    isstream "~0.1.2"
-    json-stringify-safe "~5.0.1"
-    mime-types "~2.1.7"
-    node-uuid "~1.4.7"
-    oauth-sign "~0.8.1"
-    qs "~6.3.0"
-    stringstream "~0.0.4"
-    tough-cookie "~2.3.0"
-    tunnel-agent "~0.4.1"
-
-request@^2.79.0:
+request@2, request@^2.61.0, request@^2.74.0, request@^2.75.0, request@^2.79.0:
   version "2.79.0"
   resolved "http://registry.npm.taobao.org/request/download/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
   dependencies:
@@ -6540,6 +6527,10 @@ sort-keys@^1.0.0:
   resolved "http://registry.npm.taobao.org/sort-keys/download/sort-keys-1.1.2.tgz#441b6d4d346798f1b4e49e8920adfba0e543f9ad"
   dependencies:
     is-plain-obj "^1.0.0"
+
+sorted-array-functions@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/sorted-array-functions/-/sorted-array-functions-1.0.0.tgz#c0b554d9e709affcbe56d34c1b2514197fd38279"
 
 source-list-map@^0.1.4, source-list-map@~0.1.0:
   version "0.1.6"

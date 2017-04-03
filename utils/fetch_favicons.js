@@ -9,7 +9,7 @@ import FeedModel from '../models/feed'
 import help from '../utils/'
 import config from '../config/config'
 
-mongoose.connect(`mongodb://${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`)
+mongoose.connect(`mongodb://${config.MONGODB.USER}:${config.MONGODB.PASSWORD}@${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`)
 mongoose.Promise = require('bluebird')
 global.Promise = require('bluebird')
 
