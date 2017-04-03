@@ -8,13 +8,10 @@ import PostModel from '../models/post'
 import UserFeedModel from '../models/userFeed'
 import schedule from 'node-schedule'
 
-schedule.scheduleJob('30 7-11,13-17,19-23 * * *', function(){
-  update()  
+schedule.scheduleJob('30 7-11,13-17,19-23 * * *', async function(){
+  await update()  
 });
 
-mongoose.connect(`mongodb://${config.MONGODB.USER}:${config.MONGODB.PASSWORD}@${config.MONGODB.HOST}:${config.MONGODB.PORT}/${config.MONGODB.NAME}`)
-mongoose.Promise = require('bluebird')
-global.Promise = require('bluebird')
 /**
  * 定时更新订阅源
  */
